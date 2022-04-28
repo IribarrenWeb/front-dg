@@ -1,0 +1,108 @@
+import DashboardLayout from "@/layout/DashboardLayout";
+import AuthLayout from "@/layout/AuthLayout";
+
+import Dashboard from "../views/Dashboard.vue";
+import Icons from "../views/Icons.vue";
+import Maps from "../views/Maps.vue";
+// import Profile from "../views/UserProfile.vue";
+import Tables from "../views/Tables.vue";
+import Users from "../views/Users.vue";
+// import NotFound from "../pages/NotFoundPage.vue";
+
+import Login from "../views/Auth/Login.vue";
+import ResetPassword from "../views/Auth/ResetPassword.vue";
+import ResetPasswordRequest from "../views/Auth/ResetPasswordRequest.vue";
+
+//import middleware
+import auth from "@/middleware/auth";
+import guest from "@/middleware/guest";
+
+const routes = [{
+        path: "/",
+        redirect: "/dashboard",
+        component: DashboardLayout,
+        children: [{
+                path: "/dashboard",
+                name: "dashboard",
+                components: { default: Dashboard },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/icons",
+                name: "icons",
+                components: { default: Icons },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/maps",
+                name: "maps",
+                components: { default: Maps },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/users",
+                name: "users",
+                components: { default: Users },
+                meta: { middleware: auth },
+                // children: [{
+                //         path: "/delegates",
+                //         name: "login",
+                //         components: { default: Login },
+                //         // meta: { middleware: auth },
+                //     },
+                //     {
+                //         path: "/auditors",
+                //         name: "login",
+                //         components: { default: Login },
+                //         // meta: { middleware: guest },
+                //     },
+                //     {
+                //         path: "/business",
+                //         name: "login",
+                //         components: { default: Login },
+                //         // meta: { middleware: guest },
+                //     },
+                // ],
+            },
+            {
+                path: "/tables",
+                name: "tables",
+                components: { default: Tables },
+                meta: { middleware: auth },
+            },
+        ],
+    },
+    {
+        path: "/",
+        redirect: "login",
+        component: AuthLayout,
+        children: [{
+                path: "/login",
+                name: "login",
+                components: { default: Login },
+                meta: { middleware: guest },
+            },
+            {
+                path: "/reset-password-request",
+                name: "reset-request",
+                components: { default: ResetPasswordRequest },
+                meta: { middleware: guest },
+            },
+            {
+                path: "/reset-password/:email",
+                name: "reset-password",
+                components: { default: ResetPassword },
+                meta: { middleware: guest },
+            },
+        ],
+    },
+    // { path: "*", component: NotFound },
+];
+
+// const router = createRouter({
+//     history: createWebHashHistory(),
+//     linkActiveClass: "active",
+//     routes,
+// });
+
+export default routes;
