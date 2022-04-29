@@ -119,25 +119,26 @@ export default {
       return arr;
     },
     changePage(item) {
-      this.$emit("input", item);
+      console.log(item);
+      this.$emit("changePage", item);
     },
     nextPage() {
       if (this.value < this.totalPages) {
-        this.$emit("input", this.value + 1);
+        this.$emit("changePage", this.value + 1);
       }
     },
     prevPage() {
       if (this.value > 1) {
-        this.$emit("input", this.value - 1);
+        this.$emit("changePage", this.value - 1);
       }
     },
   },
   watch: {
     perPage() {
-      this.$emit("input", 1);
+      this.$emit("changePage", 1);
     },
     total() {
-      this.$emit("input", 1);
+      this.$emit("changePage", 1);
     },
   },
 };

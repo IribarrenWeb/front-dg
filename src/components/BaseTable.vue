@@ -7,7 +7,7 @@
         </slot>
       </tr>
     </thead>
-    <tbody v-if="data.length <= 0" :class="tbodyClasses">
+    <tbody v-if="!data.length >= 1" :class="tbodyClasses">
       <tr>
         <td class="text-center" :colspan="columns.length">No hay datos para mostrar</td>
       </tr>
@@ -35,8 +35,8 @@ export default {
       description: "Table columns",
     },
     data: {
-      type: Array,
-      default: () => [],
+      type: Object,
+      default: () => {},
       description: "Table data",
     },
     type: {
@@ -64,6 +64,8 @@ export default {
         return this.columns.filter((column) => this.hasValue(row, column));
       };
     },
+  },
+  mounted() {
   },
   methods: {
     hasValue(item, column) {

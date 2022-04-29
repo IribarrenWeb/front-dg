@@ -42,20 +42,6 @@
             path: '/tables',
           }"
         />
-        <!-- <sidebar-item
-          :link="{
-            name: 'Login',
-            icon: 'ni ni-key-25 text-info',
-            path: '/login',
-          }"
-        />
-        <sidebar-item
-          :link="{
-            name: 'Register',
-            icon: 'ni ni-circle-08 text-pink',
-            path: '/register',
-          }"
-        /> -->
       </template>
     </side-bar>
     <div class="main-content" :data="sidebarBackground">
@@ -63,38 +49,49 @@
 
       <div @click="toggleSidebar">
         <!-- your content here -->
-        <router-view></router-view>
+        <Transition name="fade">
+          <Suspense>
+            <template #default>
+              <router-view></router-view>
+            </template>
+            <template #fallback>
+              <loader></loader>
+            </template>
+          </Suspense>
+        </Transition>
         <content-footer v-if="!$route.meta.hideFooter"></content-footer>
       </div>
     </div>
   </div>
 </template>
 <script>
-import DashboardNavbar from "./DashboardNavbar.vue";
-import ContentFooter from "./ContentFooter.vue";
+  import DashboardNavbar from "./DashboardNavbar.vue";
+  import ContentFooter from "./ContentFooter.vue";
+  import Loader from "../components/Loader.vue";
 
-export default {
-  components: {
-    DashboardNavbar,
-    ContentFooter,
-  },
-  data() {
-    return {
-      sidebarBackground: "orange", //vue|blue|orange|green|red|primary,
-      me: {}
-    };
-  },
-  methods: {
-    toggleSidebar() {
-      if (this.$sidebar.showSidebar) {
-        this.$sidebar.displaySidebar(false);
-      }
+  export default {
+    components: {
+      DashboardNavbar,
+      ContentFooter,
+      Loader,
     },
-  },
-  async mounted() {
-    await this.$store.dispatch('profile/me')
-    this.me = await this.$store.getters['profile/me']
-  }
-};
+    data() {
+      return {
+        sidebarBackground: "orange", //vue|blue|orange|green|red|primary,
+        me: {},
+      };
+    },
+    methods: {
+      toggleSidebar() {
+        if (this.$sidebar.showSidebar) {
+          this.$sidebar.displaySidebar(false);
+        }
+      },
+    },
+    async mounted() {
+      await this.$store.dispatch("profile/me");
+      this.me = await this.$store.getters["profile/me"];
+    },
+  };
 </script>
 <style lang="scss"></style>

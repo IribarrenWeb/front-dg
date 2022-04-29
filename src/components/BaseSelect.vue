@@ -25,25 +25,21 @@
         </slot>
       </span>
     </div>
-    <slot>
-      <input
-        :value="modelValue"
-        v-bind="$attrs"
-        v-on="listeners"
-        class="form-control"
-        :class="[
-          { 'is-valid': valid === true },
-          { 'is-invalid': valid === false },
-          inputClasses,
-        ]"
-        aria-describedby="addon-right addon-left"
-        :type="type"
-        autocomplete="off"
-        aria-autocomplete="both"
-        aria-haspopup="false"
-        :disabled="disabled"
-      />
-    </slot>
+    <select
+      :value="modelValue"
+      v-bind="$attrs"
+      v-on="listeners"
+      class="form-control"
+      :class="[
+        { 'is-valid': valid === true },
+        { 'is-invalid': valid === false },
+        inputClasses,
+      ]"
+      :disabled="disabled"
+    >
+      <option selected>{{ defaultOption }}</option>
+      <slot></slot>
+    </select>
     <div v-if="addonRightIcon || $slots.addonRight" class="input-group-append">
       <span class="input-group-text">
         <slot name="addonRight">
@@ -79,21 +75,25 @@
 <script>
   export default {
     inheritAttrs: false,
-    name: "base-input",
+    name: "base-select",
     props: {
       required: {
         type: Boolean,
         description: "Whether input is required (adds an asterix *)",
+      },
+      disabled: {
+        type: Boolean,
+        description: "Whether is valid",
+        default: false,
       },
       valid: {
         type: Boolean,
         description: "Whether is valid",
         default: undefined,
       },
-      disabled: {
-        type: Boolean,
-        description: "Whether is valid",
-        default: false,
+      apiErrors: {
+        type: String,
+        description: "Api Input error (below input)",
       },
       label: {
         type: String,
@@ -102,10 +102,6 @@
       error: {
         type: String,
         description: "Input error (below input)",
-      },
-      apiErrors: {
-        type: String,
-        description: "Api Input error (below input)",
       },
       formClasses: {
         type: String,
@@ -138,6 +134,11 @@
       },
       rules: {
         type: String,
+      },
+      defaultOption: {
+        type: String,
+        description: "Addont left icon",
+        default: "Selecciona...",
       },
     },
     data() {

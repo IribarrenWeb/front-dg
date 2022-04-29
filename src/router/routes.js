@@ -7,6 +7,9 @@ import Maps from "../views/Maps.vue";
 // import Profile from "../views/UserProfile.vue";
 import Tables from "../views/Tables.vue";
 import Users from "../views/Users.vue";
+import AuditorTable from "../views/Tables/AuditorsTable.vue";
+import BusinessTable from "../views/Tables/BusinessTable.vue";
+import DelegateTable from "../views/Tables/DelegateTable.vue";
 // import NotFound from "../pages/NotFoundPage.vue";
 
 import Login from "../views/Auth/Login.vue";
@@ -44,6 +47,25 @@ const routes = [{
                 name: "users",
                 components: { default: Users },
                 meta: { middleware: auth },
+                children: [{
+                        path: "/users/delegates",
+                        name: "delegates",
+                        components: { default: DelegateTable },
+                        meta: { middleware: auth },
+                    },
+                    {
+                        path: "/users/auditors",
+                        name: "auditors",
+                        components: { default: AuditorTable },
+                        meta: { middleware: auth },
+                    },
+                    {
+                        path: "/users/business",
+                        name: "business",
+                        components: { default: BusinessTable },
+                        meta: { middleware: auth },
+                    },
+                ],
                 // children: [{
                 //         path: "/delegates",
                 //         name: "login",

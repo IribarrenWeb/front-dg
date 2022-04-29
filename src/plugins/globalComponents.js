@@ -16,32 +16,38 @@ import Modal from "../components/Modal";
 import StatsCard from "../components/StatsCard";
 import TabPane from "../components/Tabs/TabPane";
 import Tabs from "../components/Tabs/Tabs";
+import FormDelegate from "../components/forms/FormDelegate.vue";
+import BaseSelect from "../components/BaseSelect.vue";
+import Loader from "../components/Loader.vue";
 
 import { ElTooltip, ElPopover } from "element-plus";
 
 const GlobalComponents = {
-  install(app) {
-    app.component("badge", Badge);
-    app.component("base-alert", BaseAlert);
-    app.component("base-button", BaseButton);
-    app.component("base-checkbox", BaseCheckbox);
-    app.component("base-dropdown", BaseDropdown);
-    app.component("base-header", BaseHeader);
-    app.component("base-input", BaseInput);
-    app.component("base-nav", BaseNav);
-    app.component("base-pagination", BasePagination);
-    app.component("base-progress", BaseProgress);
-    app.component("base-switch", BaseSwitch);
-    app.component("base-radio", BaseRadio);
-    app.component("base-table", BaseTable);
-    app.component("card", Card);
-    app.component("modal", Modal);
-    app.component("stats-card", StatsCard);
-    app.component("tab-pane", TabPane);
-    app.component("tabs", Tabs);
-    app.use(ElTooltip);
-    app.use(ElPopover);
-  },
+    install(app) {
+        app.component("badge", Badge);
+        app.component("base-alert", BaseAlert);
+        app.component("base-button", BaseButton);
+        app.component("base-checkbox", BaseCheckbox);
+        app.component("base-dropdown", BaseDropdown);
+        app.component("base-header", BaseHeader);
+        app.component("base-input", BaseInput);
+        app.component("base-nav", BaseNav);
+        app.component("base-pagination", BasePagination);
+        app.component("base-progress", BaseProgress);
+        app.component("base-switch", BaseSwitch);
+        app.component("base-radio", BaseRadio);
+        app.component("base-table", BaseTable);
+        app.component("base-select", BaseSelect);
+        app.component("card", Card);
+        app.component("loader", Loader);
+        app.component("modal", Modal);
+        app.component("stats-card", StatsCard);
+        app.component("tab-pane", TabPane);
+        app.component("form-delegate", FormDelegate);
+        app.component("tabs", Tabs);
+        app.use(ElTooltip);
+        app.use(ElPopover);
+    },
 };
 
 export default GlobalComponents;

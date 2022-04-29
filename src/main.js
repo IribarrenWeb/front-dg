@@ -24,13 +24,23 @@ import "element-plus/lib/theme-chalk/index.css";
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import Toaster from "@meforma/vue-toaster";
+import "./assets/main.css";
+// import * as VeeValidate from 'vee-validate';
+// import { defineRule } from 'vee-validate';
+// import AllRules from '@vee-validate/rules';
+// Object.keys(AllRules).forEach(rule => {
+//     defineRule(rule, AllRules[rule]);
+// });
 
 const appInstance = createApp(App);
+
+// appInstance.use(VeeValidate);
 appInstance.use(Toaster, {
     // One of the options
     maxToasts: 4,
     queue: true
 });
+// appInstance.use(VeeValidate);
 appInstance.use(store);
 appInstance.use(router);
 appInstance.use(VueSweetalert2);
