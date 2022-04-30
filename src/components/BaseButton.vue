@@ -119,6 +119,8 @@ export default {
   },
   methods: {
     handleClick(evt) {
+      // evt.preventDefault();
+      
       this.$emit("clicked", evt);
     },
   },

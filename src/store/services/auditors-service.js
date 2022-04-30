@@ -17,6 +17,35 @@ function getIndex(params) {
     });
 }
 
+function store(data) {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+            'content-type': 'multipart/form-data'
+        },
+    };
+
+    return axios.post(`${url}${baseApi}`, data, options).then((response) => {
+        return response
+    });
+}
+
+function view(id, params = "") {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(`${url}${baseApi}/${id}?${params}`, options).then((response) => {
+        return response
+    });
+}
+
 export default {
-    getIndex
+    getIndex,
+    store,
+    view
 }

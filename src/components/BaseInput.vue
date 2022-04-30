@@ -1,79 +1,120 @@
 <template>
-  <div
-    class="form-group"
-    :class="[
-      { 'input-group': hasIcon },
-      { 'has-danger': error },
-      { focused: focused },
-      { 'has-label': label || $slots.label },
-      { 'has-success': valid === true },
-      { 'has-danger': valid === false },
-      formClasses,
-    ]"
-  >
-    <slot name="label">
-      <label v-if="label" class="form-control-label" :class="labelClasses">
-        {{ label }}
-        <span v-if="required">*</span>
-      </label>
-    </slot>
+  <div :class="formClasses">
+    <div
+      class="form-group"
+      :class="[
+        { 'input-group': hasIcon },
+        { 'has-danger': error },
+        { focused: focused },
+        { 'has-label': label || $slots.label },
+        { 'has-success': valid === true },
+        { 'has-danger': valid === false },
+      ]"
+    >
+      <slot name="label">
+        <label v-if="label" class="form-control-label" :class="labelClasses">
+          {{ label }}
+          <span v-if="required">*</span>
+        </label>
+      </slot>
 
-    <div v-if="addonLeftIcon || $slots.addonLeft" class="input-group-prepend">
-      <span class="input-group-text">
-        <slot name="addonLeft">
-          <i :class="addonLeftIcon"></i>
-        </slot>
-      </span>
-    </div>
-    <slot>
-      <input
-        :value="modelValue"
-        v-bind="$attrs"
-        v-on="listeners"
-        class="form-control"
-        :class="[
-          { 'is-valid': valid === true },
-          { 'is-invalid': valid === false },
-          inputClasses,
-        ]"
-        aria-describedby="addon-right addon-left"
-        :type="type"
-        autocomplete="off"
-        aria-autocomplete="both"
-        aria-haspopup="false"
-        :disabled="disabled"
-      />
-    </slot>
-    <div v-if="addonRightIcon || $slots.addonRight" class="input-group-append">
-      <span class="input-group-text">
-        <slot name="addonRight">
-          <i :class="addonRightIcon"></i>
-        </slot>
-      </span>
-    </div>
-    <slot name="infoBlock"></slot>
-    <slot name="helpBlock">
-      <div
-        class="text-danger invalid-feedback"
-        style="display: block"
-        :class="{ 'mt-2': hasIcon }"
-        v-if="error"
-      >
-        {{ error }}
+      <div v-if="addonLeftIcon || $slots.addonLeft" class="input-group-prepend">
+        <span class="input-group-text">
+          <slot name="addonLeft">
+            <i :class="addonLeftIcon"></i>
+          </slot>
+        </span>
       </div>
+      <slot>
+        <input
+          :value="modelValue"
+          v-bind="$attrs"
+          v-on="listeners"
+          class="form-control"
+          :class="[
+            { 'is-valid': valid === true },
+            { 'is-invalid': valid === false },
+            inputClasses,
+          ]"
+          aria-describedby="addon-right addon-left"
+          :type="type"
+          autocomplete="off"
+          aria-autocomplete="both"
+          aria-haspopup="false"
+          :disabled="disabled"
+          v-if="view"
+        />
+        <div v-else>
+          <field-validate
+            :disabled="disabled"
+            :name="name"
+            @update:modelValue="updateValue($event)"
+            :rules="rules"
+            class="form-control"
+            :label="label"
+            :type="type"
+            :value="modelValue"
+            v-if="type != 'file' && type != 'select'"
+          />
+          <field-validate
+            :disabled="disabled"
+            v-else-if="type == 'select'"
+            :name="name"
+            @update:modelValue="updateValue($event)"
+            :rules="rules"
+            class="form-control"
+            :label="label"
+            as="select"
+          >
+            <slot name="options"></slot>
+          </field-validate>
+          <field-validate
+            :disabled="disabled"
+            v-else
+            :name="name"
+            @update:modelValue="updateValue($event)"
+            :rules="rules"
+            class="form-control"
+            :label="label"
+            :type="type"
+          />
+          <error-message-validate class="text-danger" :name="name" />
+        </div>
+      </slot>
       <div
-        class="text-danger invalid-feedback"
-        style="display: block"
-        :class="{ 'mt-2': hasIcon }"
-        v-if="apiErrors"
+        v-if="addonRightIcon || $slots.addonRight"
+        class="input-group-append"
       >
-        <ul>
-          <li v-for="error in apiErrors" :key="error.id">
-            {{ error }}
-          </li>
-        </ul>
+        <span class="input-group-text">
+          <slot name="addonRight">
+            <i :class="addonRightIcon"></i>
+          </slot>
+        </span>
       </div>
-    </slot>
+      <slot name="infoBlock"></slot>
+      <slot name="helpBlock">
+        <div
+          class="text-danger invalid-feedback"
+          style="display: block"
+          :class="{ 'mt-2': hasIcon }"
+          v-if="error"
+        >
+          {{ error }}
+        </div>
+        <div
+          class="text-danger invalid-feedback"
+          style="display: block"
+          :class="{ 'mt-2': hasIcon }"
+          v-if="apiErrors"
+        >
+          <ul>
+            <li v-for="error in apiErrors" :key="error.id">
+              {{ error }}
+            </li>
+          </ul>
+        </div>
+      </slot>
+    </div>
   </div>
 </template>
 <script>
@@ -85,10 +126,18 @@
         type: Boolean,
         description: "Whether input is required (adds an asterix *)",
       },
+      view: {
+        type: Boolean,
+        default: false,
+      },
+      rules: {
+        type: String,
+        default: "required",
+      },
       valid: {
         type: Boolean,
         description: "Whether is valid",
-        default: undefined,
+        default: null,
       },
       disabled: {
         type: Boolean,
@@ -104,8 +153,9 @@
         description: "Input error (below input)",
       },
       apiErrors: {
-        type: String,
+        type: Object,
         description: "Api Input error (below input)",
+        default: null
       },
       formClasses: {
         type: String,
@@ -122,6 +172,7 @@
       modelValue: {
         type: [String, Number],
         description: "Input value",
+        default: "",
       },
       addonRightIcon: {
         type: String,
@@ -136,7 +187,7 @@
         default: "text",
         description: "Input type",
       },
-      rules: {
+      name: {
         type: String,
       },
     },
@@ -165,7 +216,8 @@
     },
     methods: {
       updateValue(evt) {
-        let value = evt.target.value;
+        let value = evt;
+        // let value = evt.target.value;
         this.$emit("update:modelValue", value);
       },
       onFocus(value) {

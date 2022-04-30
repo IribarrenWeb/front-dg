@@ -11,11 +11,11 @@
         <ul class="nav nav-tabs">
           <li class="nav-item">
             <router-link
-              to="/users/delegates"
+              to="/business/all"
               class="nav-link"
               active-class="active"
             >
-              Delegados
+              Empresas
             </router-link>
           </li>
           <li class="nav-item">
@@ -44,7 +44,6 @@
     },
     
     async mounted() {
-      this.$router.push("/users/delegates");
     },
     methods: {
     },

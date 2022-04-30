@@ -18,7 +18,7 @@
           :link="{
             name: 'Empresas',
             icon: 'ni ni-planet text-blue',
-            path: '/icons',
+            path: '/business',
           }"
         />
         <sidebar-item

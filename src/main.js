@@ -21,16 +21,29 @@ import router from "./router";
 import ArgonDashboard from "./plugins/argon-dashboard";
 import { store } from "./store";
 import "element-plus/lib/theme-chalk/index.css";
-import VueSweetalert2 from 'vue-sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 import Toaster from "@meforma/vue-toaster";
 import "./assets/main.css";
-// import * as VeeValidate from 'vee-validate';
-// import { defineRule } from 'vee-validate';
-// import AllRules from '@vee-validate/rules';
-// Object.keys(AllRules).forEach(rule => {
-//     defineRule(rule, AllRules[rule]);
-// });
+
+import { localize, setLocale } from "@vee-validate/i18n";
+import es from "@vee-validate/i18n/dist/locale/es.json";
+import { configure } from 'vee-validate';
+
+import { defineRule } from "vee-validate";
+import AllRules from "@vee-validate/rules";
+
+Object.keys(AllRules).forEach((rule) => {
+    defineRule(rule, AllRules[rule]);
+});
+
+configure({
+    generateMessage: localize({
+        es
+    }),
+});
+
+setLocale("es");
 
 const appInstance = createApp(App);
 
@@ -38,7 +51,7 @@ const appInstance = createApp(App);
 appInstance.use(Toaster, {
     // One of the options
     maxToasts: 4,
-    queue: true
+    queue: true,
 });
 // appInstance.use(VeeValidate);
 appInstance.use(store);

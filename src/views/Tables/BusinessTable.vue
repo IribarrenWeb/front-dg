@@ -10,7 +10,14 @@
         </div>
       </div>
     </div>
-
+    <div>
+      asdasdasd
+      <form-business/>
+      <!-- <Form>
+        <Field name="name"></Field>
+        <ErrorMessage></ErrorMessage>
+      </Form> -->
+    </div>
     <div class="table-responsive">
       <base-table thead-classes="thead-light" :data="tableData">
         <template v-slot:columns>
@@ -40,14 +47,20 @@
         </template>
       </base-table>
     </div>
+    <!-- <Form>
+      <base-input></base-input>
+    </Form> -->
   </div>
 </template>
 <script>
+// import {Form, Field, ErrorMessage} from 'vee-validate';
+
   export default {
+    // comments: {Form, Field, ErrorMessage},
     name: "users-table",
     data() {
       return {
-        tableData: {}
+        tableData: {},
       };
     },
   };

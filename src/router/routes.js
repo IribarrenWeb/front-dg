@@ -2,13 +2,14 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import AuthLayout from "@/layout/AuthLayout";
 
 import Dashboard from "../views/Dashboard.vue";
-import Icons from "../views/Icons.vue";
+// import Icons from "../views/Icons.vue";
 import Maps from "../views/Maps.vue";
-// import Profile from "../views/UserProfile.vue";
+import Profile from "../views/UserProfile.vue";
 import Tables from "../views/Tables.vue";
 import Users from "../views/Users.vue";
 import AuditorTable from "../views/Tables/AuditorsTable.vue";
 import BusinessTable from "../views/Tables/BusinessTable.vue";
+import Business from "../views/Business.vue";
 import DelegateTable from "../views/Tables/DelegateTable.vue";
 // import NotFound from "../pages/NotFoundPage.vue";
 
@@ -31,10 +32,17 @@ const routes = [{
                 meta: { middleware: auth },
             },
             {
-                path: "/icons",
-                name: "icons",
-                components: { default: Icons },
+                path: "/business",
+                name: "business",
+                components: { default: Business },
                 meta: { middleware: auth },
+                redirect: { name: "business.all" },
+                children: [{
+                    path: "/business/all",
+                    name: "business.all",
+                    components: { default: BusinessTable },
+                    meta: { middleware: auth },
+                }, ],
             },
             {
                 path: "/maps",
@@ -43,10 +51,17 @@ const routes = [{
                 meta: { middleware: auth },
             },
             {
+                path: "/profile",
+                name: "profile",
+                components: { default: Profile },
+                meta: { middleware: auth },
+            },
+            {
                 path: "/users",
                 name: "users",
                 components: { default: Users },
                 meta: { middleware: auth },
+                redirect: { name: "delegates" },
                 children: [{
                         path: "/users/delegates",
                         name: "delegates",
@@ -57,12 +72,6 @@ const routes = [{
                         path: "/users/auditors",
                         name: "auditors",
                         components: { default: AuditorTable },
-                        meta: { middleware: auth },
-                    },
-                    {
-                        path: "/users/business",
-                        name: "business",
-                        components: { default: BusinessTable },
                         meta: { middleware: auth },
                     },
                 ],

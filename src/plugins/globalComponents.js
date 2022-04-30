@@ -17,13 +17,19 @@ import StatsCard from "../components/StatsCard";
 import TabPane from "../components/Tabs/TabPane";
 import Tabs from "../components/Tabs/Tabs";
 import FormDelegate from "../components/forms/FormDelegate.vue";
+import FormAuditor from "../components/forms/FormAuditor.vue";
 import BaseSelect from "../components/BaseSelect.vue";
 import Loader from "../components/Loader.vue";
-
 import { ElTooltip, ElPopover } from "element-plus";
+import FormBusiness from "../components/forms/FormBusiness.vue";
+import { Field, Form, ErrorMessage } from "vee-validate";
+
 
 const GlobalComponents = {
     install(app) {
+        app.component("form-auditor", FormAuditor);
+        app.component("form-business", FormBusiness);
+        app.component("form-delegate", FormDelegate);
         app.component("badge", Badge);
         app.component("base-alert", BaseAlert);
         app.component("base-button", BaseButton);
@@ -43,8 +49,10 @@ const GlobalComponents = {
         app.component("modal", Modal);
         app.component("stats-card", StatsCard);
         app.component("tab-pane", TabPane);
-        app.component("form-delegate", FormDelegate);
         app.component("tabs", Tabs);
+        app.component("field-validate", Field);
+        app.component("form-validate", Form);
+        app.component("error-message-validate", ErrorMessage);
         app.use(ElTooltip);
         app.use(ElPopover);
     },

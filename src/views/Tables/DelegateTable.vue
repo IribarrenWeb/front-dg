@@ -62,10 +62,10 @@
     </div>
 
     <Transition name="fade">
-      <modal v-model:show="this.modal" modalClasses="modal-xl">
+      <modal v-model:show="this.modal" modalClasses="modal-xl" v-if="this.modal">
         <template v-slot:header>
           <h4 class="modal-title" id="modal-title-default">
-            Registrar un nuevo delegado
+            {{disabled ? 'Ver un delegado' : 'Registrar un nuevo delegado'}}
           </h4>
         </template>
 
@@ -103,7 +103,6 @@
         modal: false,
         submit: false,
         loader: false,
-        selectedDelegate: "",
         delegate: {},
         disabled: false
       };
@@ -144,7 +143,7 @@
         this.loader = true;
 
         try {
-          const response = await service.view(id, 'includes[]=province.city');
+          const response = await service.view(id, 'includes[]=province.city&includes[]=documents.type');
           const data = response.data.data;
           this.delegate = {
             name: data.user.name,
@@ -152,9 +151,11 @@
             email: data.user.email,
             phone_number: data.phone_number,
             dni: data.dni,
-            province: data.province
+            province: data.province,
+            documents: data.documents
           }
 
+          console.log(this.delegate);
           this.disabled = true
           this.modal = true
         } catch (err) {

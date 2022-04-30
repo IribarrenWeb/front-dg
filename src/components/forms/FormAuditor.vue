@@ -4,30 +4,65 @@
       <div class="row">
         <base-input
           :disabled="disabled"
-          :modelValue="delegate.name"
-          :view="delegate.length >= 1"
+          :modelValue="auditor.name"
+          :view="auditor.length >= 1"
           :apiErrors="apiValidationErrors.name"
-          formClasses="col-md-6"
+          formClasses="col-md-4"
           name="name"
           label="Nombre"
           rules="required|alpha"
         />
         <base-input
           :disabled="disabled"
-          :modelValue="delegate.last_name"
-          :view="delegate.length >= 1"
+          :modelValue="auditor.last_name"
+          :view="auditor.length >= 1"
           :apiErrors="apiValidationErrors.last_name"
-          formClasses="col-md-6"
+          formClasses="col-md-4"
           name="last_name"
           label="Apellido"
           rules="required|alpha"
         />
+        <div class="col-md-4">
+          <div v-if="disabled">
+            <label for="">Delegado</label>
+            <div>
+              <a href="#" @click.prevent="" class="text-uppercase">
+                {{auditor.delegate.user.name + ' ' + auditor.delegate.user.last_name}}
+              </a>
+            </div>
+          </div>
+          <div v-else>
+            <label for=""> Delegado </label>
+            <Multiselect
+              :searchable="true"
+              v-model="delegate_id"
+              trackBy="name"
+              label="name"
+              :min-chars="2"
+              :delay="50"
+              valueProp="id"
+              :required="true"
+              :options="fetchItems"
+              :object="true"
+              @change="validSelect($event)"
+            >
+              <template v-slot:option="{ option }">
+                {{ option.name }} {{ option.last_name }} - {{ option.email }}
+              </template>
+            </Multiselect>
+            <span
+              class="text-danger invalid-feedback d-block"
+              v-if="apiValidationErrors.auditor_id"
+              >{{ apiValidationErrors.auditor_id[0] }}</span
+            >
+          </div>
+        </div>
       </div>
       <div class="row">
         <base-input
           :disabled="disabled"
-          :modelValue="delegate.phone_number"
-          :view="delegate.length >= 1"
+          :modelValue="auditor.phone_number"
+          :view="auditor.length >= 1"
           :apiErrors="apiValidationErrors.phone_number"
           formClasses="col-md-4"
           name="phone_number"
@@ -36,8 +71,8 @@
         />
         <base-input
           :disabled="disabled"
-          :modelValue="delegate.email"
-          :view="delegate.length >= 1"
+          :modelValue="auditor.email"
+          :view="auditor.length >= 1"
           :apiErrors="apiValidationErrors.email"
           formClasses="col-md-4"
           name="email"
@@ -46,8 +81,8 @@
         />
         <base-input
           :disabled="disabled"
-          :modelValue="delegate.dni"
-          :view="delegate.length >= 1"
+          :modelValue="auditor.dni"
+          :view="auditor.length >= 1"
           :apiErrors="apiValidationErrors.dni"
           formClasses="col-md-4"
           name="dni"
@@ -59,14 +94,14 @@
             <base-input
               formClasses="col-md-6"
               :view="true"
-              :modelValue="delegate.province.city.name"
+              :modelValue="auditor.province.city.name"
               :disabled="true"
               label="Ciudad"
             />
             <base-input
               formClasses="col-md-6"
               :view="true"
-              :modelValue="delegate.province.name"
+              :modelValue="auditor.province.name"
               label="Provincia"
               :disabled="true"
             />
@@ -114,7 +149,7 @@
         </div>
       </div>
       <div>
-        <hr>
+        <hr />
         <div class="row" v-if="!disabled">
           <base-input
             :apiErrors="apiValidationErrors.file_certification"
@@ -152,7 +187,7 @@
         <div class="row" v-else>
           <div
             class="col-md-6"
-            v-for="document in delegate.documents"
+            v-for="document in auditor.documents"
             :key="document.id"
           >
             <div class="row">
@@ -198,21 +233,20 @@
     <loader v-if="loader"></loader>
   </div>
 </template>
-
 <script>
-  import service from "../../store/services/delegate-service";
+  import Multiselect from "@vueform/multiselect";
+
+  import service from "../../store/services/auditors-service";
+  import adminService from "../../store/services/admin-service";
+  import _ from "lodash";
   import formMixin from "@/mixins/form-mixin";
   import utils from "@/mixins/utils-mixin";
-
   export default {
+    components: { Multiselect },
     mixins: [formMixin, utils],
-    name: "form-delegate",
+    name: "form-auditor",
     props: {
-      isSubmit: {
-        type: Boolean,
-        default: false,
-      },
-      delegate: {
+      auditor: {
         type: Object,
       },
       disabled: {
@@ -222,15 +256,26 @@
     data() {
       return {
         errors: {},
+
+        delegate_id: "",
       };
     },
     mounted() {
-      console.log(this.delegate);
       this.getCities();
     },
     methods: {
       async onSubmit(values, { resetForm }) {
-        console.log(values);
+        if (_.isEmpty(this.file_firm) || _.isEmpty(this.file_cer)) {
+          this.$swal(
+            "Documentos requeridos",
+            "Los documentos son requeridos",
+            "error"
+          );
+          return;
+        }
+        var file_firm = document.querySelector("#file_firm");
+        var file_cer = document.querySelector("#file_cer");
+
         let formData = new FormData();
 
         formData.append("name", values.name);
@@ -239,12 +284,13 @@
         formData.append("phone_number", values.phone_number);
         formData.append("dni", values.dni);
         formData.append("province_id", values.province_id);
-        formData.append("file_certification", values.file_cer[0]);
+        formData.append("delegate_id", this.delegate_id);
+        formData.append("file_certification", file_cer.files[0]);
         formData.append(
           "certification_date",
           new Date(values.date_cer).toLocaleDateString("en-US")
         );
-        formData.append("file_firm", values.file_firm[0]);
+        formData.append("file_firm", file_firm.files[0]);
         formData.append(
           "firm_date",
           new Date(values.date_firm).toLocaleDateString("en-US")
@@ -256,8 +302,8 @@
           const response = await service.store(formData);
           if (response.status == 201) {
             this.$swal(
-              "El delegado se ha creado",
-              "El delegado se ha creado con exito.",
+              "El auditor se ha creado",
+              "El auditor se ha creado con exito.",
               "success"
             ).then(() => {
               resetForm();
@@ -266,25 +312,41 @@
             });
           }
         } catch (err) {
-          if (err.response.status == 422) {
-            this.setApiValidation(err.response.data.errors);
-            console.log(this.apiValidationErrors);
-            this.$swal(
-              "Error en los datos",
-              err.response.data.message,
-              "error"
-            );
+          if (typeof err.response == "undefined") {
+            this.$swal("Error", "Ocurrio un error", "error");
+            console.log(err);
           } else {
-            this.$swal(
-              "Error en el servidor",
-              "Ocurrio un error en el servidor",
-              "error"
-            );
-            console.log(err.response);
+            if (err.response.status == 422) {
+              this.setApiValidation(err.response.data.errors);
+              console.log(this.apiValidationErrors);
+              this.$swal(
+                "Error en los datos",
+                err.response.data.message,
+                "error"
+              );
+            } else {
+              this.$swal(
+                "Error en el servidor",
+                "Ocurrio un error en el servidor",
+                "error"
+              );
+              console.log(err.response);
+            }
           }
         }
         this.loader = false;
       },
+      async fetchItems(search) {
+        if (_.isEmpty(search)) {
+          return {};
+        }
+        const response = await adminService.getUsers(
+          "name=" + search + "&role_id=2"
+        );
+        console.log(response.data.data);
+        return response.data.data;
+      },
     },
   };
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>
