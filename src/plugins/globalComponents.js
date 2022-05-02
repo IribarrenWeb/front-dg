@@ -21,14 +21,12 @@ import FormAuditor from "../components/forms/FormAuditor.vue";
 import BaseSelect from "../components/BaseSelect.vue";
 import Loader from "../components/Loader.vue";
 import { ElTooltip, ElPopover } from "element-plus";
-import FormBusiness from "../components/forms/FormBusiness.vue";
 import { Field, Form, ErrorMessage } from "vee-validate";
 
 
 const GlobalComponents = {
     install(app) {
         app.component("form-auditor", FormAuditor);
-        app.component("form-business", FormBusiness);
         app.component("form-delegate", FormDelegate);
         app.component("badge", Badge);
         app.component("base-alert", BaseAlert);

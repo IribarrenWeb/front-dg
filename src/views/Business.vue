@@ -1,41 +1,24 @@
 <template>
   <div>
-    <base-header type="gradient-blue" class="py-5">
-      <div class="row">
-      </div>
+    <base-header type="gradient-success" class="pb-6 pb-8 pt-5 pt-md-8">
+      <!-- Card stats -->
     </base-header>
 
-    <div class="container-fluid mt-5">
+    <div class="container-fluid mt--7">
       <!--Tables-->
-      <div class="mt-5">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <router-link
-              to="/business/all"
-              class="nav-link"
-              active-class="active"
-            >
-              Empresas
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/users/auditors" class="nav-link" active-class="active">
-              Auditores
-            </router-link>
-          </li>
-        </ul>
-        
-        <router-view class="mt-5"></router-view>
+      <div class="card">
+        <business-table></business-table>
       </div>
       <!--End tables-->
     </div>
   </div>
 </template>
 <script>
+import BusinessTable from './Tables/BusinessTable.vue';
   // Charts
 
   export default {
-    components: {},
+    components: {BusinessTable},
     data() {
       return {
         users: {},

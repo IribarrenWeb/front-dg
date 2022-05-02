@@ -2,9 +2,9 @@
   <base-nav class="navbar-top navbar-dark" id="navbar-main" :show-toggle-button="false" expand>
     <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
       <div class="form-group mb-0">
-        <base-input placeholder="Search" class="input-group-alternative" alternative=""
+        <!-- <base-input placeholder="Search" class="input-group-alternative" alternative=""
           addon-right-icon="fas fa-search">
-        </base-input>
+        </base-input> -->
       </div>
     </form>
     <ul class="navbar-nav align-items-center d-none d-md-flex">
@@ -21,29 +21,17 @@
             </div>
           </template>
           <div class="dropdown-header noti-title">
-            <h6 class="text-overflow m-0">Welcome!</h6>
+            <h6 class="text-overflow m-0">Bienvenido!</h6>
           </div>
           <router-link to="/profile" class="dropdown-item">
             <i class="ni ni-single-02"></i>
-            <span>My profile</span>
-          </router-link>
-          <router-link to="/profile" class="dropdown-item">
-            <i class="ni ni-settings-gear-65"></i>
-            <span>Settings</span>
-          </router-link>
-          <router-link to="/profile" class="dropdown-item">
-            <i class="ni ni-calendar-grid-58"></i>
-            <span>Activity</span>
-          </router-link>
-          <router-link to="/profile" class="dropdown-item">
-            <i class="ni ni-support-16"></i>
-            <span>Support</span>
+            <span>Mi perfil</span>
           </router-link>
           <div class="dropdown-divider"></div>
-          <router-link to="#" @click="logout()" class="dropdown-item">
+          <a @click.prevent="logout()" class="dropdown-item">
             <i class="ni ni-user-run"></i>
             <span>Logout</span>
-          </router-link>
+          </a>
         </base-dropdown>
       </li>
     </ul>

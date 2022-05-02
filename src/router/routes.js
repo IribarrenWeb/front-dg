@@ -8,7 +8,6 @@ import Profile from "../views/UserProfile.vue";
 import Tables from "../views/Tables.vue";
 import Users from "../views/Users.vue";
 import AuditorTable from "../views/Tables/AuditorsTable.vue";
-import BusinessTable from "../views/Tables/BusinessTable.vue";
 import Business from "../views/Business.vue";
 import DelegateTable from "../views/Tables/DelegateTable.vue";
 // import NotFound from "../pages/NotFoundPage.vue";
@@ -36,13 +35,13 @@ const routes = [{
                 name: "business",
                 components: { default: Business },
                 meta: { middleware: auth },
-                redirect: { name: "business.all" },
-                children: [{
-                    path: "/business/all",
-                    name: "business.all",
-                    components: { default: BusinessTable },
-                    meta: { middleware: auth },
-                }, ],
+                // redirect: { name: "business.all" },
+                // children: [{
+                //     path: "/business/all",
+                //     name: "business.all",
+                //     components: { default: BusinessTable },
+                //     meta: { middleware: auth },
+                // }, ],
             },
             {
                 path: "/maps",

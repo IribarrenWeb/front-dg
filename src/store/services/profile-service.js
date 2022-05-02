@@ -12,7 +12,6 @@ function get() {
 
 
     return axios.get(`${url}/me`, options).then((response) => {
-        console.log(response);
         return {
             list: response.data,
             meta: response.data.meta,

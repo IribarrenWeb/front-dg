@@ -51,6 +51,7 @@
             @update:modelValue="updateValue($event)"
             :rules="rules"
             class="form-control"
+            :class="inputClasses"
             :label="label"
             :type="type"
             :value="modelValue"

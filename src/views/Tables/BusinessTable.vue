@@ -6,18 +6,16 @@
           <h3 class="mb-0">Empresas</h3>
         </div>
         <div class="col text-right">
-          <a href="#" class="btn btn-sm btn-primary">Agregar</a>
+          <a
+            href="#"
+            @click.prevent="handleAdd()"
+            class="btn btn-sm btn-primary"
+            >Agregar</a
+          >
         </div>
       </div>
     </div>
-    <div>
-      asdasdasd
-      <form-business/>
-      <!-- <Form>
-        <Field name="name"></Field>
-        <ErrorMessage></ErrorMessage>
-      </Form> -->
-    </div>
+    <div></div>
     <div class="table-responsive">
       <base-table thead-classes="thead-light" :data="tableData">
         <template v-slot:columns>
@@ -46,23 +44,41 @@
           </td>
         </template>
       </base-table>
+
+      <modal v-model:show="this.modal" modalClasses="modal-xl" bodyClasses="pt-0" modalContentClasses="overflow-auto max-h-modal">
+        <template v-slot:header>
+          <h4 class="modal-title text-center" id="modal-title-default">
+            Agregar una empresa
+          </h4>
+        </template>
+        <form-business @close="this.modal=false"/>
+      </modal>
     </div>
-    <!-- <Form>
-      <base-input></base-input>
-    </Form> -->
   </div>
 </template>
 <script>
-// import {Form, Field, ErrorMessage} from 'vee-validate';
-
+import FormBusiness from '../../components/forms/Business/FormBusiness.vue';
   export default {
-    // comments: {Form, Field, ErrorMessage},
-    name: "users-table",
+	components: { FormBusiness },
+    name: "business-table",
     data() {
       return {
         tableData: {},
+        modal: false,
       };
+    },
+    methods: {
+      handleAdd() {
+        this.modal = true;
+      },
+      handleView(id) {
+        console.log(id);
+      },
     },
   };
 </script>
-<style></style>
+<style>
+  .max-h-modal{
+    max-height: 850px;
+  }
+</style>
