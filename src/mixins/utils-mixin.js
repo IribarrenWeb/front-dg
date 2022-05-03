@@ -8,7 +8,11 @@ export default {
             cities: {},
             provinces: {},
             loader: false,
+            permits: {},
         };
+    },
+    mounted() {
+        this.getCities();
     },
     methods: {
         /* extract API server validation errors and assigns them to local mixin data */
@@ -48,10 +52,26 @@ export default {
             }
             this.loader = false;
         },
-        async getProvinces($evnt) {
+        async getPermits() {
             this.loader = true;
             try {
-                const response = await dataService.getProvinces("city_id=" + $evnt);
+                const response = await dataService.getPermits();
+                this.permits = response.data.data;
+            } catch (err) {
+                this.$swal("Error", "Error al cargar los permisos", "error");
+                console.log(err);
+            }
+            this.loader = false;
+        },
+        async getProvinces($evnt = null) {
+            this.loader = true;
+            let response = {};
+            try {
+                if ($evnt == null) {
+                    response = await dataService.getProvinces();
+                } else {
+                    response = await dataService.getProvinces("city_id=" + $evnt);
+                }
                 this.provinces = response.data.data;
             } catch (error) {
                 this.$swal("Error", "Error al cargar las provincias", "error");
@@ -59,7 +79,23 @@ export default {
             this.loader = false;
         },
         formatDate(date) {
-            return new Date(date).toLocaleDateString("en-GB");
+            return new Date(date).toLocaleDateString("en-US");
+        },
+        async toBase64(file) {
+            return await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+            });
+        },
+        async b64(file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                console.log(reader.result);
+                // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
+            };
+            reader.readAsDataURL(file);
         },
     },
 };

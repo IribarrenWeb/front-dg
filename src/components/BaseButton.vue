@@ -5,7 +5,7 @@
     @click="handleClick"
     class="btn"
     :class="classes"
-    :disabled="loading"
+    :disabled="disabled"
   >
     <span
       class="btn-inner--icon"
@@ -99,6 +99,10 @@ export default {
       default: 'Cargando...',
       description: "Text button when loading",
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     classes() {

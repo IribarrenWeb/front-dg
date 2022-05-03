@@ -17,6 +17,20 @@ function getIndex(params) {
     });
 }
 
+function store(payload) {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.post(url + baseApi, payload, options).then((response) => {
+        return response
+    });
+}
+
 export default {
-    getIndex
+    getIndex,
+    store
 }

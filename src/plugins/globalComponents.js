@@ -21,7 +21,7 @@ import FormAuditor from "../components/forms/FormAuditor.vue";
 import BaseSelect from "../components/BaseSelect.vue";
 import Loader from "../components/Loader.vue";
 import { ElTooltip, ElPopover } from "element-plus";
-import { Field, Form, ErrorMessage } from "vee-validate";
+import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
 
 
 const GlobalComponents = {
@@ -50,6 +50,7 @@ const GlobalComponents = {
         app.component("tabs", Tabs);
         app.component("field-validate", Field);
         app.component("form-validate", Form);
+        app.component("field-array-validate", FieldArray);
         app.component("error-message-validate", ErrorMessage);
         app.use(ElTooltip);
         app.use(ElPopover);

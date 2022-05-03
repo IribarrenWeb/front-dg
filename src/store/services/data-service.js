@@ -16,7 +16,20 @@ function getCities() {
     });
 }
 
-function getProvinces(params) {
+function getPermits() {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/adr-permits', options).then((response) => {
+        return response
+    });
+}
+
+function getProvinces(params = '') {
     const token = localStorage.getItem(tokenName);
     const options = {
         headers: {
@@ -31,5 +44,6 @@ function getProvinces(params) {
 
 export default {
     getCities,
-    getProvinces
+    getProvinces,
+    getPermits
 }

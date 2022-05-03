@@ -79,7 +79,7 @@
             :label="label"
             :type="type"
           />
-          <error-message-validate class="text-danger" :name="name" />
+          <error-message-validate class="text-danger invalid-feedback d-block" :name="name" />
         </div>
       </slot>
       <div

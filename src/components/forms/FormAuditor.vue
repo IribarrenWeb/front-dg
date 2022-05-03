@@ -44,7 +44,6 @@
               :required="true"
               :options="fetchItems"
               :object="true"
-              @change="validSelect($event)"
             >
               <template v-slot:option="{ option }">
                 {{ option.name }} {{ option.last_name }} - {{ option.email }}
@@ -261,36 +260,24 @@
       };
     },
     mounted() {
-      this.getCities();
+      // this.getCities();
     },
     methods: {
       async onSubmit(values, { resetForm }) {
-        if (_.isEmpty(this.file_firm) || _.isEmpty(this.file_cer)) {
-          this.$swal(
-            "Documentos requeridos",
-            "Los documentos son requeridos",
-            "error"
-          );
-          return;
-        }
-        var file_firm = document.querySelector("#file_firm");
-        var file_cer = document.querySelector("#file_cer");
-
         let formData = new FormData();
-
         formData.append("name", values.name);
         formData.append("last_name", values.last_name);
         formData.append("email", values.email);
         formData.append("phone_number", values.phone_number);
         formData.append("dni", values.dni);
         formData.append("province_id", values.province_id);
-        formData.append("delegate_id", this.delegate_id);
-        formData.append("file_certification", file_cer.files[0]);
+        formData.append("delegate_id", this.delegate_id.delegate.id);
+        formData.append("file_certification", values.file_cer[0]);
         formData.append(
           "certification_date",
           new Date(values.date_cer).toLocaleDateString("en-US")
         );
-        formData.append("file_firm", file_firm.files[0]);
+        formData.append("file_firm", values.file_firm[0]);
         formData.append(
           "firm_date",
           new Date(values.date_firm).toLocaleDateString("en-US")
@@ -341,9 +328,8 @@
           return {};
         }
         const response = await adminService.getUsers(
-          "name=" + search + "&role_id=2"
+          "name=" + search + "&role_id=2&includes[]=delegate"
         );
-        console.log(response.data.data);
         return response.data.data;
       },
     },
