@@ -2,7 +2,7 @@
   <div>
     <base-header class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
       <!-- Mask -->
-      <span class="mask bg-gradient-blue opacity-8"></span>
+      <span class="mask bg-default opacity-8"></span>
     </base-header>
 
     <div class="container-fluid mt--7">
@@ -16,7 +16,7 @@
                     <h3 class="mb-0">Mi cuenta</h3>
                   </div>
                   <div class="col-4 text-right">
-                    <a href="#!" class="btn btn-sm btn-primary"
+                    <a href="#!" class="btn btn-sm btn-default"
                       >Configuracion</a
                     >
                   </div>
@@ -157,6 +157,6 @@
 </script>
 <style>
   .bg-gradient-blue {
-    background: linear-gradient(87deg, #2d41ce 0, #00ffe9 100%) !important;
+    background: linear-gradient(87deg, #2d41ce 0, #0206ff 100%) !important;
   }
 </style>

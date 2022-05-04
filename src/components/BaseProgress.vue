@@ -62,7 +62,7 @@ export default {
     type: {
       type: String,
       default: "default",
-      description: "Progress type (e.g danger, primary etc)",
+      description: "Progress type (e.g danger, default etc)",
     },
     value: {
       type: Number,

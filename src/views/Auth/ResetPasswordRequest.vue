@@ -12,7 +12,7 @@
             </base-input>
 
             <div class="text-center">
-              <base-button type="primary" :loading="loading" loading_text="Enviando..." class="my-4"
+              <base-button type="default" :loading="loading" loading_text="Enviando..." class="my-4"
                 @clicked="handleReset()">
                 <div class="spinner-border text-light" role="status" v-if="loading">
                   <span class="visually-hidden">Enviado email...</span>

@@ -154,7 +154,7 @@
                 }}</base-input>
                 <button
                   type="button"
-                  class="btn btn-primary btn-sm"
+                  class="btn btn-default btn-sm"
                   @click="this.model.file_document = null"
                 >
                   Cambiar
@@ -281,7 +281,7 @@
                   }}</base-input>
                   <button
                     type="button"
-                    class="btn btn-primary btn-sm"
+                    class="btn btn-default btn-sm"
                     @click="installations[id].file_document = null"
                   >
                     Cambiar
@@ -327,7 +327,7 @@
             :key="installation.key"
           >
             <div class="col-12 border-bottom border-light mb-2">
-              <h3 class="badge rounded-pill bg-primary text-white h3">
+              <h3 class="badge rounded-pill bg-default text-white h3">
                 Responsable de instalacion #{{ id + 1 }}
               </h3>
             </div>
@@ -382,7 +382,7 @@
                 }}</base-input>
                 <button
                   type="button"
-                  class="btn btn-primary btn-sm"
+                  class="btn btn-default btn-sm"
                   @click="installations[id].responsible.file_certification = null"
                 >
                   Cambiar
@@ -450,7 +450,7 @@
                     }}</base-input>
                     <button
                       type="button"
-                      class="btn btn-primary btn-sm"
+                      class="btn btn-default btn-sm"
                       @click="installations[id].responsible.driver_document = null"
                     >
                       Cambiar
@@ -495,17 +495,17 @@
       </template>
 
       <div class="mt-4 float-md-right">
-        <base-button type="primary" @click="prevStep()" v-if="step !== 1"
+        <base-button type="default" @click="prevStep()" v-if="step !== 1"
           >Anterior</base-button
         >
-        <base-button type="primary" nativeType="submit" v-if="step !== 4"
+        <base-button type="default" nativeType="submit" v-if="step !== 4"
           >Siguiente</base-button
         >
-        <base-button type="primary" nativeType="submit" v-if="step === 4"
+        <base-button type="default" nativeType="submit" v-if="step === 4"
           >Enviar</base-button
         >
         <base-button
-          type="primary"
+          type="default"
           :outline="true"
           class="ml-auto"
           @click="handleClose()"

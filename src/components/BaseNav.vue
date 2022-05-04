@@ -48,7 +48,7 @@ export default {
     type: {
       type: String,
       default: "",
-      description: "Navbar type (e.g default, primary etc)",
+      description: "Navbar type (e.g default, default etc)",
     },
     title: {
       type: String,

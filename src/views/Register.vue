@@ -69,7 +69,7 @@
               </div>
             </div>
             <div class="text-center">
-              <base-button type="primary" class="my-4"
+              <base-button type="default" class="my-4"
                 >Create account</base-button
               >
             </div>

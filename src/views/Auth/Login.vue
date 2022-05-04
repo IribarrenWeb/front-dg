@@ -28,7 +28,7 @@
               <span class="text-muted">Remember me</span>
             </base-checkbox>
             <div class="text-center">
-              <base-button type="primary" class="my-4" @click="handleSubmit()"
+              <base-button type="default" class="my-4" @click="handleSubmit()"
                 >Sign in</base-button
               >
             </div>

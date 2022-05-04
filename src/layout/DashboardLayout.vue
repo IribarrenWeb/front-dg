@@ -9,7 +9,7 @@
         <sidebar-item
           :link="{
             name: 'Dashboard',
-            icon: 'ni ni-tv-2 text-blue',
+            icon: 'ni ni-tv-2 text-default',
             path: '/dashboard',
           }"
         />
@@ -17,28 +17,28 @@
         <sidebar-item
           :link="{
             name: 'Empresas',
-            icon: 'ni ni-planet text-blue',
+            icon: 'ni ni-planet text-default',
             path: '/business',
           }"
         />
         <sidebar-item
           :link="{
             name: 'Informes',
-            icon: 'ni ni-pin-3 text-blue',
+            icon: 'ni ni-pin-3 text-default',
             path: '/maps',
           }"
         />
         <sidebar-item
           :link="{
             name: 'Usuarios',
-            icon: 'ni ni-single-02 text-blue',
+            icon: 'ni ni-single-02 text-default',
             path: '/users',
           }"
         />
         <sidebar-item
           :link="{
             name: 'Auditorias',
-            icon: 'ni ni-bullet-list-67 text-blue',
+            icon: 'ni ni-bullet-list-67 text-default',
             path: '/tables',
           }"
         />
@@ -77,7 +77,7 @@
     },
     data() {
       return {
-        sidebarBackground: "orange", //vue|blue|orange|green|red|primary,
+        sidebarBackground: "orange", //vue|blue|orange|green|red|default,
         me: {},
       };
     },

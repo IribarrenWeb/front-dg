@@ -40,7 +40,7 @@ export default {
     type: {
       type: String,
       default: "default",
-      description: "Badge type (primary|info|danger|default|warning|success)",
+      description: "Badge type (default|info|danger|default|warning|success)",
     },
   },
 };

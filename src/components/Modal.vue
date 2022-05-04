@@ -78,7 +78,7 @@ export default {
     },
     gradient: {
       type: String,
-      description: "Modal gradient type (danger, primary etc)",
+      description: "Modal gradient type (danger, default etc)",
     },
     headerClasses: {
       type: [Object, String],

@@ -57,6 +57,7 @@ export default {
             try {
                 const response = await dataService.getPermits();
                 this.permits = response.data.data;
+                return this.permits
             } catch (err) {
                 this.$swal("Error", "Error al cargar los permisos", "error");
                 console.log(err);
@@ -88,14 +89,6 @@ export default {
                 reader.onload = () => resolve(reader.result);
                 reader.onerror = (error) => reject(error);
             });
-        },
-        async b64(file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                console.log(reader.result);
-                // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
-            };
-            reader.readAsDataURL(file);
         },
     },
 };

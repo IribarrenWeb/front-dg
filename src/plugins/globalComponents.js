@@ -19,6 +19,7 @@ import Tabs from "../components/Tabs/Tabs";
 import FormDelegate from "../components/forms/FormDelegate.vue";
 import FormAuditor from "../components/forms/FormAuditor.vue";
 import BaseSelect from "../components/BaseSelect.vue";
+import BaseField from "../components/BaseField.vue";
 import Loader from "../components/Loader.vue";
 import { ElTooltip, ElPopover } from "element-plus";
 import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
@@ -41,6 +42,7 @@ const GlobalComponents = {
         app.component("base-switch", BaseSwitch);
         app.component("base-radio", BaseRadio);
         app.component("base-table", BaseTable);
+        app.component("base-field", BaseField);
         app.component("base-select", BaseSelect);
         app.component("card", Card);
         app.component("loader", Loader);

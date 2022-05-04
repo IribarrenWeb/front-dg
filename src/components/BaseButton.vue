@@ -42,7 +42,7 @@ export default {
     type: {
       type: String,
       default: "default",
-      description: "Button type (e,g primary, danger etc)",
+      description: "Button type (e,g default, danger etc)",
     },
     size: {
       type: String,
@@ -52,7 +52,7 @@ export default {
     textColor: {
       type: String,
       default: "",
-      description: "Button text color (e.g primary, danger etc)",
+      description: "Button text color (e.g default, danger etc)",
     },
     nativeType: {
       type: String,

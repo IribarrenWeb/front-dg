@@ -9,7 +9,7 @@
           <a
             href="#"
             @click.prevent="handleAdd()"
-            class="btn btn-sm btn-primary"
+            class="btn btn-sm btn-default"
             >Agregar</a
           >
         </div>
@@ -47,7 +47,7 @@
             <a
               href="#"
               @click.prevent="handleView(row.item.id)"
-              class="btn btn-sm btn-primary"
+              class="btn btn-sm btn-default"
               >Ver</a
             >
           </td>

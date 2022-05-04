@@ -9,6 +9,7 @@ import Tables from "../views/Tables.vue";
 import Users from "../views/Users.vue";
 import AuditorTable from "../views/Tables/AuditorsTable.vue";
 import Business from "../views/Business.vue";
+import BusinessDetail from "../views/BusinessDetail.vue";
 import DelegateTable from "../views/Tables/DelegateTable.vue";
 // import NotFound from "../pages/NotFoundPage.vue";
 
@@ -28,6 +29,12 @@ const routes = [{
                 path: "/dashboard",
                 name: "dashboard",
                 components: { default: Dashboard },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/business/:id",
+                name: "business.show",
+                components: { default: BusinessDetail },
                 meta: { middleware: auth },
             },
             {

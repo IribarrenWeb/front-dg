@@ -64,7 +64,7 @@ export default {
       validator: (value) => {
         let acceptedValues = [
           "",
-          "primary",
+          "default",
           "info",
           "success",
           "warning",
@@ -72,7 +72,7 @@ export default {
         ];
         return acceptedValues.indexOf(value) !== -1;
       },
-      description: "Tabs type (primary|info|danger|default|warning|success)",
+      description: "Tabs type (default|info|danger|default|warning|success)",
     },
     pills: {
       type: Boolean,

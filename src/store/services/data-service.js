@@ -29,6 +29,32 @@ function getPermits() {
     });
 }
 
+function getEquipments() {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/equipments', options).then((response) => {
+        return response
+    });
+}
+
+function getOperations() {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/operation-types', options).then((response) => {
+        return response
+    });
+}
+
 function getProvinces(params = '') {
     const token = localStorage.getItem(tokenName);
     const options = {
@@ -45,5 +71,7 @@ function getProvinces(params = '') {
 export default {
     getCities,
     getProvinces,
-    getPermits
+    getPermits,
+    getEquipments,
+    getOperations
 }

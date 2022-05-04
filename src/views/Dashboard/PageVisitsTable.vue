@@ -6,7 +6,7 @@
           <h3 class="mb-0">Usuarios</h3>
         </div>
         <div class="col text-right">
-          <a href="#" class="btn btn-sm btn-primary">Agregar</a>
+          <a href="#" class="btn btn-sm btn-default">Agregar</a>
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@
             {{ row.item.phone_number }}
           </td>
           <td>
-            <a href="#" class="btn btn-sm btn-primary">Ver</a>
+            <a href="#" class="btn btn-sm btn-default">Ver</a>
           </td>
         </template>
       </base-table>

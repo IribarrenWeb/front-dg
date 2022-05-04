@@ -179,7 +179,7 @@
         </div>
       </div>
       <base-button
-        type="primary"
+        type="default"
         nativeType="submit"
         text="Enviar"
         v-if="!disabled"

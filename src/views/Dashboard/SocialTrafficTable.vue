@@ -6,7 +6,7 @@
           <h3 class="mb-0">Social traffic</h3>
         </div>
         <div class="col text-right">
-          <base-button size="sm" type="primary">See all</base-button>
+          <base-button size="sm" type="default">See all</base-button>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@ export default {
           name: "Google",
           visitors: "4,807",
           progress: 80,
-          progressType: "gradient-primary",
+          progressType: "gradient-default",
         },
         {
           name: "Instagram",

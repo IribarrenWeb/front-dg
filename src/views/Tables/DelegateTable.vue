@@ -8,7 +8,7 @@
         <div class="col text-right">
           <a
             href="#"
-            class="btn btn-sm btn-primary"
+            class="btn btn-sm btn-default"
             @click.prevent="handleAdd()"
             >Agregar</a
           >
@@ -42,7 +42,7 @@
           <td>
             <a
               href="#"
-              class="btn btn-sm btn-primary"
+              class="btn btn-sm btn-default"
               @click.prevent="handleView(row.item.id)"
               >Ver</a
             >
@@ -79,7 +79,7 @@
         </form-delegate>
 
         <template v-slot:footer>
-          <!-- <base-button type="primary" @click="submit = true">Save changes</base-button>
+          <!-- <base-button type="default" @click="submit = true">Save changes</base-button>
           <base-button type="link" class="ml-auto" @click="this.modal = false"
             >Close
           </base-button> -->

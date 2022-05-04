@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header type="gradient-blue" class="py-5">
+    <base-header type="default" class="py-5">
       <div class="row">
       </div>
     </base-header>
