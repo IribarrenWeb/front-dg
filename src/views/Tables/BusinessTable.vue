@@ -43,6 +43,7 @@
           </td>
           <td>
             <router-link :to="`/business/${row.item.id}`" class="btn btn-sm btn-default">Ver</router-link>
+            <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
           </td>
         </template>
       </base-table>
@@ -87,7 +88,7 @@
       };
     },
     mounted() {
-      this.getBusiness()
+      this.getBusiness(this.page)
     },
     methods: {
       handleAdd() {
@@ -96,33 +97,40 @@
       handleView(id) {
         this.$router.push('/business/' + id)
       },
-      async getBusiness() {
+      async getBusiness(page) {
         this.loader = true;
         try {
           const response = await service.getIndex(
-            `page=${this.page}&includes[]=user&includes[]=installations`
-          );
-          this.tableData = response.data.data;
-          this.metaData = response.data.meta.page;
-        } catch (err) {
-          console.log(err);
-        }
-        this.loader = false;
-      },
-      async handleChange(event) {
-        this.loader = true;
-        try {
-          const response = await service.getIndex(
-            `page=${event}&includes[]=user&includes[]=installations`
+            `page=${page}&includes[]=user&includes[]=installations`
           );
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
           this.page = this.metaData.currentPage;
+          this.loader = false;
         } catch (err) {
-          this.$swal("Error", "No se pudieron cargar los datos de la tabla");
-          console.log(err);
+          this.$swal('Error', 'Error al cargar el listado', 'error')
+          this.loader = false;
         }
-        this.loader = false;
+      },
+      async handleChange(event) {
+        if (this.page == event) {
+          return 
+        }
+        this.getBusiness(event)
+      },
+       async destroy(id) {
+        this.loader = true
+        try {
+          const response = await service.destroy(id)
+          console.log(response);
+          this.$toast.success('Registro eliminado')
+          this.getBusiness();
+          this.loader = false
+        } catch (err) {
+          console.log(err.response);
+          this.loader = false 
+          this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
+        }
       },
     },
   };

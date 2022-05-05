@@ -57,9 +57,23 @@ function view(id, params = "") {
     });
 }
 
+function destroy(id) {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.delete(`${url}${baseApi}/${id}`, options).then((response) => {
+        return response
+    });
+}
+
 export default {
     getIndex,
     store,
     view,
-    getByBusiness
+    getByBusiness,
+    destroy
 }

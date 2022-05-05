@@ -39,7 +39,7 @@
           :link="{
             name: 'Auditorias',
             icon: 'ni ni-bullet-list-67 text-default',
-            path: '/tables',
+            path: '/audits',
           }"
         />
       </template>

@@ -17,6 +17,7 @@ import StatsCard from "../components/StatsCard";
 import TabPane from "../components/Tabs/TabPane";
 import Tabs from "../components/Tabs/Tabs";
 import FormDelegate from "../components/forms/FormDelegate.vue";
+import FormMaterial from "../components/forms/FormMaterial.vue";
 import FormAuditor from "../components/forms/FormAuditor.vue";
 import BaseSelect from "../components/BaseSelect.vue";
 import BaseField from "../components/BaseField.vue";
@@ -29,6 +30,7 @@ const GlobalComponents = {
     install(app) {
         app.component("form-auditor", FormAuditor);
         app.component("form-delegate", FormDelegate);
+        app.component("form-material", FormMaterial);
         app.component("badge", Badge);
         app.component("base-alert", BaseAlert);
         app.component("base-button", BaseButton);

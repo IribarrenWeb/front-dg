@@ -22,7 +22,7 @@
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Email</th>
-          <th>Telefono</th>
+          <th>Móvil</th>
           <th>Delegado</th>
           <th>Acciones</th>
         </template>

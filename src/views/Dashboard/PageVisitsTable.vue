@@ -17,7 +17,7 @@
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Email</th>
-          <th>Telefono</th>
+          <th>Móvil</th>
           <th>Acciones</th>
         </template>
 

@@ -2,9 +2,9 @@ import { axios } from '@/axios';
 
 const url = process.env.VUE_APP_API_BASE_URL;
 const tokenName = process.env.VUE_APP_USER_TOKEN_NAME
-const baseApi = "/business";
+const baseApi = "/vehicles";
 
-function getIndex(params) {
+function getIndex(page = 1, params) {
     const token = localStorage.getItem(tokenName);
     const options = {
         headers: {
@@ -12,7 +12,7 @@ function getIndex(params) {
         },
     };
 
-    return axios.get(url + baseApi + '?' + params, options).then((response) => {
+    return axios.get(`${url}${baseApi}?page=${page}&${params}`, options).then((response) => {
         return response
     });
 }
@@ -25,20 +25,7 @@ function store(payload) {
         },
     };
 
-    return axios.post(url + baseApi, payload, options).then((response) => {
-        return response
-    });
-}
-
-function show(id) {
-    const token = localStorage.getItem(tokenName);
-    const options = {
-        headers: {
-            Authorization: "Bearer " + token,
-        },
-    };
-
-    return axios.get(url + baseApi + '/' + id, options).then((response) => {
+    return axios.post(`${url}${baseApi}`, payload, options).then((response) => {
         return response
     });
 }
@@ -59,6 +46,5 @@ function destroy(id) {
 export default {
     getIndex,
     store,
-    show,
     destroy
 }

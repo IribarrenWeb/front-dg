@@ -68,10 +68,66 @@ function getProvinces(params = '') {
     });
 }
 
+function getAdrMaterials(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/adr-materials' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
+function getDeposits(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/deposit-type' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
+function getVehicleTypes(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/vehicle-types' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
+function getAdrDesignations(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/adr-designations' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
 export default {
     getCities,
     getProvinces,
     getPermits,
     getEquipments,
-    getOperations
+    getOperations,
+    getAdrMaterials,
+    getDeposits,
+    getAdrDesignations,
+    getVehicleTypes
 }

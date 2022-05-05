@@ -31,3 +31,8 @@
 .bg-default {
     background-color: #172B4D;
 }
+
+.checked {
+    color: #fff;
+    background-color: #2f7500;
+}

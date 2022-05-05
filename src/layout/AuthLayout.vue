@@ -55,7 +55,7 @@
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6">
-              <img src="http://dgsoftware.test/img/dg_logo.png" width="200" />
+              <img :src="baseUrl + 'img/dg_logo.png'" width="100" />
               <h1 class="text-white">DG SOFTWARE APP!</h1>
               <p class="text-lead text-white">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -140,6 +140,7 @@
       return {
         year: new Date().getFullYear(),
         showMenu: false,
+        baseUrl: process.env.VUE_APP_API_URL
       };
     },
   };

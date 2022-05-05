@@ -6,7 +6,7 @@
         <form-validate @submit="onSubmit" v-slot="{ resetForm, meta }">
             <ul class="nav nav-pills mb-md-4 justify-content-center">
                 <li class="nav-item" v-for="step in steps" :key="step.key">
-                    <a class="nav-link p-2" :class="[{'active':step.valid||currentStep == step.number},{'disabled':!step.valid && currentStep != step.number}]" href="#" @click.prevent="meta.valid ? currentStep = step.number : ''">
+                    <a class="nav-link p-2" :class="[{'active': currentStep == step.number},{'disabled':!step.valid && currentStep != step.number}]" href="#" @click.prevent="meta.valid ? currentStep = step.number : ''">
                         <i class="fa fa-check" aria-hidden="true" v-if="step.valid"></i> 
                         {{step.title}}
                     </a>
@@ -16,22 +16,22 @@
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-4">
                         <base-field :apiErrors="apiValidationErrors" name="name" label="Nombre de instalacion">
-                            <field-validate type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
                         <base-field :apiErrors="apiValidationErrors" name="address" label="Direccion">
-                            <field-validate type="text" class="form-control" name="address" rules="required" label="direccion" v-model="model.address"/>
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="address" rules="required" label="direccion" v-model="model.address"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
                         <base-field :apiErrors="apiValidationErrors" name="auditable" label="Auditor">
                             <div v-if="model.auditable != null">
                                 <span class="mr-md-4 text-uppercase">{{model.auditable.user.name}} {{model.auditable.user.last_name}}</span>
-                                <base-button @click="model.auditable = null" size="sm" type="default" :outline="true">Cambiar</base-button>
+                                <base-button @click="model.auditable = null" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
                             </div>
                             <div v-else>
-                                <field-validate name="auditable" label="Auditor" rules="required" v-slot="{ field }" v-model="model.auditable">
+                                <field-validate :disabled="isSaved" name="auditable" label="Auditor" rules="required" v-slot="{ field }" v-model="model.auditable">
                                     <Multiselect
                                         :searchable="true"
                                         v-bind="field"
@@ -41,6 +41,7 @@
                                         :options="fetchItems"
                                         ref="multiselect"
                                         @select="auditable = $event"
+                                        :disabled="isSaved"
                                     >
                                     </Multiselect>
                                 </field-validate>
@@ -49,7 +50,7 @@
                     </div>
                     <div class="col-md-6">
                         <base-field :apiErrors="apiValidationErrors" name="province_id" label="Provincia">
-                            <field-validate class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
+                            <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
                                 <option value="" selected>Selecciona una provincia</option>
                                 <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
                             </field-validate>
@@ -59,9 +60,9 @@
                         <base-field :apiErrors="apiValidationErrors" name="file_document" label="Documentacion">
                             <div v-if="model.file_document.file.length >= 1">
                                 <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
-                                <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                                <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
                             </div>
-                            <field-validate v-show="!model.file_document.file.length >= 1" class="form-control" type="file" name="file_document" rules="required|ext:pdf" :validateOnInput="true" label="documentacion" v-model="model.file_document.file"/>
+                            <field-validate :disabled="isSaved" v-show="!model.file_document.file.length >= 1" class="form-control" type="file" name="file_document" rules="required|ext:pdf" :validateOnInput="true" label="documentacion" v-model="model.file_document.file"/>
                         </base-field>
                     </div>
                 </div>
@@ -72,14 +73,16 @@
                     <div class="row border rounded border-light px-4 py-2">
                         <div class="col-md-12">
                             <base-field :apiErrors="apiValidationErrors" name="operations" label="Tipos de operaciones">
-                                <div v-for="operation in operations" :key="operation.key">
-                                    <field-validate 
+                                <div v-for="operation in operations" :key="operation.key" class="form-check">
+                                    <field-validate :disabled="isSaved" 
                                         type="checkbox" 
-                                        name="operations" 
+                                        name="operations"
+                                        class="form-check-input" 
                                         :value="operation.value"
+                                        v-model="model.operation_types_ids"
                                         rules="required" label="operaciones">
                                     </field-validate>
-                                    <label for="" class="ml-4">{{operation.label}}</label>
+                                    <label for="" class="form-check-label">{{operation.label}}</label>
                                 </div>
                             </base-field>
                         </div>
@@ -88,10 +91,11 @@
                         <div class="col-md-12">
                             <base-field :apiErrors="apiValidationErrors" name="equipments" label="Tipos de equipamientos" labelClasses="d-block">
                                 <div v-for="equipment in equipments" :key="equipment.key" class="d-inline-block">
-                                    <field-validate 
+                                    <field-validate :disabled="isSaved" 
                                         type="checkbox" 
                                         name="equipments"
                                         :value="equipment.value"
+                                        v-model="model.equipments_ids"
                                         rules="required" label="equipamientos">
                                     </field-validate>
                                     <label for=""  class="mx-4">{{equipment.label}}</label>
@@ -109,36 +113,36 @@
                     </div>
                     <div class="col-md-6 col-lg-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.name" name="name" label="Nombre">
-                            <field-validate type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.responsible.name"/>
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.responsible.name"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.last_name" name="last_name" label="Apellido">
-                            <field-validate type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="model.responsible.last_name"/>
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="model.responsible.last_name"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.dni" name="dni" label="Dni">
-                            <field-validate type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.responsible.dni"/>
+                            <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.responsible.dni"/>
                         </base-field>
                     </div>
                     <div class="col-md-6 col-lg-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.email" name="email" label="Email">
-                            <field-validate type="text" class="form-control" name="email" rules="required" label="email" v-model="model.responsible.email"/>
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="email" rules="required" label="email" v-model="model.responsible.email"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.position" name="position" label="Posicion">
-                            <field-validate type="text" class="form-control" name="position" rules="required" label="posicion" v-model="model.responsible.position"/>
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required" label="posicion" v-model="model.responsible.position"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.phone_number" label="Movil" name="phone_number">
-                            <field-validate type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="model.responsible.phone_number"/>
+                            <field-validate :disabled="isSaved" type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="model.responsible.phone_number"/>
                         </base-field>
                     </div>
                 </div>
@@ -148,21 +152,21 @@
                     </div>
                     <div class="col-md-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.date_firm" name="date_firm" label="Fecha de firma">
-                            <field-validate type="date" class="form-control" name="date_firm" rules="required" label="fecha" v-model="model.responsible.date_firm.toForm"/>
+                            <field-validate :disabled="isSaved" type="date" class="form-control" name="date_firm" rules="required" label="fecha" v-model="model.responsible.date_firm.toForm"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.date_certification" name="date_cer" label="Fecha de formacion">
-                            <field-validate type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification.toForm"/>
+                            <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification.toForm"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
                         <base-field :apiErrors="apiValidationErrors" apiName="responsible.file_certification" name="file_cer" label="Documento de formacion">
                             <div v-if="model.responsible.file_certification.file.length >= 1">
                                 <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
-                                <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                                <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
                             </div>
-                            <field-validate v-else type="file" class="form-control" name="file_cer" rules="required" label="documento" v-model="model.responsible.file_certification.file"/>
+                            <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_cer" rules="required" label="documento" v-model="model.responsible.file_certification.file"/>
                         </base-field>
                     </div>
 
@@ -170,12 +174,13 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <base-switch
+                                    :disabled="isSaved"
                                     v-model="model.responsible.driver" label="Conductor"
                                 ></base-switch>
                             </div>
                             <div class="col-md-3" v-if="model.responsible.driver">
                                 <base-field :apiErrors="apiValidationErrors" apiName="responsible.phone_number" name="adr_permit_id" label="Permiso ADR">
-                                    <field-validate as="select" class="form-control" name="adr_permit_id" v-model="model.responsible.adr_permit_id" rules="required">
+                                    <field-validate :disabled="isSaved" as="select" class="form-control" name="adr_permit_id" v-model="model.responsible.adr_permit_id" rules="required">
                                         <option selected>Permiso adr</option>
                                         <option
                                             :value="permit.id"
@@ -189,7 +194,7 @@
                             </div>
                             <div class="col-md-3" v-if="model.responsible.driver">
                                 <base-field :apiErrors="apiValidationErrors" apiName="responsible.driver_document_date" name="driver_date" label="Fecha documentacion">
-                                    <field-validate type="date" class="form-control" name="driver_date" v-model="model.responsible.driver_document_date.toForm" rules="required">
+                                    <field-validate :disabled="isSaved" type="date" class="form-control" name="driver_date" v-model="model.responsible.driver_document_date.toForm" rules="required">
                                     </field-validate>
                                 </base-field>
                             </div>
@@ -197,36 +202,57 @@
                                 <base-field :apiErrors="apiValidationErrors" apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
                                     <div v-if="model.responsible.driver_document.file.length >= 1">
                                         <span class="mr-md-4">{{model.responsible.driver_document.file[0].name}}</span>
-                                        <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                                        <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
                                     </div>
-                                    <field-validate v-else type="file" class="form-control" name="file_driver" rules="required" label="documento" v-model="model.responsible.driver_document.file"/>
+                                    <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_driver" rules="required" label="documento" v-model="model.responsible.driver_document.file"/>
                                 </base-field>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <base-switch v-model="model.responsible.dangerous_goods" label="Mercancias peligrosas"
+                        <base-switch v-model="model.responsible.dangerous_goods" :disabled="isSaved" label="Mercancias peligrosas"
                         ></base-switch>
                     </div>
                 </div>
             </template>
             <!-- ------------------------------------------------------- -->
+            <template v-if="currentStep == 4 && isSaved">
+                <div>
+                    <material-table :installation_id="installation_id"></material-table>
+                </div>
+                <div class="mt-5">
+                    <material-table :installation_id="installation_id" residue="true" title="Residuos"></material-table>
+                </div>
+            </template>
+            <!-- ------------------------------------------------------- -->
+            <template v-if="currentStep == 5 && isSaved">
+                <div>
+                    <vehicles-table :installation_id="installation_id"></vehicles-table>
+                </div>
+            </template>
+            <!-- ------------------------------------------------------ -->
+            <template v-if="currentStep == 6 && isSaved">
+                <div>
+                    <subcontractor-table :installation_id="installation_id"></subcontractor-table>
+                </div>
+            </template>
+            <!-- ------------------------------------------------------ -->
             <div class="mt-4 float-md-right">
                 <base-button type="default" @click="prevStep()" v-if="currentStep !== 1"
                 >Anterior</base-button
                 >
-                <base-button type="default" nativeType="submit" v-if="currentStep !== 3"
+                <base-button type="default" nativeType="submit" v-if="currentStep !== 3 && currentStep < 6"
                 >Siguiente</base-button
                 >
                 <base-button type="default" nativeType="submit" v-if="currentStep === 3"
-                >Enviar</base-button
+                >{{!isSaved ? 'Enviar' : 'Siguiente'}}</base-button
                 >
                 <base-button
                     type="default"
                     :outline="true"
                     class="ml-auto"
                     @click="handleClose(resetForm)"
-                    >Cancelar
+                    >{{isSaved ? "Cerrar" : "Cancelar"}}
                 </base-button>
             </div>
             <loader v-if="loader"/>
@@ -241,10 +267,13 @@ import utils from "../../../mixins/utils-mixin";
 import _ from "lodash";
 import service from "../../../store/services/installation-service";
 import formMixin from "../../../mixins/form-mixin";
+import MaterialTable from '../../../views/Tables/MaterialTable.vue';
+import VehiclesTable from '../../../views/Tables/VehiclesTable.vue';
+import SubcontractorTable from '../../../views/Tables/SubcontractorTable.vue';
 
 export default {
-    components: {Multiselect},
     mixins: [utils, formMixin],
+    components: {Multiselect,MaterialTable, VehiclesTable, SubcontractorTable},
     props: {
         business_id: {
             type:Number,
@@ -253,23 +282,9 @@ export default {
     },
     data() {
         return {
-            steps: [
-                {
-                    number: 1,
-                    title: "Instalacion",
-                    valid: false
-                },
-                {
-                    number: 2,
-                    title: "Operaciones",
-                    valid: false
-                },
-                {
-                    number: 3,
-                    title: "Responsable",
-                    valid: false
-                }
-            ],
+            isSaved: false,
+            steps: [],
+            installation_id: null,
             currentStep: 1,
             auditable: null,
             model: {
@@ -282,8 +297,8 @@ export default {
                     base64: "",
                     file: []
                 },
-                operation_types_ids:{},
-                equipments_ids:{},
+                operation_types_ids:[],
+                equipments_ids:[],
                 responsible: {
                     name: "",
                     last_name: "",
@@ -337,7 +352,7 @@ export default {
         this.initVals()
     },
     methods:{
-        async onSubmit(values, { resetForm }){
+        async onSubmit(values){
             for (let index = 0; index < this.steps.length; index++) {
                 const step = this.steps[index];
                 if (step.number == this.currentStep) {
@@ -352,8 +367,8 @@ export default {
             }
 
             if (this.currentStep == 2) {
-                this.model.equipments_ids = inst.equipments
-                this.model.operation_types_ids = inst.operations
+                // this.model.equipments_ids = inst.equipments
+                // this.model.operation_types_ids = inst.operations
             }
 
             if (this.currentStep == 3) {
@@ -366,30 +381,28 @@ export default {
                 }
             }
 
-            if (this.currentStep === 3) {
+            if (this.currentStep === 3 && !this.isSaved) {
+                this.resetApiValidation()
                 this.loader = true;
                 try {
                     const res = await service.store(this.model);
-                    console.log(res);
-                    this.$emit('close')
-                    this.$emit('reload')
-                    this.currentStep = 0
-                    resetForm()
-                    this.initVals()
+                    this.installation_id = res.data.data.id
+                    this.isSaved = true
                     this.loader = false
+                    this.$emit('reload')
                     this.$swal('Instalacion registrada', 'La instalacion se ha registrado correctamente', 'success')
                 } catch (err) {
                     this.loader = false
                     let message = !_.isEmpty(err.response) ? err.response.data.message : 'Ocurrio un error en el servidor';
                     if (!_.isEmpty(err.response)) {
                         this.setApiValidation(err.response.data.errors)
-                        this.currentStep = 0
                     }
                     this.$swal('Error', message, 'error')
+                    return
                 }
             }
            
-            if (this.currentStep !== 3) {
+            if (this.currentStep !== 6) {
                 this.currentStep++
             }
         },
@@ -453,6 +466,21 @@ export default {
                     number: 3,
                     title: "Responsable",
                     valid: false
+                },
+                {
+                   number: 4,
+                    title: "Materiales",
+                    valid: false 
+                },
+                {
+                   number: 5,
+                    title: "Vehiculos",
+                    valid: false 
+                },
+                {
+                   number: 6,
+                    title: "Subcontratistas",
+                    valid: false 
                 }
             ]; 
             this.model = {};
@@ -467,8 +495,8 @@ export default {
                     base64: "",
                     file: []
                 },
-                operation_types_ids:{},
-                equipments_ids:{},
+                operation_types_ids:[],
+                equipments_ids:[],
                 responsible: {
                     name: "",
                     last_name: "",

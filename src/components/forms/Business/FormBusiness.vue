@@ -64,7 +64,7 @@
               <base-input
                 name="property_phone"
                 inputClasses="form-control-sm"
-                label="Telefono"
+                label="Móvil"
                 type="text"
                 :modelValue="model.property_phone"
                 rules="required"
@@ -89,7 +89,7 @@
                 inputClasses="form-control-sm"
                 name="business_phone"
                 :modelValue="model.business_phone"
-                label="Telefono"
+                label="Móvil"
                 type="number"
               />
             </div>
@@ -370,7 +370,7 @@
               formClasses="col-md-4"
               :name="`installations[${id}].responsible.phone_number`"
               :modelValue="installations[id].responsible.phone_number"
-              label="Telefono"
+              label="Móvil"
               rules="required|numeric"
             ></base-input>
             <div class="col-md-4">

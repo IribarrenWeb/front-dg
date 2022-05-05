@@ -44,7 +44,8 @@
             <a href="#" @click="showAuditor()">{{ row.item.auditable.user.name }} {{ row.item.auditable.user.last_name }}</a>
           </td>
           <td>
-            <a href="#" @click.prevent="this.modal = true" class="btn btn-sm btn-default">Ver</a>
+            <a href="#" @click.prevent="" class="btn btn-sm btn-default">Ver</a>
+            <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
           </td>
         </template>
       </base-table>
@@ -60,6 +61,7 @@
       <loader v-if="loader"></loader>
 
       <modal
+        v-if="this.modal"
         v-model:show="this.modal"
         modalClasses="modal-xl"
         bodyClasses="pt-0 px-5"
@@ -111,6 +113,18 @@ import FormInstallation from '../../components/forms/Installation/FormInstallati
           console.log(err);
         }
         this.loader = false;
+      },
+      async destroy(id) {
+        this.loader = true
+        try {
+          const response = await service.destroy(id)
+          console.log(response);
+          this.$toast.success('Registro eliminado')
+          this.getInstallations();
+        } catch (err) {
+          this.loader = false 
+          this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
+        }
       },
       async handleChange(event) {
         if(event == this.page){

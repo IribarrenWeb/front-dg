@@ -5,12 +5,15 @@ import Dashboard from "../views/Dashboard.vue";
 // import Icons from "../views/Icons.vue";
 import Maps from "../views/Maps.vue";
 import Profile from "../views/UserProfile.vue";
-import Tables from "../views/Tables.vue";
+// import Tables from "../views/Tables.vue";
+import Audits from "../views/Audits.vue";
 import Users from "../views/Users.vue";
 import AuditorTable from "../views/Tables/AuditorsTable.vue";
 import Business from "../views/Business.vue";
 import BusinessDetail from "../views/BusinessDetail.vue";
 import DelegateTable from "../views/Tables/DelegateTable.vue";
+// import MaterialTable from "../views/Tables/MaterialTable.vue"
+import Sub from "../views/Tables/SubcontractorTable.vue"
 // import NotFound from "../pages/NotFoundPage.vue";
 
 import Login from "../views/Auth/Login.vue";
@@ -63,6 +66,12 @@ const routes = [{
                 meta: { middleware: auth },
             },
             {
+                path: "/sub",
+                name: "sub",
+                components: { default: Sub },
+                meta: { middleware: auth },
+            },
+            {
                 path: "/users",
                 name: "users",
                 components: { default: Users },
@@ -102,9 +111,9 @@ const routes = [{
                 // ],
             },
             {
-                path: "/tables",
-                name: "tables",
-                components: { default: Tables },
+                path: "/audits",
+                name: "audits",
+                components: { default: Audits },
                 meta: { middleware: auth },
             },
         ],
