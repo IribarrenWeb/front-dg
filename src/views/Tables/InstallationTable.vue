@@ -44,7 +44,7 @@
             <a href="#" @click="showAuditor()">{{ row.item.auditable.user.name }} {{ row.item.auditable.user.last_name }}</a>
           </td>
           <td>
-            <a href="#" @click.prevent="view(row.item.id)" class="btn btn-sm btn-default">Ver</a>
+            <!-- <a href="#" @click.prevent="view(row.item.id)" class="btn btn-sm btn-default">Ver</a> -->
             <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
           </td>
         </template>
