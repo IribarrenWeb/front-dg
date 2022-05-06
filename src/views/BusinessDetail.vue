@@ -65,7 +65,6 @@
             </tr>
           </tbody>
         </table>
-        <loader v-if="loader"></loader>
       </div>
       <div class="card" v-else>
         <h3>No hay resultados</h3>
@@ -76,7 +75,7 @@
   </div>
 </template>
 <script>
-  import service from "../store/services/business-service";
+  import service from "../store/services/model-service";
   import utils from "@/mixins/utils-mixin";
 import InstallationTable from './Tables/InstallationTable.vue';
 
@@ -88,7 +87,6 @@ import InstallationTable from './Tables/InstallationTable.vue';
         meta: {},
         business: null,
         id: "",
-        loader: false,
       };
     },
     async created() {
@@ -105,22 +103,9 @@ import InstallationTable from './Tables/InstallationTable.vue';
       async getBusiness() {
         console.log("ejecutando");
         const id = this.id;
-        try {
-          const response = await service.show(id);
-          this.business = response.data.data;
-          console.log(typeof this.business.id != "undefined", this.business);
-        } catch (error) {
-          console.log(error.response);
-        }
+        const response = await service.show('business',id);
+        this.business = response.data.data;
       },
-    },
-    watch: {
-      // id(newVal, old) {
-      //   console.log(newVal);
-      //   if (newVal != old) {
-      //     this.getBusiness();
-      //   }
-      // },
     },
   };
 </script>

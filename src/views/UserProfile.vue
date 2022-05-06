@@ -147,11 +147,6 @@
       async beforeMount() {
         const u_data = await service.get()
         this.u_data = u_data.list.user
-          // this.model.username = 'user_default'
-          // this.model.email = u_data.list.user.email
-          // this.model.firstName = u_data.list.user.name
-          // this.model.lastName = u_data.list.user.last_name
-          // console.log(this.model);
       },
     };
 </script>

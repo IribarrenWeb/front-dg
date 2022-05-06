@@ -6,21 +6,19 @@
           :disabled="disabled"
           :modelValue="delegate.name"
           :view="delegate.length >= 1"
-          :apiErrors="apiValidationErrors.name"
           formClasses="col-md-6"
           name="name"
           label="Nombre"
-          rules="required|alpha"
+          rules="required"
         />
         <base-input
           :disabled="disabled"
           :modelValue="delegate.last_name"
           :view="delegate.length >= 1"
-          :apiErrors="apiValidationErrors.last_name"
           formClasses="col-md-6"
           name="last_name"
           label="Apellido"
-          rules="required|alpha"
+          rules="required"
         />
       </div>
       <div class="row">
@@ -28,7 +26,6 @@
           :disabled="disabled"
           :modelValue="delegate.phone_number"
           :view="delegate.length >= 1"
-          :apiErrors="apiValidationErrors.phone_number"
           formClasses="col-md-4"
           name="phone_number"
           label="Numero movil"
@@ -38,7 +35,6 @@
           :disabled="disabled"
           :modelValue="delegate.email"
           :view="delegate.length >= 1"
-          :apiErrors="apiValidationErrors.email"
           formClasses="col-md-4"
           name="email"
           label="Email"
@@ -48,7 +44,6 @@
           :disabled="disabled"
           :modelValue="delegate.dni"
           :view="delegate.length >= 1"
-          :apiErrors="apiValidationErrors.dni"
           formClasses="col-md-4"
           name="dni"
           label="Dni"
@@ -93,7 +88,6 @@
             </base-input>
 
             <base-input
-              :apiErrors="apiValidationErrors.province_id"
               formClasses="col-md-6"
               type="select"
               name="province_id"
@@ -114,10 +108,9 @@
         </div>
       </div>
       <div>
-        <hr>
+        <hr />
         <div class="row" v-if="!disabled">
           <base-input
-            :apiErrors="apiValidationErrors.file_certification"
             formClasses="col-md-6"
             name="file_cer"
             label="Certificado"
@@ -125,7 +118,6 @@
             rules="required|ext:pdf"
           />
           <base-input
-            :apiErrors="apiValidationErrors.certification_date"
             formClasses="col-md-6"
             name="date_cer"
             label="Fecha de certificado"
@@ -133,7 +125,6 @@
             rules="required"
           />
           <base-input
-            :apiErrors="apiValidationErrors.file_firm"
             formClasses="col-md-6"
             name="file_firm"
             label="Alta"
@@ -141,7 +132,6 @@
             rules="required|ext:pdf"
           />
           <base-input
-            :apiErrors="apiValidationErrors.firm_date"
             formClasses="col-md-6"
             name="date_firm"
             label="Fecha de alta"
@@ -194,18 +184,16 @@
         Cancelar
       </base-button>
     </form-validate>
-
-    <loader v-if="loader"></loader>
   </div>
 </template>
 
 <script>
-  import service from "../../store/services/delegate-service";
-  import formMixin from "@/mixins/form-mixin";
+  import service from "@/store/services/model-service";
+
   import utils from "@/mixins/utils-mixin";
 
   export default {
-    mixins: [formMixin, utils],
+    mixins: [utils],
     name: "form-delegate",
     props: {
       isSubmit: {
@@ -225,7 +213,6 @@
       };
     },
     mounted() {
-      console.log(this.delegate);
       this.getCities();
     },
     methods: {
@@ -250,40 +237,17 @@
           new Date(values.date_firm).toLocaleDateString("en-US")
         );
 
-        this.loader = true;
-
+        console.log(formData);
         try {
-          const response = await service.store(formData);
-          if (response.status == 201) {
-            this.$swal(
-              "El delegado se ha creado",
-              "El delegado se ha creado con exito.",
-              "success"
-            ).then(() => {
-              resetForm();
-              this.$emit("closeModal");
-              this.$emit("resetTable");
-            });
-          }
-        } catch (err) {
-          if (err.response.status == 422) {
-            this.setApiValidation(err.response.data.errors);
-            console.log(this.apiValidationErrors);
-            this.$swal(
-              "Error en los datos",
-              err.response.data.message,
-              "error"
-            );
-          } else {
-            this.$swal(
-              "Error en el servidor",
-              "Ocurrio un error en el servidor",
-              "error"
-            );
-            console.log(err.response);
-          }
+          
+          await service.store("delegate", formData, true);
+  
+          resetForm();
+          this.$emit("closeModal");
+          this.$emit("resetTable");
+        } catch (error) {
+          console.log(error);
         }
-        this.loader = false;
       },
     },
   };

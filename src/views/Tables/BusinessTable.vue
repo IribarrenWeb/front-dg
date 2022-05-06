@@ -56,23 +56,23 @@
           align="center"
         ></base-pagination>
       </div>
-      <loader v-if="loader"></loader>
 
       <modal
+        v-if="this.modal"
         v-model:show="this.modal"
         modalClasses="modal-xl"
         bodyClasses="pt-0"
         modalContentClasses="overflow-auto max-h-modal"
       >
         <template v-slot:header> </template>
-        <form-business @close="this.modal = false" @reload="getBusiness()"/>
+        <form-business v-if="this.modal" @close="this.modal = false" @reload="getBusiness()"/>
       </modal>
     </div>
   </div>
 </template>
 <script>
   import FormBusiness from "../../components/forms/Business/FormBusiness.vue";
-  import service from "../../store/services/business-service";
+  import service from "../../store/services/model-service";
 
   export default {
     components: { FormBusiness },
@@ -98,19 +98,14 @@
         this.$router.push('/business/' + id)
       },
       async getBusiness(page) {
-        this.loader = true;
-        try {
           const response = await service.getIndex(
-            `page=${page}&includes[]=user&includes[]=installations`
+            'business',
+            page,
+            `&includes[]=user&includes[]=installations`
           );
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
           this.page = this.metaData.currentPage;
-          this.loader = false;
-        } catch (err) {
-          this.$swal('Error', 'Error al cargar el listado', 'error')
-          this.loader = false;
-        }
       },
       async handleChange(event) {
         if (this.page == event) {
@@ -119,16 +114,13 @@
         this.getBusiness(event)
       },
        async destroy(id) {
-        this.loader = true
         try {
           const response = await service.destroy(id)
           console.log(response);
           this.$toast.success('Registro eliminado')
           this.getBusiness();
-          this.loader = false
         } catch (err) {
           console.log(err.response);
-          this.loader = false 
           this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
         }
       },

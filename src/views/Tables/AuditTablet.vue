@@ -81,7 +81,7 @@
           </td>
         </template>
       </base-table>
-      <loader v-if="loader"></loader>
+      <!-- <loader v-if="loader"></loader> -->
 
       <base-pagination 
           :perPage="this.metaData.perPage"
@@ -94,7 +94,7 @@
   </div>
 </template>
 <script>
-import service from '../../store/services/audit-service';
+import service from '../../store/services/model-service';
 export default {
   name: "audits-table",
   props: {
@@ -117,19 +117,11 @@ export default {
   },
   methods: {
     async getAudits(page){
-      try {
-        this.loader = true
-        const resp = await service.getIndex(page,'includes[]=installation.province');
-        if (typeof resp.data.data != 'undefined') {
-          this.tableData = resp.data.data;
-          this.metaData = resp.data.meta.page;
-          this.page = this.metaData.currentPage;
-        }
-        this.loader = false
-      } catch (err) {
-        this.loader = false
-        console.log(err);
-        this.$swal('Ocurrio un error', 'No se pudieron cargar las auditorias', 'error')
+      const resp = await service.getIndex('audit', page,'includes[]=installation.province');
+      if (typeof resp.data.data != 'undefined') {
+        this.tableData = resp.data.data;
+        this.metaData = resp.data.meta.page;
+        this.page = this.metaData.currentPage;
       }
     },
     setStatusType(status){

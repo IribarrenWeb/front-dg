@@ -58,4 +58,7 @@ appInstance.use(store);
 appInstance.use(router);
 appInstance.use(VueSweetalert2);
 appInstance.use(ArgonDashboard);
+appInstance.config.errorHandler = (err, instance, info) => {
+    console.log(err, instance, info, 'ERRRORRR');
+}
 appInstance.mount("#app");

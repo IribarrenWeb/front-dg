@@ -49,11 +49,10 @@
   </div>
 </template>
 <script>
-  import formMixin from "@/mixins/form-mixin";
+   
   import _ from 'lodash'; 
   export default {
     name: "login",
-    mixins: [formMixin],
     data() {
       return {
         model: {

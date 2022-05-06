@@ -44,7 +44,7 @@
             <a href="#" @click="showAuditor()">{{ row.item.auditable.user.name }} {{ row.item.auditable.user.last_name }}</a>
           </td>
           <td>
-            <a href="#" @click.prevent="" class="btn btn-sm btn-default">Ver</a>
+            <a href="#" @click.prevent="view(row.item.id)" class="btn btn-sm btn-default">Ver</a>
             <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
           </td>
         </template>
@@ -70,16 +70,18 @@
       >
         <template v-slot:header>
         </template>
-        <form-installation @close="this.modal = false" @reload="getInstallations()" :business_id="business_id"></form-installation>
+        <form-installation v-if="!isView" @close="this.modal = false" @reload="getInstallations()" :business_id="business_id"></form-installation>
+        <installation-show v-else :installation_id="installation_id"></installation-show>
       </modal>
     </div>
   </div>
 </template>
 <script>
-import FormInstallation from '../../components/forms/Installation/FormInstallation.vue';
-  import service from "../../store/services/installation-service";
+  import FormInstallation from '../../components/forms/Installation/FormInstallation.vue';
+  import service from "../../store/services/model-service";
+  import InstallationShow from '../Shows/InstallationShow.vue';
   export default {
-	components: { FormInstallation },
+    components: { FormInstallation, InstallationShow },
     name: "business-table",
     props: {
       business_id: {}
@@ -92,6 +94,8 @@ import FormInstallation from '../../components/forms/Installation/FormInstallati
         loader: false,
         metaData: {},
         page: 1,
+        isView: false,
+        installation_id: {}
       };
     },
     mounted() {
@@ -102,46 +106,40 @@ import FormInstallation from '../../components/forms/Installation/FormInstallati
         this.modal = true;
       },
       async getInstallations() {
-        this.loader = true;
-        try {
-          const response = await service.getByBusiness(this.business_id,this.page);
-          console.log(response);
+          const response = await service.instByBusiness(this.business_id,this.page);
           this.tableData = response.data.data;
-          console.log(this.tableData);
           this.metaData = response.data.meta.page;
-        } catch (err) {
-          console.log(err);
-        }
-        this.loader = false;
+          this.page = this.metaData.currentPage;
       },
       async destroy(id) {
-        this.loader = true
         try {
-          const response = await service.destroy(id)
-          console.log(response);
+          await service.destroy('installation',id)
           this.$toast.success('Registro eliminado')
           this.getInstallations();
-        } catch (err) {
-          this.loader = false 
-          this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
+        } catch (error) {
+          console.log(error);
         }
+
       },
       async handleChange(event) {
         if(event == this.page){
           return
         }
-        this.loader = true;
-        try {
-          const response = await service.getByBusiness(this.business_id,event);
+
+          const response = await service.instByBusiness(this.business_id,event);
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
           this.page = this.metaData.currentPage;
+      },
+      async view(id){
+        try {
+          this.isView = true
+          this.modal = true
+          this.installation_id = id
         } catch (err) {
-          this.$swal("Error", "No se pudieron cargar los datos de la tabla");
           console.log(err);
         }
-        this.loader = false;
-      },
+      }
     },
   };
 </script>

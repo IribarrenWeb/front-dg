@@ -1,12 +1,19 @@
 <template>
+<div v-if="loading">
   <Transition name="fade">
     <div class="d-flex justify-content-center" id="loader">
       <div class="spinner-border" role="status"></div>
     </div>
   </Transition>
+</div>
 </template>
 <script>
-  export default {};
+import { mapState } from 'vuex';
+  export default {
+    computed: mapState({
+      loading: state => state.loader
+    })
+  };
 </script>
 <style>
   #loader {

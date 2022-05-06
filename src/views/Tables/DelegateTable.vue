@@ -58,7 +58,6 @@
           align="center"
         ></base-pagination>
       </div>
-      <loader v-if="loader"></loader>
     </div>
 
     <Transition name="fade">
@@ -90,11 +89,9 @@
 </template>
 
 <script>
-  import Loader from "../../components/Loader.vue";
-  import service from "../../store/services/delegate-service";
+  import service from "../../store/services/model-service";
 
   export default {
-    components: { Loader },
     data() {
       return {
         tableData: {},
@@ -102,7 +99,6 @@
         page: 1,
         modal: false,
         submit: false,
-        loader: false,
         delegate: {},
         disabled: false
       };
@@ -112,38 +108,28 @@
     },
     methods: {
       async getDelegates() {
-        this.loader = true;
-        try {
           const response = await service.getIndex(
-            `page=${this.page}&includes[]=user`
+            'delegate',
+            this.page,
+            `&includes[]=user`
           );
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
-        } catch (err) {
-          console.log(err);
-        }
-        this.loader = false;
       },
       async handleChange(event) {
-        this.loader = true;
-        try {
+
           const response = await service.getIndex(
-            `page=${event}&includes[]=user`
+            'delegate',
+            event,
+            `&includes[]=user`
           );
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
           this.page = this.metaData.currentPage;
-        } catch (err) {
-          this.$swal("Error", "No se pudieron cargar los datos de la tabla");
-          console.log(err);
-        }
-        this.loader = false;
       },
       async handleView(id) {
-        this.loader = true;
-
         try {
-          const response = await service.view(id, 'includes[]=province.city&includes[]=documents.type');
+          const response = await service.show('delegate',id,'includes[]=province.city&includes[]=documents.type');
           const data = response.data.data;
           this.delegate = {
             name: data.user.name,
@@ -159,10 +145,8 @@
           this.disabled = true
           this.modal = true
         } catch (err) {
-          this.$swal("Error", "No se pudieron cargar los datos del delegado");
           console.log(err);
         }
-        this.loader = false;
       },
       handleAdd(){
         this.disabled = false

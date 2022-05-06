@@ -55,7 +55,6 @@
           </td>
         </template>
       </base-table>
-      <loader v-if="loader"></loader>
 
       <base-pagination 
           :perPage="this.metaData.perPage"
@@ -81,7 +80,7 @@
   </div>
 </template>
 <script>
-import service from '../../store/services/material-service';
+import service from '../../store/services/model-service';
 
 export default {
   name: "material-table",
@@ -99,14 +98,13 @@ export default {
     },
     title: {
       type: String,
-      default: "Materiales"
+      default: "Mercancías"
     }
   },
   data() {
     return {
       tableData: [],
       metaData: {},
-      loader: false,
       page: 1,
       modal: false
     };
@@ -116,8 +114,6 @@ export default {
   },
   methods: {
     async getMaterials(page, id = null){
-      try {
-        this.loader = true
         let params = 'includes[]=installation.operations&includes[]=material.class&includes[]=deposit&includes[]=material.packing';
 
         if (id != null) {
@@ -130,21 +126,13 @@ export default {
           params += '&is_residue=true'
         }
         
-        const resp = await service.getIndex(page,params);
+        const resp = await service.getIndex('material', page,params);
         
         if (typeof resp.data.data != 'undefined') {
           this.tableData = resp.data.data;
           this.metaData = resp.data.meta.page;
           this.page = this.metaData.currentPage;
         }
-        this.loader = false
-      } catch (err) {
-        this.loader = false
-        if (typeof err.response.data.errors != 'undefined') {
-            this.setApiValidation(err.response.data.errors)
-        }
-        this.$swal('Ocurrio un error', 'No se pudieron cargar los materiales', 'error')
-      }
     },
     async handleChange(event) {
       if(event == this.page){

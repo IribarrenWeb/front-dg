@@ -48,6 +48,7 @@
         </div>
       </div>
     </div>
+    <loader></loader>
   </div>
 </template>
 <script>

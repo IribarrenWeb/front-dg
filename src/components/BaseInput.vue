@@ -106,10 +106,10 @@
           class="text-danger invalid-feedback"
           style="display: block"
           :class="{ 'mt-2': hasIcon }"
-          v-if="apiErrors"
+          v-if="typeof apiErrors[validName] == 'object'"
         >
           <ul>
-            <li v-for="error in apiErrors" :key="error.id">
+            <li v-for="error in apiErrors[validName]" :key="error.id">
               {{ error }}
             </li>
           </ul>
@@ -119,10 +119,15 @@
   </div>
 </template>
 <script>
+import { mapState } from 'vuex';
   export default {
     inheritAttrs: false,
     name: "base-input",
     props: {
+      apiName: {
+        type: String,
+        default: ''
+      },
       required: {
         type: Boolean,
         description: "Whether input is required (adds an asterix *)",
@@ -152,11 +157,6 @@
       error: {
         type: String,
         description: "Input error (below input)",
-      },
-      apiErrors: {
-        type: Object,
-        description: "Api Input error (below input)",
-        default: null
       },
       formClasses: {
         type: String,
@@ -213,6 +213,12 @@
           this.addonRightIcon !== undefined ||
           this.addonLeftIcon !== undefined
         );
+      },
+      ...mapState({
+        apiErrors: state => state.apiErrors,
+      }),
+      validName(){
+        return this.apiName != '' ? this.apiName : this.name
       },
     },
     methods: {

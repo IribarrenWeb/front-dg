@@ -1,4 +1,4 @@
-import documentService from "../store/services/document-service";
+import model from "../store/services/model-service";
 import dataService from "../store/services/data-service";
 
 export default {
@@ -19,7 +19,7 @@ export default {
         async getDocument(id) {
             this.loader = true;
             try {
-                const response = await documentService.getDocument(id);
+                const response = await model.getDocument(id);
                 console.log(response.data);
                 if (response.status == 200) {
                     var byteCharacters = atob(response.data.data);

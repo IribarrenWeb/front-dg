@@ -24,6 +24,7 @@ import BaseField from "../components/BaseField.vue";
 import Loader from "../components/Loader.vue";
 import { ElTooltip, ElPopover } from "element-plus";
 import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
+import ErrorBoundary from "vue-error-boundary";
 
 
 const GlobalComponents = {
@@ -54,6 +55,7 @@ const GlobalComponents = {
         app.component("tabs", Tabs);
         app.component("field-validate", Field);
         app.component("form-validate", Form);
+        app.component("error-boundary", ErrorBoundary);
         app.component("field-array-validate", FieldArray);
         app.component("error-message-validate", ErrorMessage);
         app.use(ElTooltip);

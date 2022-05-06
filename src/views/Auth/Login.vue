@@ -24,9 +24,6 @@
             >
             </base-input>
 
-            <base-checkbox class="custom-control-alternative">
-              <span class="text-muted">Remember me</span>
-            </base-checkbox>
             <div class="text-center">
               <base-button type="default" class="my-4" @click="handleSubmit()"
                 >Sign in</base-button
@@ -49,10 +46,9 @@
   </div>
 </template>
 <script>
-  import formMixin from "@/mixins/form-mixin";
+   
   export default {
     name: "login",
-    mixins: [formMixin],
     data() {
       return {
         model: {
@@ -75,8 +71,6 @@
           });
         } catch (error) {
           await this.$swal("Error", "Credenciales invalidas!");
-          console.log(error);
-          // this.setApiValidation(error.response.data.errors);
         }
       },
     },

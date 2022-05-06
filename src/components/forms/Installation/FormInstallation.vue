@@ -15,17 +15,17 @@
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-4">
-                        <base-field :apiErrors="apiValidationErrors" name="name" label="Nombre de instalacion">
+                        <base-field   name="name" label="Nombre de instalacion">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
-                        <base-field :apiErrors="apiValidationErrors" name="address" label="Direccion">
+                        <base-field   name="address" label="Direccion">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="address" rules="required" label="direccion" v-model="model.address"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
-                        <base-field :apiErrors="apiValidationErrors" name="auditable" label="Auditor">
+                        <base-field   name="auditable" label="Auditor">
                             <div v-if="model.auditable != null">
                                 <span class="mr-md-4 text-uppercase">{{model.auditable.user.name}} {{model.auditable.user.last_name}}</span>
                                 <base-button @click="model.auditable = null" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
@@ -49,7 +49,7 @@
                         </base-field>
                     </div>
                     <div class="col-md-6">
-                        <base-field :apiErrors="apiValidationErrors" name="province_id" label="Provincia">
+                        <base-field   name="province_id" label="Provincia">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
                                 <option value="" selected>Selecciona una provincia</option>
                                 <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
@@ -57,7 +57,7 @@
                         </base-field>
                     </div>
                     <div class="col-md-6">
-                        <base-field :apiErrors="apiValidationErrors" name="file_document" label="Documentacion">
+                        <base-field   name="file_document" label="Documentacion">
                             <div v-if="model.file_document.file.length >= 1">
                                 <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
                                 <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
@@ -72,7 +72,7 @@
                 <div>
                     <div class="row border rounded border-light px-4 py-2">
                         <div class="col-md-12">
-                            <base-field :apiErrors="apiValidationErrors" name="operations" label="Tipos de operaciones">
+                            <base-field   name="operations" label="Tipos de operaciones">
                                 <div v-for="operation in operations" :key="operation.key" class="form-check">
                                     <field-validate :disabled="isSaved" 
                                         type="checkbox" 
@@ -89,7 +89,7 @@
                     </div>
                     <div class="row border rounded border-light px-4 py-2 mt-3">
                         <div class="col-md-12">
-                            <base-field :apiErrors="apiValidationErrors" name="equipments" label="Tipos de equipamientos" labelClasses="d-block">
+                            <base-field   name="equipments" label="Tipos de equipamientos" labelClasses="d-block">
                                 <div v-for="equipment in equipments" :key="equipment.key" class="d-inline-block">
                                     <field-validate :disabled="isSaved" 
                                         type="checkbox" 
@@ -112,36 +112,36 @@
                         <h4>Datos principales</h4>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.name" name="name" label="Nombre">
+                        <base-field   apiName="responsible.name" name="name" label="Nombre">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.responsible.name"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.last_name" name="last_name" label="Apellido">
+                        <base-field   apiName="responsible.last_name" name="last_name" label="Apellido">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="model.responsible.last_name"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.dni" name="dni" label="Dni">
+                        <base-field   apiName="responsible.dni" name="dni" label="Dni">
                             <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.responsible.dni"/>
                         </base-field>
                     </div>
                     <div class="col-md-6 col-lg-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.email" name="email" label="Email">
+                        <base-field   apiName="responsible.email" name="email" label="Email">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="email" rules="required" label="email" v-model="model.responsible.email"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.position" name="position" label="Posicion">
+                        <base-field   apiName="responsible.position" name="position" label="Posicion">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required" label="posicion" v-model="model.responsible.position"/>
                         </base-field>
                     </div>
 
                     <div class="col-md-6 col-lg-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.phone_number" label="Movil" name="phone_number">
+                        <base-field   apiName="responsible.phone_number" label="Movil" name="phone_number">
                             <field-validate :disabled="isSaved" type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="model.responsible.phone_number"/>
                         </base-field>
                     </div>
@@ -151,17 +151,17 @@
                         <h4>Documentacion</h4>
                     </div>
                     <div class="col-md-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.date_firm" name="date_firm" label="Fecha de firma">
+                        <base-field   apiName="responsible.date_firm" name="date_firm" label="Fecha de firma">
                             <field-validate :disabled="isSaved" type="date" class="form-control" name="date_firm" rules="required" label="fecha" v-model="model.responsible.date_firm.toForm"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.date_certification" name="date_cer" label="Fecha de formacion">
+                        <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formacion">
                             <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification.toForm"/>
                         </base-field>
                     </div>
                     <div class="col-md-4">
-                        <base-field :apiErrors="apiValidationErrors" apiName="responsible.file_certification" name="file_cer" label="Documento de formacion">
+                        <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formacion">
                             <div v-if="model.responsible.file_certification.file.length >= 1">
                                 <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
                                 <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
@@ -179,7 +179,7 @@
                                 ></base-switch>
                             </div>
                             <div class="col-md-3" v-if="model.responsible.driver">
-                                <base-field :apiErrors="apiValidationErrors" apiName="responsible.phone_number" name="adr_permit_id" label="Permiso ADR">
+                                <base-field   apiName="responsible.phone_number" name="adr_permit_id" label="Permiso ADR">
                                     <field-validate :disabled="isSaved" as="select" class="form-control" name="adr_permit_id" v-model="model.responsible.adr_permit_id" rules="required">
                                         <option selected>Permiso adr</option>
                                         <option
@@ -193,13 +193,13 @@
                                 </base-field>
                             </div>
                             <div class="col-md-3" v-if="model.responsible.driver">
-                                <base-field :apiErrors="apiValidationErrors" apiName="responsible.driver_document_date" name="driver_date" label="Fecha documentacion">
+                                <base-field   apiName="responsible.driver_document_date" name="driver_date" label="Fecha documentacion">
                                     <field-validate :disabled="isSaved" type="date" class="form-control" name="driver_date" v-model="model.responsible.driver_document_date.toForm" rules="required">
                                     </field-validate>
                                 </base-field>
                             </div>
                             <div class="col-md-4" v-if="model.responsible.driver">
-                                <base-field :apiErrors="apiValidationErrors" apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
+                                <base-field   apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
                                     <div v-if="model.responsible.driver_document.file.length >= 1">
                                         <span class="mr-md-4">{{model.responsible.driver_document.file[0].name}}</span>
                                         <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
@@ -255,24 +255,21 @@
                     >{{isSaved ? "Cerrar" : "Cancelar"}}
                 </base-button>
             </div>
-            <loader v-if="loader"/>
         </form-validate>
     </div>
 </template>
 <script>
-import auditorService from "../../../store/services/auditors-service";
-import dataService from "../../../store/services/data-service";
+import dataService from "@/store/services/data-service";
 import Multiselect from "@vueform/multiselect";
-import utils from "../../../mixins/utils-mixin";
+import utils from "@/mixins/utils-mixin";
 import _ from "lodash";
-import service from "../../../store/services/installation-service";
-import formMixin from "../../../mixins/form-mixin";
-import MaterialTable from '../../../views/Tables/MaterialTable.vue';
-import VehiclesTable from '../../../views/Tables/VehiclesTable.vue';
-import SubcontractorTable from '../../../views/Tables/SubcontractorTable.vue';
+import service from "@/store/services/model-service";
+import MaterialTable from '@/views/Tables/MaterialTable.vue';
+import VehiclesTable from '@/views/Tables/VehiclesTable.vue';
+import SubcontractorTable from '@/views/Tables/SubcontractorTable.vue';
 
 export default {
-    mixins: [utils, formMixin],
+    mixins: [utils],
     components: {Multiselect,MaterialTable, VehiclesTable, SubcontractorTable},
     props: {
         business_id: {
@@ -287,54 +284,7 @@ export default {
             installation_id: null,
             currentStep: 1,
             auditable: null,
-            model: {
-                name: "",
-                address: "",
-                business_id: this.business_id,
-                auditable_id: null,
-                province_id: null,
-                file_document: {
-                    base64: "",
-                    file: []
-                },
-                operation_types_ids:[],
-                equipments_ids:[],
-                responsible: {
-                    name: "",
-                    last_name: "",
-                    email: "",
-                    dni: "",
-                    phone_number: "",
-                    position: "",
-                    driver: false,
-                    dangerous_goods: false,
-                    driver_document: {
-                        base64: "",
-                        file: []
-                    },
-                    driver_document_date: {
-                        date: "",
-                        toForm: ""
-                    },
-                    adr_permit_id: null,
-                    file_firm: {
-                        base64: "",
-                        file: []
-                    },
-                    date_firm: {
-                        date: "",
-                        toForm: ""
-                    },
-                    file_certification: {
-                        base64: "",
-                        file: []
-                    },
-                    date_certification: {
-                        date: "",
-                        toForm: ""
-                    },
-                },
-            },
+            model: this.$store.getters.INSTALLATION_SCHEMA,
             provinces: [{
                 value: "",
                 label: ""
@@ -382,22 +332,14 @@ export default {
             }
 
             if (this.currentStep === 3 && !this.isSaved) {
-                this.resetApiValidation()
-                this.loader = true;
+                this.model.business_id = this.business_id
                 try {
-                    const res = await service.store(this.model);
+                    const res = await service.store('installation',this.model);
                     this.installation_id = res.data.data.id
                     this.isSaved = true
-                    this.loader = false
                     this.$emit('reload')
-                    this.$swal('Instalacion registrada', 'La instalacion se ha registrado correctamente', 'success')
-                } catch (err) {
-                    this.loader = false
-                    let message = !_.isEmpty(err.response) ? err.response.data.message : 'Ocurrio un error en el servidor';
-                    if (!_.isEmpty(err.response)) {
-                        this.setApiValidation(err.response.data.errors)
-                    }
-                    this.$swal('Error', message, 'error')
+                } catch (error) {
+                    console.log(error);
                     return
                 }
             }
@@ -407,7 +349,7 @@ export default {
             }
         },
         async fetchItems(search){
-            const res = await auditorService.getIndex(`name=${search}&includes[]=user`);
+            const res = await service.getIndex('auditor',`name=${search}&includes[]=user`);
             const data = res.data.data;
             let options = _.map(data, (auditor) => {
                 return {value: auditor, label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`}
@@ -483,56 +425,8 @@ export default {
                     valid: false 
                 }
             ]; 
-            this.model = {};
 
-            this.model = {
-                name: "",
-                address: "",
-                business_id: this.business_id,
-                auditable_id: null,
-                province_id: null,
-                file_document: {
-                    base64: "",
-                    file: []
-                },
-                operation_types_ids:[],
-                equipments_ids:[],
-                responsible: {
-                    name: "",
-                    last_name: "",
-                    email: "",
-                    dni: "",
-                    phone_number: "",
-                    position: "",
-                    driver: false,
-                    dangerous_goods: false,
-                    driver_document: {
-                        base64: "",
-                        file: []
-                    },
-                    driver_document_date: {
-                        date: "",
-                        toForm: ""
-                    },
-                    adr_permit_id: null,
-                    file_firm: {
-                        base64: "",
-                        file: []
-                    },
-                    date_firm: {
-                        date: "",
-                        toForm: ""
-                    },
-                    file_certification: {
-                        base64: "",
-                        file: []
-                    },
-                    date_certification: {
-                        date: "",
-                        toForm: ""
-                    },
-                },
-            }
+            this.model = this.$store.state.installation_schema
         }
     }
 }

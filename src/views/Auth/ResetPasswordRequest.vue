@@ -34,10 +34,10 @@
   </div>
 </template>
 <script>
-  import formMixin from "@/mixins/form-mixin";
+   
   export default {
     name: "login",
-    mixins: [formMixin],
+    mixins: [  ],
     data() {
       return {
         email: '',

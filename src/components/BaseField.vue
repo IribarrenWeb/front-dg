@@ -65,6 +65,7 @@
   </div>
 </template>
 <script>
+  import { mapState } from 'vuex'
   export default {
     inheritAttrs: false,
     name: "base-input",
@@ -94,11 +95,6 @@
       error: {
         type: String,
         description: "Input error (below input)",
-      },
-      apiErrors: {
-        type: Object,
-        description: "Api Input error (below input)",
-        default: null
       },
       formClasses: {
         type: String,
@@ -159,7 +155,10 @@
       },
       validName(){
         return this.apiName != '' ? this.apiName : this.name
-      }
+      },
+      ...mapState({
+        apiErrors: state => state.apiErrors,
+      })
     },
     methods: {
       updateValue(evt) {

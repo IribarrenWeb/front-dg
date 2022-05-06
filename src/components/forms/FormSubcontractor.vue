@@ -3,42 +3,42 @@
         <form-validate @submit="onSubmit" v-slot="{resetForm}">
             <div class="row border rounded border-light px-4 py-2">
                 <div class="col-md-4">
-                    <base-field :apiErrors="apiValidationErrors" name="name" label="Nombre">
-                        <field-validate type="text" class="form-control text-uppercase" name="name" rules="required|alpha" label="Nombre" v-model="model.name"/>
+                    <base-field   name="name" label="Nombre">
+                        <field-validate type="text" class="form-control text-uppercase" name="name" rules="required" label="Nombre" v-model="model.name"/>
                     </base-field>
                 </div>
                 <div class="col-md-4">
-                    <base-field :apiErrors="apiValidationErrors" name="last_name" label="Apellido">
-                        <field-validate type="text" class="form-control" name="last_name" rules="required|alpha" label="Apellido" v-model="model.last_name"/>
+                    <base-field   name="last_name" label="Apellido">
+                        <field-validate type="text" class="form-control" name="last_name" rules="required" label="Apellido" v-model="model.last_name"/>
                     </base-field>
                 </div>
                 <div class="col-md-4">
-                    <base-field :apiErrors="apiValidationErrors" name="dni" label="DNI">
+                    <base-field   name="dni" label="DNI">
                         <field-validate type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.dni"/>
                     </base-field>
                 </div>
                 <div class="col-md-4">
-                    <base-field :apiErrors="apiValidationErrors" name="phone_number" label="Móvil">
+                    <base-field   name="phone_number" label="Móvil">
                         <field-validate type="number" class="form-control" name="phone_number" rules="required" label="Móvil" v-model="model.phone_number"/>
                     </base-field>
                 </div>
                 <div class="col-md-4">
-                    <base-field :apiErrors="apiValidationErrors" name="email" label="Email">
+                    <base-field   name="email" label="Email">
                         <field-validate type="text" class="form-control" name="email" rules="required|email" label="email" v-model="model.email"/>
                     </base-field>
                 </div>
                 <div class="col-md-4">
-                    <base-field :apiErrors="apiValidationErrors" name="service" label="Servicio">
+                    <base-field   name="service" label="Servicio">
                         <field-validate type="text" class="form-control text-uppercase" name="service" rules="required" label="servicio" v-model="model.service"/>
                     </base-field>
                 </div>
                 <div class="col-md-3">
-                    <base-field :apiErrors="apiValidationErrors" name="file_document_date" label="Fecha documentacion">
+                    <base-field   name="file_document_date" label="Fecha documentacion">
                         <field-validate type="date" class="form-control" name="file_document_date" rules="required" label="fecha" v-model="model.file_document_date.toForm"/>
                     </base-field>
                 </div>
                 <div class="col-md-6">
-                    <base-field :apiErrors="apiValidationErrors" name="file_document" label="Documentacion">
+                    <base-field   name="file_document" label="Documentacion">
                         <div v-if="model.file_document.file.length >= 1">
                             <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
                             <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
@@ -60,18 +60,17 @@
                     >Cancelar
                 </base-button>
             </div>
-            <loader v-if="loader"></loader>
         </form-validate>
     </div>
 </template>
 
 <script>
-import service from "../../store/services/subcontractor-service";
-import formMixin from "@/mixins/form-mixin";
+import service from "@/store/services/model-service";
+ 
 import utils from "@/mixins/utils-mixin";
 
 export default {
-    mixins: [formMixin, utils],
+    mixins: [utils],
     props: {
         installation_id: {
             required: true,
@@ -107,26 +106,21 @@ export default {
     },
     methods: {
         async onSubmit(values, { resetForm }){
-            console.log(values);
-            this.loader = true;
             this.model.file_document_date.date = this.formatDate(values.file_document_date)
             this.model.file_document.base64 = await this.toBase64(values.file_document[0])
-            this.resetApiValidation()
+            this.$store.commit('resetApiErrors')
+
             try {
-                const res = await service.store(this.model);
-                console.log(res);
+                await service.store('subcontractor',this.model);
+    
                 this.$toast.success('Subcontratista registrado')
-                this.loader = false;
+    
                 resetForm()
+                
                 this.$emit('close')
                 this.$emit('reload')
-            } catch (err) {
-                console.log(err.response);
-                if (typeof err.response.data.errors != 'undefined') {
-                    this.setApiValidation(err.response.data.errors)
-                }
-                this.$toast.error('No se pudo registrar el subcontratista')
-                this.loader = false;
+            } catch (error) {
+                console.log(error);
             }
         },
         handleClose(reset){

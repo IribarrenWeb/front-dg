@@ -92,7 +92,7 @@
 </template>
 <script>
   import FormSubcontractor from "../../components/forms/FormSubcontractor.vue";
-  import service from "../../store/services/subcontractor-service";
+  import service from "../../store/services/model-service";
   import utils from "@/mixins/utils-mixin";
 
   export default {
@@ -123,31 +123,19 @@
     },
     methods: {
       async getSubcontractors(page) {
-        try {
-          this.loader = true;
           let params = "includes[]=documents";
 
           if (this.installation_id != null) {
             params += "&installation_id=" + this.installation_id;
           }
 
-          const resp = await service.getIndex(page, params);
+          const resp = await service.getIndex('subcontractor', page, params);
 
           if (typeof resp.data.data != "undefined") {
             this.tableData = resp.data.data;
             this.metaData = resp.data.meta.page;
             this.page = this.metaData.currentPage;
           }
-          this.loader = false;
-        } catch (err) {
-          this.loader = false;
-          console.log(err);
-          this.$swal(
-            "Ocurrio un error",
-            "No se pudieron cargar los subcontratistas",
-            "error"
-          );
-        }
       },
       async handleChange(event) {
         if (event == this.page) {
@@ -156,17 +144,13 @@
         this.getSubcontractors(event, this.installation_id);
       },
       async destroy(id) {
-        this.loader = true
         try {
-          const response = await service.destroy(id)
-          console.log(response);
-          this.$toast.success('Registro eliminado')
-          this.getSubcontractors();
-          this.loader = false
-        } catch (err) {
-          console.log(err.response);
-          this.loader = false 
-          this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
+          
+          await service.destroy('subcontractor',id)
+            this.$toast.success('Registro eliminado')
+            this.getSubcontractors();
+        } catch (error) {
+          console.log(error);
         }
       },
     },

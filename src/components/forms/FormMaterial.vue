@@ -12,7 +12,7 @@
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="is_residue" label="Tipo">
+                        <base-field name="is_residue" label="Tipo">
                             <field-validate as="select" class="form-control" name="is_residue" rules="required" label="residue" v-model="model.is_residue">
                                 <option :value="true" selected>Residuo ADR</option>
                                 <option value="false">Material</option>
@@ -20,12 +20,12 @@
                         </base-field>
                     </div>
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="name" label="Nombre">
+                        <base-field name="name" label="Nombre">
                             <field-validate type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
                         </base-field>
                     </div>
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="deposit_type_id" label="Depósito">
+                        <base-field name="deposit_type_id" label="Depósito">
                             <field-validate as="select" class="form-control" name="deposit_type_id" rules="required" label="tipo de deposito" v-model="model.deposit_type_id">
                                 <option v-for="deposit in deposits" :key="deposit.key" :value="deposit.id">
                                     {{deposit.name}}
@@ -34,7 +34,7 @@
                         </base-field>
                     </div>
                     <div class="col-md-3">
-                       <base-field :apiErrors="apiValidationErrors" name="material" label="UN">
+                       <base-field name="material" label="UN">
                             <div v-if="model.material != null">
                                 <span class="mr-md-4 text-uppercase">{{material.un_code}} - {{material.denomination_name}}</span>
                                 <base-button @click="model.material = null" size="sm" type="default" :outline="true">Cambiar</base-button>
@@ -64,7 +64,7 @@
             <template v-if="currentStep == 2">
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="address" label="Unidad">
+                        <base-field name="address" label="Unidad">
                             <field-validate as="select" class="form-control" name="deposit" rules="required" label="deposit" v-model="model.unit">
                                 <option value="TONELADAS" selected>TONELADAS</option>
                                 <option value="KILOS">KILOS</option>
@@ -72,17 +72,17 @@
                         </base-field>
                     </div>
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="buy" label="Compra">
+                        <base-field name="buy" label="Compra">
                             <field-validate type="number" class="form-control" name="buy" rules="required" label="Cantidad de compra" v-model="model.buy"/>
                         </base-field>
                     </div>
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="sell" label="Venta">
+                        <base-field name="sell" label="Venta">
                             <field-validate type="number" class="form-control" name="sell" rules="required" label="Cantidad de venta" v-model="model.sell"/>
                         </base-field>
                     </div>
                     <div class="col-md-3">
-                        <base-field :apiErrors="apiValidationErrors" name="transported" label="Transportada">
+                        <base-field name="transported" label="Transportada">
                             <field-validate type="number" class="form-control" name="transported" rules="required" label="Cantidad transportada" v-model="model.transported"/>
                         </base-field>
                     </div>
@@ -107,20 +107,18 @@
                     >Cancelar
                 </base-button>
             </div>
-            <loader v-if="loader"></loader>
         </form-validate>
     </div>
 </template>
 
 <script>
-import dataService from "../../store/services/data-service";
-import service from "../../store/services/material-service";
+import dataService from "@/store/services/data-service";
 import Multiselect from "@vueform/multiselect";
-import formMixin from "@/mixins/form-mixin";
+import service from "@/store/services/model-service";
+ 
 import _ from "lodash";
 
 export default {
-    mixins: [formMixin],
     props: {
         installation_id: {
             required: true,
@@ -183,19 +181,14 @@ export default {
                 this.model.is_residue = values.is_residue == 'false' ? false : true;
             }
             if (this.currentStep === 2) {
-                this.loader = true;
                 try {
-                    const res = await service.store(this.model);
-                    console.log(res);
+                    await service.store('material',this.model);
                     this.$toast.success('Material registrado')
-                    this.loader = false;
                     resetForm()
                     this.$emit('close')
                     this.$emit('reload')
-                } catch (err) {
-                    console.log(err);
-                    this.$toast.error('No se pudo registrar el material')
-                    this.loader = false;
+                } catch (error) {
+                    console.log(error);
                 }
             }
 
@@ -224,6 +217,6 @@ export default {
             reset()
             this.$emit('close')
         }
-    },
+    }
 }
 </script>

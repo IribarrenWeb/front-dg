@@ -6,21 +6,19 @@
           :disabled="disabled"
           :modelValue="auditor.name"
           :view="auditor.length >= 1"
-          :apiErrors="apiValidationErrors.name"
           formClasses="col-md-4"
           name="name"
           label="Nombre"
-          rules="required|alpha"
+          rules="required"
         />
         <base-input
           :disabled="disabled"
           :modelValue="auditor.last_name"
           :view="auditor.length >= 1"
-          :apiErrors="apiValidationErrors.last_name"
           formClasses="col-md-4"
           name="last_name"
           label="Apellido"
-          rules="required|alpha"
+          rules="required"
         />
         <div class="col-md-4">
           <div v-if="disabled">
@@ -49,11 +47,6 @@
                 {{ option.name }} {{ option.last_name }} - {{ option.email }}
               </template>
             </Multiselect>
-            <span
-              class="text-danger invalid-feedback d-block"
-              v-if="apiValidationErrors.auditor_id"
-              >{{ apiValidationErrors.auditor_id[0] }}</span
-            >
           </div>
         </div>
       </div>
@@ -62,7 +55,6 @@
           :disabled="disabled"
           :modelValue="auditor.phone_number"
           :view="auditor.length >= 1"
-          :apiErrors="apiValidationErrors.phone_number"
           formClasses="col-md-4"
           name="phone_number"
           label="Numero movil"
@@ -72,7 +64,6 @@
           :disabled="disabled"
           :modelValue="auditor.email"
           :view="auditor.length >= 1"
-          :apiErrors="apiValidationErrors.email"
           formClasses="col-md-4"
           name="email"
           label="Email"
@@ -82,7 +73,6 @@
           :disabled="disabled"
           :modelValue="auditor.dni"
           :view="auditor.length >= 1"
-          :apiErrors="apiValidationErrors.dni"
           formClasses="col-md-4"
           name="dni"
           label="Dni"
@@ -127,7 +117,6 @@
             </base-input>
 
             <base-input
-              :apiErrors="apiValidationErrors.province_id"
               formClasses="col-md-6"
               type="select"
               name="province_id"
@@ -151,7 +140,6 @@
         <hr />
         <div class="row" v-if="!disabled">
           <base-input
-            :apiErrors="apiValidationErrors.file_certification"
             formClasses="col-md-6"
             name="file_cer"
             label="Certificado"
@@ -159,7 +147,6 @@
             rules="required|ext:pdf"
           />
           <base-input
-            :apiErrors="apiValidationErrors.certification_date"
             formClasses="col-md-6"
             name="date_cer"
             label="Fecha de certificado"
@@ -167,7 +154,6 @@
             rules="required"
           />
           <base-input
-            :apiErrors="apiValidationErrors.file_firm"
             formClasses="col-md-6"
             name="file_firm"
             label="Alta"
@@ -175,7 +161,6 @@
             rules="required|ext:pdf"
           />
           <base-input
-            :apiErrors="apiValidationErrors.firm_date"
             formClasses="col-md-6"
             name="date_firm"
             label="Fecha de alta"
@@ -229,20 +214,18 @@
       </base-button>
     </form-validate>
 
-    <loader v-if="loader"></loader>
   </div>
 </template>
 <script>
   import Multiselect from "@vueform/multiselect";
 
-  import service from "../../store/services/auditors-service";
-  import adminService from "../../store/services/admin-service";
+  import service from "@/store/services/model-service";
   import _ from "lodash";
-  import formMixin from "@/mixins/form-mixin";
+   
   import utils from "@/mixins/utils-mixin";
   export default {
     components: { Multiselect },
-    mixins: [formMixin, utils],
+    mixins: [utils],
     name: "form-auditor",
     props: {
       auditor: {
@@ -255,7 +238,7 @@
     data() {
       return {
         errors: {},
-
+        api: "auditor",
         delegate_id: "",
       };
     },
@@ -286,48 +269,41 @@
         this.loader = true;
 
         try {
-          const response = await service.store(formData);
+          const response = await service.store(this.api, formData, true);
           if (response.status == 201) {
-            this.$swal(
-              "El auditor se ha creado",
-              "El auditor se ha creado con exito.",
-              "success"
-            ).then(() => {
               resetForm();
               this.$emit("closeModal");
               this.$emit("resetTable");
-            });
           }
         } catch (err) {
-          if (typeof err.response == "undefined") {
-            this.$swal("Error", "Ocurrio un error", "error");
-            console.log(err);
-          } else {
-            if (err.response.status == 422) {
-              this.setApiValidation(err.response.data.errors);
-              console.log(this.apiValidationErrors);
-              this.$swal(
-                "Error en los datos",
-                err.response.data.message,
-                "error"
-              );
-            } else {
-              this.$swal(
-                "Error en el servidor",
-                "Ocurrio un error en el servidor",
-                "error"
-              );
-              console.log(err.response);
-            }
-          }
+          // if (typeof err.response == "undefined") {
+          //   this.$swal("Error", "Ocurrio un error", "error");
+          //   console.log(err);
+          // } else {
+          //   if (err.response.status == 422) {
+          //     this.setApiValidation(err.response.data.errors);
+          //     console.log(this.apiValidationErrors);
+          //     this.$swal(
+          //       "Error en los datos",
+          //       err.response.data.message,
+          //       "error"
+          //     );
+          //   } else {
+          //     this.$swal(
+          //       "Error en el servidor",
+          //       "Ocurrio un error en el servidor",
+          //       "error"
+          //     );
+          //     console.log(err.response);
+          //   }
+          // }
         }
-        this.loader = false;
       },
       async fetchItems(search) {
         if (_.isEmpty(search)) {
           return {};
         }
-        const response = await adminService.getUsers(
+        const response = await service.users(
           "name=" + search + "&role_id=2&includes[]=delegate"
         );
         return response.data.data;

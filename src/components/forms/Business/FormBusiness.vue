@@ -3,72 +3,46 @@
     <div class="text-center text-uppercase">
       <h3>Agregar una empresa</h3>
     </div>
-    <div class="progress" style="height: 1px">
-      <div
-        class="progress-bar"
-        role="progressbar"
-        :style="`width: ${percent}%`"
-        aria-valuenow="50"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
-    </div>
-    <form-validate @submit="submit">
-      <template v-if="step === 1">
+    
+    <form-validate @submit="submit" v-slot="{ meta, resetForm }">
+      <ul class="nav nav-pills mb-md-4 justify-content-center">
+          <li class="nav-item" v-for="step in steps" :key="step.key">
+              <a class="nav-link p-2" :class="[{'active': currentStep == step.number},{'disabled':!step.valid && currentStep != step.number}]" href="#" @click.prevent="meta.valid ? currentStep = step.number : ''">
+                  <i class="fa fa-check" aria-hidden="true" v-if="step.valid"></i> 
+                  {{step.title}}
+              </a>
+          </li>
+      </ul>
+      <template v-if="currentStep === 1">
         <div>
           <div class="row border border-light rounded p-2">
             <div class="col-12">
-              <h4>Datos del representante</h4>
+              <h4>Datos generales</h4>
             </div>
             <div class="col-md-4">
-              <base-input
-                name="name"
-                label="Nombre"
-                inputClasses="form-control-sm"
-                type="text"
-                :modelValue="model.name"
-                rules="required|alpha"
-              />
+                <base-field name="name" label="Nombre representante">
+                    <field-validate type="text" class="form-control" name="name" rules="required|" label="nombre" v-model="model.name"/>
+                </base-field>
             </div>
             <div class="col-md-4">
-              <base-input
-                name="last_name"
-                inputClasses="form-control-sm"
-                label="Apellido"
-                type="text"
-                :modelValue="model.last_name"
-                rules="required|alpha"
-              />
+                <base-field name="last_name" label="Apellido representante">
+                    <field-validate type="text" class="form-control" name="last_name" rules="required|" label="apellido" v-model="model.last_name"/>
+                </base-field>
             </div>
             <div class="col-md-4">
-              <base-input
-                name="property_dni"
-                inputClasses="form-control-sm"
-                label="Dni"
-                type="text"
-                :modelValue="model.property_dni"
-                rules="required"
-              />
+                <base-field name="property_dni" label="Dni">
+                    <field-validate type="text" class="form-control" name="property_dni" rules="required|min:4|max:15" label="dni" v-model.trim="model.property_dni"/>
+                </base-field>
             </div>
-            <div class="col-md-6">
-              <base-input
-                name="email"
-                inputClasses="form-control-sm"
-                label="Email"
-                type="text"
-                :modelValue="model.email"
-                rules="required|email"
-              />
+            <div class="col-md-4">
+                <base-field name="property_phone" label="Móvil">
+                    <field-validate type="number" class="form-control" name="property_phone" rules="required|min:5|max:15" label="móvil" v-model.number="model.property_phone"/>
+                </base-field>
             </div>
-            <div class="col-md-6">
-              <base-input
-                name="property_phone"
-                inputClasses="form-control-sm"
-                label="Móvil"
-                type="text"
-                :modelValue="model.property_phone"
-                rules="required"
-              />
+            <div class="col-md-4">
+                <base-field   name="email" label="Email">
+                    <field-validate type="text" class="form-control" name="email" rules="required|email" label="email" v-model.trim="model.email"/>
+                </base-field>
             </div>
           </div>
           <div class="row border border-light rounded p-2 mt-2">
@@ -76,227 +50,133 @@
               <h4>Datos de empresa</h4>
             </div>
             <div class="col-md-4">
-              <base-input
-                inputClasses="form-control-sm"
-                name="business_name"
-                label="Nombre"
-                :modelValue="model.business_name"
-                type="text"
-              />
+                <base-field name="business_name" label="Nombre">
+                    <field-validate type="text" class="form-control" name="business_name" rules="required|" label="nombre empresa" v-model="model.business_name"/>
+                </base-field>
             </div>
             <div class="col-md-4">
-              <base-input
-                inputClasses="form-control-sm"
-                name="business_phone"
-                :modelValue="model.business_phone"
-                label="Móvil"
-                type="number"
-              />
+                <base-field name="business_nif" label="CIF/NIF">
+                    <field-validate type="text" class="form-control" name="business_nif" rules="required|" label="nombre" v-model.trim="model.business_nif"/>
+                </base-field>
             </div>
             <div class="col-md-4">
-              <base-input
-                inputClasses="form-control-sm"
-                name="nif"
-                :modelValue="model.business_nif"
-                label="NIF"
-                type="text"
-              />
+                <base-field name="business_phone" label="Fijo">
+                    <field-validate type="number" class="form-control" name="business_phone" rules="required|min:5|max:15" label="fijó" v-model.number="model.business_phone"/>
+                </base-field>
+            </div>
+            <div class="col-md-4">
+                <base-field   name="province_id" label="Provincia">
+                    <field-validate class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
+                        <option value="" selected>Selecciona una provincia</option>
+                        <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
+                    </field-validate>
+                </base-field>
+            </div>
+            <div class="col-md-4">
+                <base-field name="postal_code" label="Código postal">
+                    <field-validate type="number" class="form-control" name="postal_code" rules="required|numeric|min:2|max:4" label="postal_code" v-model="model.postal_code"/>
+                </base-field>
             </div>
           </div>
         </div>
       </template>
-      <template v-if="step === 2">
-        <div>
-          <div class="row border border-light rounded p-2 mt-2">
+      <template v-if="currentStep === 2">
+        <div class="row border border-light rounded p-2">
             <div class="col-12">
-              <h4>Datos Bancarios</h4>
+              <h4>Datos bancarios</h4>
             </div>
             <div class="col-md-4">
-              <base-input
-                inputClasses="form-control-sm"
-                name="bank_code"
-                label="Numero cuenta"
-                type="number"
-                :modelValue="model.bank_code"
-                rules="required"
-              />
+                <base-field name="holder_name" label="Nombre del titular">
+                    <field-validate type="text" class="form-control" name="holder_name" rules="required|" label="nombre" v-model="model.holder_name"/>
+                </base-field>
             </div>
             <div class="col-md-4">
-              <base-input
-                inputClasses="form-control-sm"
-                name="holder_name"
-                label="Nombre titular"
-                :modelValue="model.holder_name"
-                type="text"
-                rules="required|alpha_spaces"
-              />
+                <base-field name="bank_code" label="BIC/SWIFT">
+                    <field-validate type="text" class="form-control" name="bank_code" rules="required|" label="BIC/SWIFT" v-model="model.bank_code"/>
+                </base-field>
             </div>
             <div class="col-md-4">
-              <base-input
-                inputClasses="form-control-sm"
-                name="iban_number"
-                :modelValue="model.iban_number"
-                label="Numero IBAN"
-                type="number"
-                rules="required"
-              />
+                <base-field name="iban_number" label="IBAN">
+                    <field-validate type="text" class="form-control" name="iban_number" rules="required|" label="numero iban" v-model="model.iban_number"/>
+                </base-field>
             </div>
+        </div>
+        <div class="row border border-light mt-3 rounded p-2">
+          <div class="col-12">
+              <h4>Documentación</h4>
           </div>
-
-          <div class="row border border-light rounded p-2 mt-2">
-            <div class="col-12">
-              <h4>Documentacion</h4>
-            </div>
-            <div class="col-md-6">
-              <div v-if="!this.model.file_document == ''">
-                <base-input :view="true">{{
-                  this.model.file_document[0].name
-                }}</base-input>
-                <button
-                  type="button"
-                  class="btn btn-default btn-sm"
-                  @click="this.model.file_document = null"
-                >
-                  Cambiar
-                </button>
-              </div>
-              <base-input
-                v-else
-                inputClasses="form-control-sm"
-                name="file_document"
-                label="Documentacion"
-                type="file"
-                rules="required|ext:pdf"
-                :modelValue="model.file_document"
-              />
-            </div>
-            <div class="col-md-6">
-              <base-input
-                name="file_date"
-                label="Fecha documentacion"
-                type="date"
-                rules="required"
-                :modelValue="model.file_date"
-              />
-            </div>
+          <div class="col-md-6">
+            <base-field name="file_date.date" label="Fecha de documentación">
+                <field-validate type="date" class="form-control" name="file_date.date" rules="required" label="fecha documentación" v-model="model.file_date.toForm"/>
+            </base-field>
+          </div>
+          <div class="col-md-6">
+            <base-field name="file_document.base64" label="Documentación">
+                <div v-if="model.file_document.file.length >= 1">
+                    <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
+                    <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                </div>
+                <field-validate v-else type="file" class="form-control" name="file_document.base64" rules="required" label="documento" v-model="model.file_document.file"/>
+            </base-field>
           </div>
         </div>
       </template>
-      <template v-if="step === 3">
+      <template v-if="currentStep === 3">
         <fieldset
           class="border border-light rounded p-2 row mt-3"
           v-for="(installation, id) in installations"
           :key="installation.key"
         >
-          <base-input
-            formClasses="col-md-4"
-            :name="`installations[${id}].name`"
-            :modelValue="installations[id].name"
-            label="Nombre de instalacion"
-            rules="required|alpha_num"
-          ></base-input>
-          <base-input
-            formClasses="col-md-4"
-            :name="`installations[${id}].address`"
-            :modelValue="installations[id].address"
-            label="Direccion"
-            rules="required"
-          ></base-input>
           <div class="col-md-4">
-            <label for=""> Auditor </label>
-            <field-validate
-              :name="`installations[${id}].auditor_id`"
-              label="Auditor"
-              rules="required"
-              :modelValue="installations[id].auditable_id"
-              v-slot="{ field, errorMessage }"
-            >
-              <Multiselect
-                :searchable="true"
-                trackBy="name"
-                v-bind="field"
-                label="name"
-                :min-chars="2"
-                :delay="500"
-                valueProp="id"
-                id="id"
-                :required="true"
-                :options="fetchItems"
-                :object="true"
-              >
-                <template v-slot:option="{ option }">
-                  {{ option.name }} {{ option.last_name }} - {{ option.email }}
-                </template>
-              </Multiselect>
-              <span
-                class="text-danger invalid-feedback d-block"
-                v-if="apiValidationErrors.auditor_id || errorMessage"
-                >{{
-                  errorMessage
-                    ? errorMessage
-                    : apiValidationErrors.auditor_id[0]
-                }}</span
-              >
-            </field-validate>
+              <base-field   :name="`installations[${id}].name`" label="Nombre de instalacion">
+                  <field-validate type="text" class="form-control" :name="`installations[${id}].name`" rules="required" label="Nombre" v-model="installations[id].name"/>
+              </base-field>
           </div>
-          <div class="col-12">
-            <div class="row">
-              <div v-show="false">
-                <field-validate
-                  :name="`installations[${id}].province_id`"
-                  class="form-control"
-                  label="Provincia"
-                  as="select"
-                  rules="required"
-                  :modelValue="installations[id].province_id"
-                >
-                </field-validate>
-              </div>
-
-              <base-input
-                :apiErrors="apiValidationErrors.province_id"
-                formClasses="col-md-6"
-                type="select"
-                :name="`installations[${id}].province_id`"
-                label="Provincia"
-                :modelValue="installations[id].province_id"
-                :disabled="!provinces.length >= 1"
-              >
-                <template v-slot:options>
-                  <option selected>Selecciona una provincia</option>
-                  <option
-                    :value="province.id"
-                    v-for="(province, key) in provinces"
-                    :key="key.id"
-                  >
-                    {{ province.name }}
-                  </option>
-                </template>
-              </base-input>
-
-              <div class="col-md-6">
-                <div v-if="!this.installations[id].file_document == ''">
-                  <base-input :view="true">{{
-                    this.installations[id].file_document[0].name
-                  }}</base-input>
-                  <button
-                    type="button"
-                    class="btn btn-default btn-sm"
-                    @click="installations[id].file_document = null"
-                  >
-                    Cambiar
-                  </button>
-                </div>
-                <base-input
-                  v-else
-                  :name="`installations[${id}].file_document`"
-                  :modelValue="installations[id].file_document"
-                  rules="required|ext:pdf"
-                  type="file"
-                  label="Documento de instalacion"
-                ></base-input>
-              </div>
-            </div>
+          <div class="col-md-4">
+              <base-field   :name="`installations[${id}].address`" label="Direccion">
+                  <field-validate type="text" class="form-control" :name="`installations[${id}].address`" rules="required" label="direccion" v-model="installations[id].address"/>
+              </base-field>
+          </div>
+          <div class="col-md-4">
+              <base-field   :name="`auditable[${id}]`" label="Auditor">
+                  <div v-if="installations[id].auditable != null">
+                      <span class="mr-md-4 text-uppercase">{{installations[id].auditable.user.name}} {{installations[id].auditable.user.last_name}}</span>
+                      <base-button @click="installations[id].auditable = null" size="sm" type="default" :outline="true">Cambiar</base-button>
+                  </div>
+                  <div v-else>
+                      <field-validate :name="`auditable[${id}]`" label="Auditor" rules="required" v-slot="{ field }" v-model="installations[id].auditable">
+                          <Multiselect
+                              :searchable="true"
+                              v-bind="field"
+                              :min-chars="2"
+                              :delay="500"
+                              :required="true"
+                              :options="fetchItems"
+                              ref="multiselect"
+                              @select="installations[id].auditable = $event"
+                            
+                          >
+                          </Multiselect>
+                      </field-validate>
+                  </div>
+              </base-field>
+          </div>
+          <div class="col-md-6">
+              <base-field :name="`installations[${id}].province_id`" label="Provincia">
+                  <field-validate class="form-control" as="select" :name="`installations[${id}].province_id`" rules="required" label="Provincia" v-model="installations[id].province_id">
+                      <option value="" selected>Selecciona una provincia</option>
+                      <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
+                  </field-validate>
+              </base-field>
+          </div>
+          <div class="col-md-6">
+              <base-field :name="`installations[${id}].file_document.base64`" label="Documentacion">
+                  <div v-if="installations[id].file_document.file.length >= 1">
+                      <span class="mr-md-4">{{installations[id].file_document.file[0].name}}</span>
+                      <base-button @click="installations[id].file_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                  </div>
+                  <field-validate v-show="!installations[id].file_document.file.length >= 1" class="form-control" type="file" :name="`installations[${id}].file_document.base64`" rules="required|ext:pdf" :validateOnInput="true" label="documentacion" v-model="installations[id].file_document.file"/>
+              </base-field>
           </div>
 
           <div class="col-12 mt-2">
@@ -319,8 +199,7 @@
           </base-button>
         </div>
       </template>
-      <template v-if="step === 4">
-        <div>
+      <template v-if="currentStep === 4">
           <fieldset
             class="border border-light rounded p-2 row mt-3"
             v-for="(installation, id) in installations"
@@ -328,372 +207,264 @@
           >
             <div class="col-12 border-bottom border-light mb-2">
               <h3 class="badge rounded-pill bg-default text-white h3">
-                Responsable de instalacion #{{ id + 1 }}
+                Responsable de instalación #{{ id + 1 }}
               </h3>
             </div>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.name`"
-              :modelValue="installations[id].responsible.name"
-              rules="required|alpha"
-              label="Nombre"
-            ></base-input>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.last_name`"
-              :modelValue="installations[id].responsible.last_name"
-              rules="required|alpha"
-              label="Apellido"
-            ></base-input>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.dni`"
-              :modelValue="installations[id].responsible.dni"
-              label="Dni"
-              rules="required"
-            ></base-input>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.email`"
-              :modelValue="installations[id].responsible.email"
-              label="Email"
-              rules="required|email"
-            ></base-input>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.position`"
-              :modelValue="installations[id].responsible.position"
-              rules="required|alpha_spaces"
-              label="Posicion"
-            ></base-input>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.phone_number`"
-              :modelValue="installations[id].responsible.phone_number"
-              label="Móvil"
-              rules="required|numeric"
-            ></base-input>
-            <div class="col-md-4">
-              <div
-                v-if="!installations[id].responsible.file_certification == ''"
-              >
-                <base-input :view="true">{{
-                  installations[id].responsible.file_certification[0].name
-                }}</base-input>
-                <button
-                  type="button"
-                  class="btn btn-default btn-sm"
-                  @click="installations[id].responsible.file_certification = null"
-                >
-                  Cambiar
-                </button>
+            <div class="row border rounded border-light px-4 py-2 mx-0">
+              <div class="col-12 border-bottom border-light mb-md-3">
+                  <h4>Datos principales</h4>
               </div>
-              <base-input
-                v-else
-                :name="`installations[${id}].responsible.file_certification`"
-                :modelValue="installations[id].responsible.file_certification"
-                rules="required|ext:pdf"
-                type="file"
-                label="Documento de certificado"
-              ></base-input>
-            </div>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.date_certification`"
-              :modelValue="installations[id].responsible.date_certification"
-              label="Fecha del certificado"
-              type="date"
-            ></base-input>
-            <base-input
-              formClasses="col-md-4"
-              :name="`installations[${id}].responsible.date_firm`"
-              :modelValue="installations[id].responsible.date_firm"
-              label="Fecha de alta"
-              type="date"
-            ></base-input>
-            <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-4">
-                  <base-switch
-                    label="Conductor ADR"
-                    v-model="installations[id].responsible.driver"
-                  ></base-switch>
-                </div>
-                <base-input
-                  v-if="installations[id].responsible.driver"
-                  formClasses="col-md-4"
-                  type="select"
-                  :name="`installations[${id}].responsible.adr_permit_id`"
-                  label="Permiso ADR"
-                  :modelValue="installations[id].responsible.adr_permit_id"
-                  :disabled="!provinces.length >= 1"
-                >
-                  <template v-slot:options>
-                    <option
-                      :value="permit.id"
-                      v-for="(permit, key) in permits"
-                      :key="key.id"
-                    >
-                      {{ permit.name }}
-                    </option>
-                  </template>
-                </base-input>
-                <div class="col-md-4">
-                  <div
-                    v-if="
-                      !installations[id].responsible.driver_document == '' &&
-                      installations[id].responsible.driver
-                    "
-                  >
-                    <base-input :view="true">{{
-                      installations[id].responsible.driver_document[0].name
-                    }}</base-input>
-                    <button
-                      type="button"
-                      class="btn btn-default btn-sm"
-                      @click="installations[id].responsible.driver_document = null"
-                    >
-                      Cambiar
-                    </button>
+              <div class="col-md-6 col-lg-4">
+                  <base-field   :apiName="`installations.${id}.responsible.name`" name="name" label="Nombre">
+                      <field-validate type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="installations[id].responsible.name"/>
+                  </base-field>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                  <base-field   :apiName="`installations.${id}.responsible.last_name`" name="last_name" label="Apellido">
+                      <field-validate type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="installations[id].responsible.last_name"/>
+                  </base-field>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                  <base-field   :apiName="`installations.${id}.responsible.dni`" name="dni" label="Dni">
+                      <field-validate type="number" class="form-control" name="dni" rules="required" label="dni" v-model="installations[id].responsible.dni"/>
+                  </base-field>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                  <base-field   :apiName="`installation.${id}.responsible.email`" name="email" label="Email">
+                      <field-validate type="text" class="form-control" name="email" rules="required" label="email" v-model="installations[id].responsible.email"/>
+                  </base-field>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                  <base-field   :apiName="`installation[${id}].responsible.position`" name="position" label="Posicion">
+                      <field-validate type="text" class="form-control" name="position" rules="required" label="posicion" v-model="installations[id].responsible.position"/>
+                  </base-field>
+              </div>
+
+              <div class="col-md-6 col-lg-4">
+                  <base-field   :apiName="`installations.${id}.responsible.phone_number`" label="Movil" name="phone_number">
+                      <field-validate type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="installations[id].responsible.phone_number"/>
+                  </base-field>
+              </div>
+          </div>
+          <div class="row border rounded border-light px-4 py-2 mt-3 mx-0">
+              <div class="col-12 border-bottom border-light mb-md-3">
+                  <h4>Documentacion</h4>
+              </div>
+              <div class="col-md-6">
+                  <base-field :name="`installations.${id}.responsible.date_firm.date`" label="Fecha de firma">
+                      <field-validate type="date" class="form-control" :name="`installations.${id}.responsible.date_firm.date`" rules="required" label="fecha de firma" v-model="installations[id].responsible.date_firm.toForm"/>
+                  </base-field>
+              </div>
+              <div class="col-md-6">
+                  <base-field :name="`installations.${id}.responsible.file_firm.base64`" label="Documento de formación">
+                      <div v-if="installations[id].responsible.file_firm.file.length >= 1">
+                          <span class="mr-md-4">{{installations[id].responsible.file_firm.file[0].name}}</span>
+                          <base-button @click="installations[id].responsible.file_firm.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                      </div>
+                      <field-validate v-else type="file" class="form-control" :name="`installations.${id}.responsible.file_firm.base64`" rules="required" label="documento" v-model="installations[id].responsible.file_firm.file"/>
+                  </base-field>
+              </div>
+              <div class="col-md-6">
+                  <base-field :name="`installations.${id}.responsible.date_certification.date`" label="Fecha de formación">
+                      <field-validate type="date" class="form-control" :name="`installations.${id}.responsible.date_certification.date`" rules="required" label="fecha" v-model="installations[id].responsible.date_certification.toForm"/>
+                  </base-field>
+              </div>
+              <div class="col-md-6">
+                  <base-field :name="`installations.${id}.responsible.file_certification.base64`" label="Documento de formación">
+                      <div v-if="installations[id].responsible.file_certification.file.length >= 1">
+                          <span class="mr-md-4">{{installations[id].responsible.file_certification.file[0].name}}</span>
+                          <base-button @click="installations[id].responsible.file_certification.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                      </div>
+                      <field-validate v-else type="file" class="form-control" :name="`installations.${id}.responsible.file_certification.base64`" rules="required" label="documento" v-model="installations[id].responsible.file_certification.file"/>
+                  </base-field>
+              </div>
+
+              <div class="col-md-12">
+                  <div class="row">
+                      <div class="col-md-2">
+                          <base-switch
+                              v-model="installations[id].responsible.driver" label="Conductor"
+                          ></base-switch>
+                      </div>
+                      <div class="col-md-3" v-if="installations[id].responsible.driver">
+                          <base-field :name="`installations.${id}.responsible.adr_permit_id`" label="Permiso ADR">
+                              <field-validate as="select" class="form-control" :name="`installations.${id}.responsible.adr_permit_id`" v-model="installations[id].responsible.adr_permit_id" rules="required">
+                                  <option selected>Permiso adr</option>
+                                  <option
+                                      :value="permit.id"
+                                      v-for="(permit, key) in permits"
+                                      :key="key.id"
+                                      >
+                                      {{ permit.name }}
+                                  </option>
+                              </field-validate>
+                          </base-field>
+                      </div>
+                      <div class="col-md-3" v-if="installations[id].responsible.driver">
+                          <base-field :name="`installations.${id}.responsible.driver_document_date.date`" label="Fecha">
+                              <field-validate type="date" class="form-control" :name="`installations.${id}.responsible.driver_document_date.date`" v-model="installations[id].responsible.driver_document_date.toForm" rules="required">
+                              </field-validate>
+                          </base-field>
+                      </div>
+                      <div class="col-md-4" v-if="installations[id].responsible.driver">
+                          <base-field :name="`installations.${id}.responsible.driver_document.base64`" label="Documentación ADR">
+                              <div v-if="installations[id].responsible.driver_document.file.length >= 1">
+                                  <span class="mr-md-4">{{installations[id].responsible.driver_document.file[0].name}}</span>
+                                  <base-button @click="installations[id].responsible.driver_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                              </div>
+                              <field-validate v-else type="file" class="form-control" :name="`installations.${id}.responsible.driver_document.base64`" rules="required" label="documento" v-model="installations[id].responsible.driver_document.file"/>
+                          </base-field>
+                      </div>
                   </div>
-                  <base-input
-                    v-else-if="
-                      installations[id].responsible.driver &&
-                      installations[id].responsible.driver_document == ''
-                    "
-                    :name="`installations[${id}].responsible.driver_document`"
-                    :modelValue="installations[id].responsible.driver_document"
-                    type="file"
-                    rules="required|ext:pdf"
-                    label="Documento de conductor"
-                  ></base-input>
-                </div>
-                <base-input
-                  v-if="installations[id].responsible.driver"
-                  formClasses="col-md-4"
-                  :name="`installations[${id}].responsible.driver_document_date`"
-                  :modelValue="
-                    installations[id].responsible.driver_document_date
-                  "
-                  label="Fecha de alta"
-                  type="date"
-                ></base-input>
               </div>
-            </div>
-            <div class="col-12">
-              <div class="row">
-                <div class="col-md-4">
-                  <base-switch
-                    label="Materiales peligrosos"
-                    v-model="installations[id].responsible.dangerous_goods"
+              <div class="col-md-6 col-lg-4">
+                  <base-switch v-model="installations[id].responsible.dangerous_goods" label="Mercancias peligrosas"
                   ></base-switch>
-                </div>
               </div>
-            </div>
+          </div>
           </fieldset>
-        </div>
       </template>
 
       <div class="mt-4 float-md-right">
-        <base-button type="default" @click="prevStep()" v-if="step !== 1"
+        <base-button type="default" @click="prevStep()" v-if="currentStep !== 1"
           >Anterior</base-button
         >
-        <base-button type="default" nativeType="submit" v-if="step !== 4"
+        <base-button type="default" nativeType="submit" v-if="currentStep !== 4"
           >Siguiente</base-button
         >
-        <base-button type="default" nativeType="submit" v-if="step === 4"
+        <base-button type="default" nativeType="submit" v-if="currentStep === 4"
           >Enviar</base-button
         >
         <base-button
           type="default"
           :outline="true"
           class="ml-auto"
-          @click="handleClose()"
+          @click="handleClose(resetForm)"
           >Cancelar
         </base-button>
       </div>
     </form-validate>
-    <loader v-if="loader"></loader>
   </div>
 </template>
 <script>
   import utils from "@/mixins/utils-mixin";
   import Multiselect from "@vueform/multiselect";
-  import adminService from "../../../store/services/admin-service";
-  import formMixin from "@/mixins/form-mixin";
-  import service from "../../../store/services/business-service";
+  import service from "../../../store/services/model-service";
   import _ from "lodash";
 
   export default {
     components: { Multiselect },
-    mixins: [formMixin, utils],
+    mixins: [utils],
     data() {
       return {
-        step: 1,
-        model: {},
+        steps: [],
+        model: this.$store.getters.BUSINESS_SCHEMA,
+        currentStep: 1,
         installations: [],
       };
     },
     mounted() {
-      this.resetValues();
+      this.steps = [
+          {
+              number: 1,
+              title: "General",
+              valid: false
+          },
+          {
+              number: 2,
+              title: "Bancario",
+              valid: false
+          },
+          {
+              number: 3,
+              title: "Instalaciones",
+              valid: false
+          },
+          {
+              number: 4,
+              title: "Responsables",
+              valid: false 
+          },
+      ]; 
+      
+      this.handlePush()
       this.provinces = this.getProvinces();
       this.permits = this.getPermits();
     },
     methods: {
-      async submit(values) {
-        if (this.step === 1) {
-          this.model.name = values.name;
-          this.model.last_name = values.last_name;
-          this.model.email = values.email;
-          this.model.business_name = values.business_name;
-          this.model.business_phone = values.business_phone;
-          this.model.business_nif = values.nif;
-          this.model.property_dni = values.property_dni;
-          this.model.property_phone = values.property_phone;
+      async submit(values, { resetForm }) {
+        for (let index = 0; index < this.steps.length; index++) {
+            const step = this.steps[index];
+            if (step.number == this.currentStep) {
+                step.valid = true
+            }   
         }
-        if (this.step === 2) {
-          this.model.bank_code = values.bank_code;
-          this.model.holder_name = values.holder_name;
-          this.model.iban_number = values.iban_number;
-          this.model.file_date = values.file_date;
-          this.model.file_document = values.file_document;
+        if (this.currentStep === 1) {
+          // console.log(values);
+        }
+        if (this.currentStep === 2) {
+          console.log(values);
+          this.model.file_document.base64 = await this.toBase64(values.file_document.base64[0])
+          this.model.file_date.date = this.formatDate(values.file_date.date)
         }
 
-        if (this.step == 3) {
-          const inst = values.installations;
-          for (let index = 0; index < this.installations.length; index++) {
-            const element = this.installations[index];
-            element.name = inst[index].name;
-            element.address = inst[index].address;
-            element.province_id = inst[index].province_id;
-            element.auditable_id = inst[index].auditor_id.auditor.id;
-            element.file_document = _.isEmpty(element.file_document)
-              ? inst[index].file_document
-              : element.file_document;
+        if (this.currentStep == 3) {
+          for (let i = 0; i < this.installations.length; i++) {
+            const installation = 	this.installations[i];
+            installation.file_document.base64 = await this.toBase64(installation.file_document.file[0])
+            installation.auditable_id = installation.auditable.id
           }
         }
-        if (this.step == 4) {
-          const inst = values.installations;
-          for (let index = 0; index < this.installations.length; index++) {
-            const responsible = inst[index].responsible;
-            console.log(responsible.last_name, responsible.file_certification);
-            this.installations[index].responsible.name = responsible.name;
-            this.installations[index].responsible.last_name =
-              responsible.last_name;
-            this.installations[index].responsible.position =
-              responsible.position;
-            this.installations[index].responsible.phone_number =
-              responsible.phone_number;
-            this.installations[index].responsible.date_firm =
-              responsible.date_firm;
-            this.installations[index].responsible.date_certification =
-              responsible.date_certification;
-            this.installations[index].responsible.file_certification =
-              responsible.file_certification;
-            this.installations[index].responsible.dni = responsible.dni;
-            this.installations[index].responsible.email = responsible.email;
-            this.installations[
-              index
-            ].responsible.driver_document = responsible.driver
-              ? responsible.driver_document
-              : responsible.driver_document;
-            this.installations[
-              index
-            ].responsible.driver_document_date = responsible.driver
-              ? responsible.driver_document_date
-              : responsible.driver_document_date;
-            this.installations[
-              index
-            ].responsible.adr_permit_id = responsible.driver
-              ? responsible.adr_permit_id
-              : responsible.adr_permit_id;
-          }
-        }
-        if (this.step !== 4) {
-          this.step++;
-        } else {
-          this.model.file_document_bas64 = await this.toBase64(
-            this.model.file_document[0]
-          );
-          this.model.file_date = this.formatDate(this.model.file_date);
-          for (let index = 0; index < this.installations.length; index++) {
-            const inst = this.installations[index];
+        if (this.currentStep == 4) {
+          for (let i = 0; i < 	this.installations.length; i++) {
+            console.log(this.installations[i].responsible);
+            // Format firm
+            this.installations[i].responsible.file_firm.base64 = await this.toBase64(this.installations[i].responsible.file_firm.file[0])
+            this.installations[i].responsible.date_firm.date = this.formatDate(this.installations[i].responsible.date_firm.toForm)
 
-            this.installations[
-              index
-            ].responsible.date_certification = this.formatDate(
-              inst.responsible.date_certification
-            );
+            // Format certification
+            this.installations[i].responsible.file_certification.base64 = await this.toBase64(this.installations[i].responsible.file_certification.file[0])
+            this.installations[i].responsible.date_certification.date = this.formatDate(this.installations[i].responsible.date_certification.toForm)
 
-            this.installations[index].file_document_bas64 = await this.toBase64(
-              inst.file_document[0]
-            );
-            this.installations[
-              index
-            ].responsible.file_certification_bas64 = await this.toBase64(
-              inst.responsible.file_certification[0]
-            );
-
-            if (inst.responsible.driver) {
-              console.log("driver");
-              this.installations[
-                index
-              ].responsible.driver_document_bas64 = await this.toBase64(
-                inst.responsible.driver_document[0]
-              );
-              this.installations[
-                index
-              ].responsible.file_certification.driver_document_date = this.formatDate(
-                inst.responsible.file_certification.driver_document_date
-              );
+            // Format driver documents
+            if (this.installations[i].responsible.driver) {
+              this.installations[i].responsible.driver_document.base64 = await this.toBase64(this.installations[i].responsible.driver_document.file[0])
+              this.installations[i].responsible.driver_document_date.date = this.formatDate(this.installations[i].responsible.driver_document_date.toForm)
             }
           }
 
-          this.loader = true;
           this.model.installations = this.installations;
+          
           try {
-            const response = await service.store(this.model);
-            console.log(response);
-            this.$swal("EXITO", "formulario", "success").then(()=>{
-              this.resetValues()
-              this.$emit('close')
-              this.$emit('reload')
-            });
+            await service.store('business',this.model)
+            resetForm()
+            this.$emit('close')
+            this.$emit('reload')
           } catch (err) {
-            if (
-              !_.isEmpty(err.response) &&
-              _.isEmpty(err.response.status == 422)
-            ) {
-              this.$swal(
-                "Error  en los datos",
-                err.response.data.message,
-                "error"
-              );
-              this.setApiValidation(err.response.data.errors);
-            } else {
-              this.$swal("Error", "formulario", "error").then(() => {
-                this.loader = false;
-              });
-            }
+            console.log(err);
           }
-          this.loader = false;
         }
+        if (this.currentStep != 4) {
+            this.currentStep++
+          }
       },
       prevStep() {
-        if (this.step <= 0) {
+        if (this.currentStep <= 0) {
           return;
         }
 
-        this.step--;
+        this.currentStep--;
       },
-      async fetchItems(search) {
-        if (_.isEmpty(search)) {
-          return {};
-        }
-        const response = await adminService.getUsers(
-          "name=" + search + "&role_id=3&includes[]=auditor"
-        );
-        return response.data.data;
+      async fetchItems(search){
+          const res = await service.getIndex('auditor',`name=${search}&includes[]=user`);
+          const data = res.data.data;
+          let options = _.map(data, (auditor) => {
+              return {value: auditor, label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`}
+          })
+          return options
       },
       remove(id) {
         let position = 0;
@@ -714,78 +485,14 @@
         this.installations.splice(position_item, 1);
       },
       handlePush() {
-        this.installations.push({
-          name: "",
-          auditor_id: "",
-          province_id: "",
-          file_document: "",
-          responsible: {
-            name: "",
-            last_name: "",
-            position: "",
-            phone_number: "",
-            date_certification: "",
-            file_certification: "",
-            email: "",
-            dni: "",
-            dangerous_goods: false,
-            driver: false,
-            driver_document: "",
-            driver_document_date: "",
-            adr_permit_id: "",
-          },
-        });
+        this.installations.push(this.$store.getters.INSTALLATION_SCHEMA);
       },
-      handleClose() {
-        this.resetValues();
+      handleClose(reset) {
+        reset()
         this.$emit("close");
-      },
-      resetValues() {
-        this.step = 1;
-        this.installations = [];
-        this.installations.push({
-          name: "",
-          auditable_id: "",
-          province_id: "",
-          address: "",
-          file_document: "",
-          responsible: {
-            name: "",
-            last_name: "",
-            position: "",
-            phone_number: "",
-            date_certification: "",
-            file_certification: "",
-            email: "",
-            dni: "",
-            dangerous_goods: false,
-            driver: false,
-            driver_document: "",
-            driver_document_date: "",
-            adr_permit_id: "",
-          },
-        });
-        this.model = {
-          name: "",
-          last_name: "",
-          email: "",
-          business_name: "",
-          business_phone: "",
-          business_nif: "",
-          property_dni: "",
-          property_phone: "",
-          bank_code: "",
-          holder_name: "",
-          iban_number: "",
-          file_date: "",
-          file_document: "",
-        };
       },
     },
     computed: {
-      percent() {
-        return (this.step * 100) / 4;
-      },
     },
   };
 </script>

@@ -1,24 +1,78 @@
+import { defineAsyncComponent } from 'vue'
 import DashboardLayout from "@/layout/DashboardLayout";
 import AuthLayout from "@/layout/AuthLayout";
+import Loader from "@/components/Loader";
 
-import Dashboard from "../views/Dashboard.vue";
+const Dashboard = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Dashboard.vue"),
+    loadingComponent: Loader
+});
+
+const Profile = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/UserProfile.vue"),
+    loadingComponent: Loader
+});
+
+const Audits = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Audits.vue"),
+    loadingComponent: Loader
+});
+
+const Users = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Users.vue"),
+    loadingComponent: Loader
+});
+
+const AuditorTable = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Tables/AuditorsTable.vue"),
+    loadingComponent: Loader
+});
+
+const Business = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Business.vue"),
+    loadingComponent: Loader
+});
+
+const BusinessDetail = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/BusinessDetail.vue"),
+    loadingComponent: Loader
+});
+
+const DelegateTable = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Tables/DelegateTable.vue"),
+    loadingComponent: Loader
+});
+
+const Login = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Auth/Login.vue"),
+    loadingComponent: Loader
+});
+
+const ResetPassword = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Auth/ResetPassword.vue"),
+    loadingComponent: Loader
+});
+
+const ResetPasswordRequest = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Auth/ResetPasswordRequest.vue"),
+    loadingComponent: Loader
+});
+
 // import Icons from "../views/Icons.vue";
-import Maps from "../views/Maps.vue";
-import Profile from "../views/UserProfile.vue";
 // import Tables from "../views/Tables.vue";
-import Audits from "../views/Audits.vue";
-import Users from "../views/Users.vue";
-import AuditorTable from "../views/Tables/AuditorsTable.vue";
-import Business from "../views/Business.vue";
-import BusinessDetail from "../views/BusinessDetail.vue";
-import DelegateTable from "../views/Tables/DelegateTable.vue";
 // import MaterialTable from "../views/Tables/MaterialTable.vue"
-import Sub from "../views/Tables/SubcontractorTable.vue"
 // import NotFound from "../pages/NotFoundPage.vue";
-
-import Login from "../views/Auth/Login.vue";
-import ResetPassword from "../views/Auth/ResetPassword.vue";
-import ResetPasswordRequest from "../views/Auth/ResetPasswordRequest.vue";
 
 //import middleware
 import auth from "@/middleware/auth";
@@ -54,21 +108,9 @@ const routes = [{
                 // }, ],
             },
             {
-                path: "/maps",
-                name: "maps",
-                components: { default: Maps },
-                meta: { middleware: auth },
-            },
-            {
                 path: "/profile",
                 name: "profile",
                 components: { default: Profile },
-                meta: { middleware: auth },
-            },
-            {
-                path: "/sub",
-                name: "sub",
-                components: { default: Sub },
                 meta: { middleware: auth },
             },
             {
@@ -90,25 +132,6 @@ const routes = [{
                         meta: { middleware: auth },
                     },
                 ],
-                // children: [{
-                //         path: "/delegates",
-                //         name: "login",
-                //         components: { default: Login },
-                //         // meta: { middleware: auth },
-                //     },
-                //     {
-                //         path: "/auditors",
-                //         name: "login",
-                //         components: { default: Login },
-                //         // meta: { middleware: guest },
-                //     },
-                //     {
-                //         path: "/business",
-                //         name: "login",
-                //         components: { default: Login },
-                //         // meta: { middleware: guest },
-                //     },
-                // ],
             },
             {
                 path: "/audits",

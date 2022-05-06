@@ -65,7 +65,7 @@
       <loader v-if="loader"></loader>
     </div>
     <Transition name="fade">
-      <modal v-model:show="this.modal" modalClasses="modal-xl"  v-if="this.modal">
+      <modal v-model:show="this.modal" modalClasses="modal-xl"  v-if="this.modal" modalContentClasses="overflow-auto max-h-modal">
         <template v-slot:header>
           <h4 class="modal-title" id="modal-title-default">
             {{disabled ? 'Ver un auditor' : 'Registrar un nuevo auditor'}}
@@ -85,7 +85,7 @@
   </div>
 </template>
 <script>
-  import service from "../../store/services/auditors-service";
+  import service from "../../store/services/model-service";
   export default {
     name: "users-table",
     data() {
@@ -101,36 +101,27 @@
       };
     },
     mounted() {
-      this.getAuditors();
+      this.getAuditors(this.page);
     },
     methods: {
-      async getAuditors() {
-        this.loader = true;
+      async getAuditors(page = 1) {
+        // this.loader = true;
         try {
           const response = await service.getIndex(
-            `page=${this.page}&includes[]=user&includes[]=delegate.user`
-          );
-          this.tableData = response.data.data;
-          this.metaData = response.data.meta.page;
-        } catch (err) {
-          console.log(err);
-        }
-        this.loader = false;
-      },
-      async handleChange(event) {
-        this.loader = true;
-        try {
-          const response = await service.getIndex(
-            `page=${event}&includes[]=user`
+            'auditor',
+            page,
+            `&includes[]=user&includes[]=delegate.user`
           );
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
           this.page = this.metaData.currentPage;
         } catch (err) {
-          this.$swal("Error", "No se pudieron cargar los datos de la tabla");
           console.log(err);
         }
-        this.loader = false;
+        // this.loader = false;
+      },
+      async handleChange(event) {
+        this.getAuditors(event)
       },
       handleAdd() {
         this.disabled = false;
@@ -138,32 +129,25 @@
         this.modal = true;
       },
       async handleView(id) {
-        this.loader = true;
+        const response = await service.show(
+          'auditor',
+          id,
+          "includes[]=province.city&includes[]=documents.type&includes[]=delegate.user"
+        );
+        const data = response.data.data;
+        this.auditor = {
+          name: data.user.name,
+          last_name: data.user.last_name,
+          email: data.user.email,
+          phone_number: data.phone_number,
+          dni: data.dni,
+          province: data.province,
+          documents: data.documents,
+          delegate: data.delegate
+        };
 
-        try {
-          const response = await service.view(
-            id,
-            "includes[]=province.city&includes[]=documents.type&includes[]=delegate.user"
-          );
-          const data = response.data.data;
-          this.auditor = {
-            name: data.user.name,
-            last_name: data.user.last_name,
-            email: data.user.email,
-            phone_number: data.phone_number,
-            dni: data.dni,
-            province: data.province,
-            documents: data.documents,
-            delegate: data.delegate
-          };
-
-          this.disabled = true;
-          this.modal = true;
-        } catch (err) {
-          this.$swal("Error", "No se pudieron cargar los datos del delegado");
-          console.log(err);
-        }
-        this.loader = false;
+        this.disabled = true;
+        this.modal = true;
       },
     },
   };

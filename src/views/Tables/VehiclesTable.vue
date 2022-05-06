@@ -73,7 +73,6 @@
           </td>
         </template>
       </base-table>
-      <loader v-if="loader"></loader>
 
       <base-pagination
         :perPage="this.metaData.perPage"
@@ -104,7 +103,7 @@
 </template>
 <script>
   import FormVehicle from "../../components/forms/FormVehicle.vue";
-  import service from "../../store/services/vehicle-service";
+  import service from "../../store/services/model-service";
 
   export default {
     components: { FormVehicle },
@@ -133,31 +132,19 @@
     },
     methods: {
       async getVehicles(page) {
-        try {
-          this.loader = true;
           let params = "includes[]=adr&includes[]=type";
 
           if (this.installation_id != null) {
             params += "&installation_id=" + this.installation_id;
           }
 
-          const resp = await service.getIndex(page, params);
+          const resp = await service.getIndex('vehicle', page, params);
 
           if (typeof resp.data.data != "undefined") {
             this.tableData = resp.data.data;
             this.metaData = resp.data.meta.page;
             this.page = this.metaData.currentPage;
           }
-          this.loader = false;
-        } catch (err) {
-          this.loader = false;
-          console.log(err);
-          this.$swal(
-            "Ocurrio un error",
-            "No se pudieron cargar los vehiculos",
-            "error"
-          );
-        }
       },
       async handleChange(event) {
         if (event == this.page) {
@@ -180,17 +167,12 @@
         return type;
       },
       async destroy(id) {
-        this.loader = true
         try {
-          const response = await service.destroy(id)
-          console.log(response);
+          await service.destroy(id)
           this.$toast.success('Registro eliminado')
           this.getVehicles();
-          this.loader = false
-        } catch (err) {
-          console.log(err.response);
-          this.loader = false 
-          this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
+        } catch (error) {
+          console.log(error);
         }
       },
     },

@@ -21,13 +21,13 @@
             path: '/business',
           }"
         />
-        <sidebar-item
+        <!-- <sidebar-item
           :link="{
             name: 'Informes',
             icon: 'ni ni-pin-3 text-default',
             path: '/maps',
           }"
-        />
+        /> -->
         <sidebar-item
           :link="{
             name: 'Usuarios',
@@ -48,17 +48,14 @@
       <dashboard-navbar :me="me"></dashboard-navbar>
 
       <div @click="toggleSidebar">
-        <!-- your content here -->
-        <Transition name="fade">
-          <Suspense>
-            <template #default>
-              <router-view></router-view>
-            </template>
-            <template #fallback>
+        <router-view v-slot="{ Component }">
+          <Transition name="fade">
+            <div>
+              <component :is="Component"></component>
               <loader></loader>
-            </template>
-          </Suspense>
-        </Transition>
+            </div>
+          </Transition>
+        </router-view>
         <content-footer v-if="!$route.meta.hideFooter"></content-footer>
       </div>
     </div>
@@ -67,13 +64,11 @@
 <script>
   import DashboardNavbar from "./DashboardNavbar.vue";
   import ContentFooter from "./ContentFooter.vue";
-  import Loader from "../components/Loader.vue";
 
   export default {
     components: {
       DashboardNavbar,
       ContentFooter,
-      Loader,
     },
     data() {
       return {
