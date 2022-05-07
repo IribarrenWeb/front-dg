@@ -120,6 +120,32 @@ function getAdrDesignations(params = '') {
     });
 }
 
+function getAdrClass(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/adr-class' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
+function getPacking(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/packing' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
 export default {
     getCities,
     getProvinces,
@@ -129,5 +155,7 @@ export default {
     getAdrMaterials,
     getDeposits,
     getAdrDesignations,
-    getVehicleTypes
+    getVehicleTypes,
+    getAdrClass,
+    getPacking
 }

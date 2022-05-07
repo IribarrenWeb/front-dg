@@ -2,8 +2,9 @@
   <div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
     <side-bar
       :background-color="sidebarBackground"
-      short-title="Argon"
-      title="Argon"
+      short-title="DG"
+      title="DG SOFTWARE"
+      v-if="!$route.meta.audit"
     >
       <template v-slot:links>
         <sidebar-item
@@ -82,8 +83,12 @@
           this.$sidebar.displaySidebar(false);
         }
       },
+      handleHide(evnt) {
+        console.log(evnt);
+      }
     },
     async mounted() {
+      console.log(this.$route.meta);
       await this.$store.dispatch("profile/me");
       this.me = await this.$store.getters["profile/me"];
     },

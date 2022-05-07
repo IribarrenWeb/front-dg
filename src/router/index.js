@@ -1,4 +1,4 @@
-import { createWebHashHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter } from "vue-router";
 
 // router setup
 import routes from "./routes";
@@ -14,7 +14,7 @@ const router = createRouter({
             return { x: 0, y: 0 };
         }
     },
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     linkActiveClass: "active",
 });
 

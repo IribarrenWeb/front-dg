@@ -10,6 +10,15 @@
     <div :class="containerClasses">
       <slot name="brand">
         <router-link
+          v-if="$route.meta.audit"
+          :to="{name: 'auditorias'}"
+          class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
+        >
+          <i class="fa fa-chevron-left text-white" aria-hidden="true"></i>
+          Regresar
+        </router-link>
+        <router-link
+          v-else
           :to="$route.path"
           class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block"
         >
@@ -42,7 +51,7 @@ import NavbarToggleButton from "./NavbarToggleButton";
 export default {
   name: "base-nav",
   components: {
-    NavbarToggleButton,
+    NavbarToggleButton
   },
   props: {
     type: {
@@ -90,6 +99,9 @@ export default {
       this.toggled = false;
     },
   },
+  computed: {
+    
+  }
 };
 </script>
 <style></style>

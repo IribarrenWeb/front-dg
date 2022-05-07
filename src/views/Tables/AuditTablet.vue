@@ -76,7 +76,7 @@
             </div>
           </td> -->
           <td class="text-right">
-              <a class="btn btn-primary btn-sm" href="#" @click.prevent="">Iniciar</a>
+              <router-link class="btn btn-primary btn-sm" v-if="row.item.status != 'COMPLETADO'" :to="`/audit-init/${row.item.id}`">{{row.item.status == 'PENDIENTE' ? 'Iniciar' : 'Completar'}}</router-link>
               <a class="btn btn-danger btn-sm" href="#" @click.prevent="">Eliminar</a>
           </td>
         </template>

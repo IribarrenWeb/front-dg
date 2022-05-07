@@ -36,3 +36,17 @@
     color: #fff;
     background-color: #2f7500;
 }
+
+.steps {
+    flex-flow: nowrap;
+    overflow-x: auto;
+}
+
+@media (max-width: 767.98px) {
+    .nav-pills.steps:not(.nav-pills-circle) .nav-item {
+        padding-right: 1rem;
+    }
+    .steps {
+        /* padding-left: 50% !important; */
+    }
+}

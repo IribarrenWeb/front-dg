@@ -5,14 +5,7 @@
     </div>
     
     <form-validate @submit="submit" v-slot="{ meta, resetForm }">
-      <ul class="nav nav-pills mb-md-4 justify-content-center">
-          <li class="nav-item" v-for="step in steps" :key="step.key">
-              <a class="nav-link p-2" :class="[{'active': currentStep == step.number},{'disabled':!step.valid && currentStep != step.number}]" href="#" @click.prevent="meta.valid ? currentStep = step.number : ''">
-                  <i class="fa fa-check" aria-hidden="true" v-if="step.valid"></i> 
-                  {{step.title}}
-              </a>
-          </li>
-      </ul>
+      <base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :meta="meta" @step="currentStep = $event"></base-steps>
       <template v-if="currentStep === 1">
         <div>
           <div class="row border border-light rounded p-2">

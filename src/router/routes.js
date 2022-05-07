@@ -78,6 +78,8 @@ const ResetPasswordRequest = defineAsyncComponent({
 import auth from "@/middleware/auth";
 import guest from "@/middleware/guest";
 
+import auditInit from './routes/audit_routes';
+
 const routes = [{
         path: "/",
         redirect: "/dashboard",
@@ -90,44 +92,37 @@ const routes = [{
             },
             {
                 path: "/business/:id",
-                name: "business.show",
+                name: "detalle de empresa",
                 components: { default: BusinessDetail },
                 meta: { middleware: auth },
             },
             {
                 path: "/business",
-                name: "business",
+                name: "empresas",
                 components: { default: Business },
                 meta: { middleware: auth },
-                // redirect: { name: "business.all" },
-                // children: [{
-                //     path: "/business/all",
-                //     name: "business.all",
-                //     components: { default: BusinessTable },
-                //     meta: { middleware: auth },
-                // }, ],
             },
             {
                 path: "/profile",
-                name: "profile",
+                name: "perfil",
                 components: { default: Profile },
                 meta: { middleware: auth },
             },
             {
                 path: "/users",
-                name: "users",
+                name: "usuarios",
                 components: { default: Users },
                 meta: { middleware: auth },
-                redirect: { name: "delegates" },
+                redirect: { name: "delegados" },
                 children: [{
                         path: "/users/delegates",
-                        name: "delegates",
+                        name: "delegados",
                         components: { default: DelegateTable },
                         meta: { middleware: auth },
                     },
                     {
                         path: "/users/auditors",
-                        name: "auditors",
+                        name: "auditores",
                         components: { default: AuditorTable },
                         meta: { middleware: auth },
                     },
@@ -135,10 +130,11 @@ const routes = [{
             },
             {
                 path: "/audits",
-                name: "audits",
+                name: "auditorias",
                 components: { default: Audits },
                 meta: { middleware: auth },
             },
+            auditInit
         ],
     },
     {

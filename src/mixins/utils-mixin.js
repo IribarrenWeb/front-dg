@@ -79,8 +79,8 @@ export default {
             }
             this.loader = false;
         },
-        formatDate(date) {
-            return new Date(date).toLocaleDateString("en-US");
+        formatDate(date, format = "en-US") {
+            return new Date(date).toLocaleDateString(format);
         },
         async toBase64(file) {
             return await new Promise((resolve, reject) => {

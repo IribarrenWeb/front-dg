@@ -5,6 +5,7 @@ import BaseCheckbox from "../components/BaseCheckbox";
 import BaseDropdown from "../components/BaseDropdown";
 import BaseHeader from "../components/BaseHeader";
 import BaseInput from "../components/BaseInput";
+import BaseSteps from "../components/BaseSteps";
 import BaseNav from "../components/BaseNav";
 import BasePagination from "../components/BasePagination";
 import BaseProgress from "../components/BaseProgress";
@@ -46,6 +47,7 @@ const GlobalComponents = {
         app.component("base-radio", BaseRadio);
         app.component("base-table", BaseTable);
         app.component("base-field", BaseField);
+        app.component("base-steps", BaseSteps);
         app.component("base-select", BaseSelect);
         app.component("card", Card);
         app.component("loader", Loader);

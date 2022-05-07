@@ -1,6 +1,7 @@
 import { axios } from '@/axios';
 import { store as storage } from '@/store';
 import Swal from 'sweetalert2';
+import router from "@/router";
 
 const url = process.env.VUE_APP_API_BASE_URL;
 
@@ -189,6 +190,7 @@ function users(params) {
 function errors(code, message = null) {
     switch (code) {
         case 500:
+            router.back()
             Swal.fire('Error', message != null ? message : 'Parece que ocurrio un error en el servidor, porfavor intentalo mas tarde.', 'error')
             break;
 
@@ -201,6 +203,7 @@ function errors(code, message = null) {
             break;
 
         default:
+            router.back()
             Swal.fire('Error inesperado', message != null ? message : 'Ocurrio un error inesperado', 'error')
             break;
     }

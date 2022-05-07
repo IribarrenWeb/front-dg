@@ -112,11 +112,7 @@ export const store = createStore({
 
             commit('setErrors', errors);
         },
-        logout({ dispatch, state }) {
-            if (dispatch('isAuth')) {
-                return alert('There is no currently authenticated user')
-                    // return new Error('There is no currently authenticated user')
-            }
+        logout({ state }) {
             localStorage.removeItem(...state.tokenName);
             window.location.reload
             return true
@@ -139,7 +135,10 @@ export const store = createStore({
                 return true; // Pass: All other tokens
             }
             return false
-        }
+        },
+        formatDate(date, format = "en-US") {
+            return new Date(date).toLocaleDateString(format);
+        },
     },
     modules: {
         auth: auth,

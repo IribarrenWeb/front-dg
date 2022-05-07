@@ -1,5 +1,5 @@
 <template>
-  <base-nav class="navbar-top navbar-dark" id="navbar-main" :show-toggle-button="false" expand>
+  <base-nav class="navbar-top navbar-dark" id="navbar-main" :show-toggle-button="false" expand :containerClasses="$route.meta.audit ? 'container' : 'container-fluid'">
     <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
       <div class="form-group mb-0">
         <!-- <base-input placeholder="Search" class="input-group-alternative" alternative=""
@@ -13,7 +13,7 @@
           <template v-slot:title>
             <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="Image placeholder" src="img/theme/team-4-800x800.jpg" />
+                <img alt="Image placeholder" src="/img/theme/team-4-800x800.jpg" />
               </span>
               <div class="media-body ml-2 d-none d-lg-block">
                 <span class="mb-0 text-sm font-weight-bold">{{me.name}} {{me.last_name}}</span>
@@ -53,6 +53,10 @@
           return {name: 'Username', last_name: 'Last name'}
         }
       },
+      audit: {
+        type:Boolean,
+        default: false
+      }
     },
     methods: {
       toggleSidebar() {

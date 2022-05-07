@@ -4,14 +4,7 @@
             <h3>Agregar una instalacion</h3>
         </div>
         <form-validate @submit="onSubmit" v-slot="{ resetForm, meta }">
-            <ul class="nav nav-pills mb-md-4 justify-content-center">
-                <li class="nav-item" v-for="step in steps" :key="step.key">
-                    <a class="nav-link p-2" :class="[{'active': currentStep == step.number},{'disabled':!step.valid && currentStep != step.number}]" href="#" @click.prevent="meta.valid ? currentStep = step.number : ''">
-                        <i class="fa fa-check" aria-hidden="true" v-if="step.valid"></i> 
-                        {{step.title}}
-                    </a>
-                </li>
-            </ul>
+            <base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :meta="meta" @step="currentStep = $event"></base-steps>
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-4">
@@ -426,7 +419,7 @@ export default {
                 }
             ]; 
 
-            this.model = this.$store.state.installation_schema
+            this.model = this.$store.getters.INSTALLATION_SCHEMA
         }
     }
 }

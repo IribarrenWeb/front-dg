@@ -38,28 +38,33 @@
           <tbody>
             <tr>
               <td>{{ business.business_name }}</td>
-              <td>BARCELONA</td>
-              <td>BARCELONA</td>
+              <td>{{ business.province.name }}</td>
+              <td>{{ business.province.city.name }}</td>
               <td>ESPANA</td>
-              <td>{{ business.installations.length }}</td>
+              <td>{{ business.installations_count }}</td>
             </tr>
           </tbody>
         </table>
         <table class="table">
           <thead>
             <tr>
+              <th scope="col">Codigo postal</th>
               <th scope="col">Fecha de ALTA</th>
               <th scope="col">Documentacion</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{{ business.business_name }}</td>
+              <td>{{ business.postal_code }}</td>
+              <td>{{ formatDate(business.documents[0].document_date, 'en-GB') }}</td>
               <td>
                 <a
                   href="#"
                   @click.prevent="getDocument(business.documents[0].id)"
-                  >DOCUMENTACION</a
+                  >
+                  <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                  Documentacion
+                </a
                 >
               </td>
             </tr>
@@ -103,8 +108,10 @@ import InstallationTable from './Tables/InstallationTable.vue';
       async getBusiness() {
         console.log("ejecutando");
         const id = this.id;
-        const response = await service.show('business',id);
+        const response = await service.show('business',id, 'includes[]=province.city&counts[]=installations&includes[]=documents');
         this.business = response.data.data;
+
+        console.log(this.business);
       },
     },
   };
