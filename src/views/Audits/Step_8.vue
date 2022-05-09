@@ -6,10 +6,10 @@
         </div>
         <div v-else class="row justify-content-center px-md-2">
             <div class="col-md-10">
-                <h4 class="text-uppercase">COMPROBACIONES REGLAMENTARIAS</h4>
+                <h4 class="text-uppercase">DOCUMENTACIÓN REGLAMENTARIA</h4>
                 <div class="row justify-content-center">
-                    <div class="col-md-12 mt-md-3">
-                        <h5 class="text-uppercase text-muted">FORMACIÓN DEL PERSONAL IMPLICADO CON MERCANCÍAS PELIGROSAS</h5>
+                    <div class="col-md-12 my-md-3">
+                        <h5 class="text-uppercase text-muted">REALIZACIÓN DEL INFORME ANUAL ADR Y PRESENTACIÓN EN PLAZO Y FORMA</h5>
                         <div v-for="(comp, idx) in comprobations" :key="comp.id">
                             <base-field :name="`comprobations[${idx}]`" :label="comp.text">
                                 <div class="row">
@@ -36,7 +36,7 @@
                     <base-button type="default" @click="this.$emit('prev')" v-if="currentStep !== 1"
                     >Anterior</base-button
                     >
-                    <base-button type="default" :disabled="!meta.valid" nativeType="submit" v-if="currentStep !== 9"
+                    <base-button type="default" :disabled="!meta.valid" nativeType="submit" v-if="currentStep !== 12"
                     >Siguiente</base-button
                     >
                 </div>
@@ -52,7 +52,8 @@ export default {
     data() {
         return {
             audit_id: this.$route.params.id,
-            comprobations: this.formatComp()
+            comprobations: this.formatComp(),
+            valid_step: this.audit.valid_step
         }
     },
     async mounted() {
@@ -60,8 +61,8 @@ export default {
     methods: {
         async onSubmit(){
             try {
-                await service.update('audit', this.audit_id, { current_step: 6, valid_step: this.audit.valid_step >= this.currentStep ? this.audit.valid_step : this.currentStep, comprobations: this.comprobations})
-                this.$emit('next', 6)
+                await service.update('audit', this.audit_id, { current_step: 9, valid_step: this.audit.valid_step >= this.currentStep ? this.audit.valid_step : this.currentStep, comprobations: this.comprobations})
+                this.$emit('next', 8)
             } catch (err) {
                 let message = err.response.message ? err.response.message : 'Ocurrio un error al guardar los cambios'
                 this.$toast.error(message);
@@ -74,7 +75,7 @@ export default {
         formatComp(){
             let compr = [];
             _.forEach(this.audit.comprobations, comp => {
-                if (comp.step > 6 && comp.step < 8) {
+                if (comp.step == 10) {
                     compr.push(comp)
                 }
             })

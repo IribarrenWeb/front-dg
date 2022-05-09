@@ -95,7 +95,66 @@
                 <div class="col-md-12 mt-md-3">
                     <h5 class="text-uppercase text-primary">DEPOSITOS MERCANCÍAS PELIGROSAS INSTALACIÓN</h5>
                     <h6 class="text-uppercase text-muted">TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS</h6>
-                    <form-validate @submit="addDeposit">
+                    <form-validate @submit="addMaterial($event, 'deposit')">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <base-field name="un_code" label="UN">
+                                    <field-validate as="select" class="form-control" name="un_code" label="un" rules="required" v-model="deposit.index">
+                                        <option selected>UN</option>
+                                        <option
+                                            :value="idx"
+                                            v-for="(r, idx) in audit.installation.deposits"
+                                            :key="idx"
+                                            >
+                                            {{ r.material.un_code }}
+                                        </option>
+                                    </field-validate>
+                                </base-field>
+                            </div>
+                            <div class="col-md-2">
+                                <base-input :view="true" :modelValue="deposit.material != null ? deposit.material.class.code : ``" label="Clase" disabled/>
+                            </div>
+                            <div class="col-md-2">
+                                <base-input :view="true" :modelValue="deposit.material != null ? deposit.material.packing.code : ``" label="GE" disabled/>
+                            </div>
+                            <div class="col-md-3">
+                                <base-input :view="true" :modelValue="deposit.material != null ? deposit.buy : ``" label="Cantidad" disabled/>
+                            </div>
+                            <div class="col-md-2 d-flex">
+                                <div class="align-self-center">
+                                    <base-button size="sm" nativeType="submit" :outline="true">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </base-button>
+                                </div>
+                            </div>
+                        </div>
+                    </form-validate>
+                    <div class="row" v-for="(dep,idx) in adr_deposits" :key="idx">
+                        <div class="col-md-3">
+                            <base-input :view="true" :modelValue="dep.material.un_code" disabled/>
+                        </div>
+                        <div class="col-md-2">
+                            <base-input :view="true" :modelValue="dep.material.class.code" disabled/>
+                        </div>
+                        <div class="col-md-2">
+                            <base-input :view="true" :modelValue="dep.material.packing.code" disabled/>
+                        </div>
+                        <div class="col-md-3">
+                            <base-input :view="true" :modelValue="dep.buy" disabled/>
+                        </div>
+                        <div class="col-md-2 d-flex">
+                            <div class="align-self-center">
+                                <base-button size="sm" @click="unlink(dep.id, false)" type="danger" :outline="true">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </base-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-md-3">
+                    <h5 class="text-uppercase text-primary">RESIDUOS ADR GENERADOS/ALMACENADOS INSTALACIÓN</h5>
+                    <h6 class="text-uppercase text-muted">TIPO RESIDUOS ADR CARGADOS/DESCARGADOS/ALMACENADOS EN LA INSTALACIÓN</h6>
+                    <form-validate @submit="addMaterial($event, 'residue')">
                         <div class="row">
                             <div class="col-md-3">
                                 <base-field name="un_code" label="UN">
@@ -151,6 +210,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12 mt-md-5">
+                    <base-field label="Añadir Productos / Residuos considerados ADR de las instalaciones:">
+                        <textarea name="" class="form-control" cols="30" rows="10"></textarea>
+                    </base-field>
+                </div>
             </div>
         </div>
         <div class="col-12">
@@ -194,7 +258,15 @@ export default {
                 buy: null,
                 is_residue: false
             },
-            adr_residues: []
+            deposit: {
+                index: null,
+                id: null,
+                material: null,
+                buy: null,
+                is_residue: false
+            },
+            adr_residues: [],
+            adr_deposits: [],
         }
     },
     async mounted() {
@@ -202,6 +274,7 @@ export default {
         this.installation_id = this.audit.installation_id
         this.materials = this.audit.review_materials
         this.adr_residues = this.formatMaterials(this.audit.materials)
+        this.adr_deposits = this.formatMaterials(this.audit.materials, false)
         console.log(this.audit.installation.residues);
         this.loadInstallation()
         this.loadData()
@@ -209,7 +282,7 @@ export default {
     methods: {
         async onSubmit(){
             try {
-                await service.update('audit', this.audit_id, { current_step: 4, valid_step: 3, audit_material_reviews: this.materials, audit_materials: this.adr_residues })
+                await service.update('audit', this.audit_id, { current_step: 4, valid_step: this.audit.valid_step >= this.currentStep ? this.audit.valid_step : this.currentStep, audit_material_reviews: this.materials, audit_materials: this.adr_residues.concat(this.adr_deposits)})
             } catch (err) {
                 let message = err.response.message ? err.response.message : 'Ocurrio un error al guardar los cambios'
                 this.$toast.error(message);
@@ -231,27 +304,40 @@ export default {
             this.audit
             resetForm()
         },
-        addDeposit(values,{resetForm}){
-            if(this.find(this.adr_residues, this.residue)){
-                this.$toast.error('El residuo ya se ha seleccionado')
+        addMaterial(values, op){
+            let model = op == 'deposit' ? this.adr_deposits : this.model;
+            let compare = op == 'deposit' ? this.deposit : this.residue
+            if(this.find(model, compare)){
+                this.$toast.error(`El ${op} ya se ha seleccionado`)
                 return
             };
-            this.adr_residues.push({
-                index: this.residue.index, 
-                id: this.residue.id, 
-                material: this.residue.material, 
-                buy: this.residue.buy, 
-                is_residue: this.residue.is_residue,
-                installation_material_id: this.residue.id
+
+            model.push({
+                index: compare.index, 
+                id: compare.id, 
+                material: compare.material, 
+                buy: compare.buy, 
+                is_residue: compare.is_residue,
+                installation_material_id: compare.id
             })
-            this.residue = {
-                index: null,
-                id: null,
-                material: null,
-                buy: null,
-                is_residue: false
-            };
-            resetForm()
+
+            if (op == 'deposit') {
+                this.deposit = {
+                    index: null,
+                    id: null,
+                    material: null,
+                    buy: null,
+                    is_residue: false
+                };
+            }else{
+                this.residue = {
+                    index: null,
+                    id: null,
+                    material: null,
+                    buy: null,
+                    is_residue: false
+                };
+            }
         },
         async loadInstallation(){
             try {
@@ -287,7 +373,20 @@ export default {
         unlink(id, op = 'materials'){
             let position = 0;
             let position_item = 0;
-            let arr = op == 'materials' ? this.materials : this.adr_residues
+            let arr = null
+            switch (op) {
+                case 'materials':
+                    arr = this.materials
+                    break;
+                case 'residues':
+                    arr = this.adr_residues
+                    break;
+                case 'deposits':
+                    arr = this.adr_deposits
+                    break;
+                default:
+                    break;
+            }
             _.mapKeys(
                 arr,
                 (material) => {
@@ -302,10 +401,14 @@ export default {
 
             arr.splice(position_item, 1);
         },
-        formatMaterials(materials){
-            return _.map(materials, res => {
-                return {id: res.id, buy: res.buy, material: res.material, installation_material_id: res.id, is_residue: res.is_residue}
-            })
+        formatMaterials(materials, op_residue = true){
+            let m = [];
+            _.forEach(materials, res => {
+                if (res.is_residue == op_residue) {
+                    m.push({id: res.id, buy: res.buy, material: res.material, installation_material_id: res.id, is_residue: res.is_residue})
+                }
+            }) 
+            return m
         }
     },
     computed: {
@@ -334,7 +437,7 @@ export default {
                 }
                 return op
             })
-        },
+        }
     },
     watch: {
         'residue.index': function(newVal){
@@ -342,6 +445,12 @@ export default {
             this.residue.material = this.audit.installation.residues[newVal].material
             this.residue.buy = this.audit.installation.residues[newVal].buy
             this.residue.is_residue = this.audit.installation.residues[newVal].is_residue
+        },
+        'deposit.index': function(newVal){
+            this.deposit.id = this.audit.installation.deposits[newVal].id
+            this.deposit.material = this.audit.installation.deposits[newVal].material
+            this.deposit.buy = this.audit.installation.deposits[newVal].buy
+            this.deposit.is_residue = this.audit.installation.deposits[newVal].is_residue
         },
     }
 }

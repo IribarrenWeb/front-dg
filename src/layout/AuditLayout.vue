@@ -4,7 +4,7 @@
     </base-header>
 
     <div class="container py-5">
-      <base-steps listClasses="p-3 border rounded border-ligth nav-fill" :steps="steps" :currentStep="currentStep" :meta="true"></base-steps>
+      <base-steps containerClassess="border rounded border-ligth" listClasses="p-3 nav-fill" :steps="steps" @navigate="handleNavigate" :currentStep="currentStep" :meta="true" :id="audit.id"></base-steps>
       <div class="p-3 mt-3 border rounded border-ligth">
         <div class="text-center col-12">
             <h3 class="text-uppercase">Informe/Visita técnica instalaciones ADR</h3>
@@ -35,55 +35,79 @@
         steps: [
           {
             number: 1,
-            title: "1.Primero",
+            title: "Datos",
             link: "",
             valid: false
           },
           {
             number: 2,
-            title: "2.Segundo",
+            title: "Contenido",
             link: "",
             valid: false
           },
           {
             number: 3,
-            title: "3.Tercero",
+            title: "Mercancías",
             link: "",
             valid: false
           },
           {
             number: 4,
-            title: "4.Cuarto",
+            title: "Actividades",
             link: "",
             valid: false
           },
           {
             number: 5,
-            title: "5.Quinto",
+            title: "Comprobaciones",
             link: "",
             valid: false
           },
           {
             number: 6,
-            title: "6.Sexto",
+            title: "Empleo",
             link: "",
             valid: false
           },
           {
             number: 7,
-            title: "7.Septimo",
+            title: "Operaciones",
             link: "",
             valid: false
           },
           {
             number: 8,
-            title: "8.Octavo",
+            title: "Documentación",
             link: "",
             valid: false
           },
           {
             number: 9,
-            title: "9.Noveno",
+            title: "Verificación",
+            link: "",
+            valid: false
+          },
+          {
+            number: 10,
+            title: "Vehículos",
+            link: "",
+            valid: false
+          },
+          {
+            number: 11,
+            title: "No conforminades",
+            link: "",
+            valid: false
+          },
+          {
+            number: 12,
+            title: "Resultado",
+            link: "",
+            valid: false
+          },
+          {
+            number: 13,
+            title: "Consejeros",
             link: "",
             valid: false
           },
@@ -100,7 +124,10 @@
       async getAudit() {
         const id = this.$route.params.id;
         try {
-          const res = await service.show('audit',id,'includes[]=materials&includes[]=review_materials&includes[]=comprobations&includes[]=installation.deposits&includes[]=installation.residues');
+          const res = await service.show('audit',id,
+            'includes[]=materials&includes[]=review_materials&includes[]=comprobations&includes[]=installation.deposits&includes[]=installation.residues'+
+            '&includes[]=vehicles&includes[]=installation.vehicles&includes[]=nonconformities'
+          );
           this.audit = res.data.data
           this.currentStep = this.audit.current_step
           this.$router.push({name:`step.${this.audit.current_step}`})
@@ -114,8 +141,15 @@
             this.steps[i].valid = true
           }
         }
-        this.currentStep += 1;
-        this.$router.push({name: `step.${this.currentStep}`})
+
+        if (evnt == 13) {
+          this.$swal('Auditoria completada!', 'La auditoria se ha completado con exito.', 'success').then(()=> {
+            this.$router.push({name: `auditorias`})
+          })
+        }else{
+          this.currentStep += 1;
+          this.$router.push({name: `step.${this.currentStep}`})
+        }
       },
       async handlePrev(){
         if (this.currentStep !== 1) {
@@ -127,6 +161,15 @@
             this.$toast.error('Error al cambiar de pagina');
           }
         }
+      },
+      async handleNavigate(step){
+          try {
+            await service.update('audit', this.audit.id, {current_step: step});
+            this.currentStep = step
+            this.$router.push({name:`step.${this.currentStep}`})
+          } catch (err) {
+            this.$toast.error('Error al cambiar de pagina');
+          }
       },
       next(step){
           this.$router.push({name:`step.${step}`})

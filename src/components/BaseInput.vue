@@ -36,6 +36,7 @@
             { 'is-invalid': valid === false },
             inputClasses,
           ]"
+          :multiple="multiple"
           aria-describedby="addon-right addon-left"
           :type="type"
           autocomplete="off"
@@ -168,6 +169,11 @@ import { mapState } from 'vuex';
       },
       inputClasses: {
         type: String,
+        description: "Input css classes",
+      },
+      multiple: {
+        type: Boolean,
+        default: false,
         description: "Input css classes",
       },
       modelValue: {

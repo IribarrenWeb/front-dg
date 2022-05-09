@@ -7,6 +7,12 @@ import Step_4 from "@/views/Audits/Step_4";
 import Step_5 from "@/views/Audits/Step_5";
 import Step_6 from "@/views/Audits/Step_6";
 import Step_7 from "@/views/Audits/Step_7";
+import Step_8 from "@/views/Audits/Step_8";
+import Step_9 from "@/views/Audits/Step_9";
+import Step_10 from "@/views/Audits/Step_10";
+import Step_11 from "@/views/Audits/Step_11";
+import Step_12 from "@/views/Audits/Step_12";
+import Step_13 from "@/views/Audits/Step_13";
 
 const auditInit = {
     path: "/audit-init/:id",
@@ -58,25 +64,37 @@ const auditInit = {
         {
             path: "page/8",
             name: "step.8",
-            component: Step_2,
+            component: Step_8,
             meta: { middleware: auth },
         },
         {
             path: "page/9",
             name: "step.9",
-            component: Step_2,
+            component: Step_9,
             meta: { middleware: auth },
         },
         {
             path: "page/10",
             name: "step.10",
-            component: Step_2,
+            component: Step_10,
             meta: { middleware: auth },
         },
         {
             path: "page/11",
             name: "step.11",
-            component: Step_2,
+            component: Step_11,
+            meta: { middleware: auth },
+        },
+        {
+            path: "page/12",
+            name: "step.12",
+            component: Step_12,
+            meta: { middleware: auth },
+        },
+        {
+            path: "page/13",
+            name: "step.13",
+            component: Step_13,
             meta: { middleware: auth },
         },
     ]

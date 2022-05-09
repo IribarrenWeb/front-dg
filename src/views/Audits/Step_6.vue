@@ -6,73 +6,28 @@
         </div>
         <div v-else class="row justify-content-center px-md-2">
             <div class="col-md-10">
-                <h4 class="text-uppercase">COMPROBACIONES REGLAMENTARIAS</h4>
+                <h4 class="text-uppercase">Empleo de subcontratistas o terceros</h4>
                 <div class="row justify-content-center">
                     <div class="col-md-12 mt-md-3">
-                        <h5 class="text-uppercase text-muted">FORMACIÓN DEL PERSONAL IMPLICADO CON MERCANCÍAS PELIGROSAS</h5>
-                        <base-field name="comprobation" label="1.El personal implicado ha recibido curso manipulación ADR adaptada a sus necesidades y tareas encomendadas">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <field-validate as="select" class="form-control" name="comprobation" label="un" rules="required">
-                                        <option selected>COMPROBACIÓN</option>
-                                        <option value="true">SI</option>
-                                        <option value="true">SI - NO CONFORMIDAD</option>
-                                        <option value="true">NO</option>
-                                        <option value="true">NO PROCEDE</option>
-                                    </field-validate>
+                        <!-- <h5 class="text-uppercase text-muted">FORMACIÓN DEL PERSONAL IMPLICADO CON MERCANCÍAS PELIGROSAS</h5> -->
+                        <div v-for="(comp, idx) in comprobations" :key="comp.id">
+                            <base-field :name="`comprobations[${idx}]`" :label="comp.text">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <field-validate as="select" class="form-control" :name="`comprobation${idx}`" label="un" rules="required" v-model="comprobations[idx].comprobation_type_id">
+                                            <option selected>COMPROBACIÓN</option>
+                                            <option :value="co.id" v-for="co in audit.con_types" :key="co.id">{{co.name}}</option>
+                                        </field-validate>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <field-validate as="select" class="form-control" :name="`evaluation${idx}`" label="" rules="required" v-model="comprobations[idx].evaluation_type_id">
+                                            <option selected>EVALUACIÓN</option>
+                                            <option :value="ev.id" v-for="ev in audit.ev_types" :key="ev.id">{{ev.name}}</option>
+                                        </field-validate>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <field-validate as="select" class="form-control" name="evaluation" label="" rules="required">
-                                        <option selected>EVALUACIÓN</option>
-                                        <option value="true">APTA</option>
-                                        <option value="true">APTA - CON RECOMENDACIONES</option>
-                                        <option value="true">NO APTA - URGE ACCION CORRECTIVA</option>
-                                    </field-validate>
-                                </div>
-                            </div>
-                        </base-field>
-                        <base-field name="comprobation1" label="2.Realización de simulacros de emergencia en operaciones de carga o descarga">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <field-validate as="select" class="form-control" name="comprobation1" label="un" rules="required">
-                                        <option selected>COMPROBACIÓN</option>
-                                        <option value="true">SI</option>
-                                        <option value="true">SI - NO CONFORMIDAD</option>
-                                        <option value="true">NO</option>
-                                        <option value="true">NO PROCEDE</option>
-                                    </field-validate>
-                                </div>
-                                <div class="col-md-6">
-                                    <field-validate as="select" class="form-control" name="evaluation1" label="" rules="required">
-                                        <option selected>EVALUACIÓN</option>
-                                        <option value="true">APTA</option>
-                                        <option value="true">APTA - CON RECOMENDACIONES</option>
-                                        <option value="true">NO APTA - URGE ACCION CORRECTIVA</option>
-                                    </field-validate>
-                                </div>
-                            </div>
-                        </base-field>
-                        <base-field name="comprobation2" label="3.Procedimientos escrito para las operaciones con Mercancías ADR">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <field-validate as="select" class="form-control" name="comprobation2" label="un" rules="required">
-                                        <option selected>COMPROBACIÓN</option>
-                                        <option value="true">SI</option>
-                                        <option value="true">SI - NO CONFORMIDAD</option>
-                                        <option value="true">NO</option>
-                                        <option value="true">NO PROCEDE</option>
-                                    </field-validate>
-                                </div>
-                                <div class="col-md-6">
-                                    <field-validate as="select" class="form-control" name="evaluation2" label="" rules="required">
-                                        <option selected>EVALUACIÓN</option>
-                                        <option value="true">APTA</option>
-                                        <option value="true">APTA - CON RECOMENDACIONES</option>
-                                        <option value="true">NO APTA - URGE ACCION CORRECTIVA</option>
-                                    </field-validate>
-                                </div>
-                            </div>
-                        </base-field>
+                            </base-field>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,24 +46,21 @@
 </template>
 <script>
 import service from "@/store/services/model-service";
+import _ from "lodash";
 export default {
     props: ['audit', 'currentStep'],
     data() {
         return {
-            check1: false,
-            check2: false,
-            audit_id: this.$route.params.id
+            audit_id: this.$route.params.id,
+            comprobations: this.formatComp()
         }
     },
     async mounted() {
     },
     methods: {
         async onSubmit(){
-            if (!this.check1 && !this.check2) {
-                this.$toast.warning('Tiene que marcar los checkbox')
-            }
             try {
-                await service.update('audit', this.audit_id, { current_step: 7, valid_step: 6 })
+                await service.update('audit', this.audit_id, { current_step: 7, valid_step: this.audit.valid_step >= this.currentStep ? this.audit.valid_step : this.currentStep, comprobations: this.comprobations})
                 this.$emit('next', 6)
             } catch (err) {
                 let message = err.response.message ? err.response.message : 'Ocurrio un error al guardar los cambios'
@@ -118,7 +70,18 @@ export default {
         },
         handle(event){
             console.log(event,this.check2);
+        },
+        formatComp(){
+            let compr = [];
+            _.forEach(this.audit.comprobations, comp => {
+                if (comp.step > 7 && comp.step < 9) {
+                    compr.push(comp)
+                }
+            })
+            return compr;
         }
+    },
+    computed: {
     }
 }
 </script>

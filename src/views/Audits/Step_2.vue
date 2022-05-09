@@ -69,7 +69,7 @@ export default {
                 this.$toast.warning('Tiene que marcar los checkbox')
             }
             try {
-                await service.update('audit', this.audit_id, { current_step: 3, valid_step: 2 })
+                await service.update('audit', this.audit_id, { current_step: 3, valid_step: this.audit.valid_step >= this.currentStep ? this.audit.valid_step : this.currentStep })
                 this.$emit('next', 2)
             } catch (err) {
                 let message = err.response.message ? err.response.message : 'Ocurrio un error al guardar los cambios'

@@ -55,6 +55,7 @@ export default {
           this.touched = true;
         }
         this.$emit("input", check);
+        this.$emit("changed", check);
       },
     },
   },

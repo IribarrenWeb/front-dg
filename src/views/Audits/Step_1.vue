@@ -84,7 +84,7 @@ export default {
     methods: {
         async onSubmit(){
             try {
-                await service.update('audit', this.audit_id, {visit_date: this.visit_date, current_step: 2, valid_step: 1, status: 'INCOMPLETO'})
+                await service.update('audit', this.audit_id, {visit_date: this.visit_date, current_step: 2, valid_step: this.audit.valid_step >= this.currentStep ? this.audit.valid_step : this.currentStep, status: 'INCOMPLETO'})
             } catch (err) {
                 let message = err.response.message ? err.response.message : 'Ocurrio un error al guardar los cambios'
                 this.$toast.error(message);
