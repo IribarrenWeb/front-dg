@@ -237,7 +237,7 @@
                 <!-- <base-button type="default" nativeType="submit" @click="this.touched = meta.touched" v-if="isSaved && meta.touched" :disabled="!meta.valid"
                 >Actualizar</base-button
                 > -->
-                <div class="d-inline-block mx-2" v-else>
+                <div class="d-inline-block mx-2">
                     <base-button type="default" :disabled="!meta.valid" nativeType="submit" v-if="currentStep !== 3 && currentStep < 6"
                     >Siguiente</base-button
                     >
