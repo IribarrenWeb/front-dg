@@ -67,7 +67,6 @@ export default {
         }
     },
     async mounted() {
-        console.log('HOLLLLLLLLLLLLLLLLLLLLLLLL');
         let id = this.$route.params.id;
         this.audit_id = id
         if (typeof this.audit.id == 'undefined') {

@@ -9,14 +9,14 @@
                 <h4 class="text-uppercase">Contenido de la visita</h4>
                 <div class="row justify-content-center">
                     <div class="col-md-12">
-                        <base-checkbox @input="check1 = $event">
+                        <base-checkbox :checked="checked" @input="check1 = $event">
                             <b>
                                 INFORME TÉCNICO DE EVALUACIÓN INICIAL. ACTIVIDADES CON MERCANCÍAS PELIGROSAS SUJETAS A CUMPLIMIENTO SEGÚN ADR ( Transporte de Mercancías Peligrosas por carretera).
                             </b> 
                         </base-checkbox>
                     </div>
                     <div class="col-md-12 mt-md-4">
-                        <base-checkbox  @input="check2 = $event">
+                        <base-checkbox :checked="checked" @input="check2 = $event">
                             <b >
                                 CONTENIDOS DE LA VISITA: - Reunión informativa previa ; - Revisión/Análisis de la gestión de las actividades con mercancías peligrosas.; - Verificación de las áreas de carga/descarga y almacenamiento de mercancías peligrosas; - Verificación de operaciones de carga de residuos peligrosos; - Verificación de operaciones de carga/descarga de cisternas; - Verificación de operaciones de carga/descarga de bultos; - Verificación de los vehículos destinados al transporte; - Sesión de Formación; - Reunión final
                                 Este informe es de carácter interno y la información aquí mostrada no esla que se comunica oficialmente al Ministerio de Fomento cuando se presenta elinforme anual; no obstante, se revisan todas aquellas cuestiones que esobligación del Consejero de Seguridad verificar, con objeto de valorar el gradode cumplimiento de los requisitos aplicables.
@@ -47,10 +47,21 @@ export default {
         return {
             check1: false,
             check2: false,
-            audit_id: this.$route.params.id
+            audit_id: this.$route.params.id,
+            checked: false
         }
     },
     async mounted() {
+        if (typeof this.audit.id == 'undefined') {
+            const res = await service.show('audit',this.audit_id)
+            this.checked = res.data.data.valid_step >= 2
+            this.check1 = this.checked
+            this.check2 = this.checked
+        }else{
+            this.checked = this.audit.valid_step >= 2
+            this.check1 = this.checked
+            this.check2 = this.checked
+        }
     },
     methods: {
         async onSubmit(){

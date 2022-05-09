@@ -10,7 +10,11 @@
             <h3 class="text-uppercase">Informe/Visita técnica instalaciones ADR</h3>
             <h4 class="text-muted text-uppercase">Real Decreto 97/2014</h4>
         </div>
-        <router-view v-slot="{ Component, route }">
+        <div class="d-flex justify-content-center" v-if="typeof audit.id == 'undefined'">
+            <div class="spinner-border" role="status">
+            </div>
+        </div>
+        <router-view v-slot="{ Component, route }" v-else>
           <transition name="fade">
             <keep-alive>
               <component :is="Component" :key="route.path" :audit="audit" @next="handleNext" @prev="handlePrev" :currentStep="currentStep"/>
@@ -89,8 +93,6 @@
       };
     },
     async beforeMount() {
-      console.log(this.$route.params.id)
-      console.log('hhahaha');
       await this.getAudit()
       await this.setSteps()
     },
@@ -98,11 +100,9 @@
       async getAudit() {
         const id = this.$route.params.id;
         try {
-          const res = await service.show('audit',id);
+          const res = await service.show('audit',id,'includes[]=materials&includes[]=review_materials&includes[]=comprobations&includes[]=installation.deposits&includes[]=installation.residues');
           this.audit = res.data.data
           this.currentStep = this.audit.current_step
-          console.log('ahjashjahsjahsjh');
-          this.$router.push({name:`step.1`})
           this.$router.push({name:`step.${this.audit.current_step}`})
         } catch (err) {
           console.log(err);

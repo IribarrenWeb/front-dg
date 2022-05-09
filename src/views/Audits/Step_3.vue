@@ -32,12 +32,12 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <base-field name="adr_class_id" label="Clase ADR">
-                                    <field-validate as="select" class="form-control" name="adr_class_id" label="clase" v-model="model.adr_class_id" rules="required">
+                                    <field-validate as="select" class="form-control" name="adr_class_id" label="clase" v-model="audit_materials.adr_class_id" rules="required">
                                         <option selected>CLASE ADR</option>
                                         <option
-                                            :value="adr"
-                                            v-for="(adr, key) in adr_classes"
-                                            :key="key.id"
+                                            :value="idx"
+                                            v-for="(adr, idx) in adr_classes"
+                                            :key="idx"
                                             >
                                             {{ adr.code }}
                                         </option>
@@ -46,12 +46,12 @@
                             </div>
                             <div class="col-md-3">
                                 <base-field name="packing_group_id" label="GE">
-                                    <field-validate as="select" class="form-control" name="packing_group_id" label="ge" v-model="model.packing_group_id" rules="required">
+                                    <field-validate as="select" class="form-control" name="packing_group_id" label="ge" v-model="audit_materials.packing_group_id" rules="required">
                                         <option selected>G.E.</option>
                                         <option
-                                            :value="pack"
-                                            v-for="(pack, key) in packing_types"
-                                            :key="key.id"
+                                            :value="idx"
+                                            v-for="(pack, idx) in packing_types"
+                                            :key="idx"
                                             >
                                             {{ pack.code }}
                                         </option>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-md-4">
                                 <base-field name="comment" label="Comentario">
-                                    <field-validate type="text" class="form-control" name="comment" rules="required" label="comentario" v-model="model.comment"/>
+                                    <field-validate type="text" class="form-control" name="comment" rules="required" label="comentario" v-model="audit_materials.comment"/>
                                 </base-field>
                             </div>
                             <div class="col-md-2 d-flex">
@@ -95,30 +95,30 @@
                 <div class="col-md-12 mt-md-3">
                     <h5 class="text-uppercase text-primary">DEPOSITOS MERCANCÍAS PELIGROSAS INSTALACIÓN</h5>
                     <h6 class="text-uppercase text-muted">TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS</h6>
-                    <form-validate @submit="submitDeposit">
+                    <form-validate @submit="addDeposit">
                         <div class="row">
                             <div class="col-md-3">
-                                <base-field name="adr_class_id" label="UN">
-                                    <field-validate as="select" class="form-control" name="adr_class_id" label="un" rules="required">
+                                <base-field name="un_code" label="UN">
+                                    <field-validate as="select" class="form-control" name="un_code" label="un" rules="required" v-model="residue.index">
                                         <option selected>UN</option>
-                                        <!-- <option
-                                            :value="permit.id"
-                                            v-for="(permit, key) in permits"
-                                            :key="key.id"
+                                        <option
+                                            :value="idx"
+                                            v-for="(r, idx) in audit.installation.residues"
+                                            :key="idx"
                                             >
-                                            {{ permit.name }}
-                                        </option> -->
+                                            {{ r.material.un_code }}
+                                        </option>
                                     </field-validate>
                                 </base-field>
                             </div>
                             <div class="col-md-2">
-                                <base-input :view="true" modelValue="" label="Clase" disabled/>
+                                <base-input :view="true" :modelValue="residue.material != null ? residue.material.class.code : ``" label="Clase" disabled/>
                             </div>
                             <div class="col-md-2">
-                                <base-input :view="true" modelValue="" label="GE" disabled/>
+                                <base-input :view="true" :modelValue="residue.material != null ? residue.material.packing.code : ``" label="GE" disabled/>
                             </div>
                             <div class="col-md-3">
-                                <base-input :view="true" modelValue="" label="Cantidad" disabled/>
+                                <base-input :view="true" :modelValue="residue.material != null ? residue.buy : ``" label="Cantidad" disabled/>
                             </div>
                             <div class="col-md-2 d-flex">
                                 <div class="align-self-center">
@@ -129,6 +129,27 @@
                             </div>
                         </div>
                     </form-validate>
+                    <div class="row" v-for="(res,idx) in adr_residues" :key="idx">
+                        <div class="col-md-3">
+                            <base-input :view="true" :modelValue="res.material.un_code" disabled/>
+                        </div>
+                        <div class="col-md-2">
+                            <base-input :view="true" :modelValue="res.material.class.code" disabled/>
+                        </div>
+                        <div class="col-md-2">
+                            <base-input :view="true" :modelValue="res.material.packing.code" disabled/>
+                        </div>
+                        <div class="col-md-3">
+                            <base-input :view="true" :modelValue="res.buy" disabled/>
+                        </div>
+                        <div class="col-md-2 d-flex">
+                            <div class="align-self-center">
+                                <base-button size="sm" @click="unlink(res.id, false)" type="danger" :outline="true">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </base-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,32 +181,35 @@ export default {
             audit_id: null,
             installation_id: null,
             installation: {},
-            model: {
+            audit_materials: {
                 packing_group_id: null,
                 adr_class_id: null,
                 comment: ""
             },
-            materials: []
+            materials: [],
+            residue: {
+                index: null,
+                id: null,
+                material: null,
+                buy: null,
+                is_residue: false
+            },
+            adr_residues: []
         }
     },
     async mounted() {
         this.audit_id = this.$route.params.id;
-        if (typeof this.audit.id == 'undefined') {
-            const res = await service.show('audit',this.audit_id)
-            this.installation_id = res.data.data.installation_id
-        }else{
-            console.log(this.audit.installation.operations);
-            this.installation_id = this.audit.installation_id
-        }
+        this.installation_id = this.audit.installation_id
+        this.materials = this.audit.review_materials
+        this.adr_residues = this.formatMaterials(this.audit.materials)
+        console.log(this.audit.installation.residues);
         this.loadInstallation()
-        this.loadOperations()
-        this.loadEquipments()
         this.loadData()
     },
     methods: {
         async onSubmit(){
             try {
-                await service.update('audit', this.audit_id, { current_step: 4, valid_step: 3 })
+                await service.update('audit', this.audit_id, { current_step: 4, valid_step: 3, audit_material_reviews: this.materials, audit_materials: this.adr_residues })
             } catch (err) {
                 let message = err.response.message ? err.response.message : 'Ocurrio un error al guardar los cambios'
                 this.$toast.error(message);
@@ -194,29 +218,40 @@ export default {
             this.$emit('next', 3)
         },
         async submitMaterial(values, {resetForm}){
+            const c = this.adr_classes[values.adr_class_id];
+            const p = this.packing_types[values.packing_group_id];
             this.materials.push({
                 id: random(1,999999),
-                class: values.adr_class_id,
-                packing: values.packing_group_id,
+                adr_class_id: c.id,
+                packing_group_id: p.id,
+                class: c,
+                packing: p,
                 comment: values.comment
             })
+            this.audit
             resetForm()
         },
-        async loadOperations(){
-            try {
-                const res = await data_service.getOperations()
-                this.operations_data = res.data.data 
-            } catch (err) {
-                this.$toast.error('No se pudieron cargar las operaciones');
-            }
-        },
-        async loadEquipments(){
-            try {
-                const res = await data_service.getEquipments()
-                this.equipments_data = res.data.data 
-            } catch (err) {
-                this.$toast.error('No se pudieron cargar los equipamientos');
-            }
+        addDeposit(values,{resetForm}){
+            if(this.find(this.adr_residues, this.residue)){
+                this.$toast.error('El residuo ya se ha seleccionado')
+                return
+            };
+            this.adr_residues.push({
+                index: this.residue.index, 
+                id: this.residue.id, 
+                material: this.residue.material, 
+                buy: this.residue.buy, 
+                is_residue: this.residue.is_residue,
+                installation_material_id: this.residue.id
+            })
+            this.residue = {
+                index: null,
+                id: null,
+                material: null,
+                buy: null,
+                is_residue: false
+            };
+            resetForm()
         },
         async loadInstallation(){
             try {
@@ -230,18 +265,31 @@ export default {
             try {
                 const res = await data_service.getPacking()
                 const res2 = await data_service.getAdrClass()
+                const res3 = await data_service.getOperations()
+                const res4 = await data_service.getEquipments()
+                this.equipments_data = res4.data.data 
+                this.operations_data = res3.data.data
                 this.adr_classes = res2.data.data 
                 this.packing_types = res.data.data 
             } catch (err) {
                 this.$toast.error('No se pudieron cargar los datos');
             }
         },
-        unlink(id){
+        find(arr, item){
+            for (let index = 0; index < arr.length; index++) {
+                const element = arr[index];
+                if (element.id == item.id) {
+                    return true
+                }
+            }
+            return false
+        },
+        unlink(id, op = 'materials'){
             let position = 0;
             let position_item = 0;
-
+            let arr = op == 'materials' ? this.materials : this.adr_residues
             _.mapKeys(
-                this.materials,
+                arr,
                 (material) => {
                     if (material.id == id) {
                         position_item = position;
@@ -252,7 +300,12 @@ export default {
                 id
             );
 
-            this.materials.splice(position_item, 1);
+            arr.splice(position_item, 1);
+        },
+        formatMaterials(materials){
+            return _.map(materials, res => {
+                return {id: res.id, buy: res.buy, material: res.material, installation_material_id: res.id, is_residue: res.is_residue}
+            })
         }
     },
     computed: {
@@ -281,7 +334,15 @@ export default {
                 }
                 return op
             })
-        }
+        },
+    },
+    watch: {
+        'residue.index': function(newVal){
+            this.residue.id = this.audit.installation.residues[newVal].id
+            this.residue.material = this.audit.installation.residues[newVal].material
+            this.residue.buy = this.audit.installation.residues[newVal].buy
+            this.residue.is_residue = this.audit.installation.residues[newVal].is_residue
+        },
     }
 }
 </script>

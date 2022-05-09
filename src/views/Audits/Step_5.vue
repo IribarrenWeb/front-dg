@@ -40,10 +40,21 @@ export default {
         return {
             check1: false,
             check2: false,
+            checked: false,
             audit_id: this.$route.params.id
         }
     },
     async mounted() {
+         if (typeof this.audit.id == 'undefined') {
+            const res = await service.show('audit',this.audit_id)
+            this.checked = res.data.data.valid_step >= 2
+            this.check1 = this.checked
+            this.check2 = this.checked
+        }else{
+            this.checked = this.audit.valid_step >= 2
+            this.check1 = this.checked
+            this.check2 = this.checked
+        }
     },
     methods: {
         async onSubmit(){

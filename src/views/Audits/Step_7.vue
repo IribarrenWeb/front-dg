@@ -15,18 +15,18 @@
                                 <div class="col-md-6">
                                     <field-validate as="select" class="form-control" name="comprobation" label="un" rules="required">
                                         <option selected>COMPROBACIÓN</option>
-                                        <option value="true">SI</option>
-                                        <option value="true">SI - NO CONFORMIDAD</option>
-                                        <option value="true">NO</option>
-                                        <option value="true">NO PROCEDE</option>
+                                        <option value="1">SI</option>
+                                        <option value="2">SI - NO CONFORMIDAD</option>
+                                        <option value="3">NO</option>
+                                        <option value="4">NO PROCEDE</option>
                                     </field-validate>
                                 </div>
                                 <div class="col-md-6">
                                     <field-validate as="select" class="form-control" name="evaluation" label="" rules="required">
                                         <option selected>EVALUACIÓN</option>
-                                        <option value="true">APTA</option>
-                                        <option value="true">APTA - CON RECOMENDACIONES</option>
-                                        <option value="true">NO APTA - URGE ACCION CORRECTIVA</option>
+                                        <option value="1">APTA</option>
+                                        <option value="2">APTA - CON RECOMENDACIONES</option>
+                                        <option value="3">NO APTA - URGE ACCION CORRECTIVA</option>
                                     </field-validate>
                                 </div>
                             </div>

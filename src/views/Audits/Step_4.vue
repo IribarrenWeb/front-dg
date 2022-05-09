@@ -10,7 +10,7 @@
                 <div class="col-md-12 mt-md-3">
                     <h5 class="text-uppercase text-primary">RESIDUOS ADR GENERADOS/ALMACENADOS INSTALACIÓN</h5>
                     <h6 class="text-uppercase text-muted">TIPO RESIDUOS ADR CARGADOS/DESCARGADOS/ALMACENADOS EN LA INSTALACIÓN</h6>
-                    <form-validate @submit="submitDeposit">
+                    <form-validate>
                         <div class="row">
                             <div class="col-md-2">
                                 <base-field name="adr_class_id" label="UN">
