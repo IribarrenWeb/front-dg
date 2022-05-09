@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="text-center text-uppercase mb-md-3">
-            <h3>Agregar una instalacion</h3>
+            <h3>Agregar una instalación</h3>
         </div>
-        <form-validate @submit="onSubmit" v-slot="{ resetForm, meta }">
+        <form-validate ref="form" @submit="onSubmit" v-slot="{ resetForm, meta }">
             <base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :meta="meta" @step="currentStep = $event"></base-steps>
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
@@ -67,7 +67,7 @@
                         <div class="col-md-12">
                             <base-field   name="operations" label="Tipos de operaciones">
                                 <div v-for="operation in operations" :key="operation.key" class="form-check">
-                                    <field-validate :disabled="isSaved" 
+                                    <field-validate :disabled="isSaved"
                                         type="checkbox" 
                                         name="operations"
                                         class="form-check-input" 
@@ -84,7 +84,7 @@
                         <div class="col-md-12">
                             <base-field   name="equipments" label="Tipos de equipamientos" labelClasses="d-block">
                                 <div v-for="equipment in equipments" :key="equipment.key" class="d-inline-block">
-                                    <field-validate :disabled="isSaved" 
+                                    <field-validate :disabled="isSaved"
                                         type="checkbox" 
                                         name="equipments"
                                         :value="equipment.value"
@@ -211,10 +211,10 @@
             <!-- ------------------------------------------------------- -->
             <template v-if="currentStep == 4 && isSaved">
                 <div>
-                    <material-table :installation_id="installation_id"></material-table>
+                    <material-table :installation_id="installation_id" :residue="0"></material-table>
                 </div>
                 <div class="mt-5">
-                    <material-table :installation_id="installation_id" residue="true" title="Residuos"></material-table>
+                    <material-table :installation_id="installation_id" :residue="1" title="Residuos"></material-table>
                 </div>
             </template>
             <!-- ------------------------------------------------------- -->
@@ -234,9 +234,14 @@
                 <base-button type="default" @click="prevStep()" v-if="currentStep !== 1"
                 >Anterior</base-button
                 >
-                <base-button type="default" nativeType="submit" v-if="currentStep !== 3 && currentStep < 6"
-                >Siguiente</base-button
+                <!-- <base-button type="default" nativeType="submit" @click="this.touched = meta.touched" v-if="isSaved && meta.touched" :disabled="!meta.valid"
+                >Actualizar</base-button
                 >
+                <div class="d-inline-block mx-2" v-else>
+                    <base-button type="default" :disabled="!meta.valid" nativeType="submit" v-if="currentStep !== 3 && currentStep < 6"
+                    >Siguiente</base-button
+                    >
+                </div> -->
                 <base-button type="default" nativeType="submit" v-if="currentStep === 3"
                 >{{!isSaved ? 'Enviar' : 'Siguiente'}}</base-button
                 >
@@ -282,6 +287,7 @@ export default {
                 value: "",
                 label: ""
             }],
+            touched: false,
             operations: [],
             equipments: [],
             permits: {}
@@ -307,20 +313,28 @@ export default {
             if (this.currentStep == 1) {
                 this.model.file_document.base64 = await this.toBase64(inst.file_document[0])
                 this.model.auditable_id = this.model.auditable.id;
+                if (this.isSaved) {
+                    return
+                }
             }
 
             if (this.currentStep == 2) {
+                if (this.isSaved & this.touched) {
+                    return
+                }
                 // this.model.equipments_ids = inst.equipments
                 // this.model.operation_types_ids = inst.operations
             }
 
             if (this.currentStep == 3) {
-                this.model.responsible.file_certification.base64 = await this.toBase64(inst.file_cer[0])
-                this.model.responsible.date_certification.date = this.formatDate(inst.date_cer);
-                this.model.responsible.date_firm.date = this.formatDate(inst.date_firm);
-                if (this.model.responsible.driver) {
-                    this.model.responsible.driver_document.base64 = await this.toBase64(inst.file_driver[0])
-                    this.model.responsible.driver_document_date.date = this.formatDate(inst.driver_date)
+                if (!this.isSaved) {
+                    this.model.responsible.file_certification.base64 = await this.toBase64(inst.file_cer[0])
+                    this.model.responsible.date_certification.date = this.formatDate(inst.date_cer);
+                    this.model.responsible.date_firm.date = this.formatDate(inst.date_firm);
+                    if (this.model.responsible.driver) {
+                        this.model.responsible.driver_document.base64 = await this.toBase64(inst.file_driver[0])
+                        this.model.responsible.driver_document_date.date = this.formatDate(inst.driver_date)
+                    }
                 }
             }
 
@@ -420,7 +434,17 @@ export default {
             ]; 
 
             this.model = this.$store.getters.INSTALLATION_SCHEMA
-        }
+        },
+        // async update(data){
+        //     try {
+        //         await service.update('installation',this.installation_id, data)
+        //         this.$toast.success('Cambios actualizados')
+        //     } catch (err) {
+        //         this.$toast.error('No se pudieron guardar los cambios')
+        //     }
+        // }
+    },
+    computed: {
     }
 }
 </script>

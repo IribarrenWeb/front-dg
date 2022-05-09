@@ -13,9 +13,9 @@
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-3">
                         <base-field name="is_residue" label="Tipo">
-                            <field-validate as="select" class="form-control" name="is_residue" rules="required" label="residue" v-model="model.is_residue">
-                                <option :value="true" selected>Residuo ADR</option>
-                                <option value="false">Material</option>
+                            <field-validate as="select" class="form-control" name="is_residue" rules="required" label="residue" v-model="model.is_residue" :disabled="true">
+                                <option :value="1">Residuo ADR</option>
+                                <option :value="0">Material</option>
                             </field-validate>
                         </base-field>
                     </div>
@@ -123,6 +123,11 @@ export default {
         installation_id: {
             required: true,
             default: null
+        },
+        residue: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     components: {Multiselect},
@@ -160,6 +165,7 @@ export default {
     },
     mounted() {
         this.loadDeposits();
+        this.model.is_residue = this.residue
     },
     methods: {
         prevStep(){

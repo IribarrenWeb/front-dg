@@ -75,7 +75,7 @@
       >
       <template v-slot:header>
       </template>
-      <form-material @close="this.modal = false" @reload="getMaterials(page,installation_id)" :installation_id="installation_id"></form-material>
+      <form-material @close="this.modal = false" @reload="getMaterials(page,installation_id)" :installation_id="installation_id" :residue="residue"></form-material>
     </modal>
   </div>
 </template>
