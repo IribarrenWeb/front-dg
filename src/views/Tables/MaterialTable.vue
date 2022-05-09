@@ -120,7 +120,7 @@ export default {
           params += '&installation_id=' + id;
         }
 
-        if (this.residue === '0') {
+        if (this.residue === 0) {
           params += '&is_residue=false'  
         }else{
           params += '&is_residue=true'

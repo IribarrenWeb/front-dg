@@ -125,7 +125,6 @@ export default {
             default: null
         },
         residue: {
-            type: Boolean,
             required: false,
             default: false
         }
@@ -184,7 +183,7 @@ export default {
 
             if (this.currentStep === 1) {
                 this.model.adr_material_id = this.material.id
-                this.model.is_residue = values.is_residue == 'false' ? false : true;
+                this.model.is_residue = values.is_residue == 0 ? false : true;
             }
             if (this.currentStep === 2) {
                 try {
