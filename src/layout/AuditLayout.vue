@@ -4,7 +4,7 @@
     </base-header>
 
     <div class="container py-5">
-      <base-steps containerClassess="border rounded border-ligth" listClasses="p-3 nav-fill" :steps="steps" @navigate="handleNavigate" :currentStep="currentStep" :meta="true" :id="audit.id"></base-steps>
+      <base-steps containerClassess="border rounded border-ligth" listClasses="p-3 nav-fill" :audit="true" :steps="steps" @navigate="handleNavigate" :currentStep="currentStep" :meta="true" :id="audit.id"></base-steps>
       <div class="p-3 mt-3 border rounded border-ligth">
         <div class="text-center col-12">
             <h3 class="text-uppercase">Informe/Visita técnica instalaciones ADR</h3>
