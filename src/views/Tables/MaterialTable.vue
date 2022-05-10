@@ -93,8 +93,8 @@ export default {
       default: null
     },
     residue: {
-      type: String,
-      default: '0'
+      type: Boolean,
+      default: false
     },
     title: {
       type: String,
@@ -120,7 +120,7 @@ export default {
           params += '&installation_id=' + id;
         }
 
-        if (this.residue === 0) {
+        if (this.residue == false) {
           params += '&is_residue=false'  
         }else{
           params += '&is_residue=true'

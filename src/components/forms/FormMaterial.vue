@@ -13,9 +13,11 @@
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-3">
                         <base-field name="is_residue" label="Tipo">
-                            <field-validate as="select" class="form-control" name="is_residue" rules="required" label="residue" v-model="model.is_residue" :disabled="true">
-                                <option :value="1">Residuo ADR</option>
-                                <option :value="0">Material</option>
+                            <field-validate class="form-control" name="is_residue" rules="required" label="residue" v-model="is_res" v-slot="{field}">
+                                <select name="" id="" v-bind="field" class="form-control">
+                                    <option value="1">Residuo ADR</option>
+                                    <option value="0">Material</option>
+                                </select>
                             </field-validate>
                         </base-field>
                     </div>
@@ -65,9 +67,11 @@
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-md-3">
                         <base-field name="address" label="Unidad">
-                            <field-validate as="select" class="form-control" name="deposit" rules="required" label="deposit" v-model="model.unit">
-                                <option value="TONELADAS" selected>TONELADAS</option>
-                                <option value="KILOS">KILOS</option>
+                            <field-validate class="form-control" name="deposit" rules="required" label="deposit" v-model="model.unit" v-slot="{ field }">
+                                <select name="" class="form-control" v-bind="field">
+                                    <option value="TONELADAS">TONELADAS</option>
+                                    <option value="KILOS">KILOS</option>
+                                </select>
                             </field-validate>
                         </base-field>
                     </div>
@@ -126,7 +130,7 @@ export default {
         },
         residue: {
             required: false,
-            default: false
+            default: 0
         }
     },
     components: {Multiselect},
@@ -144,6 +148,7 @@ export default {
                     valid: false
                 }
             ],
+            is_res: null,
             currentStep: 1,
             model: {
                 installation_id: this.installation_id,
@@ -164,7 +169,6 @@ export default {
     },
     mounted() {
         this.loadDeposits();
-        this.model.is_residue = this.residue
     },
     methods: {
         prevStep(){
@@ -183,7 +187,7 @@ export default {
 
             if (this.currentStep === 1) {
                 this.model.adr_material_id = this.material.id
-                this.model.is_residue = values.is_residue == 0 ? false : true;
+                this.model.is_residue = values.is_residue == '1' ? true : false;
             }
             if (this.currentStep === 2) {
                 try {

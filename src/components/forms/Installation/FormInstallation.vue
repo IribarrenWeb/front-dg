@@ -211,10 +211,10 @@
             <!-- ------------------------------------------------------- -->
             <template v-if="currentStep == 4 && isSaved">
                 <div>
-                    <material-table :installation_id="installation_id" :residue="0"></material-table>
+                    <material-table :installation_id="installation_id" :residue="false"></material-table>
                 </div>
                 <div class="mt-5">
-                    <material-table :installation_id="installation_id" :residue="1" title="Residuos"></material-table>
+                    <material-table :installation_id="installation_id" :residue="true" title="Residuos"></material-table>
                 </div>
             </template>
             <!-- ------------------------------------------------------- -->
