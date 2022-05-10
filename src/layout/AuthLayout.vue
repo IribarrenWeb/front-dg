@@ -1,15 +1,11 @@
 <template>
-  <div class="main-content bg-default">
+  <div class="main-content bg-gradient-primary">
     <!-- Navbar -->
     <base-nav
       class="navbar-top navbar-horizontal navbar-dark"
       containerClasses="px-4 container"
       expand
     >
-      <!-- <router-link slot="brand" class="navbar-brand" to="/">
-                <img src="img/brand/white.png"/>
-            </router-link> -->
-
       <template v-slot="{ closeMenu }">
         <!-- Collapse header -->
         <div class="navbar-collapse-header d-md-none">
@@ -40,26 +36,16 @@
               <span class="nav-link-inner--text">Login</span>
             </router-link>
           </li>
-          <!-- <li class="nav-item">
-            <router-link class="nav-link nav-link-icon" to="/profile">
-              <i class="ni ni-single-02"></i>
-              <span class="nav-link-inner--text">Profile</span>
-            </router-link>
-          </li> -->
         </ul>
       </template>
     </base-nav>
     <!-- Header -->
-    <div class="header bg-light py-7 py-lg-8">
+    <div class="header bg-gradient-clear py-7 py-lg-8">
       <div class="container">
         <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6">
-              <img :src="baseUrl + 'img/dg_logo.png'" width="100" />
-              <h1 class="text-white">DG SOFTWARE APP!</h1>
-              <p class="text-lead text-white">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
+              <img :src="baseUrl + 'img/dg_logo.png'" width="80" />
             </div>
           </div>
         </div>

@@ -9,6 +9,12 @@ const Dashboard = defineAsyncComponent({
     loadingComponent: Loader
 });
 
+const Delegate = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Delegate.vue"),
+    loadingComponent: Loader
+});
+
 const Profile = defineAsyncComponent({
     loader: () =>
         import ("@/views/UserProfile.vue"),
@@ -21,15 +27,9 @@ const Audits = defineAsyncComponent({
     loadingComponent: Loader
 });
 
-const Users = defineAsyncComponent({
+const Informs = defineAsyncComponent({
     loader: () =>
-        import ("@/views/Users.vue"),
-    loadingComponent: Loader
-});
-
-const AuditorTable = defineAsyncComponent({
-    loader: () =>
-        import ("@/views/Tables/AuditorsTable.vue"),
+        import ("@/views/Informs.vue"),
     loadingComponent: Loader
 });
 
@@ -45,9 +45,9 @@ const BusinessDetail = defineAsyncComponent({
     loadingComponent: Loader
 });
 
-const DelegateTable = defineAsyncComponent({
+const Auditors = defineAsyncComponent({
     loader: () =>
-        import ("@/views/Tables/DelegateTable.vue"),
+        import ("@/views/Auditor.vue"),
     loadingComponent: Loader
 });
 
@@ -109,24 +109,22 @@ const routes = [{
                 meta: { middleware: auth },
             },
             {
-                path: "/users",
-                name: "usuarios",
-                components: { default: Users },
+                path: "/delegates",
+                name: "delegados",
+                components: { default: Delegate },
                 meta: { middleware: auth },
-                redirect: { name: "delegados" },
-                children: [{
-                        path: "/users/delegates",
-                        name: "delegados",
-                        components: { default: DelegateTable },
-                        meta: { middleware: auth },
-                    },
-                    {
-                        path: "/users/auditors",
-                        name: "auditores",
-                        components: { default: AuditorTable },
-                        meta: { middleware: auth },
-                    },
-                ],
+            },
+            {
+                path: "/informs",
+                name: "informes",
+                components: { default: Informs },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/auditors",
+                name: "auditores",
+                components: { default: Auditors },
+                meta: { middleware: auth },
             },
             {
                 path: "/audits",

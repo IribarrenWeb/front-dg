@@ -28,8 +28,37 @@
     opacity: 0;
 }
 
+.fill-default {
+    fill: #191A4D;
+}
+
+.shadow-dark {
+    box-shadow: 0 0 2rem 0 rgb(0 0 0 / 15%) !important;
+}
+
+.bg-gradient-clear {
+    background: linear-gradient(176deg, #ffffff 0, #dbd9d9 100%) !important;
+}
+
 .bg-default {
     background-color: #172B4D;
+}
+
+.drop-custom {
+    top: auto;
+    position: fixed;
+    right: 5%;
+    margin-top: 0;
+    margin-bottom: 0.125rem;
+}
+
+.input-group {
+    background-color: white;
+}
+
+.audit-drop .dropdown-item {
+    text-align: center;
+    border-bottom: 0.5px lightgray solid;
 }
 
 .checked {
@@ -49,4 +78,12 @@
     .steps {
         /* padding-left: 50% !important; */
     }
+}
+
+.max-h-modal {
+    max-height: 95vh;
+}
+
+.border-light {
+    border-color: #e8e8e8 !important;
 }

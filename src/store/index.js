@@ -81,7 +81,7 @@ export const store = createStore({
                         toForm: ""
                     },
                 },
-            }
+            },
         }
     },
     getters: {
@@ -91,6 +91,30 @@ export const store = createStore({
         INSTALLATION_SCHEMA(state) {
             return JSON.parse(JSON.stringify(state.installation_schema))
         },
+        ROLE(state) {
+            let role = state.role
+            console.log(role);
+            switch (role) {
+                case 1:
+                    role = 'admin';
+                    break;
+                case 2:
+                    role = 'auditor';
+                    break;
+                case 3:
+                    role = 'delegado';
+                    break;
+                case 4:
+                    role = 'empresa';
+                    break;
+
+                default:
+                    role = false
+                    break;
+            }
+
+            return role
+        }
     },
     mutations: {
         loading(state) {
@@ -101,6 +125,9 @@ export const store = createStore({
         },
         setErrors(state, payload) {
             state.apiErrors = payload
+        },
+        setRole(state, payload) {
+            state.role = payload
         }
     },
     actions: {

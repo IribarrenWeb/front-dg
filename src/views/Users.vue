@@ -1,14 +1,14 @@
 <template>
   <div>
-    <base-header type="default" class="py-5">
+    <base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8">
       <div class="row">
       </div>
     </base-header>
 
-    <div class="container-fluid mt-5">
+    <div class="container-fluid mt--7">
       <!--Tables-->
-      <div class="mt-5">
-        <ul class="nav nav-tabs">
+      <div class="">
+        <!-- <ul class="nav nav-tabs">
           <li class="nav-item">
             <router-link
               to="/users/delegates"
@@ -23,9 +23,9 @@
               Auditores
             </router-link>
           </li>
-        </ul>
+        </ul> -->
         
-        <router-view class="mt-5"></router-view>
+        <router-view></router-view>
       </div>
       <!--End tables-->
     </div>

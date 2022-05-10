@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light bg-white"
+    :class="`navbar navbar-vertical fixed-left navbar-expand-lg navbar-light bg-white ${sidebarClasses}`"
     id="sidenav-main"
   >
     <div class="container-fluid">
@@ -13,7 +13,7 @@
       </router-link>
 
       <slot name="mobile-right">
-        <ul class="nav align-items-center d-md-none">
+        <ul class="nav align-items-center d-lg-none">
           <base-dropdown class="nav-item" position="right">
             <template v-slot:title>
               <a
@@ -52,22 +52,10 @@
             </div>
             <router-link to="/profile" class="dropdown-item">
               <i class="ni ni-single-02"></i>
-              <span>My profile</span>
-            </router-link>
-            <router-link to="/profile" class="dropdown-item">
-              <i class="ni ni-settings-gear-65"></i>
-              <span>Settings</span>
-            </router-link>
-            <router-link to="/profile" class="dropdown-item">
-              <i class="ni ni-calendar-grid-58"></i>
-              <span>Activity</span>
-            </router-link>
-            <router-link to="/profile" class="dropdown-item">
-              <i class="ni ni-support-16"></i>
-              <span>Support</span>
+              <span>Mi perfil</span>
             </router-link>
             <div class="dropdown-divider"></div>
-            <a href="#!" class="dropdown-item">
+            <a href="#!" @click.prevent="" class="dropdown-item">
               <i class="ni ni-user-run"></i>
               <span>Logout</span>
             </a>
@@ -153,6 +141,10 @@ export default {
       description:
         "Whether sidebar should autoclose on mobile when clicking an item",
     },
+    sidebarClasses: {
+      type: String,
+      required: false
+    }
   },
   provide() {
     return {

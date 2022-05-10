@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-center">
-    <div class="col-lg-5 col-md-7">
+    <div class="col-lg-5  col-lg-7">
       <div class="card bg-secondary shadow border-0">
         <div class="card-body px-lg-5 py-lg-5">
           <div class="text-center text-muted mb-4">
@@ -26,8 +26,8 @@
         </div>
       </div>
       <div class="row mt-3">
-        <div class="col-6 text-right">
-          <router-link to="/login" class="text-left"><small>Login</small></router-link>
+        <div class="col-6 text-white">
+          <router-link to="/login" class="text-left"><small class="text-white">Volver al login</small></router-link>
         </div>
       </div>
     </div>

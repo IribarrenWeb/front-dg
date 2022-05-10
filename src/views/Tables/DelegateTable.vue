@@ -61,13 +61,7 @@
     </div>
 
     <Transition name="fade">
-      <modal v-model:show="this.modal" modalClasses="modal-xl" v-if="this.modal">
-        <template v-slot:header>
-          <h4 class="modal-title" id="modal-title-default">
-            {{disabled ? 'Ver un delegado' : 'Registrar un nuevo delegado'}}
-          </h4>
-        </template>
-
+      <modal v-model:show="this.modal" model="delegado" :action="action" @close="action = 'Registrar'" modalClasses="modal-xl" v-if="this.modal">
         <form-delegate
           :delegate="delegate"
           @notValid="submit = false"
@@ -92,6 +86,7 @@
   import service from "../../store/services/model-service";
 
   export default {
+    name: "delegate-table",
     data() {
       return {
         tableData: {},
@@ -100,7 +95,8 @@
         modal: false,
         submit: false,
         delegate: {},
-        disabled: false
+        disabled: false,
+        action: 'Registrar'
       };
     },
     mounted() {
@@ -141,7 +137,7 @@
             documents: data.documents
           }
 
-          console.log(this.delegate);
+          this.action = 'Editar';
           this.disabled = true
           this.modal = true
         } catch (err) {
@@ -154,6 +150,13 @@
         this.modal = true
       }
     },
+    watch: {
+      modal(newVal){
+        if (newVal == false) {
+          this.action = 'Registrar'
+        }
+      }
+    }
   };
 </script>
 <style></style>

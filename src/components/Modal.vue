@@ -13,30 +13,51 @@
     :aria-hidden="!show"
   >
     <div
-      class="modal-dialog modal-dialog-centered"
+      class="modal-dialog modal-dialog-centered modal-xl"
       :class="[{ 'modal-notice': type === 'notice' }, modalClasses]"
     >
       <div
-        class="modal-content"
+        class="modal-content px-lg-5 pt-lg-3 overflow-auto max-h-modal"
         :class="[
           gradient ? `bg-gradient-${gradient}` : '',
           modalContentClasses,
+          mainClasses
         ]"
       >
         <div class="modal-header" :class="[headerClasses]" v-if="$slots.header">
-          <slot name="header"></slot>
-          <slot name="close-button">
-            <button
-              type="button"
-              class="close"
-              v-if="showClose"
-              @click="closeModal"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span :aria-hidden="!show">×</span>
-            </button>
-          </slot>
+            <slot name="header"></slot>
+            <slot name="close-button">
+              <button
+                type="button"
+                class="close"
+                v-if="showClose"
+                @click="closeModal"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span :aria-hidden="!show">×</span>
+              </button>
+            </slot>
+        </div>
+        <div v-else class="modal-header d-block border-bottom border-light" :class="[headerClasses]">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center text-uppercase">
+              <h3>{{model}} {{this.$router.name}}</h3>
+              <span class="text-muted h6 ml-md-1 text-capitalize"> - {{action}}</span>
+            </div>
+            <div>
+              <button
+                  type="button"
+                  class="close"
+                  v-if="showClose"
+                  @click="closeModal"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span :aria-hidden="!show">×</span>
+                </button>
+            </div>
+          </div>
         </div>
 
         <div class="modal-body" :class="bodyClasses">
@@ -69,7 +90,13 @@ export default {
       },
       description: 'Modal type (notice|mini|"") ',
     },
+    model: {type: String},
+    action: {type: String, default: 'registrar'},
     modalClasses: {
+      type: [Object, String],
+      description: "Modal dialog css classes",
+    },
+    mainClasses: {
       type: [Object, String],
       description: "Modal dialog css classes",
     },

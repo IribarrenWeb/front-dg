@@ -23,7 +23,7 @@
       </a>
     </slot>
     <ul
-      class="dropdown-menu"
+      class="dropdown-menu drop-custom"
       ref="menu"
       :class="[
         { 'dropdown-menu-right': position === 'right' },

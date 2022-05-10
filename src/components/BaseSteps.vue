@@ -16,9 +16,9 @@
         </Carousel>
       </div>
 
-      <ul v-else :class="`nav nav-pills justify-content-center step ${listClasses}`">
+      <ul v-else :class="`nav nav-pills justify-content-center steps nav-fill ${listClasses}`">
           <li class="nav-item" v-for="step in steps" :key="step">
-              <a class="nav-link p-2 d-flex align-items-center text" :class="[{'active': currentStep == step.number},{'disabled':!step.valid}]" href="#" @click.prevent="handleClick(step)">
+              <a class="nav-link p-2 d-flex align-items-center text-center" :class="[{'active': currentStep == step.number},{'disabled':!step.valid}]" href="#" @click.prevent="handleClick(step)">
                   <i class="fa fa-check mr-2" aria-hidden="true" v-if="step.valid"></i> 
                   {{step.title}}
               </a>

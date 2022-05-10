@@ -2,7 +2,7 @@
     <div>
         <form-validate @submit="onSubmit" v-slot="{resetForm}">
             <div class="row border rounded border-light px-4 py-2">
-                <div class="col-md-3">
+                <div class=" col-lg-3">
                     <base-field   name="fleet" label="Flota">
                         <field-validate as="select" class="form-control" name="fleet" rules="required" label="flota" v-model="model.fleet">
                             <option value="ajena" selected>Ajena</option>
@@ -10,27 +10,27 @@
                         </field-validate>
                     </base-field>
                 </div>
-                <div class="col-md-4">
+                <div class=" col-lg-4">
                     <base-field   name="registration" label="Matricula">
                         <field-validate type="text" class="form-control text-uppercase" name="registration" rules="required" label="matricula" v-model="model.registration_number"/>
                     </base-field>
                 </div>
-                <div class="col-md-4">
+                <div class=" col-lg-4">
                     <base-field   name="mma" label="MMA">
                         <field-validate type="number" class="form-control" name="mma" rules="required" label="mma" v-model="model.mma"/>
                     </base-field>
                 </div>
-                <div class="col-md-4">
+                <div class=" col-lg-4">
                     <base-field   name="tara" label="TARA">
                         <field-validate type="number" class="form-control" name="tara" rules="required" label="tara" v-model="model.tara"/>
                     </base-field>
                 </div>
-                <div class="col-md-4">
+                <div class=" col-lg-4">
                     <base-field   name="adr_kit" label="Kit ADR">
                         <field-validate type="date" class="form-control" name="adr_kit" rules="required" label="kit adr" v-model="model.adr_kit.toForm"/>
                     </base-field>
                 </div>
-                <div class="col-md-4">
+                <div class=" col-lg-4">
                     <base-field   name="vehicle_type_id" label="Tipo">
                         <field-validate as="select" class="form-control" name="vehicle_type_id" rules="required" label="tipo de vehiculo" v-model="model.vehicle_type_id">
                             <option v-for="type in types" :key="type.key" :value="type.id">
@@ -39,7 +39,7 @@
                         </field-validate>
                     </base-field>
                 </div>
-                <div class="col-md-4">
+                <div class=" col-lg-4">
                     <base-field   name="adr_designation_id" label="Designacion Adr">
                         <field-validate as="select" class="form-control" name="adr_designation_id" rules="required" label="designacion adr" v-model="model.adr_designation_id">
                             <option v-for="designation in designations" :key="designation.key" :value="designation.id">

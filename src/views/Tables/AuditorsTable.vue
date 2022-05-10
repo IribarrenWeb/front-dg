@@ -65,13 +65,14 @@
       <loader v-if="loader"></loader>
     </div>
     <Transition name="fade">
-      <modal v-model:show="this.modal" modalClasses="modal-xl"  v-if="this.modal" modalContentClasses="overflow-auto max-h-modal">
-        <template v-slot:header>
-          <h4 class="modal-title" id="modal-title-default">
-            {{disabled ? 'Ver un auditor' : 'Registrar un nuevo auditor'}}
-          </h4>
-        </template>
-
+      <modal
+        v-model:show="this.modal"
+        model="auditor"
+        :action="action"
+        modalClasses="modal-xl"
+        @close="action = 'Registrar'"
+        v-if="this.modal"
+      >
         <form-auditor
           :auditor="auditor"
           @notValid="submit = false"
@@ -87,7 +88,7 @@
 <script>
   import service from "../../store/services/model-service";
   export default {
-    name: "users-table",
+    name: "auditors-table",
     data() {
       return {
         tableData: {},
@@ -98,6 +99,7 @@
         loader: false,
         auditor: {},
         disabled: false,
+        action: "Registrar",
       };
     },
     mounted() {
@@ -105,10 +107,9 @@
     },
     methods: {
       async getAuditors(page = 1) {
-        // this.loader = true;
         try {
           const response = await service.getIndex(
-            'auditor',
+            "auditor",
             page,
             `&includes[]=user&includes[]=delegate.user`
           );
@@ -118,10 +119,9 @@
         } catch (err) {
           console.log(err);
         }
-        // this.loader = false;
       },
       async handleChange(event) {
-        this.getAuditors(event)
+        this.getAuditors(event);
       },
       handleAdd() {
         this.disabled = false;
@@ -130,7 +130,7 @@
       },
       async handleView(id) {
         const response = await service.show(
-          'auditor',
+          "auditor",
           id,
           "includes[]=province.city&includes[]=documents.type&includes[]=delegate.user"
         );
@@ -143,13 +143,20 @@
           dni: data.dni,
           province: data.province,
           documents: data.documents,
-          delegate: data.delegate
+          delegate: data.delegate,
         };
-
+        this.action = "editar";
         this.disabled = true;
         this.modal = true;
       },
     },
+    watch: {
+      modal(newVal){
+        if (!newVal) {
+          this.action = 'Registrar'
+        }
+      }
+    }
   };
 </script>
 <style></style>

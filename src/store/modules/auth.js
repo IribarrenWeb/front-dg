@@ -24,11 +24,13 @@ export default {
 
     actions: {
         async login(context, payload) {
-            return await service.login(payload.user).then(() => {
+            return await service.login(payload.user).then((res) => {
                 context.commit("isAuthenticated", {
                     isAuthenticated: service.isAuth()
                 });
+                console.log(res.data.user.role_id);
                 store.dispatch('profile/me')
+                store.commit('setRole', res.data.user.role_id)
                 router.push({ name: "dashboard" });
             });
         },

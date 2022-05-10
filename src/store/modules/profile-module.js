@@ -1,4 +1,5 @@
 import service from '@/store/services/profile-service';
+import { store } from '@/store';
 
 const state = {
     me: null,
@@ -16,6 +17,7 @@ const actions = {
         return service.get(params)
             .then((profile) => {
                 commit('SET_RESOURCE', profile.list.user);
+                store.commit('setRole', profile.list.user.role_id)
             });
     },
 

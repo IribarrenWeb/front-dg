@@ -6,18 +6,18 @@
     <div class="container-fluid mt--7">
       <div class="row">
         <div class="col">
-          <audit-tablet title="Auditorias"/>
+          <informs-table title="Informes"/>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import AuditTablet from './Tables/AuditTablet.vue';
+import InformsTable from './Tables/InformsTable.vue';
 export default {
   name: "tables",
   components: {
-    AuditTablet,
+    InformsTable
   },
 };
 </script>

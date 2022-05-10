@@ -11,7 +11,7 @@
             </ul>
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="is_residue" label="Tipo">
                             <field-validate class="form-control" name="is_residue" rules="required" label="residue" v-model="is_res" v-slot="{field}">
                                 <select name="" id="" v-bind="field" class="form-control">
@@ -21,12 +21,12 @@
                             </field-validate>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="name" label="Nombre">
                             <field-validate type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="deposit_type_id" label="Depósito">
                             <field-validate as="select" class="form-control" name="deposit_type_id" rules="required" label="tipo de deposito" v-model="model.deposit_type_id">
                                 <option v-for="deposit in deposits" :key="deposit.key" :value="deposit.id">
@@ -35,7 +35,7 @@
                             </field-validate>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                        <base-field name="material" label="UN">
                             <div v-if="model.material != null">
                                 <span class="mr-md-4 text-uppercase">{{material.un_code}} - {{material.denomination_name}}</span>
@@ -57,7 +57,7 @@
                             </div>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-switch v-model="model.is_dangerous" label="Material peligroso"
                         ></base-switch>
                     </div>
@@ -65,7 +65,7 @@
             </template>
             <template v-if="currentStep == 2">
                 <div class="row border rounded border-light px-4 py-2">
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="address" label="Unidad">
                             <field-validate class="form-control" name="deposit" rules="required" label="deposit" v-model="model.unit" v-slot="{ field }">
                                 <select name="" class="form-control" v-bind="field">
@@ -75,17 +75,17 @@
                             </field-validate>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="buy" label="Compra">
                             <field-validate type="number" class="form-control" name="buy" rules="required" label="Cantidad de compra" v-model="model.buy"/>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="sell" label="Venta">
                             <field-validate type="number" class="form-control" name="sell" rules="required" label="Cantidad de venta" v-model="model.sell"/>
                         </base-field>
                     </div>
-                    <div class="col-md-3">
+                    <div class=" col-lg-3">
                         <base-field name="transported" label="Transportada">
                             <field-validate type="number" class="form-control" name="transported" rules="required" label="Cantidad transportada" v-model="model.transported"/>
                         </base-field>

@@ -50,8 +50,8 @@
           <td>{{ row.item.material.class.code }}</td>
           <td>{{ row.item.material.packing.code }}</td>
           <td class="text-right">
-              <a class="btn btn-primary btn-sm" href="#" @click.prevent="">Ver</a>
-              <a class="btn btn-danger btn-sm" href="#" @click.prevent="">Eliminar</a>
+              <!-- <a class="btn btn-primary btn-sm" href="#" @click.prevent="">Ver</a> -->
+              <a class="btn btn-outline-primary btn-sm" href="#" @click.prevent="">Eliminar</a>
           </td>
         </template>
       </base-table>
@@ -68,13 +68,8 @@
     <modal
         v-if="this.modal"
         v-model:show="this.modal"
-        modalClasses="modal-xl"
-        bodyClasses="pt-0 px-5"
-        modalContentClasses="overflow-auto max-h-modal"
-        headerClasses="px-4 py-2"
+        model="material"
       >
-      <template v-slot:header>
-      </template>
       <form-material @close="this.modal = false" @reload="getMaterials(page,installation_id)" :installation_id="installation_id" :residue="residue"></form-material>
     </modal>
   </div>

@@ -76,8 +76,28 @@
             </div>
           </td> -->
           <td class="text-right">
-              <router-link class="btn btn-primary btn-sm" v-if="row.item.status != 'COMPLETADO'" :to="`/audit-init/${row.item.id}`">{{row.item.status == 'PENDIENTE' ? 'Iniciar' : 'Completar'}}</router-link>
-              <a class="btn btn-danger btn-sm" href="#" @click.prevent="">Eliminar</a>
+            <base-dropdown class="dropdown audit-drop" position="right" direction="down">
+              <template v-slot:title>
+                <a
+                  class="btn btn-sm btn-icon-only text-light"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-ellipsis-v"></i>
+                </a>
+              </template>
+              <a class="dropdown-item" href="#" @click.prevent="">Archivar</a>
+              <a class="dropdown-item" href="#" @click.prevent="">Agendar</a>
+              <a class="dropdown-item" href="#" @click.prevent="">Eliminar</a>
+              <a class="dropdown-item" href="#" @click.prevent="">Historial</a>
+              <router-link class="dropdown-item" v-if="row.item.status != 'COMPLETADO'" :to="`/audit-init/${row.item.id}`">
+                {{row.item.status == 'PENDIENTE' ? 'Iniciar' : 'Completar'}}
+              </router-link>
+              <a class="dropdown-item" href="#" @click.prevent="">No conformidades</a>
+              <a class="dropdown-item" href="#" @click.prevent="">Delegar</a>
+            </base-dropdown>
           </td>
         </template>
       </base-table>

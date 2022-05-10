@@ -3,8 +3,8 @@
     <side-bar
       :background-color="sidebarBackground"
       short-title="DG"
+      :sidebarClasses="$route.meta.audit ? 'd-lg-none' : ''"
       title="DG SOFTWARE"
-      v-if="!$route.meta.audit"
     >
       <template v-slot:links>
         <sidebar-item
@@ -14,28 +14,6 @@
             path: '/dashboard',
           }"
         />
-
-        <sidebar-item
-          :link="{
-            name: 'Empresas',
-            icon: 'ni ni-planet text-default',
-            path: '/business',
-          }"
-        />
-        <!-- <sidebar-item
-          :link="{
-            name: 'Informes',
-            icon: 'ni ni-pin-3 text-default',
-            path: '/maps',
-          }"
-        /> -->
-        <sidebar-item
-          :link="{
-            name: 'Usuarios',
-            icon: 'ni ni-single-02 text-default',
-            path: '/users',
-          }"
-        />
         <sidebar-item
           :link="{
             name: 'Auditorias',
@@ -43,9 +21,47 @@
             path: '/audits',
           }"
         />
+        <sidebar-item
+          v-if="role == 'admin' || role == 'delegate'"
+          :link="{
+            name: 'Auditores',
+            icon: 'ni ni-hat-3 text-default',
+            path: '/auditors',
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'Empresas',
+            icon: 'ni ni-shop text-default',
+            path: '/business',
+          }"
+        />
+        <sidebar-item
+          v-if="role == 'admin'"
+          :link="{
+            name: 'Delegados',
+            icon: 'ni ni-single-02 text-default',
+            path: '/delegates',
+          }"
+        />
+        <sidebar-item
+          :link="{
+            name: 'Informes',
+            icon: 'ni ni-book-bookmark text-default',
+            path: '/informs',
+          }"
+        />
+        <sidebar-item
+          v-if="role == 'delegate' || role == 'auditor'"
+          :link="{
+            name: 'Formaciones',
+            icon: 'ni ni-spaceship text-default',
+            path: '/informs',
+          }"
+        />
       </template>
     </side-bar>
-    <div class="main-content" :data="sidebarBackground">
+    <div class="main-content" :class="{'m-lg-0':$route.meta.audit}" :data="sidebarBackground">
       <dashboard-navbar :me="me"></dashboard-navbar>
 
       <div @click="toggleSidebar">
@@ -65,7 +81,7 @@
 <script>
   import DashboardNavbar from "./DashboardNavbar.vue";
   import ContentFooter from "./ContentFooter.vue";
-
+  import {mapGetters} from "vuex";
   export default {
     components: {
       DashboardNavbar,
@@ -92,6 +108,11 @@
       await this.$store.dispatch("profile/me");
       this.me = await this.$store.getters["profile/me"];
     },
+    computed: {
+      ...mapGetters({
+        role: 'ROLE'
+      })
+    }
   };
 </script>
 <style lang="scss"></style>

@@ -12,27 +12,27 @@
             <div class="col-12">
               <h4>Datos generales</h4>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="name" label="Nombre representante">
                     <field-validate type="text" class="form-control" name="name" rules="required|" label="nombre" v-model="model.name"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="last_name" label="Apellido representante">
                     <field-validate type="text" class="form-control" name="last_name" rules="required|" label="apellido" v-model="model.last_name"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="property_dni" label="Dni">
                     <field-validate type="text" class="form-control" name="property_dni" rules="required|min:4|max:15" label="dni" v-model.trim="model.property_dni"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="property_phone" label="Móvil">
                     <field-validate type="number" class="form-control" name="property_phone" rules="required|min:5|max:15" label="móvil" v-model.number="model.property_phone"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field   name="email" label="Email">
                     <field-validate type="text" class="form-control" name="email" rules="required|email" label="email" v-model.trim="model.email"/>
                 </base-field>
@@ -42,22 +42,22 @@
             <div class="col-12">
               <h4>Datos de empresa</h4>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="business_name" label="Nombre">
                     <field-validate type="text" class="form-control" name="business_name" rules="required|" label="nombre empresa" v-model="model.business_name"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="business_nif" label="CIF/NIF">
                     <field-validate type="text" class="form-control" name="business_nif" rules="required|" label="nombre" v-model.trim="model.business_nif"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="business_phone" label="Fijo">
                     <field-validate type="number" class="form-control" name="business_phone" rules="required|min:5|max:15" label="fijó" v-model.number="model.business_phone"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field   name="province_id" label="Provincia">
                     <field-validate class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
                         <option value="" selected>Selecciona una provincia</option>
@@ -65,7 +65,7 @@
                     </field-validate>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="postal_code" label="Código postal">
                     <field-validate type="number" class="form-control" name="postal_code" rules="required|numeric|min:2|max:4" label="postal_code" v-model="model.postal_code"/>
                 </base-field>
@@ -78,17 +78,17 @@
             <div class="col-12">
               <h4>Datos bancarios</h4>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="holder_name" label="Nombre del titular">
                     <field-validate type="text" class="form-control" name="holder_name" rules="required|" label="nombre" v-model="model.holder_name"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="bank_code" label="BIC/SWIFT">
                     <field-validate type="text" class="form-control" name="bank_code" rules="required|" label="BIC/SWIFT" v-model="model.bank_code"/>
                 </base-field>
             </div>
-            <div class="col-md-4">
+            <div class=" col-lg-4">
                 <base-field name="iban_number" label="IBAN">
                     <field-validate type="text" class="form-control" name="iban_number" rules="required|" label="numero iban" v-model="model.iban_number"/>
                 </base-field>
@@ -98,12 +98,12 @@
           <div class="col-12">
               <h4>Documentación</h4>
           </div>
-          <div class="col-md-6">
+          <div class=" col-lg-6">
             <base-field name="file_date.date" label="Fecha de documentación">
                 <field-validate type="date" class="form-control" name="file_date.date" rules="required" label="fecha documentación" v-model="model.file_date.toForm"/>
             </base-field>
           </div>
-          <div class="col-md-6">
+          <div class=" col-lg-6">
             <base-field name="file_document.base64" label="Documentación">
                 <div v-if="model.file_document.file.length >= 1">
                     <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
@@ -120,17 +120,17 @@
           v-for="(installation, id) in installations"
           :key="installation.key"
         >
-          <div class="col-md-4">
+          <div class=" col-lg-4">
               <base-field   :name="`installations[${id}].name`" label="Nombre de instalacion">
                   <field-validate type="text" class="form-control" :name="`installations[${id}].name`" rules="required" label="Nombre" v-model="installations[id].name"/>
               </base-field>
           </div>
-          <div class="col-md-4">
+          <div class=" col-lg-4">
               <base-field   :name="`installations[${id}].address`" label="Direccion">
                   <field-validate type="text" class="form-control" :name="`installations[${id}].address`" rules="required" label="direccion" v-model="installations[id].address"/>
               </base-field>
           </div>
-          <div class="col-md-4">
+          <div class=" col-lg-4">
               <base-field   :name="`auditable[${id}]`" label="Auditor">
                   <div v-if="installations[id].auditable != null">
                       <span class="mr-md-4 text-uppercase">{{installations[id].auditable.user.name}} {{installations[id].auditable.user.last_name}}</span>
@@ -154,7 +154,7 @@
                   </div>
               </base-field>
           </div>
-          <div class="col-md-6">
+          <div class=" col-lg-6">
               <base-field :name="`installations[${id}].province_id`" label="Provincia">
                   <field-validate class="form-control" as="select" :name="`installations[${id}].province_id`" rules="required" label="Provincia" v-model="installations[id].province_id">
                       <option value="" selected>Selecciona una provincia</option>
@@ -162,7 +162,7 @@
                   </field-validate>
               </base-field>
           </div>
-          <div class="col-md-6">
+          <div class=" col-lg-6">
               <base-field :name="`installations[${id}].file_document.base64`" label="Documentacion">
                   <div v-if="installations[id].file_document.file.length >= 1">
                       <span class="mr-md-4">{{installations[id].file_document.file[0].name}}</span>
@@ -207,36 +207,36 @@
               <div class="col-12 border-bottom border-light mb-md-3">
                   <h4>Datos principales</h4>
               </div>
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-field   :apiName="`installations.${id}.responsible.name`" name="name" label="Nombre">
                       <field-validate type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="installations[id].responsible.name"/>
                   </base-field>
               </div>
 
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-field   :apiName="`installations.${id}.responsible.last_name`" name="last_name" label="Apellido">
                       <field-validate type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="installations[id].responsible.last_name"/>
                   </base-field>
               </div>
 
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-field   :apiName="`installations.${id}.responsible.dni`" name="dni" label="Dni">
                       <field-validate type="number" class="form-control" name="dni" rules="required" label="dni" v-model="installations[id].responsible.dni"/>
                   </base-field>
               </div>
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-field   :apiName="`installation.${id}.responsible.email`" name="email" label="Email">
                       <field-validate type="text" class="form-control" name="email" rules="required" label="email" v-model="installations[id].responsible.email"/>
                   </base-field>
               </div>
 
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-field   :apiName="`installation[${id}].responsible.position`" name="position" label="Posicion">
                       <field-validate type="text" class="form-control" name="position" rules="required" label="posicion" v-model="installations[id].responsible.position"/>
                   </base-field>
               </div>
 
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-field   :apiName="`installations.${id}.responsible.phone_number`" label="Movil" name="phone_number">
                       <field-validate type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="installations[id].responsible.phone_number"/>
                   </base-field>
@@ -246,12 +246,12 @@
               <div class="col-12 border-bottom border-light mb-md-3">
                   <h4>Documentacion</h4>
               </div>
-              <div class="col-md-6">
+              <div class=" col-lg-6">
                   <base-field :name="`installations.${id}.responsible.date_firm.date`" label="Fecha de firma">
                       <field-validate type="date" class="form-control" :name="`installations.${id}.responsible.date_firm.date`" rules="required" label="fecha de firma" v-model="installations[id].responsible.date_firm.toForm"/>
                   </base-field>
               </div>
-              <div class="col-md-6">
+              <div class=" col-lg-6">
                   <base-field :name="`installations.${id}.responsible.file_firm.base64`" label="Documento de formación">
                       <div v-if="installations[id].responsible.file_firm.file.length >= 1">
                           <span class="mr-md-4">{{installations[id].responsible.file_firm.file[0].name}}</span>
@@ -260,12 +260,12 @@
                       <field-validate v-else type="file" class="form-control" :name="`installations.${id}.responsible.file_firm.base64`" rules="required" label="documento" v-model="installations[id].responsible.file_firm.file"/>
                   </base-field>
               </div>
-              <div class="col-md-6">
+              <div class=" col-lg-6">
                   <base-field :name="`installations.${id}.responsible.date_certification.date`" label="Fecha de formación">
                       <field-validate type="date" class="form-control" :name="`installations.${id}.responsible.date_certification.date`" rules="required" label="fecha" v-model="installations[id].responsible.date_certification.toForm"/>
                   </base-field>
               </div>
-              <div class="col-md-6">
+              <div class=" col-lg-6">
                   <base-field :name="`installations.${id}.responsible.file_certification.base64`" label="Documento de formación">
                       <div v-if="installations[id].responsible.file_certification.file.length >= 1">
                           <span class="mr-md-4">{{installations[id].responsible.file_certification.file[0].name}}</span>
@@ -275,14 +275,14 @@
                   </base-field>
               </div>
 
-              <div class="col-md-12">
+              <div class=" col-lg-12">
                   <div class="row">
-                      <div class="col-md-2">
+                      <div class=" col-lg-2">
                           <base-switch
                               v-model="installations[id].responsible.driver" label="Conductor"
                           ></base-switch>
                       </div>
-                      <div class="col-md-3" v-if="installations[id].responsible.driver">
+                      <div class=" col-lg-3" v-if="installations[id].responsible.driver">
                           <base-field :name="`installations.${id}.responsible.adr_permit_id`" label="Permiso ADR">
                               <field-validate as="select" class="form-control" :name="`installations.${id}.responsible.adr_permit_id`" v-model="installations[id].responsible.adr_permit_id" rules="required">
                                   <option selected>Permiso adr</option>
@@ -296,13 +296,13 @@
                               </field-validate>
                           </base-field>
                       </div>
-                      <div class="col-md-3" v-if="installations[id].responsible.driver">
+                      <div class=" col-lg-3" v-if="installations[id].responsible.driver">
                           <base-field :name="`installations.${id}.responsible.driver_document_date.date`" label="Fecha">
                               <field-validate type="date" class="form-control" :name="`installations.${id}.responsible.driver_document_date.date`" v-model="installations[id].responsible.driver_document_date.toForm" rules="required">
                               </field-validate>
                           </base-field>
                       </div>
-                      <div class="col-md-4" v-if="installations[id].responsible.driver">
+                      <div class=" col-lg-4" v-if="installations[id].responsible.driver">
                           <base-field :name="`installations.${id}.responsible.driver_document.base64`" label="Documentación ADR">
                               <div v-if="installations[id].responsible.driver_document.file.length >= 1">
                                   <span class="mr-md-4">{{installations[id].responsible.driver_document.file[0].name}}</span>
@@ -313,7 +313,7 @@
                       </div>
                   </div>
               </div>
-              <div class="col-md-6 col-lg-4">
+              <div class=" col-lg-6 col-lg-4">
                   <base-switch v-model="installations[id].responsible.dangerous_goods" label="Mercancias peligrosas"
                   ></base-switch>
               </div>

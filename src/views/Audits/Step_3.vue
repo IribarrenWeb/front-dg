@@ -305,7 +305,7 @@ export default {
             resetForm()
         },
         addMaterial(values, op){
-            let model = op == 'deposit' ? this.adr_deposits : this.model;
+            let model = op == 'deposit' ? this.adr_deposits : this.adr_residues;
             let compare = op == 'deposit' ? this.deposit : this.residue
             if(this.find(model, compare)){
                 this.$toast.error(`El ${op} ya se ha seleccionado`)

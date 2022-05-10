@@ -63,15 +63,13 @@
       <modal
         v-if="this.modal"
         v-model:show="this.modal"
+        :action="action"
+        @close="action='registrar'"
         modalClasses="modal-xl"
-        bodyClasses="pt-0 px-5"
-        modalContentClasses="overflow-auto max-h-modal"
-        headerClasses="px-4 py-2"
+        model="instalación"
       >
-        <template v-slot:header>
-        </template>
         <form-installation v-if="!isView" @close="this.modal = false" @reload="getInstallations()" :business_id="business_id"></form-installation>
-        <installation-show v-else :installation_id="installation_id" @close="this.modal = false"></installation-show>
+        <installation-show v-else :installation_id="installation_id" @close="this.modal = false, this.isView = false"></installation-show>
       </modal> 
     </div>
   </div>
@@ -82,7 +80,7 @@
   import InstallationShow from '../Shows/InstallationShow.vue';
   export default {
     components: { FormInstallation, InstallationShow },
-    name: "business-table",
+    name: "installation-table",
     props: {
       business_id: {}
     },
@@ -95,6 +93,7 @@
         metaData: {},
         page: 1,
         isView: false,
+        action: "Registrar",
         installation_id: {}
       };
     },
@@ -135,6 +134,7 @@
         try {
           this.isView = true
           this.modal = true
+          this.action = 'editar'
           this.installation_id = id
         } catch (err) {
           console.log(err);

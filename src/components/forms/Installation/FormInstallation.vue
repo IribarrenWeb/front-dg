@@ -1,23 +1,20 @@
 <template>
     <div>
-        <div class="text-center text-uppercase mb-md-3">
-            <h3>Agregar una instalación</h3>
-        </div>
         <form-validate ref="form" @submit="onSubmit" v-slot="{ resetForm, meta }">
             <base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :meta="meta" @step="currentStep = $event"></base-steps>
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <base-field   name="name" label="Nombre de instalacion">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
                         </base-field>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <base-field   name="address" label="Direccion">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="address" rules="required" label="direccion" v-model="model.address"/>
                         </base-field>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <base-field   name="auditable" label="Auditor">
                             <div v-if="model.auditable != null">
                                 <span class="mr-md-4 text-uppercase">{{model.auditable.user.name}} {{model.auditable.user.last_name}}</span>
@@ -42,7 +39,7 @@
                             </div>
                         </base-field>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <base-field   name="province_id" label="Provincia">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
                                 <option value="" selected>Selecciona una provincia</option>
@@ -50,7 +47,7 @@
                             </field-validate>
                         </base-field>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <base-field   name="file_document" label="Documentacion">
                             <div v-if="model.file_document.file.length >= 1">
                                 <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
@@ -65,7 +62,7 @@
             <template v-if="currentStep == 2">
                 <div>
                     <div class="row border rounded border-light px-4 py-2">
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <base-field   name="operations" label="Tipos de operaciones">
                                 <div v-for="operation in operations" :key="operation.key" class="form-check">
                                     <field-validate :disabled="isSaved"
@@ -82,7 +79,7 @@
                         </div>
                     </div>
                     <div class="row border rounded border-light px-4 py-2 mt-3">
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <base-field   name="equipments" label="Tipos de equipamientos" labelClasses="d-block">
                                 <div v-for="equipment in equipments" :key="equipment.key" class="d-inline-block">
                                     <field-validate :disabled="isSaved"
@@ -105,36 +102,36 @@
                     <div class="col-12 border-bottom border-light mb-md-3">
                         <h4>Datos principales</h4>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-field   apiName="responsible.name" name="name" label="Nombre">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.responsible.name"/>
                         </base-field>
                     </div>
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-field   apiName="responsible.last_name" name="last_name" label="Apellido">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="model.responsible.last_name"/>
                         </base-field>
                     </div>
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-field   apiName="responsible.dni" name="dni" label="Dni">
                             <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.responsible.dni"/>
                         </base-field>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-field   apiName="responsible.email" name="email" label="Email">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="email" rules="required" label="email" v-model="model.responsible.email"/>
                         </base-field>
                     </div>
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-field   apiName="responsible.position" name="position" label="Posicion">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required" label="posicion" v-model="model.responsible.position"/>
                         </base-field>
                     </div>
 
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-field   apiName="responsible.phone_number" label="Movil" name="phone_number">
                             <field-validate :disabled="isSaved" type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="model.responsible.phone_number"/>
                         </base-field>
@@ -144,17 +141,17 @@
                     <div class="col-12 border-bottom border-light mb-md-3">
                         <h4>Documentacion</h4>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <base-field   apiName="responsible.date_firm" name="date_firm" label="Fecha de firma">
                             <field-validate :disabled="isSaved" type="date" class="form-control" name="date_firm" rules="required" label="fecha" v-model="model.responsible.date_firm.toForm"/>
                         </base-field>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formacion">
                             <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification.toForm"/>
                         </base-field>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-4">
                         <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formacion">
                             <div v-if="model.responsible.file_certification.file.length >= 1">
                                 <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
@@ -164,15 +161,15 @@
                         </base-field>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-lg-2">
                                 <base-switch
                                     :disabled="isSaved"
                                     v-model="model.responsible.driver" label="Conductor"
                                 ></base-switch>
                             </div>
-                            <div class="col-md-3" v-if="model.responsible.driver">
+                            <div class="col-lg-3" v-if="model.responsible.driver">
                                 <base-field   apiName="responsible.phone_number" name="adr_permit_id" label="Permiso ADR">
                                     <field-validate :disabled="isSaved" as="select" class="form-control" name="adr_permit_id" v-model="model.responsible.adr_permit_id" rules="required">
                                         <option selected>Permiso adr</option>
@@ -186,13 +183,13 @@
                                     </field-validate>
                                 </base-field>
                             </div>
-                            <div class="col-md-3" v-if="model.responsible.driver">
+                            <div class="col-lg-3" v-if="model.responsible.driver">
                                 <base-field   apiName="responsible.driver_document_date" name="driver_date" label="Fecha documentacion">
                                     <field-validate :disabled="isSaved" type="date" class="form-control" name="driver_date" v-model="model.responsible.driver_document_date.toForm" rules="required">
                                     </field-validate>
                                 </base-field>
                             </div>
-                            <div class="col-md-4" v-if="model.responsible.driver">
+                            <div class="col-lg-4" v-if="model.responsible.driver">
                                 <base-field   apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
                                     <div v-if="model.responsible.driver_document.file.length >= 1">
                                         <span class="mr-md-4">{{model.responsible.driver_document.file[0].name}}</span>
@@ -203,7 +200,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-lg-6 col-lg-4">
                         <base-switch v-model="model.responsible.dangerous_goods" :disabled="isSaved" label="Mercancias peligrosas"
                         ></base-switch>
                     </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-header class="py-5">
+    <base-header type="gradient-default" class="py-5">
     </base-header>
 
     <div class="container-fluid mt-4">
