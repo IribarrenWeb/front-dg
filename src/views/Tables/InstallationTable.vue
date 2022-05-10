@@ -44,7 +44,7 @@
             <a href="#" @click="showAuditor()">{{ row.item.auditable.user.name }} {{ row.item.auditable.user.last_name }}</a>
           </td>
           <td>
-            <!-- <a href="#" @click.prevent="view(row.item.id)" class="btn btn-sm btn-default">Ver</a> -->
+            <a href="#" @click.prevent="view(row.item.id)" class="btn btn-sm btn-default">Ver</a>
             <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
           </td>
         </template>
@@ -71,8 +71,8 @@
         <template v-slot:header>
         </template>
         <form-installation v-if="!isView" @close="this.modal = false" @reload="getInstallations()" :business_id="business_id"></form-installation>
-        <installation-show v-else :installation_id="installation_id"></installation-show>
-      </modal>
+        <installation-show v-else :installation_id="installation_id" @close="this.modal = false"></installation-show>
+      </modal> 
     </div>
   </div>
 </template>

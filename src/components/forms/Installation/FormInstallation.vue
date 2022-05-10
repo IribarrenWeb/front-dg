@@ -35,6 +35,7 @@
                                         ref="multiselect"
                                         @select="auditable = $event"
                                         :disabled="isSaved"
+                                        :resolve-on-load="false"
                                     >
                                     </Multiselect>
                                 </field-validate>
