@@ -87,10 +87,10 @@ import service from '@/store/services/model-service';
             const res = await service.dashboard()
             let data = res.data.data;
             this.counter = {
-              delegates: data.delegates,
-              business: data.business,
-              auditors: data.auditors,
-              insts: data.installations,
+              delegates: data.delegates >= 1 ? data.delegates : 0,
+              business: data.business >= 1 ? data.business : 0,
+              auditors: data.auditors >= 1 ? data.auditors : 0,
+              insts: data.installations >= 1 ? data.installations : 0,
             }
           } catch (err) {
             console.log(err);
