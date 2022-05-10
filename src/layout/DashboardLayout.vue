@@ -16,24 +16,23 @@
         />
         <sidebar-item
           :link="{
+            name: 'Empresas',
+            icon: 'ni ni-shop text-default',
+            path: '/business',
+          }"
+        />
+        <sidebar-item
+          :link="{
             name: 'Auditorias',
             icon: 'ni ni-bullet-list-67 text-default',
             path: '/audits',
           }"
         />
         <sidebar-item
-          v-if="role == 'admin' || role == 'delegate'"
           :link="{
-            name: 'Auditores',
-            icon: 'ni ni-hat-3 text-default',
-            path: '/auditors',
-          }"
-        />
-        <sidebar-item
-          :link="{
-            name: 'Empresas',
-            icon: 'ni ni-shop text-default',
-            path: '/business',
+            name: 'Informes',
+            icon: 'ni ni-book-bookmark text-default',
+            path: '/informs',
           }"
         />
         <sidebar-item
@@ -45,10 +44,11 @@
           }"
         />
         <sidebar-item
+          v-if="role == 'admin' || role == 'delegate'"
           :link="{
-            name: 'Informes',
-            icon: 'ni ni-book-bookmark text-default',
-            path: '/informs',
+            name: 'Auditores',
+            icon: 'ni ni-hat-3 text-default',
+            path: '/auditors',
           }"
         />
         <sidebar-item

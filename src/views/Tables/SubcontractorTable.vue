@@ -30,8 +30,8 @@
           <th>Servicio(s)</th>
           <th>Nombre</th>
           <th>DNI</th>
-          <th>Móvil</th>
           <th>Email</th>
+          <th>Móvil</th>
           <th>Fecha</th>
           <th></th>
           <th></th>
@@ -77,11 +77,8 @@
       v-if="this.modal"
       v-model:show="this.modal"
       modalClasses="modal-xl"
-      bodyClasses="pt-0 px-5"
-      modalContentClasses="overflow-auto max-h-modal"
-      headerClasses="px-4 py-2"
+      model="subcontratistas"
     >
-      <template v-slot:header> </template>
       <form-subcontractor
         @close="this.modal = false"
         @reload="getSubcontractors(page)"
@@ -145,10 +142,9 @@
       },
       async destroy(id) {
         try {
-          
-          await service.destroy('subcontractor',id)
-            this.$toast.success('Registro eliminado')
+          await service.destroy('subcontractor',id).then(()=>{
             this.getSubcontractors();
+          })
         } catch (error) {
           console.log(error);
         }

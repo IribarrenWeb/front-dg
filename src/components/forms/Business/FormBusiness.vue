@@ -1,9 +1,5 @@
 <template>
-  <div class="px-md-5">
-    <div class="text-center text-uppercase">
-      <h3>Agregar una empresa</h3>
-    </div>
-    
+  <div>
     <form-validate @submit="submit" v-slot="{ meta, resetForm }">
       <base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :meta="meta" @step="currentStep = $event"></base-steps>
       <template v-if="currentStep === 1">
@@ -231,8 +227,8 @@
               </div>
 
               <div class=" col-lg-6 col-lg-4">
-                  <base-field   :apiName="`installation[${id}].responsible.position`" name="position" label="Posicion">
-                      <field-validate type="text" class="form-control" name="position" rules="required" label="posicion" v-model="installations[id].responsible.position"/>
+                  <base-field   :apiName="`installation[${id}].responsible.position`" name="position" label="Cargo">
+                      <field-validate type="text" class="form-control" name="position" rules="required" label="cargo" v-model="installations[id].responsible.position"/>
                   </base-field>
               </div>
 

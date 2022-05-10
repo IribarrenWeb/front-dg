@@ -126,8 +126,8 @@
                     </div>
 
                     <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.position" name="position" label="Posicion">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required" label="posicion" v-model="model.responsible.position"/>
+                        <base-field   apiName="responsible.position" name="position" label="Cargo">
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required" label="cargo" v-model="model.responsible.position"/>
                         </base-field>
                     </div>
 
@@ -147,12 +147,12 @@
                         </base-field>
                     </div>
                     <div class="col-lg-4">
-                        <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formacion">
+                        <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formación">
                             <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification.toForm"/>
                         </base-field>
                     </div>
                     <div class="col-lg-4">
-                        <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formacion">
+                        <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formación">
                             <div v-if="model.responsible.file_certification.file.length >= 1">
                                 <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
                                 <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>

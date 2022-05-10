@@ -2,7 +2,7 @@
   <div>
     <base-header class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center">
       <!-- Mask -->
-      <span class="mask bg-default opacity-8"></span>
+      <span class="mask bg-gradient-default opacity-8"></span>
     </base-header>
 
     <div class="container-fluid mt--7">
@@ -34,7 +34,7 @@
                     <base-input
                       :view="true"
                       name="email"
-                      label="Email address"
+                      label="Correo"
                       :modelValue="u_data.email"
                     />
                   </div>
@@ -44,14 +44,14 @@
                     <base-input
                       :view="true"
                       name="first_name"
-                      label="First name"
+                      label="Nombre"
                       :modelValue="u_data.name"
                     />
                   </div>
                   <div class="col-lg-6">
                     <base-input
                       :view="true"
-                      label="last_name"
+                      label="Apellido"
                       :modelValue="u_data.last_name"
                     />
                   </div>
@@ -59,67 +59,52 @@
               </div>
               <hr class="my-4" />
               <!-- Address -->
-              <h6 class="heading-small text-muted mb-4">Contact information</h6>
-              <div class="pl-lg-4">
-                <div class="row">
-                  <div class="col-md-12">
-                    <base-input
-                      name=""
-                      label="Address"
-                      placeholder="Home Address"
-                      input-classes="form-control-alternative"
-                      :modelValue="model.address"
-                    />
+              <div v-if="u_data.role_id == 4">
+                <h6 class="heading-small text-muted mb-4">Informacion de contacto</h6>
+                <div class="pl-lg-4">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <base-input
+                        name=""
+                        label="Direccion"
+                        placeholder="Dirección"
+                        input-classes="form-control-alternative"
+                        :modelValue="model.address"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-4">
-                    <base-input
-                      name=""
-                      :view="true"
-                      label="City"
-                      placeholder="Ciudad"
-                      input-classes="form-control-alternative"
-                      :modelValue="model.city"
-                    />
+                  <div class="row">
+                    <div class="col-lg-4">
+                      <base-input
+                        name=""
+                        :view="true"
+                        label="Ciudad"
+                        placeholder="Ciudad"
+                        input-classes="form-control-alternative"
+                        :modelValue="model.city"
+                      />
+                    </div>
+                    <div class="col-lg-4">
+                      <base-input
+                        name=""
+                        :view="true"
+                        label="Pais"
+                        placeholder="País"
+                        input-classes="form-control-alternative"
+                        :modelValue="model.country"
+                      />
+                    </div>
+                    <div class="col-lg-4">
+                      <base-input
+                        name=""
+                        :view="true"
+                        label="Codigo postal"
+                        placeholder="Codigo postal"
+                        input-classes="form-control-alternative"
+                        :modelValue="model.zipCode"
+                      />
+                    </div>
                   </div>
-                  <div class="col-lg-4">
-                    <base-input
-                      name=""
-                      :view="true"
-                      label="Pais"
-                      placeholder="Country"
-                      input-classes="form-control-alternative"
-                      :modelValue="model.country"
-                    />
-                  </div>
-                  <div class="col-lg-4">
-                    <base-input
-                      name=""
-                      :view="true"
-                      label="Postal code"
-                      placeholder="Postal code"
-                      input-classes="form-control-alternative"
-                      :modelValue="model.zipCode"
-                    />
-                  </div>
-                </div>
-              </div>
-              <hr class="my-4" />
-              <!-- Description -->
-              <h6 class="heading-small text-muted mb-4">About me</h6>
-              <div class="pl-lg-4">
-                <div class="form-group">
-                  <base-input name=""
-                  :view="true" label="About Me">
-                    <textarea
-                      rows="4"
-                      class="form-control form-control-alternative"
-                      placeholder="A few words about you ..."
-                    >
-                      A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.
-                    </textarea>
-                  </base-input>
                 </div>
               </div>
             </form>
@@ -148,6 +133,9 @@
         const u_data = await service.get()
         this.u_data = u_data.list.user
       },
+      computed:{
+
+      }
     };
 </script>
 <style>

@@ -1,22 +1,23 @@
 import { axios } from '@/axios';
+import { store } from '@/store';
 
 const url = process.env.VUE_APP_API_BASE_URL;
-const tokenName = process.env.VUE_APP_USER_TOKEN_NAME
-    // const baseApi = "admin";
+// const baseApi = "admin";
 
 function getUsers(params) {
-    const token = localStorage.getItem(tokenName);
-    const options = {
-        headers: {
-            Authorization: "Bearer " + token,
-        },
-    };
+    return axios.get(url + '/index?' + params).then((response) => {
+        return response
+    });
+}
 
-    return axios.get(url + '/index?' + params, options).then((response) => {
+function dashboard() {
+    storage.commit('loading');
+    return axios.get(url + '/dashboard').then((response) => {
         return response
     });
 }
 
 export default {
-    getUsers
+    getUsers,
+    dashboard
 }

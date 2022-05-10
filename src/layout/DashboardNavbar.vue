@@ -7,13 +7,13 @@
         </base-input> -->
       </div>
     </form>
-    <ul class="navbar-nav align-items-center d-none d-md-flex">
+    <ul class="navbar-nav align-items-center d-none d-lg-flex">
       <li class="nav-item dropdown">
         <base-dropdown class="nav-link pr-0">
           <template v-slot:title>
             <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="Image placeholder" src="/img/theme/team-4-800x800.jpg" />
+                <img :src="logo" class="navbar-brand-img" alt="dgsoft_logo" />
               </span>
               <div class="media-body ml-2 d-none d-lg-block">
                 <span class="mb-0 text-sm font-weight-bold">{{me.name}} {{me.last_name}}</span>
@@ -56,7 +56,12 @@
       audit: {
         type:Boolean,
         default: false
-      }
+      },
+        logo: {
+        type: String,
+        default: process.env.VUE_APP_API_URL + "img/dg_logo.png",
+        description: "Sidebar app logo",
+      },
     },
     methods: {
       toggleSidebar() {

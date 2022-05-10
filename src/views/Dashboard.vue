@@ -6,8 +6,8 @@
           <stats-card
             title="Delegados"
             type="gradient-info"
-            sub-title="350"
-            icon="ni ni-active-40"
+            :sub-title="counter.delegates"
+            icon="ni ni-single-02"
             class="mb-4 mb-xl-0"
           ></stats-card>
         </div>
@@ -15,17 +15,17 @@
           <stats-card
             title="Auditores"
             type="gradient-info"
-            sub-title="265"
-            icon="ni ni-chart-pie-35"
+            :sub-title="counter.auditors"
+            icon="ni ni-hat-3"
             class="mb-4 mb-xl-0"
           ></stats-card>
         </div>
         <div class="col-xl-3 col-lg-6">
           <stats-card
-            title="Epresas"
+            title="Empresas"
             type="gradient-info"
-            sub-title="924"
-            icon="ni ni-money-coins"
+            :sub-title="counter.business"
+            icon="ni ni-shop"
             class="mb-4 mb-xl-0"
           >
           </stats-card>
@@ -34,7 +34,7 @@
           <stats-card
             title="Instalaciones"
             type="gradient-info"
-            sub-title="44"
+            :sub-title="counter.insts"
             icon="ni ni-chart-bar-32"
             class="mb-4 mb-xl-0"
           >
@@ -61,10 +61,17 @@ import {mapGetters} from 'vuex'
 import InformsTable from './Tables/InformsTable.vue';
 import NonTable from './Tables/NonTable.vue';
 import VisitsTable from './Tables/VisitsTable.vue';
+import service from '@/store/services/model-service';
   export default {
 	components: { VisitsTable, InformsTable, NonTable },
     data() {
       return {
+        counter: {
+          delegates: 0,
+          business: 0,
+          auditors: 0,
+          insts: 0 
+        }
       };
     },
     async mounted() {
@@ -74,7 +81,32 @@ import VisitsTable from './Tables/VisitsTable.vue';
         role: 'ROLE'
       })
     },
-    methods: {},
+    methods: {
+      async getDash() {
+          try {
+            const res = await service.dashboard()
+            let data = res.data.data;
+            this.counter = {
+              delegates: data.delegates,
+              business: data.business,
+              auditors: data.auditors,
+              insts: data.installations,
+            }
+          } catch (err) {
+            console.log(err);
+          }
+      }  
+    },
+    watch: {
+      role:{
+        handler(role){
+          if(role == 'admin'){
+            this.getDash()
+          }
+        },
+        immediate: true
+      }
+    }
   };
 </script>
 <style></style>

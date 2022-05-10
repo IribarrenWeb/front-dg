@@ -45,7 +45,7 @@
           </td>
           <td>
             <a href="#" @click.prevent="view(row.item.id)" class="btn btn-sm btn-default">Ver</a>
-            <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
+            <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-outline-default">Eliminar</a>
           </td>
         </template>
       </base-table>
@@ -113,7 +113,6 @@
       async destroy(id) {
         try {
           await service.destroy('installation',id)
-          this.$toast.success('Registro eliminado')
           this.getInstallations();
         } catch (error) {
           console.log(error);

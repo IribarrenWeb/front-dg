@@ -1,7 +1,7 @@
 <template>
     <div>
         <form-validate @submit="onSubmit" v-slot="{resetForm}">
-            <div class="row border rounded border-light px-4 py-2">
+            <div class="row border rounded border-light px-3 py-2">
                 <div class=" col-lg-3">
                     <base-field   name="fleet" label="Flota">
                         <field-validate as="select" class="form-control" name="fleet" rules="required" label="flota" v-model="model.fleet">

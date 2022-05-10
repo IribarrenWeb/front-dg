@@ -88,11 +88,8 @@
       v-if="this.modal"
       v-model:show="this.modal"
       modalClasses="modal-xl"
-      bodyClasses="pt-0 px-5"
-      modalContentClasses="overflow-auto max-h-modal"
-      headerClasses="px-4 py-2"
+      model="vehiculos"
     >
-      <template v-slot:header> </template>
       <form-vehicle
         @close="this.modal = false"
         @reload="getVehicles(page)"
@@ -168,8 +165,8 @@
       },
       async destroy(id) {
         try {
-          await service.destroy(id)
-          this.$toast.success('Registro eliminado')
+          await service.destroy('vehicle',id)
+          
           this.getVehicles();
         } catch (error) {
           console.log(error);

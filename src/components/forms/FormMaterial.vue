@@ -13,12 +13,10 @@
                 <div class="row border rounded border-light px-4 py-2">
                     <div class=" col-lg-3">
                         <base-field name="is_residue" label="Tipo">
-                            <field-validate class="form-control" name="is_residue" rules="required" label="residue" v-model="is_res" v-slot="{field}">
-                                <select name="" id="" v-bind="field" class="form-control">
-                                    <option value="1">Residuo ADR</option>
-                                    <option value="0">Material</option>
-                                </select>
-                            </field-validate>
+                            <select name="" id="" v-model="model.is_residue" class="form-control">
+                                <option value="true" selected>Residuo ADR</option>
+                                <option value="false">Material</option>
+                            </select>
                         </base-field>
                     </div>
                     <div class=" col-lg-3">
@@ -38,7 +36,7 @@
                     <div class=" col-lg-3">
                        <base-field name="material" label="UN">
                             <div v-if="model.material != null">
-                                <span class="mr-md-4 text-uppercase">{{material.un_code}} - {{material.denomination_name}}</span>
+                                <span class="mr-md-4 text-uppercase text-text-truncate d-inline-block">{{material.un_code}} - {{material.denomination_name}}</span>
                                 <base-button @click="model.material = null" size="sm" type="default" :outline="true">Cambiar</base-button>
                             </div>
                             <div v-else>
@@ -67,12 +65,10 @@
                 <div class="row border rounded border-light px-4 py-2">
                     <div class=" col-lg-3">
                         <base-field name="address" label="Unidad">
-                            <field-validate class="form-control" name="deposit" rules="required" label="deposit" v-model="model.unit" v-slot="{ field }">
-                                <select name="" class="form-control" v-bind="field">
-                                    <option value="TONELADAS">TONELADAS</option>
-                                    <option value="KILOS">KILOS</option>
-                                </select>
-                            </field-validate>
+                            <select name="" class="form-control" v-model="model.unit">
+                                <option value="TONELADAS">TONELADAS</option>
+                                <option value="KILOS">KILOS</option>
+                            </select>
                         </base-field>
                     </div>
                     <div class=" col-lg-3">
@@ -158,8 +154,8 @@ export default {
                 buy: "",
                 sell: "",
                 transported: "",
-                unit: "",
-                is_residue: false,
+                unit: null,
+                is_residue: null,
                 is_dangerous: false,
             },
             material: {},
@@ -178,18 +174,24 @@ export default {
             this.currentStep--
         },
         async onSubmit(values, { resetForm }){
-            for (let index = 0; index < this.steps.length; index++) {
-                const step = this.steps[index];
-                if (step.number == this.currentStep) {
-                    step.valid = true
-                }   
-            }
 
             if (this.currentStep === 1) {
+                if (this.model.is_residue == null) {
+                    return this.$toast.error('Selecciona el tipo de material')
+                }
                 this.model.adr_material_id = this.material.id
-                this.model.is_residue = values.is_residue == '1' ? true : false;
+                console.log(this.model.is_residue);
             }
             if (this.currentStep === 2) {
+                if (this.model.is_residue === 'true') {
+                    this.model.is_residue = true
+                }else{
+                    this.model.is_residue = false
+                }
+
+                if (this.model.unit == null) {
+                    return this.$toast.error('Selecciona el tipo de unidad')
+                }
                 try {
                     await service.store('material',this.model);
                     this.$toast.success('Material registrado')
@@ -199,6 +201,13 @@ export default {
                 } catch (error) {
                     console.log(error);
                 }
+            }
+
+            for (let index = 0; index < this.steps.length; index++) {
+                const step = this.steps[index];
+                if (step.number == this.currentStep) {
+                    step.valid = true
+                }   
             }
 
             if (this.currentStep != 2) {

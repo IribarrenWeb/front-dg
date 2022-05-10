@@ -43,7 +43,7 @@
           </td>
           <td>
             <router-link :to="`/business/${row.item.id}`" class="btn btn-sm btn-default">Ver</router-link>
-            <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-danger">Eliminar</a>
+            <a href="#" @click.prevent="destroy(row.item.id)" class="btn btn-sm btn-outline-default">Eliminar</a>
           </td>
         </template>
       </base-table>
@@ -61,10 +61,8 @@
         v-if="this.modal"
         v-model:show="this.modal"
         modalClasses="modal-xl"
-        bodyClasses="pt-0"
-        modalContentClasses="overflow-auto max-h-modal"
+        model="Empresa"
       >
-        <template v-slot:header> </template>
         <form-business v-if="this.modal" @close="this.modal = false" @reload="getBusiness()"/>
       </modal>
     </div>
@@ -115,13 +113,10 @@
       },
        async destroy(id) {
         try {
-          const response = await service.destroy(id)
-          console.log(response);
-          this.$toast.success('Registro eliminado')
+          await service.destroy(id)
           this.getBusiness();
         } catch (err) {
           console.log(err.response);
-          this.$swal('Error', 'Ocurrio un error al intentar eliminar el registro', 'error')         
         }
       },
     },
