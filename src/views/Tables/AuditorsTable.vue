@@ -74,8 +74,7 @@
         v-if="this.modal"
       >
         <form-auditor
-          :auditor="auditor"
-          @notValid="submit = false"
+          :id="auditor_id"
           @closeModal="this.modal = false"
           @resetTable="getAuditors"
           :disabled="disabled"
@@ -97,7 +96,7 @@
         modal: false,
         submit: false,
         loader: false,
-        auditor: {},
+        auditor_id: null,
         disabled: false,
         action: "Registrar",
       };
@@ -124,30 +123,17 @@
         this.getAuditors(event);
       },
       handleAdd() {
+        this.auditor_id = null
         this.disabled = false;
         this.auditor = {};
         this.modal = true;
       },
       async handleView(id) {
-        const response = await service.show(
-          "auditor",
-          id,
-          "includes[]=province.city&includes[]=documents.type&includes[]=delegate.user"
-        );
-        const data = response.data.data;
-        this.auditor = {
-          name: data.user.name,
-          last_name: data.user.last_name,
-          email: data.user.email,
-          phone_number: data.phone_number,
-          dni: data.dni,
-          province: data.province,
-          documents: data.documents,
-          delegate: data.delegate,
-        };
+        this.auditor_id = id
         this.action = "editar";
         this.disabled = true;
         this.modal = true;
+        console.log(this.auditor_id);
       },
     },
     watch: {

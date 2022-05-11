@@ -108,7 +108,7 @@ export default {
     this.getMaterials(this.page, this.installation_id)
   },
   methods: {
-    async getMaterials(page, id = null){
+    async getMaterials(page = 1, id = null){
         let params = 'includes[]=installation.operations&includes[]=material.class&includes[]=deposit&includes[]=material.packing';
 
         if (id != null) {

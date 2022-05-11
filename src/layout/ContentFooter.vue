@@ -8,7 +8,7 @@
             href="https://www.creative-tim.com"
             class="font-weight-bold ml-1"
             target="_blank"
-            >Doover.es</a
+            >DGSOFTWARE.es</a
           >
         </div>
       </div>
@@ -16,7 +16,7 @@
         <ul
           class="nav nav-footer justify-content-center justify-content-lg-end"
         >
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a
               href="https://www.creative-tim.com"
               class="nav-link"
@@ -47,7 +47,7 @@
               target="_blank"
               >License</a
             >
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

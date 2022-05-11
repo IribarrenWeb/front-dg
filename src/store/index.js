@@ -82,6 +82,22 @@ export const store = createStore({
                     },
                 },
             },
+            auditor_schema: {
+                dni: "",
+                phone_number: "",
+                email: "",
+                province_id: null,
+                name: "",
+                last_name: "",
+                documents: null,
+                file_certification: "",
+                certification_date: "",
+                file_firm: "",
+                firm_date: "",
+                delegate_id: "",
+                delegate: null
+            },
+            provinces: null
         }
     },
     getters: {
@@ -90,6 +106,9 @@ export const store = createStore({
         },
         INSTALLATION_SCHEMA(state) {
             return JSON.parse(JSON.stringify(state.installation_schema))
+        },
+        AUDITOR_SCHEMA(state) {
+            return JSON.parse(JSON.stringify(state.auditor_schema))
         },
         ROLE(state) {
             let role = state.role
@@ -114,6 +133,9 @@ export const store = createStore({
             }
 
             return role
+        },
+        COPY: () => (data) => {
+            return JSON.parse(JSON.stringify(data))
         }
     },
     mutations: {

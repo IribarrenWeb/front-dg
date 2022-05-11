@@ -1,211 +1,151 @@
 <template>
   <div>
-    <form-validate @submit="onSubmit">
-      <div class="row">
-        <base-input
-          :disabled="disabled"
-          :modelValue="auditor.name"
-          :view="auditor.length >= 1"
-          formClasses=" col-lg-4"
-          name="name"
-          label="Nombre"
-          rules="required"
-        />
-        <base-input
-          :disabled="disabled"
-          :modelValue="auditor.last_name"
-          :view="auditor.length >= 1"
-          formClasses=" col-lg-4"
-          name="last_name"
-          label="Apellido"
-          rules="required"
-        />
-        <div class=" col-lg-4">
-          <div v-if="disabled">
-            <label for="">Delegado</label>
-            <div>
-              <a href="#" @click.prevent="" class="text-uppercase">
-                {{auditor.delegate.user.name + ' ' + auditor.delegate.user.last_name}}
-              </a>
-            </div>
-          </div>
-          <div v-else>
-            <label for=""> Delegado </label>
-            <Multiselect
-              :searchable="true"
-              v-model="delegate_id"
-              trackBy="name"
-              label="name"
-              :min-chars="2"
-              :delay="50"
-              valueProp="id"
-              :required="true"
-              :options="fetchItems"
-              :object="true"
-            >
-              <template v-slot:option="{ option }">
-                {{ option.name }} {{ option.last_name }} - {{ option.email }}
-              </template>
-            </Multiselect>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <base-input
-          :disabled="disabled"
-          :modelValue="auditor.phone_number"
-          :view="auditor.length >= 1"
-          formClasses=" col-lg-4"
-          name="phone_number"
-          label="Numero movil"
-          rules="required|numeric"
-        />
-        <base-input
-          :disabled="disabled"
-          :modelValue="auditor.email"
-          :view="auditor.length >= 1"
-          formClasses=" col-lg-4"
-          name="email"
-          label="Email"
-          rules="required|email"
-        />
-        <base-input
-          :disabled="disabled"
-          :modelValue="auditor.dni"
-          :view="auditor.length >= 1"
-          formClasses=" col-lg-4"
-          name="dni"
-          label="Dni"
-          rules="required|numeric"
-        />
-        <div v-if="disabled" class="col-12">
-          <div class="row">
-            <base-input
-              formClasses=" col-lg-6"
-              :view="true"
-              :modelValue="auditor.province.city.name"
-              :disabled="true"
-              label="Ciudad"
-            />
-            <base-input
-              formClasses=" col-lg-6"
-              :view="true"
-              :modelValue="auditor.province.name"
-              label="Provincia"
-              :disabled="true"
-            />
-          </div>
-        </div>
-        <div v-else class="col-12">
-          <div class="row">
-            <base-input
-              formClasses=" col-lg-6"
-              @update:modelValue="getProvinces($event)"
-              type="select"
-              name="city"
-              label="Ciudad"
-            >
-              <template v-slot:options>
-                <option
-                  :value="city.id"
-                  v-for="(city, key) in cities"
-                  :key="key.id"
-                >
-                  {{ city.name }}
-                </option>
-              </template>
-            </base-input>
+    <form-validate @submit="onSubmit" ref="form" v-slot="{meta}" :initial-values="current_values">
 
-            <base-input
-              formClasses=" col-lg-6"
-              type="select"
-              name="province_id"
-              label="Provincia"
-              :disabled="!provinces.length >= 1"
-            >
-              <template v-slot:options>
-                <option
-                  :value="province.id"
-                  v-for="(province, key) in provinces"
-                  :key="key.id"
-                >
-                  {{ province.name }}
-                </option>
-              </template>
-            </base-input>
-          </div>
+      <div class="row border rounded border-light px-md-3 py-md-2">
+        <div class="col-12">
+          <h4>
+            Datos generales
+          </h4>
+          <hr>
         </div>
-      </div>
-      <div>
-        <hr />
-        <div class="row" v-if="!disabled">
-          <base-input
-            formClasses=" col-lg-6"
-            name="file_cer"
-            label="Certificado"
-            type="file"
-            rules="required|ext:pdf"
-          />
-          <base-input
-            formClasses=" col-lg-6"
-            name="date_cer"
-            label="Fecha de certificado"
-            type="date"
-            rules="required"
-          />
-          <base-input
-            formClasses=" col-lg-6"
-            name="file_firm"
-            label="Alta"
-            type="file"
-            rules="required|ext:pdf"
-          />
-          <base-input
-            formClasses=" col-lg-6"
-            name="date_firm"
-            label="Fecha de alta"
-            type="date"
-            rules="required"
-          />
+        <div class="col-lg-4">
+          <base-field label="Nombre">
+            <field-validate class="form-control" name="name" label="nombre" rules="required|max:20|alpha_spaces" v-model="model.name"/>
+          </base-field>
         </div>
-        <div class="row" v-else>
-          <div
-            class=" col-lg-6"
-            v-for="document in auditor.documents"
-            :key="document.id"
-          >
-            <div class="row">
-              <div class=" col-lg-6 align-self-center">
-                <button
-                  type="button"
-                  class="btn btn-link text-uppercase h3"
-                  @click="getDocument(document.id)"
-                >
-                  <i class="fa fa-file-pdf"></i><u>{{ document.type.name }}</u>
-                </button>
+
+        <div class="col-lg-4">
+          <base-field name="last_name" label="Apellido">
+            <field-validate class="form-control" name="last_name" label="apellido" rules="required|max:20|alpha_spaces" v-model="model.last_name"/>
+          </base-field>
+        </div>
+
+        <div class="col-lg-4">
+          <base-field name="delegate" label="Delegado">
+              <div v-if="model.delegate != null">
+                  <span class="mr-md-4 text-uppercase">{{model.delegate.user.name}} {{model.delegate.user.last_name}}</span>
+                  <base-button @click="model.delegate = null" size="sm" type="default" :outline="true">Cambiar</base-button>
               </div>
-              <div class=" col-lg-6">
-                <base-input
-                  :disabled="true"
-                  :view="true"
-                  :modelValue="formatDate(document.document_date)"
-                  :label="'Fecha ' + document.type.name"
-                >
-                </base-input>
+              <div v-show="model.delegate == null">
+                  <field-validate name="delegate" label="Delegado" :rules="{'required':model.delegate == null}" v-slot="{ field }" v-model="model.delegate">
+                      <Multiselect
+                          :searchable="true"
+                          v-bind="field"
+                          :min-chars="2"
+                          :delay="1000"
+                          :required="true"
+                          :options="fetchItems"
+                          ref="multiselect"
+                          @select="model.delegate = $event"
+                          :resolve-on-load="false"
+                      >
+                      </Multiselect>
+                  </field-validate>
+                  <base-button v-if="update" @click="reset('delegate')" size="sm" type="default" :outline="true">Cancelar</base-button>
               </div>
+          </base-field>
+        </div>
+
+        <div class="col-lg-4">
+          <base-field name="phone_number" label="Móvil">
+            <field-validate class="form-control" name="phone_number" label="móvil" rules="required|min:7|max:15" v-model="model.phone_number"/>
+          </base-field>
+        </div>
+
+        <div class="col-lg-4">
+          <base-field name="dni" label="DNI">
+            <field-validate class="form-control" name="dni" label="dni" rules="required|min:5|max:15|alpha_num" v-model="model.dni"/>
+          </base-field>
+        </div>
+
+        <div class="col-lg-4">
+          <base-field name="email" label="Email">
+            <field-validate class="form-control" name="email" label="email" rules="required|email" v-model="model.email"/>
+          </base-field>
+        </div>
+
+        <div class="col-lg-4">
+          <base-field name="province_id" label="Provincia">
+            <div v-if="update && !prov_update" class="d-flex">
+              <input type="text" class="form-control mr-md-3" disabled :value="model.province.name">
+              <base-button @click="prov_update = true" size="sm" type="default" :outline="true">Cambiar</base-button>
             </div>
-          </div>
+            <div v-show="!update || prov_update">
+              <field-validate class="form-control" as="select" name="province_id" :rules="{'required':!update || prov_update}" label="Provincia" v-model="model.province_id">
+                  <option value="" selected>Selecciona una provincia</option>
+                  <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
+              </field-validate>
+              <base-button v-if="update" @click="reset('province')" size="sm" type="default" :outline="true">Cancelar</base-button>
+            </div>
+          </base-field>
         </div>
       </div>
+
+      <div class="row border rounded border-light px-md-3 py-md-2 mt-2 mt-md-3">
+        <div class="col-12">
+          <h4>
+            Documentacion
+          </h4>
+          <hr>
+        </div>
+        <div class="col-lg-6">
+          <base-field   name="file_certification" label="Documento de ceritificado">
+              <div v-if="cert_document && !cer_update">
+                  <a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{cert_document.type.name}}</a>
+                  <base-button @click="cer_update = true" size="sm" type="default" :outline="true">Cambiar</base-button>
+              </div>
+              <div v-show="!cert_document || cer_update">
+                <field-validate class="form-control"  type="file" name="file_certification" :rules="{'required':!cert_document || cer_update, ext:['pdf']}" label="documento certificado" v-model="model.file_certification"/>
+                <base-button v-if="update" @click="reset('file_cer')" size="sm" type="default" :outline="true">Cancelar</base-button>
+              </div>
+          </base-field>
+        </div>
+
+        <div class="col-lg-6">
+          <base-field name="certification_date" label="Fecha certificado">
+            <field-validate class="form-control" name="certification_date" type="date" label="Fecha certificado" rules="required" v-model="model.certification_date"/>
+          </base-field>
+        </div>
+
+        <div class="col-lg-6">
+          <base-field   name="file_firm" label="Documento de alta">
+              <div v-if="firm_document && !firm_update">
+                  <a href="#" @click.prevent="getDocument(firm_document.id)" class="mr-md-4">{{firm_document.type.name}}</a>
+                  <base-button @click="firm_update = true" size="sm" type="default" :outline="true">Cambiar</base-button>
+              </div>
+              <div v-show="firm_update || !firm_document">
+                <field-validate class="form-control" type="file" name="file_firm" :rules="{'required':firm_update || !firm_document, ext:['pdf']}" label="documento alta" v-model="model.file_firm"/>
+                <base-button v-if="update" @click="firm_update = false" size="sm" type="default" :outline="true">Cancelar</base-button>
+              </div>
+          </base-field>
+        </div>
+
+        <div class="col-lg-6">
+          <base-field name="firm_date" label="Fecha Alta">
+            <field-validate class="form-control" name="firm_date" type="date" label="Fecha certificado" rules="required" v-model="model.firm_date"/>
+          </base-field>
+        </div>
+      </div>
+
       <div class="d-flex justify-content-lg-end">
         <base-button
           type="default"
           nativeType="submit"
-          text="Enviar"
           size="sm"
-          v-if="!disabled"
+          v-if="!update"
+          :disabled="!meta.valid"
         >
           Enviar
+        </base-button>
+        <base-button
+          type="default"
+          nativeType="submit"
+          size="sm"
+          v-if="update"
+          :disabled="!meta.valid || !meta.dirty"
+        >
+          Actualizar
         </base-button>
         <base-button
           type="default"
@@ -225,95 +165,199 @@
   import Multiselect from "@vueform/multiselect";
 
   import service from "@/store/services/model-service";
+  import dataService from "@/store/services/data-service";
   import _ from "lodash";
    
   import utils from "@/mixins/utils-mixin";
+import { mapGetters } from 'vuex';
   export default {
     components: { Multiselect },
     mixins: [utils],
     name: "form-auditor",
     props: {
-      auditor: {
-        type: Object,
-      },
-      disabled: {
-        type: Boolean,
+      id: {
+        default: null,
+        required: false
       },
     },
     data() {
       return {
         errors: {},
         api: "auditor",
-        delegate_id: "",
+        model: this.$store.getters.AUDITOR_SCHEMA,
+        auditor: null,
+        provinces: null,
+        cer_update: false,
+        firm_update: false,
+        current_values: null,
+        prov_update: null
       };
     },
     mounted() {
-      // this.getCities();
+      this.$refs.form.resetForm('dirty')
+      this.loadProvinces()
     },
     methods: {
       async onSubmit(values, { resetForm }) {
         let formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("last_name", values.last_name);
-        formData.append("email", values.email);
-        formData.append("phone_number", values.phone_number);
-        formData.append("dni", values.dni);
-        formData.append("province_id", values.province_id);
-        formData.append("delegate_id", this.delegate_id.delegate.id);
-        formData.append("file_certification", values.file_cer[0]);
-        formData.append(
-          "certification_date",
-          new Date(values.date_cer).toLocaleDateString("en-US")
-        );
-        formData.append("file_firm", values.file_firm[0]);
-        formData.append(
-          "firm_date",
-          new Date(values.date_firm).toLocaleDateString("en-US")
-        );
+        formData.append("name", this.model.name);
+        formData.append("last_name", this.model.last_name);
+        formData.append("email", this.model.email);
+        formData.append("phone_number", this.model.phone_number);
+        formData.append("dni", this.model.dni);
+        formData.append("province_id", this.model.province_id);
+        formData.append("delegate_id", this.model.delegate.id);
+        formData.append("certification_date", this.model.certification_date);
+        formData.append("firm_date", this.model.firm_date);
 
-        this.loader = true;
+        if (_.isArray(this.model.file_certification)) {
+          formData.append("file_certification", this.model.file_certification[0]);
+        }
 
+        if (_.isArray(this.model.file_firm)) {
+          formData.append("file_firm", this.model.file_firm[0]);
+        }
+
+        let response = null
         try {
-          const response = await service.store(this.api, formData, true);
+          if (!this.update) {
+            response = await service.store(this.api, formData, true);
+          }else{
+            response = await service.update(this.api, this.auditor.id,formData, true);
+          }
           if (response.status == 201) {
-              resetForm();
-              this.$emit("closeModal");
+            if (!this.update) {
+                resetForm();
+                this.$emit("closeModal");
+              }else{
+                this.show(this.auditor.id)
+              }
               this.$emit("resetTable");
           }
         } catch (err) {
-          // if (typeof err.response == "undefined") {
-          //   this.$swal("Error", "Ocurrio un error", "error");
-          //   console.log(err);
-          // } else {
-          //   if (err.response.status == 422) {
-          //     this.setApiValidation(err.response.data.errors);
-          //     console.log(this.apiValidationErrors);
-          //     this.$swal(
-          //       "Error en los datos",
-          //       err.response.data.message,
-          //       "error"
-          //     );
-          //   } else {
-          //     this.$swal(
-          //       "Error en el servidor",
-          //       "Ocurrio un error en el servidor",
-          //       "error"
-          //     );
-          //     console.log(err.response);
-          //   }
-          // }
+         console.log(err);
         }
       },
+      async loadProvinces(){
+            const res = await dataService.getProvinces()
+            this.provinces = res.data.data;
+        },
       async fetchItems(search) {
         if (_.isEmpty(search)) {
           return {};
         }
-        const response = await service.users(
-          "name=" + search + "&role_id=2&includes[]=delegate"
-        );
-        return response.data.data;
+        const res = await service.getIndex('delegate',`name=${search}&includes[]=user`);
+        const data = res.data.data;
+        let options = _.map(data, (delegate) => {
+            return {value: delegate, label: `${delegate.user.name} ${delegate.user.last_name} - ${delegate.dni}`}
+        })
+        return options
       },
+      async show(id){
+        console.log(this.$refs)
+        try {
+          const response = await service.show(
+            "auditor",
+            id,
+            "includes[]=province.city&includes[]=documents.type&includes[]=delegate.user"
+          );
+          const data = response.data.data
+          this.setCurrent(data)
+          this.auditor = this.COPY(data)
+          this.model = this.COPY(data);
+          this.model.name = this.model.user.name;
+          this.model.last_name = this.model.user.last_name;
+          this.model.email = this.model.user.email;
+        } catch (err) {
+          this.$emit('closeModal')
+          console.log(err);
+        }
+      },
+      setCurrent(data) {
+        let current = null
+        if(this.update){
+          current = {
+            name: data.user.name,
+            last_name: data.user.last_name,
+            certification_date: data.documents[0].document_date,
+            delegate: data.delegate,
+            file_firm: undefined,
+            file_certification: undefined,
+            // delegate_id: "",
+            dni: data.dni,
+            firm_date: data.documents[1].document_date,
+            phone_number: data.phone_number,
+            province_id: data.province_id,
+            email: data.user.email,
+          }
+        }
+        this.current_values = current
+      },
+      reset(op){
+        switch (op) {
+          case 'delegate':
+            this.model.delegate = this.COPY(this.auditor.delegate)
+            break;
+          case 'file_cer':
+            this.model.file_certification = undefined 
+            this.cer_update = false
+            break;
+          case 'file_firm':
+            this.model.file_firm = undefined 
+            this.firm_update = false
+            break;
+          case 'province':
+            this.prov_update = false
+            this.model.province_id = this.auditor.province_id
+            break;
+          default:
+            break;
+        }
+      }
     },
+    computed: {
+      firm_document(){
+        let doc = false;
+        if (this.model.documents != null && _.isObject(this.model.documents)) {
+            _.forEach(this.model.documents, (document) => {
+              if(document.type.name == 'ALTA'){
+                doc = document
+                this.model.firm_date = doc.document_date
+              }
+            })
+        }
+        return doc;
+      },
+      cert_document(){
+        let doc = false;
+        if (this.model.documents != null && typeof this.model.documents == 'object') {
+            _.forEach(this.model.documents, (document) => {
+              if(document.type.name == 'CERTIFICADO'){
+                doc = document
+                this.model.certification_date = doc.document_date
+              }
+            })
+        }
+        return doc;
+      },
+      update(){
+        return this.id != null 
+      },
+      ...mapGetters([
+        'COPY'
+      ])
+    },
+    watch: {
+      id: {
+        // the callback will be called immediately after the start of the observation
+        handler (val) {
+          if (val >= 1 && val != null) {
+            this.show(val)
+          }
+        },
+        immediate: true, 
+      }
+    }
   };
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

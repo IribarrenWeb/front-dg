@@ -64,6 +64,7 @@ function store(model, payload, multipart = false) {
     return axios.post(`${url}/${apis[model]}`, payload, options).then((response) => {
         $swal.fire('Registro completado', 'El registro se ha completado correctamente', 'success')
         storage.commit('loading');
+        toaster.success(response.data.message)
         return response
     }).catch(err => {
         storage.commit('loading');
@@ -126,7 +127,7 @@ async function destroy(model, id) {
     if (deletes) {
         return axios.delete(`${url}/${apis[model]}/${id}`).then((response) => {
             storage.commit('loading');
-            toaster.success('Registro eliminado')
+            toaster.success(response.data.message)
             return response
         }).catch(err => {
             storage.commit('loading');
@@ -164,10 +165,18 @@ function instByBusiness(id, page = 1) {
     });;
 }
 
-function update(model, id, data) {
+function update(model, id, data, multipart = false) {
     storage.commit('loading');
-    return axios.put(`${url}/${apis[model]}/${id}`, data).then((response) => {
+    const options = {};
+
+    if (multipart) {
+        options.headers = {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    return axios.post(`${url}/${apis[model]}/${id}?_method=PUT`, data, options).then((response) => {
         storage.commit('loading');
+        toaster.success(response.data.message)
         return response
     }).catch(err => {
         storage.commit('loading');
