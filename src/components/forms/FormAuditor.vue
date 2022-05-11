@@ -290,6 +290,11 @@ import { mapGetters } from 'vuex';
             province_id: data.province_id,
             email: data.user.email,
           }
+
+          this.cer_update = false;
+          this.firm_update = false;
+          this.current_values = null;
+          this.prov_update = null;
         }
         this.current_values = current
       },

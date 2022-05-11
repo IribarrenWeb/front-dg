@@ -97,6 +97,19 @@ export const store = createStore({
                 delegate_id: "",
                 delegate: null
             },
+            delegate_schema: {
+                dni: "",
+                phone_number: "",
+                email: "",
+                province_id: null,
+                name: "",
+                last_name: "",
+                documents: null,
+                file_certification: "",
+                certification_date: "",
+                file_firm: "",
+                firm_date: "",
+            },
             provinces: null
         }
     },
@@ -109,6 +122,9 @@ export const store = createStore({
         },
         AUDITOR_SCHEMA(state) {
             return JSON.parse(JSON.stringify(state.auditor_schema))
+        },
+        DELEGATE_SCHEMA(state) {
+            return JSON.parse(JSON.stringify(state.delegate_schema))
         },
         ROLE(state) {
             let role = state.role

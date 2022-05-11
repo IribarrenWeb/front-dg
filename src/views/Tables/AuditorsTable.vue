@@ -77,7 +77,6 @@
           :id="auditor_id"
           @closeModal="this.modal = false"
           @resetTable="getAuditors"
-          :disabled="disabled"
         >
         </form-auditor>
       </modal>
@@ -133,7 +132,6 @@
         this.action = "editar";
         this.disabled = true;
         this.modal = true;
-        console.log(this.auditor_id);
       },
     },
     watch: {

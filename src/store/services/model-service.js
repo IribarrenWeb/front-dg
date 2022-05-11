@@ -183,7 +183,7 @@ function update(model, id, data, multipart = false) {
         const status = err.response.status
 
         let message = null;
-        if (status == 422) {
+        if (status == 422 || status == 403) {
             message = err.response.data.message
         }
         errors(status, message)
@@ -258,6 +258,10 @@ function errors(code, message = null) {
 
         case 401:
             window.location.reload
+            break
+
+        case 403:
+            $swal.fire('Algunos campos son incorrectos', message != null ? message : "Algunos de los datos enviados son incorrectos.", 'error')
             break
 
         default:

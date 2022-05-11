@@ -63,11 +63,9 @@
     <Transition name="fade">
       <modal v-model:show="this.modal" model="delegado" :action="action" @close="action = 'Registrar'" modalClasses="modal-xl" v-if="this.modal">
         <form-delegate
-          :delegate="delegate"
-          @notValid="submit = false"
+          :id="delegate_id"
           @closeModal="this.modal = false"
           @resetTable="getDelegates"
-          :disabled="disabled"
         >
         </form-delegate>
 
@@ -94,57 +92,36 @@
         page: 1,
         modal: false,
         submit: false,
-        delegate: {},
+        delegate_id: null,
         disabled: false,
         action: 'Registrar'
       };
     },
     mounted() {
-      this.getDelegates();
+      this.getDelegates(this.page);
     },
     methods: {
-      async getDelegates() {
+      async getDelegates(page = 1) {
           const response = await service.getIndex(
             'delegate',
-            this.page,
+            page,
             `&includes[]=user`
           );
+          this.page = this.metaData.currentPage;
           this.tableData = response.data.data;
           this.metaData = response.data.meta.page;
       },
-      async handleChange(event) {
-
-          const response = await service.getIndex(
-            'delegate',
-            event,
-            `&includes[]=user`
-          );
-          this.tableData = response.data.data;
-          this.metaData = response.data.meta.page;
-          this.page = this.metaData.currentPage;
+      async handleChange() {
+          this.getDelegates()
       },
       async handleView(id) {
-        try {
-          const response = await service.show('delegate',id,'includes[]=province.city&includes[]=documents.type');
-          const data = response.data.data;
-          this.delegate = {
-            name: data.user.name,
-            last_name: data.user.last_name,
-            email: data.user.email,
-            phone_number: data.phone_number,
-            dni: data.dni,
-            province: data.province,
-            documents: data.documents
-          }
-
-          this.action = 'Editar';
-          this.disabled = true
-          this.modal = true
-        } catch (err) {
-          console.log(err);
-        }
+        this.delegate_id = id
+        this.action = 'editar';
+        this.disabled = true
+        this.modal = true
       },
       handleAdd(){
+        this.delegate_id = null
         this.disabled = false
         this.delegate = {}
         this.modal = true
