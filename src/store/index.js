@@ -27,10 +27,7 @@ export const store = createStore({
                     base64: "",
                     file: ""
                 },
-                file_date: {
-                    date: "",
-                    toForm: ""
-                },
+                file_date: "",
                 postal_code: ""
             },
             installation_schema: {
@@ -59,27 +56,18 @@ export const store = createStore({
                         base64: "",
                         file: []
                     },
-                    driver_document_date: {
-                        date: "",
-                        toForm: ""
-                    },
+                    driver_document_date: "",
                     adr_permit_id: null,
                     file_firm: {
                         base64: "",
                         file: []
                     },
-                    date_firm: {
-                        date: "",
-                        toForm: ""
-                    },
+                    date_firm: "",
                     file_certification: {
                         base64: "",
                         file: []
                     },
-                    date_certification: {
-                        date: "",
-                        toForm: ""
-                    },
+                    date_certification: "",
                 },
             },
             auditor_schema: {
@@ -110,6 +98,34 @@ export const store = createStore({
                 file_firm: "",
                 firm_date: "",
             },
+            employee_schema: {
+                name: "",
+                last_name: "",
+                email: "",
+                dni: "",
+                phone_number: "",
+                position: "",
+                driver: false,
+                dangerous_goods: false,
+                representative: false,
+                installation_id: null,
+                driver_document: {
+                    base64: "",
+                    file: []
+                },
+                driver_document_date: "",
+                adr_permit_id: null,
+                file_firm: {
+                    base64: "",
+                    file: []
+                },
+                date_firm: "",
+                file_certification: {
+                    base64: "",
+                    file: []
+                },
+                date_certification: "",
+            },
             provinces: null
         }
     },
@@ -125,6 +141,9 @@ export const store = createStore({
         },
         DELEGATE_SCHEMA(state) {
             return JSON.parse(JSON.stringify(state.delegate_schema))
+        },
+        EMPLOYEE_SCHEMA(state) {
+            return JSON.parse(JSON.stringify(state.employee_schema))
         },
         ROLE(state) {
             let role = state.role

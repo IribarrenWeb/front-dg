@@ -1,6 +1,8 @@
 import { axios } from '@/axios';
 import { store as storage } from '@/store';
 import $Swal from 'sweetalert2';
+// import _ from "lodash";
+
 const $swal = $Swal.mixin({
     customClass: {
         confirmButton: 'btn btn-primary',
@@ -165,6 +167,24 @@ function instByBusiness(id, page = 1) {
     });;
 }
 
+function dashEmployee(id) {
+    storage.commit('loading');
+    return axios.get(`${url}/employees/dashboard?installation_id=${id}`).then((response) => {
+        storage.commit('loading');
+        return response
+    }).catch(err => {
+        storage.commit('loading');
+        const status = err.response.status
+
+        let message = null;
+        if (status == 422) {
+            message = err.response.data.message
+        }
+        errors(status, message)
+        throw Error('Error');
+    });;
+}
+
 function update(model, id, data, multipart = false) {
     storage.commit('loading');
     const options = {};
@@ -257,7 +277,7 @@ function errors(code, message = null) {
             break;
 
         case 401:
-            window.location.reload
+            window.location.href = '/';
             break
 
         case 403:
@@ -281,5 +301,6 @@ export default {
     getDocument,
     users,
     errors,
-    dashboard
+    dashboard,
+    dashEmployee
 }

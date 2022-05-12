@@ -98,112 +98,131 @@
             </template>
             <!-- ------------------------------------------------------ -->
             <template v-if="currentStep == 3">
-                <div class="row border rounded border-light px-4 py-2">
-                    <div class="col-12 border-bottom border-light mb-md-3">
-                        <h4>Datos principales</h4>
-                    </div>
-                    <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.name" name="name" label="Nombre">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.responsible.name"/>
-                        </base-field>
-                    </div>
+                <div v-if="!isSaved">
+                    <div class="row border rounded border-light px-4 py-2">
+                        <div class="col-12 border-bottom border-light mb-md-3">
+                            <h4>Datos principales</h4>
+                        </div>
+                        <div class="col-lg-6 col-lg-4">
+                            <base-field   apiName="responsible.name" name="name" label="Nombre">
+                                <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required|alpha_spaces" label="Nombre" v-model="model.responsible.name"/>
+                            </base-field>
+                        </div>
 
-                    <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.last_name" name="last_name" label="Apellido">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="last_name" rules="required" label="apellido" v-model="model.responsible.last_name"/>
-                        </base-field>
-                    </div>
+                        <div class="col-lg-6 col-lg-4">
+                            <base-field   apiName="responsible.last_name" name="last_name" label="Apellido">
+                                <field-validate :disabled="isSaved" type="text" class="form-control" name="last_name" rules="required|alpha_spaces" label="apellido" v-model="model.responsible.last_name"/>
+                            </base-field>
+                        </div>
 
-                    <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.dni" name="dni" label="Dni">
-                            <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.responsible.dni"/>
-                        </base-field>
-                    </div>
-                    <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.email" name="email" label="Email">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="email" rules="required" label="email" v-model="model.responsible.email"/>
-                        </base-field>
-                    </div>
+                        <div class="col-lg-6 col-lg-4">
+                            <base-field   apiName="responsible.dni" name="dni" label="Dni">
+                                <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required|alpha_num|min:5|max:15" label="dni" v-model="model.responsible.dni"/>
+                            </base-field>
+                        </div>
+                        <div class="col-lg-6 col-lg-4">
+                            <base-field   apiName="responsible.email" name="email" label="Email">
+                                <field-validate :disabled="isSaved" type="text" class="form-control" name="email" rules="required|email" label="email" v-model="model.responsible.email"/>
+                            </base-field>
+                        </div>
 
-                    <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.position" name="position" label="Cargo">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required" label="cargo" v-model="model.responsible.position"/>
-                        </base-field>
-                    </div>
+                        <div class="col-lg-6 col-lg-4">
+                            <base-field   apiName="responsible.position" name="position" label="Cargo">
+                                <field-validate :disabled="isSaved" type="text" class="form-control" name="position" rules="required|alpha_spaces" label="cargo" v-model="model.responsible.position"/>
+                            </base-field>
+                        </div>
 
-                    <div class="col-lg-6 col-lg-4">
-                        <base-field   apiName="responsible.phone_number" label="Movil" name="phone_number">
-                            <field-validate :disabled="isSaved" type="number" class="form-control" name="phone_number" rules="required" label="movil" v-model="model.responsible.phone_number"/>
-                        </base-field>
+                        <div class="col-lg-6 col-lg-4">
+                            <base-field   apiName="responsible.phone_number" label="Movil" name="phone_number">
+                                <field-validate :disabled="isSaved" type="number" class="form-control" name="phone_number" rules="required|min:5|max:15" label="movil" v-model="model.responsible.phone_number"/>
+                            </base-field>
+                        </div>
                     </div>
-                </div>
-                <div class="row border rounded border-light px-4 py-2 mt-3">
-                    <div class="col-12 border-bottom border-light mb-md-3">
-                        <h4>Documentacion</h4>
-                    </div>
-                    <div class="col-lg-4">
-                        <base-field   apiName="responsible.date_firm" name="date_firm" label="Fecha de firma">
-                            <field-validate :disabled="isSaved" type="date" class="form-control" name="date_firm" rules="required" label="fecha" v-model="model.responsible.date_firm.toForm"/>
-                        </base-field>
-                    </div>
-                    <div class="col-lg-4">
-                        <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formación">
-                            <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification.toForm"/>
-                        </base-field>
-                    </div>
-                    <div class="col-lg-4">
-                        <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formación">
-                            <div v-if="model.responsible.file_certification.file.length >= 1">
-                                <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
-                                <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                    <div class="row border rounded border-light px-4 py-2 mt-3">
+                        <div class="col-12 border-bottom border-light mb-md-3">
+                            <h4>Documentacion</h4>
+                        </div>
+                        <div class="col-lg-6">
+                            <base-field apiName="responsible.date_firm" name="date_firm" label="Fecha de Alta">
+                                <field-validate :disabled="isSaved" type="date" class="form-control" name="date_firm" rules="required" label="fecha" v-model="model.responsible.date_firm"/>
+                            </base-field>
+                        </div>
+                        <div class="col-lg-6">
+                            <base-field   apiName="responsible.file_firm" name="file_firm" label="Documento de Alta">
+                                <div v-if="model.responsible.file_firm.file.length >= 1">
+                                    <span class="mr-md-4">{{model.responsible.file_firm.file[0].name}}</span>
+                                    <base-button @click="model.responsible.file_firm.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                </div>
+                                <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_firm" rules="required" label="documento" v-model="model.responsible.file_firm.file"/>
+                            </base-field>
+                        </div>
+                        <!-- --------------------------------------- -->
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <base-switch
+                                        :disabled="isSaved"
+                                        v-model="model.responsible.driver" label="Conductor"
+                                        :value="model.responsible.driver != 0 ? true : false"
+                                    ></base-switch>
+                                </div>
+                                <div class="col-lg-3" v-if="model.responsible.driver">
+                                    <base-field   apiName="responsible.phone_number" name="adr_permit_id" label="Permiso ADR">
+                                        <field-validate :disabled="isSaved" as="select" class="form-control" name="adr_permit_id" v-model="model.responsible.adr_permit_id" rules="required">
+                                            <option selected>Permiso adr</option>
+                                            <option
+                                                :value="permit.id"
+                                                v-for="(permit, key) in permits"
+                                                :key="key.id"
+                                                >
+                                                {{ permit.name }}
+                                            </option>
+                                        </field-validate>
+                                    </base-field>
+                                </div>
+                                <div class="col-lg-3" v-if="model.responsible.driver">
+                                    <base-field   apiName="responsible.driver_document_date" name="driver_date" label="Fecha documentacion">
+                                        <field-validate :disabled="isSaved" type="date" class="form-control" name="driver_date" v-model="model.responsible.driver_document_date" rules="required">
+                                        </field-validate>
+                                    </base-field>
+                                </div>
+                                <div class="col-lg-4" v-if="model.responsible.driver">
+                                    <base-field   apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
+                                        <div v-if="model.responsible.driver_document.file.length >= 1">
+                                            <span class="mr-md-4">{{model.responsible.driver_document.file[0].name}}</span>
+                                            <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                        </div>
+                                        <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_driver" rules="required" label="documento" v-model="model.responsible.driver_document.file"/>
+                                    </base-field>
+                                </div>
                             </div>
-                            <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_cer" rules="required" label="documento" v-model="model.responsible.file_certification.file"/>
-                        </base-field>
-                    </div>
-
-                    <div class="col-lg-12">
-                        <div class="row">
-                            <div class="col-lg-2">
-                                <base-switch
-                                    :disabled="isSaved"
-                                    v-model="model.responsible.driver" label="Conductor"
-                                ></base-switch>
-                            </div>
-                            <div class="col-lg-3" v-if="model.responsible.driver">
-                                <base-field   apiName="responsible.phone_number" name="adr_permit_id" label="Permiso ADR">
-                                    <field-validate :disabled="isSaved" as="select" class="form-control" name="adr_permit_id" v-model="model.responsible.adr_permit_id" rules="required">
-                                        <option selected>Permiso adr</option>
-                                        <option
-                                            :value="permit.id"
-                                            v-for="(permit, key) in permits"
-                                            :key="key.id"
-                                            >
-                                            {{ permit.name }}
-                                        </option>
-                                    </field-validate>
-                                </base-field>
-                            </div>
-                            <div class="col-lg-3" v-if="model.responsible.driver">
-                                <base-field   apiName="responsible.driver_document_date" name="driver_date" label="Fecha documentacion">
-                                    <field-validate :disabled="isSaved" type="date" class="form-control" name="driver_date" v-model="model.responsible.driver_document_date.toForm" rules="required">
-                                    </field-validate>
-                                </base-field>
-                            </div>
-                            <div class="col-lg-4" v-if="model.responsible.driver">
-                                <base-field   apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
-                                    <div v-if="model.responsible.driver_document.file.length >= 1">
-                                        <span class="mr-md-4">{{model.responsible.driver_document.file[0].name}}</span>
-                                        <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
-                                    </div>
-                                    <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_driver" rules="required" label="documento" v-model="model.responsible.driver_document.file"/>
-                                </base-field>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <base-switch v-model="model.responsible.dangerous_goods" :value="model.responsible.dangerous_goods != 0 ? true : false" :disabled="isSaved" label="Mercancias peligrosas"
+                                    ></base-switch>
+                                </div>
+                                <div v-if="model.responsible.dangerous_goods" class="col-lg-5">
+                                    <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formación">
+                                        <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification"/>
+                                    </base-field>
+                                </div>
+                                <div v-if="model.responsible.dangerous_goods" class="col-lg-5">
+                                    <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formación">
+                                        <div v-if="model.responsible.file_certification.file.length >= 1">
+                                            <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
+                                            <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                        </div>
+                                        <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_cer" rules="required" label="documento" v-model="model.responsible.file_certification.file"/>
+                                    </base-field>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-lg-4">
-                        <base-switch v-model="model.responsible.dangerous_goods" :disabled="isSaved" label="Mercancias peligrosas"
-                        ></base-switch>
-                    </div>
+                </div>
+                <div v-else>
+                    <employees-table :installation_id="installation_id"></employees-table>
                 </div>
             </template>
             <!-- ------------------------------------------------------- -->
@@ -232,15 +251,12 @@
                 <base-button type="default" @click="prevStep()" v-if="currentStep !== 1"
                 >Anterior</base-button
                 >
-                <!-- <base-button type="default" nativeType="submit" @click="this.touched = meta.touched" v-if="isSaved && meta.touched" :disabled="!meta.valid"
-                >Actualizar</base-button
-                > -->
                 <div class="d-inline-block mx-2">
                     <base-button type="default" :disabled="!meta.valid" nativeType="submit" v-if="currentStep !== 3 && currentStep < 6"
                     >Siguiente</base-button
                     >
                 </div>
-                <base-button type="default" nativeType="submit" v-if="currentStep === 3"
+                <base-button type="default" :disabled="!meta.valid" nativeType="submit" v-if="currentStep === 3"
                 >{{!isSaved ? 'Enviar' : 'Siguiente'}}</base-button
                 >
                 <base-button
@@ -263,10 +279,11 @@ import service from "@/store/services/model-service";
 import MaterialTable from '@/views/Tables/MaterialTable.vue';
 import VehiclesTable from '@/views/Tables/VehiclesTable.vue';
 import SubcontractorTable from '@/views/Tables/SubcontractorTable.vue';
+import EmployeesTable from '../../../views/Tables/EmployeesTable.vue';
 
 export default {
     mixins: [utils],
-    components: {Multiselect,MaterialTable, VehiclesTable, SubcontractorTable},
+    components: {Multiselect,MaterialTable, VehiclesTable, SubcontractorTable, EmployeesTable},
     props: {
         business_id: {
             type:Number,
@@ -308,7 +325,7 @@ export default {
             }
             const inst = values 
 
-            if (this.currentStep == 1) {
+            if (this.currentStep == 1 && !this.isSaved) {
                 this.model.file_document.base64 = await this.toBase64(inst.file_document[0])
                 this.model.auditable_id = this.model.auditable.id;
                 if (this.isSaved) {
@@ -316,23 +333,19 @@ export default {
                 }
             }
 
-            if (this.currentStep == 2) {
+            if (this.currentStep == 2 && !this.isSaved) {
                 if (this.isSaved & this.touched) {
                     return
                 }
-                // this.model.equipments_ids = inst.equipments
-                // this.model.operation_types_ids = inst.operations
             }
 
-            if (this.currentStep == 3) {
-                if (!this.isSaved) {
+            if (this.currentStep == 3 && !this.isSaved) {
+                this.model.responsible.file_firm.base64 = await this.toBase64(inst.file_firm[0])
+                if (this.model.responsible.driver) {
+                    this.model.responsible.driver_document.base64 = await this.toBase64(inst.file_driver[0])
+                }
+                if (this.model.responsible.dangerous_goods) {
                     this.model.responsible.file_certification.base64 = await this.toBase64(inst.file_cer[0])
-                    this.model.responsible.date_certification.date = this.formatDate(inst.date_cer);
-                    this.model.responsible.date_firm.date = this.formatDate(inst.date_firm);
-                    if (this.model.responsible.driver) {
-                        this.model.responsible.driver_document.base64 = await this.toBase64(inst.file_driver[0])
-                        this.model.responsible.driver_document_date.date = this.formatDate(inst.driver_date)
-                    }
                 }
             }
 
@@ -348,7 +361,7 @@ export default {
                     return
                 }
             }
-           
+            
             if (this.currentStep !== 6) {
                 this.currentStep++
             }
@@ -411,7 +424,7 @@ export default {
                 },
                 {
                     number: 3,
-                    title: "Responsable",
+                    title: !this.isSaved ? "Responsable" : "Empleados",
                     valid: false
                 },
                 {
@@ -433,14 +446,6 @@ export default {
 
             this.model = this.$store.getters.INSTALLATION_SCHEMA
         },
-        // async update(data){
-        //     try {
-        //         await service.update('installation',this.installation_id, data)
-        //         this.$toast.success('Cambios actualizados')
-        //     } catch (err) {
-        //         this.$toast.error('No se pudieron guardar los cambios')
-        //     }
-        // }
     },
     computed: {
     }
