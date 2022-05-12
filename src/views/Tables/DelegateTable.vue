@@ -114,12 +114,12 @@
 					page,
 					`&includes[]=user`
 				);
-				this.page = this.metaData.currentPage;
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;
 			},
-			async handleChange() {
-				this.getDelegates();
+			async handleChange(event) {
+                this.page = event
+				this.getDelegates(event);
 			},
 			async handleView(id) {
 				this.delegate_id = id;

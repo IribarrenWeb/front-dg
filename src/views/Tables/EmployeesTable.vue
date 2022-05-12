@@ -136,7 +136,7 @@
 					});
                     this.tableData = employees;
                     this.metaData = res.data.meta.page;
-                    this.page = this.metaData.currentPage;
+                    // this.page = this.metaData.currentPage;
 				} catch (err) {
 					console.log(err);
 				}
