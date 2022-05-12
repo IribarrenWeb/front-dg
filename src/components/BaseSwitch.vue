@@ -3,6 +3,7 @@
     class="form-group"
     :class="[
       { 'has-label': label || $slots.label },
+      classes
     ]"
   >
     <div>
@@ -37,6 +38,9 @@
         type: String,
         description: "Input label (text before input)",
       },
+      classes: {
+        type: String
+      }
     },
     computed: {
       model: {

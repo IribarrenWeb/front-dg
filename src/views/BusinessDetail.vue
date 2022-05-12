@@ -4,8 +4,8 @@
     </base-header>
 
     <div class="container-fluid mt-4">
-      <div class="card" v-if="business != null" id="table-data">
-        <table class="table">
+      <div class="card" v-if="business != null">
+        <table class="table table-responsive-xl table-sm table-bordered">
           <thead>
             <tr>
               <th scope="col">Nombre</th>
@@ -23,19 +23,13 @@
               <td>{{ business.property_phone }}</td>
               <td>{{ business.business_nif }}</td>
             </tr>
-          </tbody>
-        </table>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Nombre empresa</th>
-              <th scope="col">Provincia</th>
-              <th scope="col">Ciudad</th>
-              <th scope="col">Pais</th>
-              <th scope="col">Instalaciones</th>
+            <tr class="text-uppercase">
+              <th scope="row">Nombre empresa</th>
+              <th scope="row">Provincia</th>
+              <th scope="row">Ciudad</th>
+              <th scope="row">Pais</th>
+              <th scope="row">Instalaciones</th>
             </tr>
-          </thead>
-          <tbody>
             <tr>
               <td>{{ business.business_name }}</td>
               <td>{{ business.province.name }}</td>
@@ -43,21 +37,15 @@
               <td>ESPANA</td>
               <td>{{ business.installations_count }}</td>
             </tr>
-          </tbody>
-        </table>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Codigo postal</th>
-              <th scope="col">Fecha de ALTA</th>
-              <th scope="col">Documentacion</th>
+            <tr class="text-uppercase">
+              <th scope="row">Codigo postal</th>
+              <th scope="row">Fecha de ALTA</th>
+              <th colspan="3" scope="row">Documentacion</th>
             </tr>
-          </thead>
-          <tbody>
             <tr>
               <td>{{ business.postal_code }}</td>
               <td>{{ formatDate(business.documents[0].document_date, 'en-GB') }}</td>
-              <td>
+              <td colspan="3">
                 <a
                   href="#"
                   @click.prevent="getDocument(business.documents[0].id)"

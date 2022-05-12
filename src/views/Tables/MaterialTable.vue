@@ -50,7 +50,7 @@
           <td>{{ row.item.material.class.code }}</td>
           <td>{{ row.item.material.packing.code }}</td>
           <td class="text-right">
-              <!-- <a class="btn btn-primary btn-sm" href="#" @click.prevent="">Ver</a> -->
+              <a class="btn btn-primary btn-sm" href="#" @click.prevent="handleView(row.item.id)">Ver</a>
               <a class="btn btn-outline-primary btn-sm" href="#" @click.prevent="">Eliminar</a>
           </td>
         </template>
@@ -70,14 +70,17 @@
         v-model:show="this.modal"
         model="material"
       >
-      <form-material @close="this.modal = false" @reload="getMaterials(page,installation_id)" :installation_id="installation_id" :residue="residue"></form-material>
+      <material-show @close="handleClose" :id="material_id" v-if="material_id != null"></material-show>
+      <form-material v-else @close="handleClose" @reload="getMaterials(page,installation_id)" :installation_id="installation_id" :residue="residue"></form-material>
     </modal>
   </div>
 </template>
 <script>
 import service from '../../store/services/model-service';
+import MaterialShow from '../Shows/MaterialShow.vue';
 
 export default {
+	components: { MaterialShow },
   name: "material-table",
   props: {
     type: {
@@ -98,6 +101,7 @@ export default {
   },
   data() {
     return {
+      material_id: null,
       tableData: [],
       metaData: {},
       page: 1,
@@ -135,6 +139,14 @@ export default {
       }
       this.getMaterials(event, this.installation_id)
     },
+    handleView(id){
+      this.material_id = id,
+      this.modal = true
+    },
+    handleClose(){
+      this.modal = false
+      this.material_id = null
+    }
   },
 };
 </script>

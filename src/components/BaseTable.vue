@@ -1,5 +1,5 @@
 <template>
-  <table class="table tablesorter" :class="tableClass">
+  <table class="table tablesorter" :class="`${tableClass} ${tableSize}`">
     <thead :class="theadClasses">
       <tr>
         <slot name="columns" :columns="columns">
@@ -54,10 +54,17 @@ export default {
       default: "",
       description: "<tbody> css classes",
     },
+    size: {
+      type: String,
+      default:'sm'
+    }
   },
   computed: {
     tableClass() {
       return this.type && `table-${this.type}`;
+    },
+    tableSize() {
+      return `table-${this.size}`;
     },
     colsWithValue() {
       return (row) => {

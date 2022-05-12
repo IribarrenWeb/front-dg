@@ -41,7 +41,10 @@
         </div>
         <div v-else class="modal-header d-block border-bottom border-light" :class="[headerClasses]">
           <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center text-uppercase">
+            <div v-if="$slots.header_2">
+              <slot name="header_2"></slot>
+            </div>
+            <div v-else class="d-flex align-items-center text-uppercase">
               <h3>{{model}} {{this.$router.name}}</h3>
               <span class="text-muted h6 ml-md-1 text-capitalize"> - {{action}}</span>
             </div>
