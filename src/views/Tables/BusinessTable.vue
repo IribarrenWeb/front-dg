@@ -46,13 +46,13 @@
 						<router-link
 							:to="`/business/${row.item.id}`"
 							class="btn btn-sm btn-default"
-							>Ver</router-link
+							><i class="fa-regular fa-eye"></i></router-link
 						>
 						<a
 							href="#"
 							@click.prevent="destroy(row.item.id)"
 							class="btn btn-sm btn-outline-default"
-							>Eliminar</a
+							><i class="fa-regular fa-trash-can"></i></a
 						>
 					</td>
 				</template>

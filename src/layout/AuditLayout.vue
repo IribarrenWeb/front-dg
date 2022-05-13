@@ -158,7 +158,7 @@
             this.currentStep -= 1
             this.$router.push({name:`step.${this.currentStep}`})
           } catch (err) {
-            this.$toast.error('Error al cambiar de pagina');
+            this.$toast.error('Error al <i class="fa-solid fa-pencil"></i> de pagina');
           }
         }
       },
@@ -168,7 +168,7 @@
             this.currentStep = step
             this.$router.push({name:`step.${this.currentStep}`})
           } catch (err) {
-            this.$toast.error('Error al cambiar de pagina');
+            this.$toast.error('Error al <i class="fa-solid fa-pencil"></i> de pagina');
           }
       },
       next(step){

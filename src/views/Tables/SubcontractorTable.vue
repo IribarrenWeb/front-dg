@@ -11,6 +11,9 @@
 					</h3>
 				</div>
 				<div class="col text-right">
+                    <base-button type="default" size="sm" :outline="true" @click.prevent=""
+						><i class="fa-solid fa-list-check"></i>Checklist</base-button
+					>
 					<base-button type="default" size="sm" @click="this.modal = true"
 						>Agregar</base-button
 					>
@@ -29,9 +32,10 @@
 				<template v-slot:columns>
 					<th>Servicio(s)</th>
 					<th>Nombre</th>
-					<th>DNI</th>
-					<th>Email</th>
+					<th>Apellido</th>
+					<th>DNI/CIF/NIF</th>
 					<th>Móvil</th>
+					<th>Email</th>
 					<th>Fecha</th>
 					<th></th>
 					<th></th>
@@ -41,11 +45,14 @@
 					<th scope="row">
 						{{ row.item.service }}
 					</th>
-					<td class="budget">{{ row.item.name }} {{ row.item.last_name }}</td>
+					<td class="budget">{{ row.item.name }}</td>
+                    <td class="budget">
+                        {{ row.item.last_name }}
+                    </td>
+					<td>{{ row.item.email }}</td>
 					<td>
 						{{ row.item.phone_number }}
 					</td>
-					<td>{{ row.item.email }}</td>
 					<td>{{ row.item.documents[0].document_date }}</td>
 					<td>
 						<a href="#" @click.prevent="getDocument(row.item.documents[0].id)">
@@ -57,7 +64,7 @@
 							class="btn btn-danger btn-sm"
 							href="#"
 							@click.prevent="destroy(row.item.id)"
-							>Eliminar</a
+							><i class="fa-regular fa-trash-can"></i></a
 						>
 					</td>
 				</template>

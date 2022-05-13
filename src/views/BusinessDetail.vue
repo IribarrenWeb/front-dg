@@ -3,56 +3,57 @@
 		<base-header type="gradient-default" class="py-5"> </base-header>
 
 		<div class="container-fluid mt-4">
-			<div class="card" v-if="business != null">
-				<table class="table table-responsive-xl table-sm table-bordered">
+			<div class="card overflow-auto" v-if="business != null">
+				<table class="table table-sm table-bordered">
 					<thead>
-						<tr>
-							<th scope="col">Nombre</th>
-							<th scope="col">DNI</th>
-							<th scope="col">Email</th>
-							<th scope="col">Movil</th>
-							<th scope="col">CIF/NIF</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{ business.user.name }}</td>
-							<td>{{ business.property_dni }}</td>
-							<td>{{ business.user.email }}</td>
-							<td>{{ business.property_phone }}</td>
-							<td>{{ business.business_nif }}</td>
-						</tr>
-						<tr class="text-uppercase">
+                        <tr class="text-uppercase">
 							<th scope="row">Nombre empresa</th>
-							<th scope="row">Provincia</th>
+							<th scope="col">CIF/NIF</th>
 							<th scope="row">Ciudad</th>
+							<th scope="row">Provincia</th>
+							<th scope="row">Codigo postal</th>
 							<th scope="row">Pais</th>
 							<th scope="row">Instalaciones</th>
 						</tr>
+						
+					</thead>
+					<tbody>
 						<tr>
 							<td>{{ business.business_name }}</td>
-							<td>{{ business.province.name }}</td>
+							<td>{{ business.business_nif }}</td>
 							<td>{{ business.province.city.name }}</td>
+							<td>{{ business.province.name }}</td>
+							<td>{{ business.postal_code }}</td>
 							<td>ESPANA</td>
 							<td>{{ business.installations_count }}</td>
 						</tr>
 						<tr class="text-uppercase">
-							<th scope="row">Codigo postal</th>
+							<th scope="col">Nombre Responsable</th>
+							<th scope="col">DNI</th>
+							<th scope="col">Email</th>
+							<th colspan="4" scope="col">Movil</th>
+						</tr>
+                        <tr>
+							<td>{{ business.user.name }}</td>
+							<td>{{ business.property_dni }}</td>
+							<td>{{ business.user.email }}</td>
+							<td colspan="4">{{ business.property_phone }}</td>
+						</tr>
+						<tr class="text-uppercase">
 							<th scope="row">Fecha de ALTA</th>
-							<th colspan="3" scope="row">Documentacion</th>
+							<th colspan="6" scope="row">Documentacion</th>
 						</tr>
 						<tr>
-							<td>{{ business.postal_code }}</td>
 							<td>
 								{{ formatDate(business.documents[0].document_date, "en-GB") }}
 							</td>
-							<td colspan="3">
+							<td colspan="6">
 								<a
 									href="#"
 									@click.prevent="getDocument(business.documents[0].id)"
 								>
 									<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-									Documentacion
+									Documentación
 								</a>
 							</td>
 						</tr>

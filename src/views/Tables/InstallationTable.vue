@@ -21,8 +21,8 @@
 				<template v-slot:columns>
 					<th>Nombre</th>
 					<th>Direccion</th>
-					<th>Empleados</th>
 					<th>Provincia</th>
+					<th>Empleados</th>
 					<th>Auditor</th>
 					<th>Acciones</th>
 				</template>
@@ -34,11 +34,11 @@
 					<td class="text-uppercase">
 						{{ row.item.address }}
 					</td>
-					<td>
-						{{ row.item.employees.length }}
-					</td>
 					<td class="text-uppercase">
 						{{ row.item.province.name }}
+					</td>
+					<td>
+						{{ row.item.employees.length }}
 					</td>
 					<td class="text-uppercase">
 						<a href="#" @click="showAuditor()"
@@ -51,13 +51,13 @@
 							href="#"
 							@click.prevent="view(row.item.id)"
 							class="btn btn-sm btn-default"
-							>Ver</a
+							><i class="fa-regular fa-eye"></i></a
 						>
 						<a
 							href="#"
 							@click.prevent="destroy(row.item.id)"
 							class="btn btn-sm btn-outline-default"
-							>Eliminar</a
+							><i class="fa-regular fa-trash-can"></i></a
 						>
 					</td>
 				</template>

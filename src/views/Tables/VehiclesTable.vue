@@ -32,8 +32,8 @@
 					<th>Tara</th>
 					<th>MMA</th>
 					<th>Tipo</th>
-					<th>Kit ADR</th>
 					<th>Designacion ADR</th>
+					<th>Kit ADR</th>
 					<th>Estado</th>
 					<th></th>
 				</template>
@@ -50,8 +50,8 @@
 					</td>
 					<td>{{ row.item.mma }}</td>
 					<td>{{ row.item.type.name }}</td>
-					<td>{{ row.item.adr_kit }}</td>
 					<td>{{ row.item.adr.code }}</td>
+					<td>{{ row.item.adr_kit }}</td>
 					<td>
 						<badge
 							class="badge-dot mr-4"
@@ -59,19 +59,19 @@
 						>
 							<i :class="`bg-${setStatusType(row.item.status)}`"></i>
 							<span class="status">{{
-								row.item.status ? "REVISADO" : "POR REVISAR"
+								row.item.status ? "VIGENTE" : "CADUCADO"
 							}}</span>
 						</badge>
 					</td>
 					<td class="text-right">
 						<!-- <a class="btn btn-primary btn-sm" href="#" @click.prevent=""
-              >Ver</a
+              ><i class="fa-regular fa-eye"></i></a
             > -->
 						<a
 							class="btn btn-danger btn-sm"
 							href="#"
 							@click.prevent="destroy(row.item.id)"
-							>Eliminar</a
+							><i class="fa-regular fa-trash-can"></i></a
 						>
 					</td>
 				</template>
@@ -102,10 +102,12 @@
 	</div>
 </template>
 <script>
+	import utils from "@/mixins/utils-mixin";
 	import FormVehicle from "../../components/forms/FormVehicle.vue";
 	import service from "../../store/services/model-service";
 
 	export default {
+        mixins: [utils],
 		components: { FormVehicle },
 		name: "vehicle-table",
 		props: {

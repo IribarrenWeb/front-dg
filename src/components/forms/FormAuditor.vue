@@ -25,7 +25,7 @@
           <base-field name="delegate" label="Delegado">
               <div v-if="model.delegate != null">
                   <span class="mr-md-4 text-uppercase">{{model.delegate.user.name}} {{model.delegate.user.last_name}}</span>
-                  <base-button @click="model.delegate = null" size="sm" type="default" :outline="true">Cambiar</base-button>
+                  <base-button @click="model.delegate = null" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
               </div>
               <div v-show="model.delegate == null">
                   <field-validate name="delegate" label="Delegado" :rules="{'required':model.delegate == null}" v-slot="{ field }" v-model="model.delegate">
@@ -42,7 +42,7 @@
                       >
                       </Multiselect>
                   </field-validate>
-                  <base-button v-if="update" @click="reset('delegate')" size="sm" type="default" :outline="true">Cancelar</base-button>
+                  <base-button v-if="update" @click="reset('delegate')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>
@@ -69,14 +69,14 @@
           <base-field name="province_id" label="Provincia">
             <div v-if="update && !prov_update" class="d-flex">
               <input type="text" class="form-control mr-md-3" disabled :value="model.province.name">
-              <base-button @click="prov_update = true" size="sm" type="default" :outline="true">Cambiar</base-button>
+              <base-button @click="prov_update = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
             </div>
             <div v-show="!update || prov_update">
               <field-validate class="form-control" as="select" name="province_id" :rules="{'required':!update || prov_update}" label="Provincia" v-model="model.province_id">
                   <option value="" selected>Selecciona una provincia</option>
                   <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
               </field-validate>
-              <base-button v-if="update" @click="reset('province')" size="sm" type="default" :outline="true">Cancelar</base-button>
+              <base-button v-if="update" @click="reset('province')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
             </div>
           </base-field>
         </div>
@@ -93,11 +93,11 @@
           <base-field   name="file_certification" label="Documento de ceritificado">
               <div v-if="cert_document && !cer_update">
                   <a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{cert_document.type.name}}</a>
-                  <base-button @click="cer_update = true" size="sm" type="default" :outline="true">Cambiar</base-button>
+                  <base-button @click="cer_update = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
               </div>
               <div v-show="!cert_document || cer_update">
                 <field-validate class="form-control"  type="file" name="file_certification" :rules="{'required':!cert_document || cer_update, ext:['pdf']}" label="documento certificado" v-model="model.file_certification"/>
-                <base-button v-if="update" @click="reset('file_cer')" size="sm" type="default" :outline="true">Cancelar</base-button>
+                <base-button v-if="update" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>
@@ -112,11 +112,11 @@
           <base-field   name="file_firm" label="Documento de alta">
               <div v-if="firm_document && !firm_update">
                   <a href="#" @click.prevent="getDocument(firm_document.id)" class="mr-md-4">{{firm_document.type.name}}</a>
-                  <base-button @click="firm_update = true" size="sm" type="default" :outline="true">Cambiar</base-button>
+                  <base-button @click="firm_update = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
               </div>
               <div v-show="firm_update || !firm_document">
                 <field-validate class="form-control" type="file" name="file_firm" :rules="{'required':firm_update || !firm_document, ext:['pdf']}" label="documento alta" v-model="model.file_firm"/>
-                <base-button v-if="update" @click="firm_update = false" size="sm" type="default" :outline="true">Cancelar</base-button>
+                <base-button v-if="update" @click="firm_update = false" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>

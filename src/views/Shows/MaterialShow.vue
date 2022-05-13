@@ -54,7 +54,7 @@
 									{{ op.name }},
 								</span>
 							</td>
-							<td>{{ material.deposit.name }}</td>
+							<td>{{ material.equipment.name }}</td>
 							<td>{{ material.name }}</td>
 						</tr>
 						<tr class="text-uppercase">
@@ -128,6 +128,7 @@
 				</div>
 			</div>
 			<div
+                v-if="document"
 				class="
 					col-md-6
 					border
@@ -140,8 +141,10 @@
 				"
 			>
 				<div class="col-12 d-flex justify-content-around">
-					<h4>Ficha de datos de seguridad</h4>
-					<i class="fa fa-file-pdf" aria-hidden="true"></i>
+                    <a href="#" @click.prevent="getDocument(document.id)">
+                        <h4>Ficha de datos de seguridad <i class="fa-regular fa-file-pdf"></i></h4>
+                        
+                    </a>
 				</div>
 			</div>
 		</div>
@@ -162,8 +165,10 @@
 	import { mapGetters } from "vuex";
 	import _ from "lodash";
 	import service from "../../store/services/model-service";
+	import utils from "@/mixins/utils-mixin";
 
 	export default {
+        mixins: [utils],
 		name: "material-show",
 		props: ["id"],
 		data() {
@@ -178,7 +183,7 @@
 					const res = await service.show(
 						"material",
 						id,
-						"includes[]=installation.operations&includes[]=installation.province.city&includes[]=deposit"
+						"includes[]=installation.operations&includes[]=installation.province.city&includes[]=equipment&includes[]=documents"
 					);
 					this.material = this.COPY(res.data.data);
 					console.log(this.material);
@@ -194,6 +199,9 @@
 					length: 25,
 				});
 			},
+            document(){
+                return _.isEmpty(this.material.documents) ? false : this.material.documents[0]
+            }
 		},
 		watch: {
 			id: {

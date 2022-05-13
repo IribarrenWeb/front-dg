@@ -38,20 +38,22 @@
 						{{ row.item.phone_number }}
 					</td>
 					<td>
-						<span class="d-block">{{
-							this.formatDate(row.item.formation_document.document_date, "GB")
-						}}</span>
-						<a
-							href="#"
-							class="text-uppercase d-block"
-							@click.prevent="getDocument(row.item.formation_document.id)"
-						>
-							<i class="fa fa-file-pdf" aria-hidden="true"></i>
-							{{ row.item.formation_document.type.name }}
-						</a>
+                        <div v-if="row.item.formation_document != null">
+                            <span class="d-block">{{
+                                this.formatDate(row.item.formation_document.document_date, "GB")
+                            }}</span>
+                            <a
+                                href="#"
+                                class="text-uppercase d-block"
+                                @click.prevent="getDocument(row.item.formation_document.id)"
+                            >
+                                <i class="fa fa-file-pdf" aria-hidden="true"></i>
+                                {{ row.item.formation_document.type.name }}
+                            </a>
+                        </div>
 					</td>
 					<td>
-						<!-- <a href="#" class="btn btn-sm btn-default">Ver</a> -->
+						<!-- <a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a> -->
 					</td>
 				</template>
 			</base-table>

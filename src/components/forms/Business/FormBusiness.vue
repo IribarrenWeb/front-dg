@@ -39,12 +39,12 @@
 							</base-field>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="property_dni" label="Dni">
+							<base-field name="property_dni" label="DNI">
 								<field-validate
 									type="text"
-									class="form-control"
+									class="form-control text-uppercase"
 									name="property_dni"
-									rules="required|min:4|max:15"
+									rules="required|min:8|max:10"
 									label="dni"
 									v-model.trim="model.property_dni"
 								/>
@@ -115,6 +115,18 @@
 								/>
 							</base-field>
 						</div>
+                        <div class="col-lg-4">
+							<base-field name="address" label="Dirección">
+								<field-validate
+									type="text"
+									class="form-control"
+									name="address"
+									rules="required"
+									label="dirección"
+									v-model.number="model.address"
+								/>
+							</base-field>
+						</div>
 						<div class="col-lg-4">
 							<base-field name="province_id" label="Provincia">
 								<field-validate
@@ -142,7 +154,7 @@
 									type="number"
 									class="form-control"
 									name="postal_code"
-									rules="required|numeric|min:2|max:4"
+									rules="required|numeric|min:5|max:6"
 									label="postal_code"
 									v-model="model.postal_code"
 								/>
@@ -162,7 +174,7 @@
 								type="text"
 								class="form-control"
 								name="holder_name"
-								rules="required|"
+								rules="required|alpha_spaces"
 								label="nombre"
 								v-model="model.holder_name"
 							/>
@@ -171,10 +183,10 @@
 					<div class="col-lg-4">
 						<base-field name="bank_code" label="BIC/SWIFT">
 							<field-validate
-								type="number"
+								type="text"
 								class="form-control"
 								name="bank_code"
-								rules="required|min:5|max:20"
+								rules="required|min:5|max:20|alpha_num"
 								label="BIC/SWIFT"
 								v-model="model.bank_code"
 							/>
@@ -195,7 +207,7 @@
 				</div>
 				<div class="row border border-light mt-3 rounded p-2">
 					<div class="col-12">
-						<h4>Documentación</h4>
+						<h4>Documentación de la empresa</h4>
 					</div>
 					<div class="col-lg-6">
 						<base-field name="file_date.date" label="Fecha de documentación">
@@ -220,7 +232,7 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									>Cambiar</base-button
+									><i class="fa-solid fa-pencil"></i></base-button
 								>
 							</div>
 							<field-validate
@@ -245,7 +257,7 @@
 					<div class="col-lg-4">
 						<base-field
 							:name="`installations[${id}].name`"
-							label="Nombre de instalacion"
+							label="Nombre de instalación"
 						>
 							<field-validate
 								type="text"
@@ -260,7 +272,7 @@
 					<div class="col-lg-4">
 						<base-field
 							:name="`installations[${id}].address`"
-							label="Direccion"
+							label="Dirección"
 						>
 							<field-validate
 								type="text"
@@ -284,7 +296,7 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									>Cambiar</base-button
+									><i class="fa-solid fa-pencil"></i></base-button
 								>
 							</div>
 							<div v-else>
@@ -337,7 +349,7 @@
 					<div class="col-lg-6">
 						<base-field
 							:name="`installations[${id}].file_document.base64`"
-							label="Documentacion"
+							label="Documentación"
 						>
 							<div v-if="installations[id].file_document.file.length >= 1">
 								<span class="mr-md-4">{{
@@ -348,7 +360,7 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									>Cambiar</base-button
+									><i class="fa-solid fa-pencil"></i></base-button
 								>
 							</div>
 							<field-validate
@@ -358,7 +370,7 @@
 								:name="`installations[${id}].file_document.base64`"
 								rules="required|ext:pdf"
 								:validateOnInput="true"
-								label="documentacion"
+								label="documentación"
 								v-model="installations[id].file_document.file"
 							/>
 						</base-field>
@@ -370,7 +382,7 @@
 							:outline="true"
 							@click="remove(id)"
 							:disabled="installations.length == 1"
-							>Eliminar</base-button
+							><i class="fa-regular fa-trash-can"></i></base-button
 						>
 					</div>
 				</fieldset>
@@ -380,7 +392,7 @@
 						@click="handlePush()"
 						:disabled="installations.length >= 3"
 					>
-						Agregrar instalacion +
+						Agregrar instalación +
 					</base-button>
 				</div>
 			</template>
@@ -437,7 +449,7 @@
 							<base-field
 								:apiName="`installations.${id}.responsible.dni`"
 								name="dni"
-								label="Dni"
+								label="DNI"
 							>
 								<field-validate
 									type="number"
@@ -502,12 +514,12 @@
 					</div>
 					<div class="row border rounded border-light px-4 py-2 mt-3 mx-0">
 						<div class="col-12 border-bottom border-light mb-md-3">
-							<h4>Documentacion</h4>
+							<h4>Documentación</h4>
 						</div>
 						<div class="col-lg-6">
 							<base-field
 								:name="`installations.${id}.responsible.date_firm.date`"
-								label="Fecha de firma"
+								label="Fecha de alta"
 							>
 								<field-validate
 									type="date"
@@ -519,7 +531,7 @@
 								/>
 							</base-field>
 						</div>
-						<div class="col-lg-6">
+                        <div class="col-lg-6">
 							<base-field
 								:name="`installations.${id}.responsible.file_firm.base64`"
 								label="Documento de Alta"
@@ -537,7 +549,7 @@
 										size="sm"
 										type="default"
 										:outline="true"
-										>Cambiar</base-button
+										><i class="fa-solid fa-pencil"></i></base-button
 									>
 								</div>
 								<field-validate
@@ -551,6 +563,85 @@
 								/>
 							</base-field>
 						</div>
+                        <div class="col-lg-12">
+							<div class="row">
+								<div class="col-lg-2">
+									<base-switch
+										v-model="installations[id].responsible.dangerous_goods"
+										:value="
+											installations[id].responsible.dangerous_goods != 0
+												? true
+												: false
+										"
+										label="Mercancias peligrosas"
+									></base-switch>
+								</div>
+								<div
+									v-if="installations[id].responsible.dangerous_goods"
+									class="col-lg-5"
+								>
+									<base-field
+										apiName="responsible.date_certification"
+										name="date_cer"
+										label="Fecha de formación"
+									>
+										<field-validate
+											type="date"
+											class="form-control"
+											name="date_cer"
+											rules="required"
+											label="fecha"
+											v-model="installations[id].responsible.date_certification"
+										/>
+									</base-field>
+								</div>
+								<div
+									v-if="installations[id].responsible.dangerous_goods"
+									class="col-lg-5"
+								>
+									<base-field
+										apiName="responsible.file_certification"
+										name="file_cer"
+										label="Documento de formación"
+									>
+										<div
+											v-if="
+												installations[id].responsible.file_certification.file
+													.length >= 1
+											"
+										>
+											<span class="mr-md-4">{{
+												installations[id].responsible.file_certification.file[0]
+													.name
+											}}</span>
+											<base-button
+												@click="
+													installations[
+														id
+													].responsible.file_certification.file = []
+												"
+												size="sm"
+												type="default"
+												:outline="true"
+												><i class="fa-solid fa-pencil"></i></base-button
+											>
+										</div>
+										<field-validate
+											v-else
+											type="file"
+											class="form-control"
+											name="file_cer"
+											rules="required"
+											label="documento"
+											v-model="
+												installations[id].responsible.file_certification.file
+											"
+										/>
+									</base-field>
+								</div>
+							</div>
+						</div>
+						
 						<div class="col-lg-12">
 							<div class="row">
 								<div class="col-lg-2">
@@ -632,7 +723,7 @@
 												size="sm"
 												type="default"
 												:outline="true"
-												>Cambiar</base-button
+												><i class="fa-solid fa-pencil"></i></base-button
 											>
 										</div>
 										<field-validate
@@ -644,85 +735,6 @@
 											label="documento"
 											v-model="
 												installations[id].responsible.driver_document.file
-											"
-										/>
-									</base-field>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-lg-12">
-							<div class="row">
-								<div class="col-lg-2">
-									<base-switch
-										v-model="installations[id].responsible.dangerous_goods"
-										:value="
-											installations[id].responsible.dangerous_goods != 0
-												? true
-												: false
-										"
-										label="Mercancias peligrosas"
-									></base-switch>
-								</div>
-								<div
-									v-if="installations[id].responsible.dangerous_goods"
-									class="col-lg-5"
-								>
-									<base-field
-										apiName="responsible.date_certification"
-										name="date_cer"
-										label="Fecha de formación"
-									>
-										<field-validate
-											type="date"
-											class="form-control"
-											name="date_cer"
-											rules="required"
-											label="fecha"
-											v-model="installations[id].responsible.date_certification"
-										/>
-									</base-field>
-								</div>
-								<div
-									v-if="installations[id].responsible.dangerous_goods"
-									class="col-lg-5"
-								>
-									<base-field
-										apiName="responsible.file_certification"
-										name="file_cer"
-										label="Documento de formación"
-									>
-										<div
-											v-if="
-												installations[id].responsible.file_certification.file
-													.length >= 1
-											"
-										>
-											<span class="mr-md-4">{{
-												installations[id].responsible.file_certification.file[0]
-													.name
-											}}</span>
-											<base-button
-												@click="
-													installations[
-														id
-													].responsible.file_certification.file = []
-												"
-												size="sm"
-												type="default"
-												:outline="true"
-												>Cambiar</base-button
-											>
-										</div>
-										<field-validate
-											v-else
-											type="file"
-											class="form-control"
-											name="file_cer"
-											rules="required"
-											label="documento"
-											v-model="
-												installations[id].responsible.file_certification.file
 											"
 										/>
 									</base-field>

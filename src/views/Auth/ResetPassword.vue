@@ -30,7 +30,7 @@
                   <span class="visually-hidden">Ejecutando...</span>
                 </div>
                 <span v-else>
-                  Cambiar contrasena
+                  <i class="fa-solid fa-pencil"></i> contrasena
                 </span>
               </base-button>
             </div>

@@ -48,7 +48,7 @@
 							href="#"
 							@click.prevent="handleView(row.item.id)"
 							class="btn btn-sm btn-default"
-							>Ver</a
+							><i class="fa-regular fa-eye"></i></a
 						>
 					</td>
 				</template>

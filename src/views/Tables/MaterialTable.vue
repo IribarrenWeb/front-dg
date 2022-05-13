@@ -27,42 +27,34 @@
 				:data="tableData"
 			>
 				<template v-slot:columns>
-					<th>Instalacion</th>
-					<th>Operaciones</th>
 					<th>UN</th>
 					<th>Nombre</th>
+					<th>Denominación</th>
 					<th>Clase</th>
-					<th>Grupo de embalaje</th>
+					<th>GE</th>
+					<th>Depósito</th>
+					<th>Cantidad</th>
 					<th></th>
 				</template>
 
 				<template v-slot:default="row">
-					<th scope="row">
-						{{ row.item.installation.name }}
-					</th>
-					<td class="budget">
-						<span
-							v-for="operation in row.item.installation.operations"
-							:key="operation.key"
-						>
-							{{ operation.name }},
-						</span>
-					</td>
 					<td>
 						{{ row.item.material.un_code }}
 					</td>
 					<td>{{ row.item.name }}</td>
+					<td>{{ row.item.material.denomination_name }}</td>
 					<td>{{ row.item.material.class.code }}</td>
-					<td>{{ row.item.material.packing.code }}</td>
+					<td>{{ row.item.equipment.name }}</td>
+					<td>{{ row.item.quantity }}</td>
 					<td class="text-right">
 						<a
 							class="btn btn-primary btn-sm"
 							href="#"
 							@click.prevent="handleView(row.item.id)"
-							>Ver</a
+							><i class="fa-regular fa-eye"></i></a
 						>
-						<a class="btn btn-outline-primary btn-sm" href="#" @click.prevent=""
-							>Eliminar</a
+						<a class="btn btn-outline-primary btn-sm" href="#" @click.prevent="destroy(row.item.id)"
+							><i class="fa-regular fa-trash-can"></i></a
 						>
 					</td>
 				</template>
@@ -110,8 +102,8 @@
 				default: null,
 			},
 			residue: {
-				type: Boolean,
-				default: false,
+				type: String,
+				default: 'false',
 			},
 			title: {
 				type: String,
@@ -132,14 +124,15 @@
 		},
 		methods: {
 			async getMaterials(page = 1, id = null) {
+                console.log('reload');
 				let params =
-					"includes[]=installation.operations&includes[]=material.class&includes[]=deposit&includes[]=material.packing";
+					"includes[]=material.class&includes[]=equipment&includes[]=material.packing";
 
 				if (id != null) {
 					params += "&installation_id=" + id;
 				}
 
-				if (this.residue == false) {
+				if (this.residue == 'false') {
 					params += "&is_residue=false";
 				} else {
 					params += "&is_residue=true";
@@ -165,6 +158,14 @@
 			handleClose() {
 				this.modal = false;
 				this.material_id = null;
+			},
+            async destroy(id) {
+				try {
+					await service.destroy("material", id)
+                    this.getMaterials(this.page,this.installation_id);
+				} catch (error) {
+					console.log(error);
+				}
 			},
 		},
 	};

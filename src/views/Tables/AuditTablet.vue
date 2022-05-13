@@ -99,7 +99,7 @@
 							</template>
 							<a class="dropdown-item" href="#" @click.prevent="">Archivar</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Agendar</a>
-							<a class="dropdown-item" href="#" @click.prevent="">Eliminar</a>
+							<a class="dropdown-item" href="#" @click.prevent=""><i class="fa-regular fa-trash-can"></i></a>
 							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
 							<router-link
 								class="dropdown-item"

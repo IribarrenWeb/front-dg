@@ -5,20 +5,20 @@
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
                     <div class="col-lg-4">
-                        <base-field   name="name" label="Nombre de instalacion">
+                        <base-field   name="name" label="Nombre de instalación">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="name" rules="required" label="Nombre" v-model="model.name"/>
                         </base-field>
                     </div>
                     <div class="col-lg-4">
-                        <base-field   name="address" label="Direccion">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="address" rules="required" label="direccion" v-model="model.address"/>
+                        <base-field   name="address" label="Dirección">
+                            <field-validate :disabled="isSaved" type="text" class="form-control" name="address" rules="required" label="dirección" v-model="model.address"/>
                         </base-field>
                     </div>
                     <div class="col-lg-4">
                         <base-field   name="auditable" label="Auditor">
                             <div v-if="model.auditable != null">
                                 <span class="mr-md-4 text-uppercase">{{model.auditable.user.name}} {{model.auditable.user.last_name}}</span>
-                                <base-button @click="model.auditable = null" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                <base-button @click="model.auditable = null" size="sm" type="default" :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                             </div>
                             <div v-else>
                                 <field-validate :disabled="isSaved" name="auditable" label="Auditor" rules="required" v-slot="{ field }" v-model="model.auditable">
@@ -48,10 +48,10 @@
                         </base-field>
                     </div>
                     <div class="col-lg-6">
-                        <base-field   name="file_document" label="Documentacion">
+                        <base-field   name="file_document" label="Documentación">
                             <div v-if="model.file_document.file.length >= 1">
                                 <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
-                                <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                             </div>
                             <field-validate :disabled="isSaved" v-show="!model.file_document.file.length >= 1" class="form-control" type="file" name="file_document" rules="required|ext:pdf" :validateOnInput="true" label="documentacion" v-model="model.file_document.file"/>
                         </base-field>
@@ -63,19 +63,39 @@
                 <div>
                     <div class="row border rounded border-light px-4 py-2">
                         <div class="col-lg-12">
-                            <base-field   name="operations" label="Tipos de operaciones">
-                                <div v-for="operation in operations" :key="operation.key" class="form-check">
-                                    <field-validate :disabled="isSaved"
-                                        type="checkbox" 
-                                        name="operations"
-                                        class="form-check-input" 
-                                        :value="operation.value"
-                                        v-model="model.operation_types_ids"
-                                        rules="required" label="operaciones">
-                                    </field-validate>
-                                    <label for="" class="form-check-label">{{operation.label}}</label>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <base-field   name="operations" label="Tipos de operaciones">
+                                        <div v-for="operation in operations" :key="operation.key" class="form-check">
+                                            <field-validate :disabled="isSaved"
+                                                type="checkbox" 
+                                                name="operations"
+                                                class="form-check-input" 
+                                                :value="operation.value"
+                                                v-model="model.operation_types_ids"
+                                                rules="required" label="operaciones">
+                                            </field-validate>
+                                            <label for="" class="form-check-label">{{operation.label}}</label>
+                                        </div>
+                                    </base-field>
                                 </div>
-                            </base-field>
+                                <div class="col-lg-6">
+                                    <base-field   name="deposits" label="Tipos de depósitos">
+                                        <div v-for="deposit in deposits" :key="deposit.key" class="form-check">
+                                            <field-validate :disabled="isSaved"
+                                                type="checkbox" 
+                                                name="deposits"
+                                                class="form-check-input" 
+                                                :value="deposit.value"
+                                                v-model="model.deposit_types_ids"
+                                                rules="required" label="depósitos">
+                                            </field-validate>
+                                            <label for="" class="form-check-label">{{deposit.label}}</label>
+                                        </div>
+                                    </base-field>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="row border rounded border-light px-4 py-2 mt-3">
@@ -116,8 +136,8 @@
                         </div>
 
                         <div class="col-lg-6 col-lg-4">
-                            <base-field   apiName="responsible.dni" name="dni" label="Dni">
-                                <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required|alpha_num|min:5|max:15" label="dni" v-model="model.responsible.dni"/>
+                            <base-field   apiName="responsible.dni" name="dni" label="DNI">
+                                <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required|alpha_num|min:8|max:10" label="dni" v-model="model.responsible.dni"/>
                             </base-field>
                         </div>
                         <div class="col-lg-6 col-lg-4">
@@ -151,12 +171,34 @@
                             <base-field   apiName="responsible.file_firm" name="file_firm" label="Documento de Alta">
                                 <div v-if="model.responsible.file_firm.file.length >= 1">
                                     <span class="mr-md-4">{{model.responsible.file_firm.file[0].name}}</span>
-                                    <base-button @click="model.responsible.file_firm.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                    <base-button @click="model.responsible.file_firm.file = []" size="sm" type="default" :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                                 </div>
                                 <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_firm" rules="required" label="documento" v-model="model.responsible.file_firm.file"/>
                             </base-field>
                         </div>
                         <!-- --------------------------------------- -->
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <base-switch v-model="model.responsible.dangerous_goods" :value="model.responsible.dangerous_goods != 0 ? true : false" :disabled="isSaved" label="Mercancias peligrosas"
+                                    ></base-switch>
+                                </div>
+                                <div v-if="model.responsible.dangerous_goods" class="col-lg-5">
+                                    <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formación">
+                                        <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification"/>
+                                    </base-field>
+                                </div>
+                                <div v-if="model.responsible.dangerous_goods" class="col-lg-5">
+                                    <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formación">
+                                        <div v-if="model.responsible.file_certification.file.length >= 1">
+                                            <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
+                                            <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
+                                        </div>
+                                        <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_cer" rules="required" label="documento" v-model="model.responsible.file_certification.file"/>
+                                    </base-field>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-12">
                             <div class="row">
                                 <div class="col-lg-2">
@@ -190,31 +232,9 @@
                                     <base-field   apiName="responsible.file_driver" name="file_driver" label="Documentacion ADR">
                                         <div v-if="model.responsible.driver_document.file.length >= 1">
                                             <span class="mr-md-4">{{model.responsible.driver_document.file[0].name}}</span>
-                                            <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
+                                            <base-button @click="model.responsible.driver_document.file = []" size="sm" type="default" :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                                         </div>
                                         <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_driver" rules="required" label="documento" v-model="model.responsible.driver_document.file"/>
-                                    </base-field>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-lg-2">
-                                    <base-switch v-model="model.responsible.dangerous_goods" :value="model.responsible.dangerous_goods != 0 ? true : false" :disabled="isSaved" label="Mercancias peligrosas"
-                                    ></base-switch>
-                                </div>
-                                <div v-if="model.responsible.dangerous_goods" class="col-lg-5">
-                                    <base-field   apiName="responsible.date_certification" name="date_cer" label="Fecha de formación">
-                                        <field-validate :disabled="isSaved" type="date" class="form-control" name="date_cer" rules="required" label="fecha" v-model="model.responsible.date_certification"/>
-                                    </base-field>
-                                </div>
-                                <div v-if="model.responsible.dangerous_goods" class="col-lg-5">
-                                    <base-field   apiName="responsible.file_certification" name="file_cer" label="Documento de formación">
-                                        <div v-if="model.responsible.file_certification.file.length >= 1">
-                                            <span class="mr-md-4">{{model.responsible.file_certification.file[0].name}}</span>
-                                            <base-button @click="model.responsible.file_certification.file = []" size="sm" type="default" :outline="true" :disabled="isSaved">Cambiar</base-button>
-                                        </div>
-                                        <field-validate :disabled="isSaved" v-else type="file" class="form-control" name="file_cer" rules="required" label="documento" v-model="model.responsible.file_certification.file"/>
                                     </base-field>
                                 </div>
                             </div>
@@ -228,10 +248,10 @@
             <!-- ------------------------------------------------------- -->
             <template v-if="currentStep == 4 && isSaved">
                 <div>
-                    <material-table :installation_id="installation_id" :residue="false"></material-table>
+                    <material-table :installation_id="installation_id" residue="false"></material-table>
                 </div>
                 <div class="mt-5">
-                    <material-table :installation_id="installation_id" :residue="true" title="Residuos"></material-table>
+                    <material-table :installation_id="installation_id" residue="true" title="Residuos"></material-table>
                 </div>
             </template>
             <!-- ------------------------------------------------------- -->
@@ -305,6 +325,7 @@ export default {
             touched: false,
             operations: [],
             equipments: [],
+            deposits: [],
             permits: {}
         }
     },
@@ -313,6 +334,7 @@ export default {
         this.loadEquipments()
         this.loadOperations()
         this.loadPermits();
+        this.loadDeposits();
         this.initVals()
     },
     methods:{
@@ -381,6 +403,14 @@ export default {
         async loadProvinces(){
             const res = await dataService.getProvinces()
             this.provinces = res.data.data;
+        },
+        async loadDeposits(){
+            const res = await dataService.getDeposits()
+            const data = res.data.data;
+            let deposits = _.map(data, (deposit) => {
+                return {value: deposit.id, label: deposit.name, checked: true}
+            })
+            this.deposits = deposits;
         },
         async loadPermits(){
             const res = await this.getPermits()

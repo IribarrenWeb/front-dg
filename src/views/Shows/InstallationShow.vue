@@ -55,8 +55,8 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									>Cambiar</base-button
-								>
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
 							</div>
 							<div v-show="new_auditable.new">
 								<field-validate
@@ -84,8 +84,8 @@
 										size="sm"
 										type="danger"
 										:outline="true"
-										>Cancelar</base-button
-									>
+										><i class="fa-solid fa-rotate-left"></i
+									></base-button>
 								</div>
 							</div>
 						</base-field>
@@ -93,16 +93,17 @@
 					<div class="col-lg-6">
 						<base-field name="province_id" label="Provincia">
 							<div v-if="!new_province.new">
-								<base-input :view="true" lable="Provincia">{{
-									model.province.name
-								}}</base-input>
-								<base-button
-									@click="new_province.new = true"
-									size="sm"
-									type="default"
-									:outline="true"
-									>Cambiar</base-button
-								>
+								<base-input :view="true" lable="Provincia">
+									{{ model.province.name }}
+
+									<base-button
+										@click="new_province.new = true"
+										size="sm"
+										type="default"
+										:outline="true"
+										><i class="fa-solid fa-pencil"></i
+									></base-button>
+								</base-input>
 							</div>
 							<field-validate
 								v-show="new_province.new"
@@ -129,8 +130,8 @@
 									size="sm"
 									type="danger"
 									:outline="true"
-									>Cancelar</base-button
-								>
+									><i class="fa-solid fa-rotate-left"></i
+								></base-button>
 							</div>
 						</base-field>
 					</div>
@@ -148,8 +149,8 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									>Cambiar</base-button
-								>
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
 							</div>
 							<field-validate
 								v-show="new_document.new"
@@ -168,8 +169,8 @@
 									size="sm"
 									type="danger"
 									:outline="true"
-									>Cancelar</base-button
-								>
+									><i class="fa-solid fa-rotate-left"></i
+								></base-button>
 							</div>
 						</base-field>
 					</div>
@@ -183,6 +184,52 @@
 					</base-button>
 				</div>
 			</form-validate>
+			<div class="row border rounded border-light px-1 py-1 mt-md-4 mt-2">
+				<div class="col-md-12">
+					<h4>Responsable de la instalación</h4>
+				</div>
+				<div class="col-md-12 overflow-auto p-0">
+					<table class="table table-sm"> 
+						<thead>
+							<tr>
+								<th>RESPONSABLE</th>
+								<th>DNI</th>
+								<th>MÓVIL</th>
+								<th>EMAIL</th>
+								<th>FORMACIÓN</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{{ responsible.name }} {{ responsible.last_name }}</td>
+								<td>{{ responsible.dni }}</td>
+								<td>{{ responsible.phone_number }}</td>
+								<td>{{ responsible.email }}</td>
+								<td>
+									<div v-if="responsible.formation_document != null">
+										<span class="d-block">{{
+											this.formatDate(
+												row.item.formation_document.document_date,
+												"GB"
+											)
+										}}</span>
+										<a
+											href="#"
+											class="text-uppercase d-block"
+											@click.prevent="
+												getDocument(row.item.formation_document.id)
+											"
+										>
+											<i class="fa fa-file-pdf" aria-hidden="true"></i>
+											{{ row.item.formation_document.type.name }}
+										</a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == 2">
@@ -204,33 +251,66 @@
 					</div>
 					<div class="row border rounded border-light px-4 py-2">
 						<div class="col-lg-12">
-							<base-field name="operations" label="Tipos de operaciones">
-								<div
-									v-for="operation in operations"
-									:key="operation.key"
-									class="form-check"
-								>
-									<div class="form-check">
-										<input
-											class="form-check-input"
-											type="checkbox"
-											:value="operation.value"
-											v-model="oper"
-											:disabled="!update"
-											:checked="operation.checked"
-										/>
-										<label class="form-check-label" for="flexCheckDefault">
-											{{ operation.label }}
-										</label>
-									</div>
+							<div class="row">
+								<div class="col-lg-6">
+									<base-field name="operations" label="Tipos de operaciones">
+										<div
+											v-for="operation in operations"
+											:key="operation.key"
+											class="form-check"
+										>
+											<div class="form-check">
+												<input
+													class="form-check-input"
+													type="checkbox"
+													:value="operation.value"
+													v-model="oper"
+													:disabled="!update"
+													:checked="operation.checked"
+												/>
+												<label class="form-check-label" for="flexCheckDefault">
+													{{ operation.label }}
+												</label>
+											</div>
+										</div>
+									</base-field>
+									<field-validate
+										v-show="false"
+										v-model="oper"
+										name="operation_ids"
+										rules="required"
+									/>
 								</div>
-							</base-field>
-							<field-validate
-								v-show="false"
-								v-model="oper"
-								name="operation_ids"
-								rules="required"
-							/>
+								<div class="col-lg-6">
+									<base-field name="deposits" label="Tipos de depósitos">
+										<div
+											v-for="deposit in deposits"
+											:key="deposit.key"
+											class="form-check"
+										>
+											<div class="form-check">
+												<input
+													class="form-check-input"
+													type="checkbox"
+													:value="deposit.value"
+													v-model="deps"
+													:disabled="!update"
+													:checked="deposit.checked"
+												/>
+												<label class="form-check-label" for="flexCheckDefault">
+													{{ deposit.label }}
+												</label>
+											</div>
+										</div>
+									</base-field>
+									<field-validate
+										v-show="false"
+										v-model="oper"
+										name="operation_ids"
+										rules="required"
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row border rounded border-light px-4 py-2 mt-3">
@@ -283,10 +363,13 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-        <template v-if="currentStep == 3"> 
-            <dashboard-employee :id="installation_id"></dashboard-employee>
-            <employees-table :installation_id="installation_id" :adr="true"></employees-table>
-        </template>
+		<template v-if="currentStep == 3">
+			<dashboard-employee :id="installation_id"></dashboard-employee>
+			<employees-table
+				:installation_id="installation_id"
+				:adr="true"
+			></employees-table>
+		</template>
 		<!-- ------------------------------------------------------- -->
 		<template v-if="currentStep == 4">
 			<div>
@@ -346,14 +429,22 @@
 	import VehiclesTable from "@/views/Tables/VehiclesTable.vue";
 	import SubcontractorTable from "@/views/Tables/SubcontractorTable.vue";
 	import Multiselect from "@vueform/multiselect";
-    import EmployeesTable from '../Tables/EmployeesTable.vue';
+	import EmployeesTable from "../Tables/EmployeesTable.vue";
 	import utils from "@/mixins/utils-mixin";
 
-    import DashboardEmployee from '../../components/Dashs/DashboardEmployee.vue';
+	import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
 	import _ from "lodash";
+	import { mapGetters } from "vuex";
 
 	export default {
-		components: { Multiselect, MaterialTable, VehiclesTable, SubcontractorTable, EmployeesTable, DashboardEmployee },
+		components: {
+			Multiselect,
+			MaterialTable,
+			VehiclesTable,
+			SubcontractorTable,
+			EmployeesTable,
+			DashboardEmployee,
+		},
 		name: "installation-show",
 		mixins: [utils],
 		props: {
@@ -373,6 +464,7 @@
 				update: false,
 				equips: [],
 				oper: [],
+				deps: [],
 				steps: [
 					{
 						number: 1,
@@ -384,7 +476,7 @@
 						title: "Operaciones",
 						valid: false,
 					},
-                    {
+					{
 						number: 3,
 						title: "Empleados",
 						valid: false,
@@ -416,7 +508,9 @@
 				currentStep: 1,
 				provinces: [],
 				operations: [],
+				deposits: [],
 				equipments: [],
+				responsible: null,
 			};
 		},
 		async created() {
@@ -424,6 +518,7 @@
 			await this.loadProvinces();
 			this.loadOperations();
 			this.loadEquipments();
+			this.loadDeposits();
 		},
 		methods: {
 			async onSubmit() {
@@ -451,6 +546,7 @@
 					data = {
 						operation_types_ids: this.oper,
 						equipments_ids: this.equips,
+						deposit_types_ids: this.deps,
 					};
 				}
 
@@ -468,9 +564,20 @@
 					const res = await service.show(
 						"installation",
 						this.installation_id,
-						"includes[]=operations&includes[]=equipments&includes[]=auditable.user&includes[]=documents.type&includes[]=province"
+						"includes[]=operations&includes[]=equipments&includes[]=auditable.user&includes[]=documents.type&includes[]=province&includes[]=depositTypes" +
+							"&responsible=true"
 					);
-					this.model = res.data.data;
+                    this.model = this.COPY(res.data.data);
+					this.responsible = this.COPY(res.data.data.responsible);
+                    let f_doc = null;
+                    _.forEach(this.responsible.documents, (doc) => {
+							if (doc.type.name == "CERTIFICADO") {
+								f_doc = doc;
+							}
+						});
+                    this.responsible.formation_document = f_doc;
+
+					this.model.responsible = null;
 				} catch (err) {
 					console.log(err);
 				}
@@ -517,6 +624,22 @@
 				this.operations = operations;
 				return;
 			},
+			async loadDeposits() {
+				const res = await dataService.getDeposits();
+				const data = res.data.data;
+				let ids = [];
+				let deposits = _.map(data, (deposit) => {
+					let checked = false;
+					return { value: deposit.id, label: deposit.name, checked: checked };
+				});
+				for (let i = 0; i < this.model.deposit_types.length; i++) {
+					const op = this.model.deposit_types[i];
+					ids.push(op.id);
+				}
+				this.deps = ids;
+				this.deposits = deposits;
+				return;
+			},
 			async loadEquipments() {
 				const res = await dataService.getEquipments();
 				const data = res.data.data;
@@ -552,6 +675,9 @@
 				};
 				this.update = false;
 			},
+		},
+		computed: {
+			...mapGetters(["COPY"]),
 		},
 	};
 </script>

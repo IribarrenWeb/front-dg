@@ -50,7 +50,7 @@
 						</badge>
 					</td>
 					<td>
-						<a href="#" class="btn btn-sm btn-default">Ver</a>
+						<a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a>
 					</td>
 				</template>
 			</base-table>

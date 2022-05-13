@@ -15,6 +15,7 @@ export const store = createStore({
                 property_phone: "",
                 property_dni: "",
                 business_phone: "",
+                address: "",
                 business_nif: "",
                 name: "",
                 last_name: "",
@@ -42,6 +43,7 @@ export const store = createStore({
                 },
                 auditable: null,
                 operation_types_ids: [],
+                deposit_types_ids: [],
                 equipments_ids: [],
                 responsible: {
                     name: "",

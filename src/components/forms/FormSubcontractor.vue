@@ -13,8 +13,8 @@
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
-                    <base-field   name="dni" label="DNI">
-                        <field-validate type="number" class="form-control" name="dni" rules="required" label="dni" v-model="model.dni"/>
+                    <base-field   name="dni" label="DNI/CIF/NIF">
+                        <field-validate type="number" class="form-control text-uppercase" name="dni" rules="required|alpha_num" label="dni" v-model="model.dni"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
@@ -41,7 +41,7 @@
                     <base-field   name="file_document" label="Documentacion">
                         <div v-if="model.file_document.file.length >= 1">
                             <span class="mr-md-4">{{model.file_document.file[0].name}}</span>
-                            <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true">Cambiar</base-button>
+                            <base-button @click="model.file_document.file = []" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
                         </div>
                         <field-validate v-show="!model.file_document.file.length >= 1" class="form-control" type="file" name="file_document" rules="required|ext:pdf" :validateOnInput="true" label="documentacion" v-model="model.file_document.file"/>
                     </base-field>

@@ -129,7 +129,7 @@
                                 size="sm"
                                 type="default"
                                 :outline="true"
-                                >Cambiar</base-button
+                                ><i class="fa-solid fa-pencil"></i></base-button
                             >
                         </div>
                         <field-validate
@@ -144,6 +144,63 @@
                     </base-field>
                 </div>
                 <!-- --------------------------------------- -->
+                
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <base-switch
+                                v-model="model.dangerous_goods"
+                                :value="model.dangerous_goods != 0 ? true : false"
+                                label="Mercancias peligrosas"
+                            ></base-switch>
+                        </div>
+                        <div v-if="model.dangerous_goods" class="col-lg-5">
+                            <base-field
+                                apiName="date_certification"
+                                name="date_cer"
+                                label="Fecha de formación"
+                            >
+                                <field-validate
+                                    type="date"
+                                    class="form-control"
+                                    name="date_cer"
+                                    rules="required"
+                                    label="fecha"
+                                    v-model="model.date_certification"
+                                />
+                            </base-field>
+                        </div>
+                        <div v-if="model.dangerous_goods" class="col-lg-5">
+                            <base-field
+                                apiName="file_certification"
+                                name="file_cer"
+                                label="Documento de formación"
+                            >
+                                <div v-if="model.file_certification.file.length >= 1">
+                                    <span class="mr-md-4">{{
+                                        model.file_certification.file[0].name
+                                    }}</span>
+                                    <base-button
+                                        @click="model.file_certification.file = []"
+                                        size="sm"
+                                        type="default"
+                                        :outline="true"
+                                        ><i class="fa-solid fa-pencil"></i></base-button
+                                    >
+                                </div>
+                                <field-validate
+                                    v-else
+                                    type="file"
+                                    class="form-control"
+                                    name="file_cer"
+                                    rules="required"
+                                    label="documento"
+                                    v-model="model.file_certification.file"
+                                />
+                            </base-field>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-2">
@@ -208,7 +265,7 @@
                                         size="sm"
                                         type="default"
                                         :outline="true"
-                                        >Cambiar</base-button
+                                        ><i class="fa-solid fa-pencil"></i></base-button
                                     >
                                 </div>
                                 <field-validate
@@ -219,62 +276,6 @@
                                     rules="required"
                                     label="documento"
                                     v-model="model.driver_document.file"
-                                />
-                            </base-field>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col-lg-2">
-                            <base-switch
-                                v-model="model.dangerous_goods"
-                                :value="model.dangerous_goods != 0 ? true : false"
-                                label="Mercancias peligrosas"
-                            ></base-switch>
-                        </div>
-                        <div v-if="model.dangerous_goods" class="col-lg-5">
-                            <base-field
-                                apiName="date_certification"
-                                name="date_cer"
-                                label="Fecha de formación"
-                            >
-                                <field-validate
-                                    type="date"
-                                    class="form-control"
-                                    name="date_cer"
-                                    rules="required"
-                                    label="fecha"
-                                    v-model="model.date_certification"
-                                />
-                            </base-field>
-                        </div>
-                        <div v-if="model.dangerous_goods" class="col-lg-5">
-                            <base-field
-                                apiName="file_certification"
-                                name="file_cer"
-                                label="Documento de formación"
-                            >
-                                <div v-if="model.file_certification.file.length >= 1">
-                                    <span class="mr-md-4">{{
-                                        model.file_certification.file[0].name
-                                    }}</span>
-                                    <base-button
-                                        @click="model.file_certification.file = []"
-                                        size="sm"
-                                        type="default"
-                                        :outline="true"
-                                        >Cambiar</base-button
-                                    >
-                                </div>
-                                <field-validate
-                                    v-else
-                                    type="file"
-                                    class="form-control"
-                                    name="file_cer"
-                                    rules="required"
-                                    label="documento"
-                                    v-model="model.file_certification.file"
                                 />
                             </base-field>
                         </div>
@@ -298,7 +299,7 @@
                     :outline="true"
                     class="ml-auto"
                     @click="handleClose(resetForm)"
-                    >Cancelar
+                    ><i class="fa-solid fa-rotate-left"></i>
                 </base-button>
             </div>
         </form-validate>
@@ -353,7 +354,7 @@
             },
             handleRep(){
                 if (this.model.representative) {
-                    this.$swal('¿Estas seguro?', 'Esto cambiara el representante de la instalación', 'warning')
+                    this.$swal('¿Estas seguro?', 'Esto <i class="fa-solid fa-pencil"></i>a el representante de la instalación', 'warning')
                 }
             },
             handleClose(reset){
