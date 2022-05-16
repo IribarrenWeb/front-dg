@@ -26,7 +26,8 @@ const apis = {
     audit: "audits",
     employee: "employees",
     installation: "installations",
-    material: "materials"
+    material: "materials",
+    audit_image: "audit-images",
 }
 
 async function getIndex(model, page = 1, params) {
@@ -196,7 +197,10 @@ function update(model, id, data, multipart = false) {
     }
     return axios.post(`${url}/${apis[model]}/${id}?_method=PUT`, data, options).then((response) => {
         storage.commit('loading');
-        toaster.success(response.data.message)
+
+        let message = getMessage(response) ? response.data.message : 'Registro actualizado'
+
+        toaster.success(message)
         return response
     }).catch(err => {
         storage.commit('loading');
@@ -288,6 +292,14 @@ function errors(code, message = null) {
             // router.back()
             $swal.fire('Error inesperado', message != null ? message : 'Ocurrio un error inesperado', 'error')
             break;
+    }
+}
+
+function getMessage(res) {
+    if (typeof res.data.message != 'undefined') {
+        return true
+    } else {
+        return false
     }
 }
 

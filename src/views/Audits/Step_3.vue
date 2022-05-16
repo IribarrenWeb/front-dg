@@ -90,7 +90,7 @@
 									/>
 								</base-field>
 							</div>
-							<div class="col-md-2 d-flex">
+							<div class="col-md-2 d-flex justify-content-center">
 								<div class="align-self-center">
 									<base-button size="sm" nativeType="submit" :outline="true">
 										<i class="fa fa-plus" aria-hidden="true"></i>
@@ -121,7 +121,7 @@
 								disabled
 							/>
 						</div>
-						<div class="col-md-2 d-flex">
+						<div class="col-md-2 d-flex justify-content-center">
 							<div class="align-self-center">
 								<base-button
 									size="sm"
@@ -145,58 +145,94 @@
 					</h6>
 					<form-validate @submit="addMaterial($event, 'deposit')">
 						<div class="row">
-							<div class="col-md-3">
-								<base-field name="un_code" label="UN">
-									<field-validate
-										as="select"
-										class="form-control"
-										name="un_code"
-										label="un"
-										rules="required"
-										v-model="deposit.index"
-									>
-										<option selected>UN</option>
-										<option
-											:value="idx"
-											v-for="(r, idx) in audit.installation.deposits"
-											:key="idx"
-										>
-											{{ r.material.un_code }}
-										</option>
-									</field-validate>
-								</base-field>
+							<div class="col-md-11">
+								<div class="row">
+									<div class="col-md-2">
+										<base-field name="un_code" label="UN">
+											<field-validate
+												as="select"
+												class="form-control"
+												name="un_code"
+												label="un"
+												rules="required"
+												v-model="deposit.index"
+											>
+												<option selected>UN</option>
+												<option
+													:value="idx"
+													v-for="(r, idx) in audit.installation.deposits"
+													:key="idx"
+												>
+													{{ r.material.un_code }}
+												</option>
+											</field-validate>
+										</base-field>
+									</div>
+									<div class="col-md-5">
+										<base-input
+											:view="true"
+											:modelValue="deposit.name"
+											label="Nombre"
+											disabled
+										/>
+									</div>
+									<div class="col-md-5">
+										<base-input
+											:view="true"
+											:modelValue="
+												deposit.material != null
+													? deposit.material.denomination_name
+													: ``
+											"
+											label="Denominación"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="
+												deposit.material != null
+													? deposit.material.class.code
+													: ``
+											"
+											label="Clase"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="
+												deposit.material != null
+													? deposit.material.packing.code
+													: ``
+											"
+											label="GE"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="
+												deposit.equipment != null ? deposit.equipment.name : ``
+											"
+											label="Deposito"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="deposit.quantity"
+											label="Cantidad"
+											disabled
+										/>
+									</div>
+								</div>
 							</div>
-							<div class="col-md-2">
-								<base-input
-									:view="true"
-									:modelValue="
-										deposit.material != null ? deposit.material.class.code : ``
-									"
-									label="Clase"
-									disabled
-								/>
-							</div>
-							<div class="col-md-2">
-								<base-input
-									:view="true"
-									:modelValue="
-										deposit.material != null
-											? deposit.material.packing.code
-											: ``
-									"
-									label="GE"
-									disabled
-								/>
-							</div>
-							<div class="col-md-3">
-								<base-input
-									:view="true"
-									:modelValue="deposit.material != null ? deposit.buy : ``"
-									label="Cantidad"
-									disabled
-								/>
-							</div>
-							<div class="col-md-2 d-flex">
+							<div class="col-md-1 d-flex">
 								<div class="align-self-center">
 									<base-button size="sm" nativeType="submit" :outline="true">
 										<i class="fa fa-plus" aria-hidden="true"></i>
@@ -205,32 +241,58 @@
 							</div>
 						</div>
 					</form-validate>
+					<hr />
 					<div class="row" v-for="(dep, idx) in adr_deposits" :key="idx">
-						<div class="col-md-3">
-							<base-input
-								:view="true"
-								:modelValue="dep.material.un_code"
-								disabled
-							/>
+						<div class="col-md-11">
+							<div class="row">
+								<div class="col-md-2">
+									<base-input
+										:view="true"
+										:modelValue="dep.material.un_code"
+										disabled
+									/>
+								</div>
+								<div class="col-md-5">
+									<base-input :view="true" :modelValue="dep.name" disabled />
+								</div>
+								<div class="col-md-5">
+									<base-input
+										:view="true"
+										:modelValue="dep.material.denomination_name"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="dep.material.class.code"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="dep.material.packing.code"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="dep.equipment.name"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="dep.quantity"
+										disabled
+									/>
+								</div>
+							</div>
 						</div>
-						<div class="col-md-2">
-							<base-input
-								:view="true"
-								:modelValue="dep.material.class.code"
-								disabled
-							/>
-						</div>
-						<div class="col-md-2">
-							<base-input
-								:view="true"
-								:modelValue="dep.material.packing.code"
-								disabled
-							/>
-						</div>
-						<div class="col-md-3">
-							<base-input :view="true" :modelValue="dep.buy" disabled />
-						</div>
-						<div class="col-md-2 d-flex">
+						<div class="col-md-1 d-flex">
 							<div class="align-self-center">
 								<base-button
 									size="sm"
@@ -253,58 +315,94 @@
 					</h6>
 					<form-validate @submit="addMaterial($event, 'residue')">
 						<div class="row">
-							<div class="col-md-3">
-								<base-field name="un_code" label="UN">
-									<field-validate
-										as="select"
-										class="form-control"
-										name="un_code"
-										label="un"
-										rules="required"
-										v-model="residue.index"
-									>
-										<option selected>UN</option>
-										<option
-											:value="idx"
-											v-for="(r, idx) in audit.installation.residues"
-											:key="idx"
-										>
-											{{ r.material.un_code }}
-										</option>
-									</field-validate>
-								</base-field>
+							<div class="col-md-11">
+								<div class="row">
+									<div class="col-md-2">
+										<base-field name="un_code" label="UN">
+											<field-validate
+												as="select"
+												class="form-control"
+												name="un_code"
+												label="un"
+												rules="required"
+												v-model="residue.index"
+											>
+												<option selected>UN</option>
+												<option
+													:value="idx"
+													v-for="(r, idx) in audit.installation.residues"
+													:key="idx"
+												>
+													{{ r.material.un_code }}
+												</option>
+											</field-validate>
+										</base-field>
+									</div>
+									<div class="col-md-5">
+										<base-input
+											:view="true"
+											:modelValue="residue.name"
+											label="Nombre"
+											disabled
+										/>
+									</div>
+									<div class="col-md-5">
+										<base-input
+											:view="true"
+											:modelValue="
+												residue.material != null
+													? residue.material.denomination_name
+													: ``
+											"
+											label="Denominación"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="
+												residue.material != null
+													? residue.material.class.code
+													: ``
+											"
+											label="Clase"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="
+												residue.material != null
+													? residue.material.packing.code
+													: ``
+											"
+											label="GE"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="
+												residue.equipment != null ? residue.equipment.name : ``
+											"
+											label="Deposito"
+											disabled
+										/>
+									</div>
+									<div class="col-md-3">
+										<base-input
+											:view="true"
+											:modelValue="residue.quantity"
+											label="Cantidad"
+											disabled
+										/>
+									</div>
+								</div>
 							</div>
-							<div class="col-md-2">
-								<base-input
-									:view="true"
-									:modelValue="
-										residue.material != null ? residue.material.class.code : ``
-									"
-									label="Clase"
-									disabled
-								/>
-							</div>
-							<div class="col-md-2">
-								<base-input
-									:view="true"
-									:modelValue="
-										residue.material != null
-											? residue.material.packing.code
-											: ``
-									"
-									label="GE"
-									disabled
-								/>
-							</div>
-							<div class="col-md-3">
-								<base-input
-									:view="true"
-									:modelValue="residue.material != null ? residue.buy : ``"
-									label="Cantidad"
-									disabled
-								/>
-							</div>
-							<div class="col-md-2 d-flex">
+							<div class="col-md-1 d-flex">
 								<div class="align-self-center">
 									<base-button size="sm" nativeType="submit" :outline="true">
 										<i class="fa fa-plus" aria-hidden="true"></i>
@@ -313,32 +411,58 @@
 							</div>
 						</div>
 					</form-validate>
+					<hr />
 					<div class="row" v-for="(res, idx) in adr_residues" :key="idx">
-						<div class="col-md-3">
-							<base-input
-								:view="true"
-								:modelValue="res.material.un_code"
-								disabled
-							/>
+						<div class="col-md-11">
+							<div class="row">
+								<div class="col-md-2">
+									<base-input
+										:view="true"
+										:modelValue="res.material.un_code"
+										disabled
+									/>
+								</div>
+								<div class="col-md-5">
+									<base-input :view="true" :modelValue="res.name" disabled />
+								</div>
+								<div class="col-md-5">
+									<base-input
+										:view="true"
+										:modelValue="res.material.denomination_name"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="res.material.class.code"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="res.material.packing.code"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="res.equipment.name"
+										disabled
+									/>
+								</div>
+								<div class="col-md-3">
+									<base-input
+										:view="true"
+										:modelValue="res.quantity"
+										disabled
+									/>
+								</div>
+							</div>
 						</div>
-						<div class="col-md-2">
-							<base-input
-								:view="true"
-								:modelValue="res.material.class.code"
-								disabled
-							/>
-						</div>
-						<div class="col-md-2">
-							<base-input
-								:view="true"
-								:modelValue="res.material.packing.code"
-								disabled
-							/>
-						</div>
-						<div class="col-md-3">
-							<base-input :view="true" :modelValue="res.buy" disabled />
-						</div>
-						<div class="col-md-2 d-flex">
+						<div class="col-md-1 d-flex">
 							<div class="align-self-center">
 								<base-button
 									size="sm"
@@ -352,15 +476,72 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-md-12 my-3">
+					<base-field label="Imagenes:">
+						<div v-if="images.length >= 1" class="clearfix">
+							<div
+								class="row overflow-auto border border-light rounded p-3 mb-3"
+								style="max-height: 400px"
+							>
+								<div
+									v-for="(image, id) in images"
+									:key="id"
+									class="
+										col-md-3
+										d-flex
+										justify-content-center
+										position-relative
+										my-1
+									"
+								>
+									<img
+										:src="image.url"
+										alt=""
+										class="img-thumbnail"
+										width="100"
+									/>
+									<a
+										class="text-danger position-absolute"
+										style="right: 10%; top: 1%"
+										@click.prevent="deleteImg(image.id)"
+									>
+										<i class="fa-solid fa-circle-xmark"></i>
+									</a>
+								</div>
+							</div>
+							<div class="float-lg-right">
+								<base-button
+									type="primary"
+									@click="addImages = !addImages"
+									size="sm"
+									>{{
+										!addImages ? "Agregar imagenes" : "Cancelar"
+									}}</base-button
+								>
+							</div>
+						</div>
+						<div v-if="images.length < 1 || addImages">
+							<UploadImages @changed="handleImages" />
+							<div class="float-lg-right mt-2">
+								<base-button
+									type="primary"
+									@click="submitImages"
+									size="sm"
+									v-if="upBtn"
+									>Guardar</base-button
+								>
+							</div>
+						</div>
+					</base-field>
+				</div>
 				<div class="col-md-12 mt-md-5">
-					<base-field
-						label="Añadir Productos / Residuos considerados ADR de las instalaciones:"
-					>
+					<base-field label="Observaciones:">
 						<textarea
 							name=""
 							class="form-control"
 							cols="30"
 							rows="10"
+							v-model="material_observations"
 						></textarea>
 					</base-field>
 				</div>
@@ -388,9 +569,13 @@
 	import service from "@/store/services/model-service";
 	import data_service from "@/store/services/data-service";
 	import _, { random } from "lodash";
+	import UploadImages from "vue-upload-drop-images";
 
 	export default {
 		props: ["audit", "currentStep"],
+		components: {
+			UploadImages,
+		},
 		data() {
 			return {
 				adr_classes: {},
@@ -409,6 +594,9 @@
 				residue: {
 					index: null,
 					id: null,
+					name: null,
+					equipment: null,
+					quantity: null,
 					material: null,
 					buy: null,
 					is_residue: false,
@@ -416,12 +604,20 @@
 				deposit: {
 					index: null,
 					id: null,
+					name: null,
+					equipment: null,
+					quantity: null,
 					material: null,
 					buy: null,
 					is_residue: false,
 				},
 				adr_residues: [],
 				adr_deposits: [],
+				material_observations: "",
+				materials_images: {},
+				addImages: false,
+				images: {},
+				upBtn: false,
 			};
 		},
 		async mounted() {
@@ -429,20 +625,26 @@
 			this.installation_id = this.audit.installation_id;
 			this.materials = this.audit.review_materials;
 			this.adr_residues = this.formatMaterials(this.audit.materials);
+			this.material_observations = this.audit.material_observation;
 			this.adr_deposits = this.formatMaterials(this.audit.materials, false);
-			console.log(this.audit.installation.residues);
 			this.loadInstallation();
 			this.loadData();
+			this.loadImages();
 		},
 		methods: {
 			async onSubmit() {
 				try {
+					let valid_step =
+						this.audit.valid_step >= this.currentStep
+							? this.audit.valid_step
+							: this.currentStep;
+
 					await service.update("audit", this.audit_id, {
 						current_step: 4,
-						valid_step:
-							this.audit.valid_step >= this.currentStep
-								? this.audit.valid_step
-								: this.currentStep,
+						material_observation: _.isEmpty(this.material_observations)
+							? ""
+							: this.material_observations,
+						valid_step: valid_step,
 						audit_material_reviews: this.materials,
 						audit_materials: this.adr_residues.concat(this.adr_deposits),
 					});
@@ -451,7 +653,6 @@
 						? err.response.message
 						: "Ocurrio un error al guardar los cambios";
 					this.$toast.error(message);
-					console.log(err);
 				}
 				this.$emit("next", 3);
 			},
@@ -469,6 +670,19 @@
 				this.audit;
 				resetForm();
 			},
+			async submitImages() {
+				try {
+					let data = new FormData();
+					_.each(this.materials_images, function (img) {
+						data.append("material_images[]", img);
+					});
+
+					await service.update("audit", this.audit_id, data);
+					this.loadImages();
+				} catch (err) {
+					console.log(err);
+				}
+			},
 			addMaterial(values, op) {
 				let model = op == "deposit" ? this.adr_deposits : this.adr_residues;
 				let compare = op == "deposit" ? this.deposit : this.residue;
@@ -481,6 +695,9 @@
 					index: compare.index,
 					id: compare.id,
 					material: compare.material,
+					equipment: compare.equipment,
+					quantity: compare.quantity,
+					name: compare.name,
 					buy: compare.buy,
 					is_residue: compare.is_residue,
 					installation_material_id: compare.id,
@@ -522,12 +739,24 @@
 					const res2 = await data_service.getAdrClass();
 					const res3 = await data_service.getOperations();
 					const res4 = await data_service.getEquipments();
+
 					this.equipments_data = res4.data.data;
 					this.operations_data = res3.data.data;
 					this.adr_classes = res2.data.data;
 					this.packing_types = res.data.data;
 				} catch (err) {
 					this.$toast.error("No se pudieron cargar los datos");
+				}
+			},
+			async loadImages() {
+				try {
+					const res_images = await service.getIndex(
+						"audit_image",
+						"audit_id=" + this.audit_id
+					);
+					this.images = res_images.data.data;
+				} catch (err) {
+					console.log(err);
 				}
 			},
 			find(arr, item) {
@@ -585,6 +814,23 @@
 				});
 				return m;
 			},
+			handleImages(imgs) {
+				this.materials_images = imgs;
+				if (imgs.length >= 1) {
+					this.upBtn = true;
+				} else {
+					this.upBtn = false;
+				}
+			},
+			async deleteImg(id) {
+				try {
+					await service.destroy("audit_image", id);
+
+					this.loadImages();
+				} catch (err) {
+					console.log(err);
+				}
+			},
 		},
 		computed: {
 			operations() {
@@ -621,12 +867,20 @@
 		watch: {
 			"residue.index": function (newVal) {
 				this.residue.id = this.audit.installation.residues[newVal].id;
+				this.residue.name = this.audit.installation.residues[newVal].name;
+				this.residue.equipment =
+					this.audit.installation.residues[newVal].equipment;
+				this.residue.quantity = this.audit.installation.residues[newVal].quantity;
 				this.residue.material = this.audit.installation.residues[newVal].material;
 				this.residue.buy = this.audit.installation.residues[newVal].buy;
 				this.residue.is_residue =
 					this.audit.installation.residues[newVal].is_residue;
 			},
 			"deposit.index": function (newVal) {
+				this.deposit.name = this.audit.installation.deposits[newVal].name;
+				this.deposit.equipment =
+					this.audit.installation.deposits[newVal].equipment;
+				this.deposit.quantity = this.audit.installation.deposits[newVal].quantity;
 				this.deposit.id = this.audit.installation.deposits[newVal].id;
 				this.deposit.material = this.audit.installation.deposits[newVal].material;
 				this.deposit.buy = this.audit.installation.deposits[newVal].buy;

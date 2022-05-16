@@ -8,20 +8,10 @@
 		</div>
 		<div v-else>
 			<span class="col-2 font-weight-bold text-muted h5"
-				>Referencia de informe: #70</span
+				>Referencia de informe: #{{audit_id}}</span
 			>
 			<hr />
 			<div class="row px-md-2">
-				<div class="text-center col-12">
-					<h3 class="text-uppercase">
-						Informe/Visita técnica instalaciones ADR
-					</h3>
-					<h4 class="text-muted text-uppercase">Real Decreto 97/2014</h4>
-				</div>
-				<span class="col-2 font-weight-bold text-muted h5"
-					>Referencia de informe: #70</span
-				>
-				<hr />
 				<div class="col-12">
 					<h4 class="text-uppercase">Datos iniciales</h4>
 					<div class="row">

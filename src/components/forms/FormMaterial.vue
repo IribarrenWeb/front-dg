@@ -311,7 +311,6 @@
 						return this.$toast.error("Selecciona el tipo de material");
 					}
 					this.model.adr_material_id = this.material.id;
-					console.log(this.model.is_residue);
 				}
 				if (this.currentStep === 2) {
 					if (this.model.is_residue === "true") {
@@ -324,7 +323,9 @@
 						return this.$toast.error("Selecciona el tipo de unidad");
 					}
 
-                    this.model.file_document.base64 = await this.toBase64(this.model.file_document.file[0])
+                    if (this.model.is_dangerous) {
+                        this.model.file_document.base64 = await this.toBase64(this.model.file_document.file[0])
+                    }
 					try {
 						await service.store("material", this.model);
 						resetForm();
