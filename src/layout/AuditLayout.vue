@@ -126,7 +126,8 @@
         try {
           const res = await service.show('audit',id,
             'includes[]=materials&includes[]=review_materials&includes[]=comprobations&includes[]=installation.deposits&includes[]=installation.residues'+
-            '&includes[]=vehicles&includes[]=installation.vehicles&includes[]=nonconformities'
+            '&includes[]=vehicles&includes[]=installation.vehicles&includes[]=nonconformities'+
+            '&includes[]=installation.operations&includes[]=installation.equipments'
           );
           this.audit = res.data.data
           this.currentStep = this.audit.current_step

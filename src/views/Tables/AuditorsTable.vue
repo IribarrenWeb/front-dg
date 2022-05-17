@@ -119,7 +119,9 @@
 				}
 			},
 			async handleChange(event) {
-				this.getAuditors(event);
+                if (event != this.page) {
+                    this.getAuditors(event);
+                }
 			},
 			handleAdd() {
 				this.auditor_id = null;

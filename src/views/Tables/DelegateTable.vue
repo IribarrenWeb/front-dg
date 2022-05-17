@@ -118,8 +118,10 @@
 				this.metaData = response.data.meta.page;
 			},
 			async handleChange(event) {
-                this.page = event
-				this.getDelegates(event);
+                if (event != this.page) {
+                    this.page = event
+                    this.getDelegates(event);
+                }
 			},
 			async handleView(id) {
 				this.delegate_id = id;
