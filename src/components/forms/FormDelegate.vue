@@ -102,6 +102,36 @@
         </div>
       </div>
 
+      <div class="row border rounded border-light px-md-3 py-md-2 mt-2 mt-md-3">
+        <div class="col-12">
+            <h4>
+                Datos de delegacion <span class="text-muted">(Si aplica)</span>
+            </h4>
+            <hr>
+        </div>
+        <div class="col-lg-6">
+          <base-field name="delegation_name" label="Nombre de delegación">
+            <field-validate class="form-control" name="delegation_name" type="text" label="nombre de delegación" rules="alpha_spaces|max:30" v-model="model.delegation_name"/>
+          </base-field>
+        </div>
+        <div class="col-lg-6">
+          <base-field name="cif_nif" label="CIF/NIF">
+            <field-validate class="form-control" name="cif_nif" type="text" label="CIF/NIF" rules="alpha_num|min:5|max:15" v-model="model.cif_nif"/>
+          </base-field>
+        </div>
+        <div class="col-lg-6">
+          <base-field name="delegation_phone" label="Fíjo">
+            <field-validate class="form-control" name="delegation_phone" type="number" label="fíjo" rules="min:5|max:15" v-model="model.delegation_phone"/>
+          </base-field>
+        </div>
+        <div class="col-lg-6">
+          <base-field name="address" label="Dirección">
+            <field-validate class="form-control" name="address" type="text" label="Dirección" rules="max:50" v-model="model.address"/>
+          </base-field>
+        </div>
+      </div>
+
+
       <div class="d-flex justify-content-lg-end">
         <base-button
           type="default"
@@ -171,6 +201,10 @@ import { mapGetters } from 'vuex';
       async onSubmit(values, { resetForm }) {
         let formData = new FormData();
         formData.append("name", this.model.name);
+        formData.append("delegation_name", this.model.delegation_name);
+        formData.append("delegation_phone", this.model.delegation_phone);
+        formData.append("address", this.model.address);
+        formData.append("cif_nif", this.model.cif_nif);
         formData.append("last_name", this.model.last_name);
         formData.append("email", this.model.email);
         formData.append("phone_number", this.model.phone_number);
@@ -257,11 +291,15 @@ import { mapGetters } from 'vuex';
             // delegate_id: "",
             dni: data.dni,
             phone_number: data.phone_number,
+            delegation_phone: data.delegation_phone,
+            delegation_name: data.delegation_name,
+            address: data.address,
+            cif_nif: data.cif_nif,
             province_id: data.province_id,
             email: data.user.email,
           }
 
-          if (data.documents >= 1) {
+          if (data.documents.length >= 1) {
             current.file_certification = undefined
             current.certification_date = data.documents[0].document_date
             current.file_firm = undefined

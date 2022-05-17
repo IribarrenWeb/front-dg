@@ -106,6 +106,64 @@
 							</div>
 						</div>
 					</div>
+					<div class="col-md-12 my-3">
+						<base-field label="Imagenes:">
+							<div v-if="images.length >= 1" class="clearfix">
+								<div
+									class="row overflow-auto border border-light rounded p-3 mb-3"
+									style="max-height: 400px"
+								>
+									<div
+										v-for="(image, id) in images"
+										:key="id"
+										class="
+											col-md-3
+											d-flex
+											justify-content-center
+											position-relative
+											my-1
+										"
+									>
+										<img
+											:src="image.url"
+											alt=""
+											class="img-thumbnail"
+											width="100"
+										/>
+										<a
+											class="text-danger position-absolute"
+											style="right: 10%; top: 1%"
+											@click.prevent="deleteImg(image.id)"
+										>
+											<i class="fa-solid fa-circle-xmark"></i>
+										</a>
+									</div>
+								</div>
+								<div class="float-lg-right">
+									<base-button
+										type="primary"
+										@click="addImages = !addImages"
+										size="sm"
+										>{{
+											!addImages ? "Agregar imagenes" : "Cancelar"
+										}}</base-button
+									>
+								</div>
+							</div>
+							<div v-if="images.length < 1 || addImages">
+								<UploadImages @changed="handleImages" />
+								<div class="float-lg-right mt-2">
+									<base-button
+										type="primary"
+										@click="submitImages"
+										size="sm"
+										v-if="upBtn"
+										>Guardar</base-button
+									>
+								</div>
+							</div>
+						</base-field>
+					</div>
 					<div class="col-md-12">
 						<base-field label="OBSERVACIONES VEHÍCULOS EMPRESA">
 							<textarea
@@ -139,10 +197,14 @@
 	</form-validate>
 </template>
 <script>
+	import UploadImages from "vue-upload-drop-images";
 	import service from "@/store/services/model-service";
 	import _ from "lodash";
 	export default {
 		props: ["audit", "currentStep"],
+        components: {
+			UploadImages,
+		},
 		data() {
 			return {
 				audit_id: this.$route.params.id,
@@ -158,6 +220,10 @@
 					fleet: null,
 				},
 				vehicle_observations: this.audit.vehicle_observations,
+				addImages: false,
+				upBtn: false,
+				images: {},
+                vehicle_images: {}
 			};
 		},
 		async mounted() {
@@ -166,6 +232,8 @@
 			} else {
 				this.check = true;
 			}
+
+			this.loadImages();
 		},
 		methods: {
 			async onSubmit() {
@@ -247,6 +315,50 @@
 				);
 
 				this.vehicles.splice(position_item, 1);
+			},
+            async deleteImg(id) {
+				try {
+					await service.destroy("audit_image", id);
+
+					this.loadImages();
+				} catch (err) {
+					console.log(err);
+				}
+			},
+            handleImages(imgs) {
+				this.vehicle_images = imgs;
+				if (imgs.length >= 1) {
+					this.upBtn = true;
+				} else {
+					this.upBtn = false;
+				}
+			},
+            async loadImages() {
+				try {
+					const res_images = await service.getIndex(
+						"audit_image",
+                        null,
+						"audit_id=" + this.audit_id + 
+                        "&type=VEHICULO"
+					);
+					this.images = res_images.data.data;
+				} catch (err) {
+					console.log(err);
+				}
+			},
+            async submitImages() {
+				try {
+					let data = new FormData();
+					_.each(this.vehicle_images, function (img) {
+						data.append("vehicle_images[]", img);
+					});
+
+					await service.update("audit", this.audit_id, data);
+					this.loadImages();
+                    this.upBtn = false
+				} catch (err) {
+					console.log(err);
+				}
 			},
 		},
 		watch: {

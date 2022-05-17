@@ -80,6 +80,13 @@
             </div>
           </base-field>
         </div>
+
+        <div class="col-lg-8">
+          <base-field name="address" label="Dirección">
+            <field-validate class="form-control" name="address" label="dirección" rules="max:20|alpha_spaces" v-model="model.address"/>
+          </base-field>
+        </div>
+      
       </div>
 
       <div class="row border rounded border-light px-md-3 py-md-2 mt-2 mt-md-3">
@@ -205,6 +212,7 @@ import { mapGetters } from 'vuex';
         formData.append("email", this.model.email);
         formData.append("phone_number", this.model.phone_number);
         formData.append("dni", this.model.dni);
+        formData.append("address", this.model.address);
         formData.append("province_id", this.model.province_id);
         formData.append("delegate_id", this.model.delegate.id);
         formData.append("certification_date", this.model.certification_date);
@@ -278,6 +286,7 @@ import { mapGetters } from 'vuex';
         if(this.update){
           current = {
             name: data.user.name,
+            address: data.address,
             last_name: data.user.last_name,
             certification_date: data.documents[0].document_date,
             delegate: data.delegate,

@@ -143,7 +143,7 @@
 					<h6 class="text-uppercase text-muted">
 						TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS
 					</h6>
-					<form-validate @submit="addMaterial($event, 'deposit')">
+					<form-validate ref="form_dep" @submit="addMaterial($event, 'deposit')">
 						<div class="row">
 							<div class="col-md-11">
 								<div class="row">
@@ -313,7 +313,7 @@
 					<h6 class="text-uppercase text-muted">
 						TIPO RESIDUOS ADR CARGADOS/DESCARGADOS/ALMACENADOS EN LA INSTALACIÓN
 					</h6>
-					<form-validate @submit="addMaterial($event, 'residue')">
+					<form-validate ref="form_res" @submit="addMaterial($event, 'residue')">
 						<div class="row">
 							<div class="col-md-11">
 								<div class="row">
@@ -627,7 +627,7 @@
 			this.adr_residues = this.formatMaterials(this.audit.materials);
 			this.material_observations = this.audit.material_observation;
 			this.adr_deposits = this.formatMaterials(this.audit.materials, false);
-			this.loadInstallation();
+            this.installation = this.audit.installation
 			this.loadData();
 			this.loadImages();
 		},
@@ -679,6 +679,7 @@
 
 					await service.update("audit", this.audit_id, data);
 					this.loadImages();
+                    this.upBtn = false
 				} catch (err) {
 					console.log(err);
 				}
@@ -711,6 +712,7 @@
 						buy: null,
 						is_residue: false,
 					};
+                    this.$refs.form_dep.resetForm()
 				} else {
 					this.residue = {
 						index: null,
@@ -719,6 +721,7 @@
 						buy: null,
 						is_residue: false,
 					};
+                    this.$refs.form_res.resetForm()
 				}
 			},
 			async loadInstallation() {
@@ -752,7 +755,9 @@
 				try {
 					const res_images = await service.getIndex(
 						"audit_image",
-						"audit_id=" + this.audit_id
+                        null,
+						"audit_id=" + this.audit_id + 
+                        "&type=MATERIAL"
 					);
 					this.images = res_images.data.data;
 				} catch (err) {
@@ -808,6 +813,9 @@
 							buy: res.buy,
 							material: res.material,
 							installation_material_id: res.id,
+							equipment: res.equipment,
+							quantity: res.quantity,
+							name: res.name,
 							is_residue: res.is_residue,
 						});
 					}

@@ -23,7 +23,7 @@
 											class="form-control"
 											:name="`comprobation${idx}`"
 											label="un"
-											rules="required"
+											rules=""
 											v-model="comprobations[idx].comprobation_type_id"
 										>
 											<option selected>COMPROBACIÓN</option>
@@ -42,7 +42,7 @@
 											class="form-control"
 											:name="`evaluation${idx}`"
 											label=""
-											rules="required"
+											rules=""
 											v-model="comprobations[idx].evaluation_type_id"
 										>
 											<option selected>EVALUACIÓN</option>

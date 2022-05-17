@@ -32,7 +32,15 @@ const apis = {
 
 async function getIndex(model, page = 1, params) {
     storage.commit('loading');
-    return await axios.get(`${url}/${apis[model]}?page=${page}&${params}`).then((response) => {
+    let url_model = `${url}/${apis[model]}?`;
+
+    if (page != null) {
+        url_model += `page=${page}&`
+    }
+
+    url_model += params
+
+    return await axios.get(url_model).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
