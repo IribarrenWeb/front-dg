@@ -45,7 +45,7 @@
 					</div>
 					<div class="col-lg-4">
 						<base-field name="auditable" label="Auditor">
-							<div v-if="!new_auditable.new">
+							<div v-if="!new_auditable.new && model.auditable != null">
 								<span class="mr-md-4 text-uppercase"
 									>{{ model.auditable.user.name }}
 									{{ model.auditable.user.last_name }}</span
@@ -58,7 +58,7 @@
 									><i class="fa-solid fa-pencil"></i
 								></base-button>
 							</div>
-							<div v-show="new_auditable.new">
+							<div v-show="new_auditable.new || model.auditable == null">
 								<field-validate
 									name="auditable"
 									label="Auditor"
@@ -78,7 +78,7 @@
 									>
 									</Multiselect>
 								</field-validate>
-								<div class="mt-md-2" @click="handleForm">
+								<div class="mt-md-2" @click="handleForm" v-if="new_auditable.new">
 									<base-button
 										@click="handleCancel(new_auditable)"
 										size="sm"
@@ -153,7 +153,7 @@
 								></base-button>
 							</div>
 							<field-validate
-								v-show="new_document.new"
+								v-show="new_document.new || model.documents.length < 1"
 								class="form-control"
 								type="file"
 								name="file_document"
@@ -529,12 +529,12 @@
 						name: this.model.name,
 						address: this.model.address,
 					};
-					if (this.new_document.new) {
+					if (this.new_document.new || (this.model.documents < 1 && _.isArray(this.new_document.value))) {
 						data.file_document = {
 							base64: await this.toBase64(this.new_document.value[0]),
 						};
 					}
-					if (this.new_auditable.new) {
+					if (this.new_auditable.new || this.model.auditable == null) {
 						data.auditable_id = this.new_auditable.value.id;
 					}
 					if (this.new_province.new) {
@@ -592,19 +592,24 @@
 			async fetchItems(search) {
 				const res = await service.getIndex(
 					"auditor",
-					1,
+					null,
 					`name=${search}&includes[]=user`
 				);
 				const data = res.data.data;
 				let options = [];
 				for (let i = 0; i < data.length; i++) {
 					const auditor = data[i];
-					if (auditor.id != this.model.auditable.id) {
+					if (this.model.auditable == null) {
 						options.push({
 							value: auditor,
 							label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
 						});
-					}
+					}else if(auditor.id != this.model.auditable.id){
+                        options.push({
+							value: auditor,
+							label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
+						});
+                    }
 				}
 				return options;
 			},

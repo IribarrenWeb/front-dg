@@ -3,10 +3,10 @@
 		<div class="card-header border-0">
 			<div class="row align-items-center">
 				<div class="col">
-					<h4 class="mb-0">Formaciones</h4>
+					<h4 class="mb-0">Asignaciones</h4>
 				</div>
 				<div class="col text-right">
-					<a href="#" class="btn btn-sm btn-default" @click.prevent="handleAdd">Agregar</a>
+					<!-- <a href="#" class="btn btn-sm btn-default" @click.prevent="handleAdd">Agregar</a> -->
 				</div>
 			</div>
 		</div>
@@ -15,27 +15,37 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Formación</th>
-					<th>Modalidad</th>
-					<th>Duración</th>
-					<th>Responsable</th>
-					<th></th>
+					<th>Empresa</th>
+					<th>Instalación</th>
+					<th>Empleados</th>
+					<th>Fecha</th>
+					<th>Estatus</th>
 				</template>
 
 				<template v-slot:default="row">
-					<th scope="row">
-						{{ row.item.name }}
+					<th scope="row" class="text-uppercase">
+						{{ row.item.formation.name }}
 					</th>
-					<td>
-						{{ row.item.type.name }}
+					<td class="text-uppercase">
+						{{ row.item.installation.company.business_name }}
+					</td>
+                    <td class="text-uppercase">
+						{{ row.item.installation.name }}
 					</td>
                     <td>
-						{{ row.item.duration }}
-					</td>
+                        {{ row.item.employees_count }}
+                    </td>
+                    <td>
+                        {{ row.item.date }}
+                    </td>
 					<td>
-						{{ row.item.responsible.user.name }} {{ row.item.responsible.user.last_name }}
-					</td>
-					<td>
-						<a href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item.id)">Asignar</a>
+                        <badge
+							class="badge-dot mr-4"
+							:type="row.item.status ? 'success' : 'danger'"
+						>
+							<i :class="`bg-danger`"></i>
+							<span class="status">{{ row.item.status ? 'COMPLETADO' : 'PENDIENTE' }}</span>
+						</badge>
 					</td>
 				</template>
 			</base-table>
@@ -48,27 +58,19 @@
 			>
 			</base-pagination>
 
-            <modal
-				v-if="this.modal"
-				v-model:show="this.modal"
-				:action="action"
-				@close="action = 'registrar'"
-				modalClasses="modal-xl"
-				model="formación"
-			>
-                <form-formation v-if="!assign" @reload="index" @close="handleClose"></form-formation>
-                <form-formation-assign v-else @reload="handleReload" @close="handleClose" :formation_id="formation_id"></form-formation-assign>
-			</modal>
 		</div>
 	</div>
 </template>
 <script>
-import FormFormation from '../../components/forms/FormFormation.vue';
-import FormFormationAssign from '../../components/forms/FormFormationAssign.vue';
 	import service from "../../store/services/model-service";
 	export default {
-	components: { FormFormation, FormFormationAssign },
-		name: "formation-table",
+        props: {
+            reload: {
+                type: Boolean,
+                defaul: false
+            }
+        },
+		name: "training-table",
 		data() {
 			return {
 				tableData: [],
@@ -86,9 +88,9 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
         methods: {
             async index(page = 1) {
 				const resp = await service.getIndex(
-					"formation",
+					"training",
 					page,
-					"includes[]=type&includes[]=responsible.user"
+					"includes[]=installation.company&counts[]=employees&includes[]=formation"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;
@@ -105,21 +107,21 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
             handleAdd() {
 				this.modal = true;
 			},
-            handleAssign(id){
-                this.formation_id = id;
-                this.assign = true;
-                this.action = 'Asignar';
+            handleAssign(){
                 this.modal = true;
             },
             handleClose() {
-                this.action = 'registrar';
                 this.modal = false;
-                this.assign = false;
-            },
-            handleReload(){
-                console.log('hola recargandoooooo');
-                this.$emit('reloadTraining')
             }
+        },
+        watch: {
+            reload(newVal){
+                if (newVal == true) {
+                    console.log(newVal);
+                    this.index()
+                    this.$emit('reloaded')
+                }
+            },
         }
 	};
 </script>

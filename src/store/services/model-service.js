@@ -29,6 +29,7 @@ const apis = {
     material: "materials",
     audit_image: "audit-images",
     formation: "formations",
+    training: "trainings"
 }
 
 async function getIndex(model, page = 1, params) {
