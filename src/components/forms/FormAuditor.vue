@@ -21,7 +21,7 @@
           </base-field>
         </div>
 
-        <div class="col-lg-4">
+        <div class="col-lg-4" v-if="ROLE != 'delegate'">
           <base-field name="delegate" label="Delegado">
               <div v-if="model.delegate != null">
                   <span class="mr-md-4 text-uppercase">{{model.delegate.user.name}} {{model.delegate.user.last_name}}</span>
@@ -104,7 +104,7 @@
               </div>
               <div v-show="!cert_document || cer_update">
                 <field-validate class="form-control"  type="file" name="file_certification" :rules="{'required':!cert_document || cer_update, ext:['pdf']}" label="documento certificado" v-model="model.file_certification"/>
-                <base-button v-if="update" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
+                <base-button v-if="update && !typeof auditor.documents[0] == undefined" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>
@@ -123,7 +123,7 @@
               </div>
               <div v-show="firm_update || !firm_document">
                 <field-validate class="form-control" type="file" name="file_firm" :rules="{'required':firm_update || !firm_document, ext:['pdf']}" label="documento alta" v-model="model.file_firm"/>
-                <base-button v-if="update" @click="firm_update = false" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
+                <base-button v-if="update && !typeof auditor.documents[1] == undefined" @click="firm_update = false" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>
@@ -214,7 +214,9 @@ import { mapGetters } from 'vuex';
         formData.append("dni", this.model.dni);
         formData.append("address", this.model.address);
         formData.append("province_id", this.model.province_id);
-        formData.append("delegate_id", this.model.delegate.id);
+        if (this.ROLE != 'delegate') {
+            formData.append("delegate_id", this.model.delegate.id);
+        }
         formData.append("certification_date", this.model.certification_date);
         formData.append("firm_date", this.model.firm_date);
 
@@ -288,18 +290,20 @@ import { mapGetters } from 'vuex';
             name: data.user.name,
             address: data.address,
             last_name: data.user.last_name,
-            certification_date: data.documents[0].document_date,
-            delegate: data.delegate,
+            certification_date: !_.isEmpty(data.documents) ? data.documents[0].document_date : undefined,
             file_firm: undefined,
             file_certification: undefined,
             // delegate_id: "",
             dni: data.dni,
-            firm_date: data.documents[1].document_date,
+            firm_date: !_.isEmpty(data.documents) ? data.documents[1].document_date : undefined,
             phone_number: data.phone_number,
             province_id: data.province_id,
             email: data.user.email,
           }
-
+        
+            if (this.ROLE != 'delegate') {
+                current.delegate =  data.delegate
+            }
           this.cer_update = false;
           this.firm_update = false;
           this.current_values = null;
@@ -358,7 +362,8 @@ import { mapGetters } from 'vuex';
         return this.id != null 
       },
       ...mapGetters([
-        'COPY'
+        'COPY',
+        'ROLE'
       ])
     },
     watch: {

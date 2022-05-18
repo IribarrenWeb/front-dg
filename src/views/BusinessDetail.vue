@@ -45,10 +45,13 @@
 						</tr>
 						<tr>
 							<td>
-								{{ formatDate(business.documents[0].document_date, "en-GB") }}
+                                <span v-if="!typeof business.documents[0] == undefined">
+                                    {{ formatDate(business.documents[0].document_date, "en-GB") }}
+                                </span>
 							</td>
 							<td colspan="6">
 								<a
+                                    v-if="!typeof business.documents[0] == undefined"
 									href="#"
 									@click.prevent="getDocument(business.documents[0].id)"
 								>

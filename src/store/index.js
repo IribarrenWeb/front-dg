@@ -105,6 +105,14 @@ export const store = createStore({
                 file_firm: "",
                 firm_date: "",
             },
+            formation_schema: {
+                name: "",
+                formation_type_id: null,
+                auditor_id: null,
+                duration: "",
+                content: "",
+                document: "",
+            },
             employee_schema: {
                 name: "",
                 last_name: "",
@@ -146,6 +154,9 @@ export const store = createStore({
         AUDITOR_SCHEMA(state) {
             return JSON.parse(JSON.stringify(state.auditor_schema))
         },
+        FORMATION_SCHEMA(state) {
+            return JSON.parse(JSON.stringify(state.formation_schema))
+        },
         DELEGATE_SCHEMA(state) {
             return JSON.parse(JSON.stringify(state.delegate_schema))
         },
@@ -160,10 +171,10 @@ export const store = createStore({
                     role = 'admin';
                     break;
                 case 2:
-                    role = 'auditor';
+                    role = 'delegate';
                     break;
                 case 3:
-                    role = 'delegado';
+                    role = 'auditor';
                     break;
                 case 4:
                     role = 'empresa';

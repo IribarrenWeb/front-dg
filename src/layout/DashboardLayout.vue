@@ -56,7 +56,7 @@
           :link="{
             name: 'Formaciones',
             icon: 'ni ni-spaceship text-default',
-            path: '/informs',
+            path: '/formations',
           }"
         />
       </template>

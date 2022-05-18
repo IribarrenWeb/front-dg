@@ -33,6 +33,12 @@ const Informs = defineAsyncComponent({
     loadingComponent: Loader
 });
 
+const Formations = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Formation.vue"),
+    loadingComponent: Loader
+});
+
 const Business = defineAsyncComponent({
     loader: () =>
         import ("@/views/Business.vue"),
@@ -118,6 +124,12 @@ const routes = [{
                 path: "/informs",
                 name: "informes",
                 components: { default: Informs },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/formations",
+                name: "formaciones",
+                components: { default: Formations },
                 meta: { middleware: auth },
             },
             {

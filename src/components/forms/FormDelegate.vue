@@ -363,7 +363,7 @@ import { mapGetters } from 'vuex';
         return this.id != null 
       },
       ...mapGetters([
-        'COPY'
+        'COPY',
       ])
     },
     watch: {

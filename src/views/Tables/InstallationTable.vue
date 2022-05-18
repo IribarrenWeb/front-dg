@@ -41,10 +41,11 @@
 						{{ row.item.employees.length }}
 					</td>
 					<td class="text-uppercase">
-						<a href="#" @click="showAuditor()"
+						<a v-if="!typeof row.item.auditable == undefined" href="#" @click="showAuditor()"
 							>{{ row.item.auditable.user.name }}
 							{{ row.item.auditable.user.last_name }}</a
 						>
+                        <span>SIN AUDITOR</span>
 					</td>
 					<td>
 						<a
@@ -111,7 +112,6 @@
 				tableData: {},
 				modal: false,
 				delegate: {},
-				loader: false,
 				metaData: {},
 				page: 1,
 				isView: false,

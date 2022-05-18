@@ -146,6 +146,19 @@ function getPacking(params = '') {
     });
 }
 
+function getFormationTypes(params = '') {
+    const token = localStorage.getItem(tokenName);
+    const options = {
+        headers: {
+            Authorization: "Bearer " + token,
+        },
+    };
+
+    return axios.get(url + '/formation-types' + '?' + params, options).then((response) => {
+        return response
+    });
+}
+
 export default {
     getCities,
     getProvinces,
@@ -157,5 +170,6 @@ export default {
     getAdrDesignations,
     getVehicleTypes,
     getAdrClass,
-    getPacking
+    getPacking,
+    getFormationTypes
 }
