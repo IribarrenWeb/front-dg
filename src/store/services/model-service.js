@@ -29,7 +29,8 @@ const apis = {
     material: "materials",
     audit_image: "audit-images",
     formation: "formations",
-    training: "trainings"
+    training: "trainings",
+    visit: "visits",
 }
 
 async function getIndex(model, page = 1, params) {
@@ -221,7 +222,7 @@ function update(model, id, data, multipart = false) {
             message = err.response.data.message
         }
         errors(status, message)
-        throw Error('Error');
+        throw Error(message ? message : 'Error');
     });
 }
 

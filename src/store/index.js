@@ -2,6 +2,17 @@ import { createStore } from 'vuex';
 import auth from "./modules/auth";
 import reset from "./modules/reset";
 import profile from "./modules/profile-module";
+import { axios } from '@/axios';
+import $Swal from 'sweetalert2';
+
+const $swal = $Swal.mixin({
+    customClass: {
+        confirmButton: 'btn btn-primary',
+        cancelButton: 'btn btn-outline-primary'
+    },
+    buttonsStyling: false,
+    cancelButtonText: "Cancelar"
+})
 
 export const store = createStore({
     state() {
@@ -141,7 +152,9 @@ export const store = createStore({
                 },
                 date_certification: "",
             },
-            provinces: null
+            provinces: null,
+            current: new Date().toISOString().split('T')[0],
+            api_url: process.env.VUE_APP_API_BASE_URL
         }
     },
     getters: {
@@ -165,7 +178,6 @@ export const store = createStore({
         },
         ROLE(state) {
             let role = state.role
-            console.log(role);
             switch (role) {
                 case 1:
                     role = 'admin';
@@ -189,6 +201,10 @@ export const store = createStore({
         },
         COPY: () => (data) => {
             return JSON.parse(JSON.stringify(data))
+        },
+        CURRENT_DATE(state) {
+            console.log(state);
+            return state.current
         }
     },
     mutations: {
@@ -241,6 +257,50 @@ export const store = createStore({
         formatDate(date, format = "en-US") {
             return new Date(date).toLocaleDateString(format);
         },
+        toSchedule({ state }, payload) {
+            return $swal.fire({
+                title: `Agendar ${payload.name}`,
+                html: `<div class="row">` +
+                    `<div class="col-md-6"><input id="audit-input1" class="form-control" type="date" min="${state.current}"></div>` +
+                    '<div class="col-md-6"><input id="audit-input2" class="form-control" type="time"></div>' +
+                    `</div>`,
+                focusConfirm: false,
+                confirmButtonText: 'Agendar',
+                showLoaderOnConfirm: true,
+                showCancelButton: true,
+                preConfirm: () => {
+                    let date = document.getElementById('audit-input1').value;
+                    let time = document.getElementById('audit-input2').value
+                    if (date && time) {
+                        let data = {}
+                        if (payload.model == 'trainings') {
+                            data = { date: date, time: time }
+                        } else {
+                            data = { scheduled_date: date, time: time }
+
+                        }
+                        return axios.put(`${payload.model}/${payload.id}`, data)
+                            .then(response => {
+                                const status = response.status
+                                if (status >= 300) {
+                                    throw new Error(response.data.message)
+                                }
+                            })
+                            .catch(error => {
+                                $swal.showValidationMessage('Ocurrio un error: ' + error)
+                            })
+                    } else {
+                        $swal.showValidationMessage('Los campos fecha y hora son requeridos')
+                    }
+                },
+                allowOutsideClick: () => !$swal.isLoading()
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    $swal.fire(`${payload.name} agendada`, `Se ha agendado la ${payload.name}.`, 'success')
+                    return true
+                }
+            });
+        }
     },
     modules: {
         auth: auth,

@@ -65,7 +65,7 @@
 						</badge>
 					</td>
 					<td>
-						{{ row.visit_date }}
+						{{ row.item.scheduled_date }}
 					</td>
 					<!-- <td>
             <div class="d-flex align-items-center">
@@ -98,7 +98,7 @@
 								</a>
 							</template>
 							<a class="dropdown-item" href="#" @click.prevent="">Archivar</a>
-							<a class="dropdown-item" href="#" @click.prevent="">Agendar</a>
+							<a class="dropdown-item" href="#" @click.prevent="toSchedule(row.item.id)">Agendar</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Eliminar</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
 							<router-link
@@ -130,6 +130,9 @@
 	</div>
 </template>
 <script>
+// import { axios } from '@/axios';
+
+import { mapGetters} from 'vuex';
 	import service from "../../store/services/model-service";
 	export default {
 		name: "audits-table",
@@ -146,13 +149,17 @@
 				baseImage: process.env.VUE_APP_API_URL + "img/dg_logo.png",
 				loader: false,
 				page: 1,
+                url: this.$store.state.api_url
 			};
 		},
 		mounted() {
 			this.getAudits(this.page);
 		},
+        computed: {
+            ...mapGetters(['CURRENT_DATE'])
+        },
 		methods: {
-			async getAudits(page) {
+			async getAudits(page = 1) {
 				const resp = await service.getIndex(
 					"audit",
 					page,
@@ -188,6 +195,11 @@
 				}
 				this.getAudits(event);
 			},
+            async toSchedule(id){
+                await this.$store.dispatch('toSchedule', {model:'audits',id: id, name: 'auditoria'})
+                console.log('asdasdasd');
+                this.getAudits()
+            }
 		},
 	};
 </script>

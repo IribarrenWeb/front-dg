@@ -75,6 +75,12 @@ const ResetPasswordRequest = defineAsyncComponent({
     loadingComponent: Loader
 });
 
+const Visits = defineAsyncComponent({
+    loader: () =>
+        import ("@/views/Visits.vue"),
+    loadingComponent: Loader
+});
+
 // import Icons from "../views/Icons.vue";
 // import Tables from "../views/Tables.vue";
 // import MaterialTable from "../views/Tables/MaterialTable.vue"
@@ -142,6 +148,12 @@ const routes = [{
                 path: "/audits",
                 name: "auditorias",
                 components: { default: Audits },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/visits",
+                name: "visitas",
+                components: { default: Visits },
                 meta: { middleware: auth },
             },
             auditInit

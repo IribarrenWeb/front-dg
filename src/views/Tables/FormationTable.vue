@@ -119,7 +119,8 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
             handleReload(){
                 console.log('hola recargandoooooo');
                 this.$emit('reloadTraining')
-            }
+            },
+            
         }
 	};
 </script>

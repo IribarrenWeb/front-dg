@@ -20,6 +20,7 @@
 					<th>Empleados</th>
 					<th>Fecha</th>
 					<th>Estatus</th>
+					<th></th>
 				</template>
 
 				<template v-slot:default="row">
@@ -47,6 +48,9 @@
 							<span class="status">{{ row.item.status ? 'COMPLETADO' : 'PENDIENTE' }}</span>
 						</badge>
 					</td>
+                    <td>
+                        <base-button type="primary" @click="toSchedule(row.item.id)" size="sm">Re-agendar</base-button>
+                    </td>
 				</template>
 			</base-table>
             <base-pagination
@@ -112,6 +116,10 @@
             },
             handleClose() {
                 this.modal = false;
+            },
+            async toSchedule(id){
+                await this.$store.dispatch('toSchedule', {model:'trainings',id: id, name: 'formacion'})
+                this.index()
             }
         },
         watch: {

@@ -59,6 +59,14 @@
             path: '/formations',
           }"
         />
+      <sidebar-item
+          v-if="role != 'business'"
+          :link="{
+            name: 'Visitas',
+            icon: 'ni ni-spaceship text-default',
+            path: '/visits',
+          }"
+        />
       </template>
     </side-bar>
     <div class="main-content" :class="{'m-lg-0':$route.meta.audit}" :data="sidebarBackground">

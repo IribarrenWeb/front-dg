@@ -300,6 +300,7 @@ import MaterialTable from '@/views/Tables/MaterialTable.vue';
 import VehiclesTable from '@/views/Tables/VehiclesTable.vue';
 import SubcontractorTable from '@/views/Tables/SubcontractorTable.vue';
 import EmployeesTable from '../../../views/Tables/EmployeesTable.vue';
+import { mapGetters } from 'vuex';
 
 export default {
     mixins: [utils],
@@ -331,10 +332,6 @@ export default {
     },
     mounted() {
         this.loadProvinces()
-        this.loadEquipments()
-        this.loadOperations()
-        this.loadPermits();
-        this.loadDeposits();
         this.initVals()
     },
     methods:{
@@ -353,12 +350,16 @@ export default {
                 if (this.isSaved) {
                     return
                 }
+                this.loadEquipments()
+                this.loadOperations()
+                this.loadDeposits();
             }
 
             if (this.currentStep == 2 && !this.isSaved) {
                 if (this.isSaved & this.touched) {
                     return
                 }
+                this.loadPermits();
             }
 
             if (this.currentStep == 3 && !this.isSaved) {
@@ -377,6 +378,7 @@ export default {
                     const res = await service.store('installation',this.model);
                     this.installation_id = res.data.data.id
                     this.isSaved = true
+                    this.toAgend(res.data.data.audit_id)
                     this.$emit('reload')
                 } catch (error) {
                     console.log(error);
@@ -389,7 +391,7 @@ export default {
             }
         },
         async fetchItems(search){
-            const res = await service.getIndex('auditor',`name=${search}&includes[]=user`);
+            const res = await service.getIndex('auditor',null,`name=${search}&includes[]=user`);
             const data = res.data.data;
             let options = _.map(data, (auditor) => {
                 return {value: auditor, label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`}
@@ -399,6 +401,9 @@ export default {
         handleClose(reset){
             reset()
             this.$emit('close')
+        },
+        async toAgend(id){
+            await this.$store.dispatch('toSchedule', {model:'audits',id: id, name: 'auditoria'})
         },
         async loadProvinces(){
             const res = await dataService.getProvinces()
@@ -478,6 +483,7 @@ export default {
         },
     },
     computed: {
+        ...mapGetters(['CURRENT_DATE'])
     }
 }
 </script>
