@@ -10,6 +10,14 @@ const Delegate = defineAsyncComponent(() =>
     import ("@/views/Delegate.vue")
 );
 
+const AuditsTable = defineAsyncComponent(() =>
+    import ("@/views/Tables/AuditTable.vue")
+);
+
+const NonTable = defineAsyncComponent(() =>
+    import ("@/views/Tables/NonTable.vue")
+);
+
 const Profile = defineAsyncComponent(() =>
     import ("@/views/UserProfile.vue")
 );
@@ -121,6 +129,20 @@ const routes = [{
                 name: "auditorias",
                 components: { default: Audits },
                 meta: { middleware: auth },
+                children: [{
+                        path: "",
+                        name: "auditorias",
+                        components: { default: AuditsTable },
+                        meta: { middleware: auth },
+                    },
+                    {
+                        path: "nonconformities",
+                        name: "no conformidades",
+                        components: { default: NonTable },
+                        meta: { middleware: auth },
+
+                    },
+                ]
             },
             {
                 path: "/visits",

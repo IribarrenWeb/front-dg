@@ -1,8 +1,8 @@
 <template>
-	<div class="card shadow" :class="type === 'dark' ? 'bg-default' : ''">
+	<div class="card shadow" :class="classes">
 		<div
 			class="card-header border-0"
-			:class="type === 'dark' ? 'bg-transparent' : ''"
+			:class="classes"
 		>
 			<div class="row align-items-center">
 				<div class="col">
@@ -141,6 +141,9 @@ import { mapGetters} from 'vuex';
 				type: String,
 			},
 			title: String,
+            classes: {
+                type: String
+            }
 		},
 		data() {
 			return {

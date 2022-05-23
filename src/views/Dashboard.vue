@@ -51,7 +51,7 @@
 				<informs-table></informs-table>
 			</div>
 			<div>
-				<non-table></non-table>
+				<non-table :dash="true"></non-table>
 			</div>
 		</div>
 	</div>

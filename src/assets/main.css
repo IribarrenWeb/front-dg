@@ -152,3 +152,16 @@
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
 }
+
+.border-radius-top-0 {
+    /* border-top-right-radius: 0; */
+    border-top-left-radius: 0;
+}
+
+.tab-custom-link {
+    color: #ccc;
+}
+
+.tab-custom-link:hover {
+    color: #ccc;
+}

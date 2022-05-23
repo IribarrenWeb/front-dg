@@ -31,6 +31,7 @@ const apis = {
     formation: "formations",
     training: "trainings",
     visit: "visits",
+    non: "nonconformities",
 }
 
 async function getIndex(model, page = 1, params) {
