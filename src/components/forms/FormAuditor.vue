@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-validate v-if="typeof this.model.id == 'number'" @submit="onSubmit" ref="form" v-slot="{meta}" :initial-values="current_values">
+    <form-validate v-if="canShow" @submit="onSubmit" ref="form" v-slot="{meta}" :initial-values="current_values">
 
       <div class="row border rounded border-light px-md-3 py-md-2">
         <div class="col-12">
@@ -363,7 +363,17 @@ import { mapGetters } from 'vuex';
       ...mapGetters([
         'COPY',
         'ROLE'
-      ])
+      ]),
+      canShow() {
+          let show = false
+          if (this.update && !_.isNull(this.model.id)) {
+              show = true;
+          }
+          if (!this.update) {
+              show = true
+          }
+          return show;
+      }
     },
     watch: {
       id: {
