@@ -113,7 +113,7 @@
 						name="file_firm"
 						label="Documento de Alta"
 					>
-						<div v-if="model.file_firm.file != null && !update">
+						<div v-if="!EMPTY(model.file_firm.file) && !update">
 							<span class="mr-md-4">{{ model.file_firm.file[0].name }}</span>
 							<base-button
 								@click="model.file_firm.file = []"
@@ -179,7 +179,7 @@
 								name="file_cer"
 								label="Documento de formación"
 							>
-								<div v-if="model.file_certification.file != null && !update">
+								<div v-if="!EMPTY(model.file_certification.file) && !update">
 									<span class="mr-md-4">{{
 										model.file_certification.file[0].name
 									}}</span>
@@ -271,7 +271,7 @@
 								name="file_driver"
 								label="Documentacion ADR"
 							>
-								<div v-if="model.driver_document.file != null && !update">
+								<div v-if="!EMPTY(model.driver_document.file) && !update">
 									<span class="mr-md-4">{{
 										model.driver_document.file[0].name
 									}}</span>
@@ -340,7 +340,7 @@
 	import utils from "@/mixins/utils-mixin";
 	import service from "@/store/services/model-service";
 	import { mapGetters } from "vuex";
-	import _ from "lodash";
+	import {isEqual} from "lodash";
 
 	export default {
 		name: "form-employee",
@@ -374,7 +374,7 @@
 		methods: {
 			async onSubmit(values, { resetForm }) {
 				if (this.update && this.canUpdate) {
-					if (this.new_firm_doc || !_.isEmpty(this.model.file_firm.file)) {
+					if (this.new_firm_doc || !this.EMPTY(this.model.file_firm.file)) {
 						this.model.file_firm.base64 = await this.toBase64(
 							values.file_firm[0]
 						);
@@ -391,12 +391,12 @@
 					}
 				} else {
 					this.model.file_firm.base64 = await this.toBase64(values.file_firm[0]);
-					if (this.model.driver && !_.isEmpty(values.file_driver)) {
+					if (this.model.driver && !this.EMPTY(values.file_driver)) {
 						this.model.driver_document.base64 = await this.toBase64(
 							values.file_driver[0]
 						);
 					}
-					if (this.model.dangerous_goods && !_.isEmpty(values.file_cer)) {
+					if (this.model.dangerous_goods && !this.EMPTY(values.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
@@ -441,7 +441,7 @@
 					this.model.adr_permit_id = this.model.adr_permission_id;
 					this.model.file_certification = { file: null };
 					this.model.driver_document = { file: null };
-					this.model.date_firm = this.file_firm.document_date;
+					this.model.date_firm = this.file_firm ? this.file_firm.document_date : null;
 
                     if (this.model.is_driver) {
                         this.model.driver_document_date = this.file_driver.document_date
@@ -484,7 +484,7 @@
 				}
 				return show;
 			},
-			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "DIFFERENCE"]),
+			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "DIFFERENCE", "EMPTY"]),
 			update() {
 				return this.employee_id != null;
 			},
@@ -498,7 +498,7 @@
 				return this.FILTER_DOC(this.model.documents, "DOCUMENTACION CHOFER");
 			},
             canUpdate(){
-                return !_.isEqual(this.model,this.original_model)
+                return !isEqual(this.model,this.original_model)
             }
 		},
 	};

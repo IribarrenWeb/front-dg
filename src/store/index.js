@@ -227,6 +227,9 @@ export const store = createStore({
                 })
             }
             return changes(newObj, origObj)
+        },
+        EMPTY: () => (val) => {
+            return _.isEmpty(val)
         }
     },
     mutations: {

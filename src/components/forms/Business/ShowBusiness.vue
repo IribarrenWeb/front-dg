@@ -1,6 +1,13 @@
 <template>
 	<div>
-		<form-validate>
+		<form-validate v-if="canShow" v-slot="{meta}" @submit="onUpdate">
+            <base-steps
+				:currentStep="currentStep"
+				listClasses="mb-md-4 pb-md-2"
+				:steps="steps"
+				:meta="meta"
+				@step="currentStep = $event"
+			></base-steps>
 			<template v-if="currentStep === 1">
 				<div>
 					<div class="row border border-light rounded p-2">
@@ -46,10 +53,10 @@
 						<div class="col-lg-4">
 							<base-field name="property_phone" label="Móvil">
 								<field-validate
-									type="number"
+									type="text"
 									class="form-control"
 									name="property_phone"
-									rules="required|min:5|max:15"
+									rules="required|min:5|max:15|numeric"
 									label="móvil"
 									v-model.number="model.property_phone"
 								/>
@@ -99,10 +106,10 @@
 						<div class="col-lg-4">
 							<base-field name="business_phone" label="Fijo">
 								<field-validate
-									type="number"
+									type="text"
 									class="form-control"
 									name="business_phone"
-									rules="required|min:5|max:15"
+									rules="required|min:5|max:15|numeric"
 									label="fijó"
 									v-model.number="model.business_phone"
 								/>
@@ -120,7 +127,7 @@
 								/>
 							</base-field>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-4" v-if="provinces.length >= 1">
 							<base-field name="province_id" label="Provincia">
 								<field-validate
 									class="form-control"
@@ -188,10 +195,10 @@
 					<div class="col-lg-4">
 						<base-field name="iban_number" label="IBAN">
 							<field-validate
-								type="number"
+								type="text"
 								class="form-control"
 								name="iban_number"
-								rules="required|min:3|max:50"
+								rules="required|min:3|max:50|alpha_num"
 								label="numero iban"
 								v-model="model.iban_number"
 							/>
@@ -216,23 +223,23 @@
 					</div>
 					<div class="col-lg-6">
 						<base-field name="file_document.base64" label="Documentación">
-							<div v-if="model.file_document.file.length >= 1">
-								<span class="mr-md-4">{{
-									model.file_document.file[0].name
-								}}</span>
-								<base-button
-									@click="model.file_document.file = []"
-									size="sm"
-									type="default"
-									:outline="true"
-									><i class="fa-solid fa-pencil"></i
-								></base-button>
-							</div>
+                            <div v-if="file_doc && !new_file_doc">
+                                <a href="#" @click="getDocument(file_doc.id)" class="mr-md-4">{{
+                                    file_doc.type.name
+                                }}</a>
+                                <base-button
+                                    @click="new_file_doc = true"
+                                    size="sm"
+                                    type="default"
+                                    :outline="true"
+                                    ><i class="fa-solid fa-pencil"></i
+                                ></base-button>
+                            </div>
 							<field-validate
-								v-show="model.file_document.file.length < 1"
+								v-else
 								type="file"
 								class="form-control"
-								name="file_document.base64"
+								name="file_doc"
 								rules="required|ext:pdf"
 								label="documento"
 								v-model="model.file_document.file"
@@ -241,6 +248,118 @@
 					</div>
 				</div>
 			</template>
+            <div class="mt-4 float-md-right">
+                <base-button v-if="canUpdate" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
+					>Actualizar</base-button
+				>
+                <base-button type="default" @click="currentStep++" v-if="currentStep !== 2 && !canUpdate"
+					>Siguiente</base-button
+				>
+                <base-button type="default" @click="currentStep--" v-if="currentStep !== 1"
+					>Anterior</base-button
+				>
+				<base-button
+					type="default"
+					:outline="true"
+					class="ml-auto"
+					@click="this.$emit('close')"
+					>Cancelar
+				</base-button>
+			</div>
 		</form-validate>
 	</div>
 </template>
+<script>
+import utils from "@/mixins/utils-mixin";
+import {mapGetters} from 'vuex';
+import service from '../../../store/services/model-service';
+import {isEmpty, isEqual} from 'lodash';
+
+export default {
+    props: {
+        business: {
+            type: Object,
+            required: true
+        }
+    },
+    mixins: [utils],
+    data() {
+        return {
+            steps: [{
+					number: 1,
+					title: "General",
+					valid: false,
+				},
+				{
+					number: 2,
+					title: "Bancario",
+					valid: false,
+				},
+            ],
+            original_model: null,
+            model: null,
+            new_file_doc: false,
+            currentStep: 1,
+        }
+    },
+    async mounted() {
+        this.show()
+        this.getProvinces();
+    },
+    methods: {
+        async onUpdate(values){
+            if (this.canUpdate) {
+                if (this.currentStep === 2) {
+                    if (this.new_firm_doc || !isEmpty(values.file_doc)) {
+                        this.model.file_document.base64 = await this.toBase64(
+                            values.file_doc[0]
+                        );
+                    }
+                }
+                try {
+                    let data = this.DIFFERENCE(this.original_model, this.model);
+                    await service.update("business", this.business.id, data);
+                    this.$emit("reload");
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        },
+        async show(){
+            // const res = await service.show('business', this.id, 'includes[]=bank')
+            this.model = this.COPY(this.business);
+            this.model.name = this.model.user.name;
+            this.model.last_name = this.model.user.last_name;
+            this.model.email = this.model.user.email;
+            this.model.holder_name = this.model.bank.holder_name;
+            this.model.iban_number = this.model.bank.iban_number;
+            this.model.bank_code = this.model.bank.bank_code;
+            this.model.file_document = { file: null };
+            this.model.file_date = this.file_doc ? this.file_doc.document_date : null;
+
+            this.original_model = this.COPY(this.model);
+        }
+    },
+    computed: {
+        ...mapGetters(['COPY', 'DIFFERENCE', 'FILTER_DOC']),
+        canUpdate(){
+            return !isEqual(this.model,this.original_model)
+        },
+        file_doc(){
+            return this.FILTER_DOC(this.model.documents, "DOCUMENTACION");
+        },
+        canShow() {
+            let show = false;
+            if (this.business != null && this.model != null) {
+                show = true;
+            }
+            return show;
+        },
+    },
+    watch: {
+        business(){
+            this.show()
+        }
+    }
+}
+</script>

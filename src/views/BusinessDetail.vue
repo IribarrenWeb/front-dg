@@ -3,10 +3,19 @@
 		<base-header type="gradient-default" class="py-5"> </base-header>
 
 		<div class="container-fluid mt-4">
+            <div class="d-flex justify-content-lg-end mb-2">
+                <base-button
+                    @click="this.modal = true"
+                    size="sm"
+                    type="default"
+                    :outline="false"
+                    ><i class="fa-solid fa-pencil"></i
+                > Editar</base-button>
+            </div>
 			<div class="card overflow-auto" v-if="business != null">
 				<table class="table table-sm table-bordered">
 					<thead>
-                        <tr class="text-uppercase">
+						<tr class="text-uppercase">
 							<th scope="row">Nombre empresa</th>
 							<th scope="col">CIF/NIF</th>
 							<th scope="row">Ciudad</th>
@@ -32,7 +41,7 @@
 							<th scope="col">Email</th>
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
-                        <tr>
+						<tr>
 							<td>{{ business.user.name }}</td>
 							<td>{{ business.property_dni }}</td>
 							<td>{{ business.user.email }}</td>
@@ -44,19 +53,21 @@
 						</tr>
 						<tr>
 							<td>
-                                <span v-if="!typeof business.documents[0] == undefined">
-                                    {{ formatDate(business.documents[0].document_date, "en-GB") }}
-                                </span>
+								<span v-if="file_doc">
+									{{ formatDate(file_doc.document_date, "en-GB") }}
+								</span>
+								<span v-else>SIN DOCUMENTACIÓN</span>
 							</td>
 							<td colspan="6">
 								<a
-                                    v-if="!typeof business.documents[0] == undefined"
+									v-if="file_doc"
 									href="#"
-									@click.prevent="getDocument(business.documents[0].id)"
+									@click.prevent="getDocument(file_doc.id)"
 								>
 									<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
 									Documentación
 								</a>
+								<span v-else>SIN DOCUMENTACIÓN</span>
 							</td>
 						</tr>
 					</tbody>
@@ -65,6 +76,19 @@
 			<div class="card" v-else>
 				<h3>No hay resultados</h3>
 			</div>
+
+            <modal
+				v-if="this.modal"
+				v-model:show="this.modal"
+				modalClasses="modal-xl"
+				model="empresa"
+			>
+				<show-business
+					@close="this.modal = false"
+					@reload="getBusiness()"
+					:business="business"
+				></show-business>
+			</modal>
 
 			<installation-table
 				v-if="business != null"
@@ -77,15 +101,18 @@
 	import service from "../store/services/model-service";
 	import utils from "@/mixins/utils-mixin";
 	import InstallationTable from "./Tables/InstallationTable.vue";
+    import ShowBusiness from '../components/forms/Business/ShowBusiness.vue';
+    import { mapGetters } from 'vuex';
 
 	export default {
-		components: { InstallationTable },
+		components: { InstallationTable, ShowBusiness },
 		mixins: [utils],
 		data() {
 			return {
 				meta: {},
 				business: null,
 				id: "",
+                modal: false
 			};
 		},
 		async created() {
@@ -100,18 +127,21 @@
 		},
 		methods: {
 			async getBusiness() {
-				console.log("ejecutando");
 				const id = this.id;
 				const response = await service.show(
 					"business",
 					id,
-					"includes[]=province.city&counts[]=installations&includes[]=documents"
+					"includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank"
 				);
 				this.business = response.data.data;
-
-				console.log(this.business);
 			},
 		},
+        computed: {
+            ...mapGetters(['FILTER_DOC']),
+            file_doc(){
+                return this.FILTER_DOC(this.business.documents, 'DOCUMENTACION')
+            }
+        }
 	};
 </script>
 <style>
