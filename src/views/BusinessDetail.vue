@@ -15,7 +15,6 @@
 							<th scope="row">Pais</th>
 							<th scope="row">Instalaciones</th>
 						</tr>
-						
 					</thead>
 					<tbody>
 						<tr>

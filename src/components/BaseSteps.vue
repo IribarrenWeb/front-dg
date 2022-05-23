@@ -18,7 +18,7 @@
 
       <ul v-else :class="`nav nav-pills justify-content-center steps nav-fill ${listClasses}`">
           <li class="nav-item" v-for="step in steps" :key="step">
-              <a class="nav-link p-2 d-flex align-items-center text-center justify-content-center" :class="[{'active': currentStep == step.number},{'disabled':!step.valid}]" href="#" @click.prevent="handleClick(step)">
+              <a class="nav-link p-2 d-flex align-items-center text-center justify-content-center" :class="[{'active': currentStep == step.number},{'disabled':!step.valid && !edit}]" href="#" @click.prevent="handleClick(step)">
                   <i class="fa fa-check mr-2" aria-hidden="true" v-if="step.valid"></i> 
                   {{step.title}}
               </a>
@@ -58,6 +58,9 @@ export default {
     },
     listClasses: {
       type: String
+    },
+    edit: {
+        type: Boolean
     }
   },
   data() {
@@ -88,13 +91,13 @@ export default {
           itemsToScroll: this.steps.length > 10 ? 1 : 1,
           snapAlign: 'start',
         },
-      }
+      },
     }
   },
   methods: {
     handleClick(step){
       let true1 = step.valid
-      if (true1) {
+      if (true1 || this.edit) {
         this.$emit('navigate',step.number);
       }else{
         this.$toast.error('No puedes ir hasta que valides la información');

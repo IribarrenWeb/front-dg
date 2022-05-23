@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form-validate @submit="onSubmit" ref="form" v-slot="{meta}" :initial-values="current_values">
+    <form-validate v-if="typeof this.model.id == 'number'" @submit="onSubmit" ref="form" v-slot="{meta}" :initial-values="current_values">
 
       <div class="row border rounded border-light px-md-3 py-md-2">
         <div class="col-12">
@@ -201,7 +201,6 @@ import { mapGetters } from 'vuex';
       };
     },
     mounted() {
-      this.$refs.form.resetForm('dirty')
       this.loadProvinces()
     },
     methods: {

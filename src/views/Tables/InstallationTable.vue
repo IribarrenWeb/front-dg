@@ -72,7 +72,6 @@
 					align="center"
 				></base-pagination>
 			</div>
-			<loader v-if="loader"></loader>
 
 			<modal
 				v-if="this.modal"
@@ -91,6 +90,7 @@
 				<installation-show
 					v-else
 					:installation_id="installation_id"
+					@reload="getInstallations()"
 					@close="(this.modal = false), (this.isView = false)"
 				></installation-show>
 			</modal>

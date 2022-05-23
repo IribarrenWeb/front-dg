@@ -6,7 +6,7 @@
 			v-slot="{ meta }"
 			:initial-values="current_values"
 		>
-			<div class="row border rounded border-light px-md-3 py-md-2 mt-2 mt-md-3">
+			<div class="row border rounded border-light px-md-3 py-md-2 mt-2 my-md-3 my-2">
 				<div class="col-12">
 					<h4>
 						Datos de delegacion <span class="text-muted">(Si aplica)</span>
@@ -44,7 +44,7 @@
 							name="delegation_phone"
 							type="number"
 							label="fíjo"
-							rules="min:5|max:15"
+							rules="max:15"
 							v-model="model.delegation_phone"
 						/>
 					</base-field>
@@ -129,7 +129,7 @@
 
 				<div class="col-lg-4">
 					<base-field name="province_id" label="Provincia">
-						<div v-if="update && !prov_update" class="d-flex">
+						<div v-if="update && (!prov_update && typeof model.province != null)" class="d-flex">
 							<input
 								type="text"
 								class="form-control mr-md-3"
@@ -177,7 +177,6 @@
 
 			<div
 				class="row border rounded border-light px-md-3 py-md-2 mt-2 mt-md-3"
-				v-if="!update || (update && model.documents.length >= 1)"
 			>
 				<div class="col-12">
 					<h4>Documentacion</h4>
@@ -216,7 +215,7 @@
 								v-model="model.file_certification"
 							/>
 							<base-button
-								v-if="update"
+								v-if="update && cer_update"
 								@click="reset('file_cer')"
 								size="sm"
 								type="default"
@@ -270,7 +269,7 @@
 								v-model="model.file_firm"
 							/>
 							<base-button
-								v-if="update"
+								v-if="update && firm_update"
 								@click="firm_update = false"
 								size="sm"
 								type="default"
@@ -295,7 +294,7 @@
 				</div>
 			</div>
 
-			<div class="d-flex justify-content-lg-end">
+			<div class="d-flex justify-content-lg-end my-3">
 				<base-button
 					type="default"
 					nativeType="submit"
@@ -362,32 +361,20 @@
 		methods: {
 			async onSubmit(values, { resetForm }) {
 				let formData = new FormData();
-				formData.append("name", this.model.name);
-				formData.append("delegation_name", this.model.delegation_name);
-				formData.append("delegation_phone", this.model.delegation_phone);
-				formData.append("address", this.model.address);
-				formData.append("cif_nif", this.model.cif_nif);
-				formData.append("last_name", this.model.last_name);
-				formData.append("email", this.model.email);
-				formData.append("phone_number", this.model.phone_number);
-				formData.append("dni", this.model.dni);
-				formData.append("province_id", this.model.province_id);
+				
+                let keys = _.keys(this.model);
+                
+                const $this = this
 
-				if (!_.isEmpty(this.model.certification_date)) {
-					formData.append("certification_date", this.model.certification_date);
-				}
-
-				if (!_.isEmpty(this.model.firm_date)) {
-					formData.append("firm_date", this.model.firm_date);
-				}
-
-				if (_.isArray(this.model.file_certification)) {
-					formData.append("file_certification", this.model.file_certification[0]);
-				}
-
-				if (_.isArray(this.model.file_firm)) {
-					formData.append("file_firm", this.model.file_firm[0]);
-				}
+                _.forEach(keys, function(key) {
+                    if (!_.isNull($this.model[key]) && !_.includes(['user','province','documents','created_at', 'id'],key)) {
+                        if (key == 'file_certification' || key == 'file_firm') {
+                            formData.append(key, $this.model[key][0]);
+                        }else{
+                            formData.append(key,$this.model[key])
+                        }
+                    }    
+                })
 
 				let response = null;
 				try {
@@ -464,10 +451,10 @@
 						// delegate_id: "",
 						dni: data.dni,
 						phone_number: data.phone_number,
-						delegation_phone: data.delegation_phone,
-						delegation_name: data.delegation_name,
-						address: data.address,
-						cif_nif: data.cif_nif,
+						delegation_phone: data.delegation_phone != null ? data.delegation_phone : '',
+						delegation_name: data.delegation_name != null ? data.delegation_name : '',
+						address: data.address != null ? data.address : '',
+						cif_nif: data.cif_nif != null ? data.cif_nif : '',
 						province_id: data.province_id,
 						email: data.user.email,
 					};

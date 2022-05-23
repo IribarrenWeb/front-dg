@@ -4,10 +4,12 @@
 			:currentStep="currentStep"
 			listClasses="mb-md-4 pb-md-2"
 			:steps="steps"
+			:edit="true"
 			@step="currentStep = $event"
+			@navigate="currentStep = $event"
 		></base-steps>
 		<template v-if="currentStep == 1">
-			<form-validate
+			<!-- <form-validate
 				@submit="onSubmit"
 				ref="form"
 				v-slot="{ meta }"
@@ -17,179 +19,177 @@
 					province_id: null,
 					file_document: null,
 				}"
-			>
-				<div class="row border rounded border-light px-4 py-2">
-					<div class="col-lg-4">
-						<base-field name="name" label="Nombre de instalacion">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="name"
-								rules="required"
-								label="Nombre"
-								v-model="model.name"
-							/>
-						</base-field>
-					</div>
-					<div class="col-lg-4">
-						<base-field name="address" label="Direccion">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="address"
-								rules="required"
-								label="direccion"
-								v-model="model.address"
-							/>
-						</base-field>
-					</div>
-					<div class="col-lg-4">
-						<base-field name="auditable" label="Auditor">
-							<div v-if="!new_auditable.new && model.auditable != null">
-								<span class="mr-md-4 text-uppercase"
-									>{{ model.auditable.user.name }}
-									{{ model.auditable.user.last_name }}</span
-								>
-								<base-button
-									@click="new_auditable.new = true"
-									size="sm"
-									type="default"
-									:outline="true"
-									><i class="fa-solid fa-pencil"></i
-								></base-button>
-							</div>
-							<div v-show="new_auditable.new || model.auditable == null">
-								<field-validate
-									name="auditable"
-									label="Auditor"
-									v-slot="{ field }"
-									v-model="new_auditable.value"
-								>
-									<Multiselect
-										:searchable="true"
-										v-bind="field"
-										:min-chars="2"
-										:delay="500"
-										:required="true"
-										:options="fetchItems"
-										:resolve-on-load="false"
-										ref="multiselect"
-										@select="new_auditable.value = $event"
-									>
-									</Multiselect>
-								</field-validate>
-								<div class="mt-md-2" @click="handleForm" v-if="new_auditable.new">
-									<base-button
-										@click="handleCancel(new_auditable)"
-										size="sm"
-										type="danger"
-										:outline="true"
-										><i class="fa-solid fa-rotate-left"></i
-									></base-button>
-								</div>
-							</div>
-						</base-field>
-					</div>
-					<div class="col-lg-6">
-						<base-field name="province_id" label="Provincia">
-							<div v-if="!new_province.new">
-								<base-input :view="true" lable="Provincia">
-									{{ model.province.name }}
-
-									<base-button
-										@click="new_province.new = true"
-										size="sm"
-										type="default"
-										:outline="true"
-										><i class="fa-solid fa-pencil"></i
-									></base-button>
-								</base-input>
-							</div>
-							<field-validate
-								v-show="new_province.new"
-								:standalone="vare"
-								class="form-control"
-								as="select"
-								name="province_id"
-								label="Provincia"
-								v-model="new_province.value"
-							>
-								<option value="" selected>Selecciona una provincia</option>
-								<option
-									v-for="province in provinces"
-									:key="province.id"
-									:value="province.id"
-								>
-									{{ province.name }}
-								</option>
-							</field-validate>
-							<div class="mt-md-2">
-								<base-button
-									v-if="new_province.new"
-									@click="handleCancel(new_province)"
-									size="sm"
-									type="danger"
-									:outline="true"
-									><i class="fa-solid fa-rotate-left"></i
-								></base-button>
-							</div>
-						</base-field>
-					</div>
-					<div class="col-lg-6">
-						<base-field name="file_document" label="Documentacion">
-							<div v-if="(model.documents.length >= 1) & !new_document.new">
-								<a
-									class="mr-md-4"
-									@click.prevent="getDocument(model.documents[0].id)"
-								>
-									{{ model.documents[0].type.name }}
-								</a>
-								<base-button
-									@click="new_document.new = true"
-									size="sm"
-									type="default"
-									:outline="true"
-									><i class="fa-solid fa-pencil"></i
-								></base-button>
-							</div>
-							<field-validate
-								v-show="new_document.new || model.documents.length < 1"
-								class="form-control"
-								type="file"
-								name="file_document"
-								rules="ext:pdf"
-								:validateOnInput="true"
-								label="documentacion"
-								v-model="new_document.value"
-							/>
-							<div class="mt-md-2">
-								<base-button
-									v-if="new_document.new"
-									@click="handleCancel(new_document)"
-									size="sm"
-									type="danger"
-									:outline="true"
-									><i class="fa-solid fa-rotate-left"></i
-								></base-button>
-							</div>
-						</base-field>
-					</div>
-					<base-button
-						type="default"
-						nativeType="submit"
-						@click="this.touched = meta.dirty"
-						v-if="meta.dirty"
-					>
-						Actualizar
-					</base-button>
+			> -->
+			<div class="row border rounded border-light px-4 py-2">
+				<div class="col-lg-4">
+					<base-field name="name" label="Nombre de instalacion">
+						<field-validate
+							type="text"
+							class="form-control"
+							name="name"
+							rules="required"
+							label="Nombre"
+							v-model="model.name"
+						/>
+					</base-field>
 				</div>
-			</form-validate>
+				<div class="col-lg-4">
+					<base-field name="address" label="Direccion">
+						<field-validate
+							type="text"
+							class="form-control"
+							name="address"
+							rules="required"
+							label="direccion"
+							v-model="model.address"
+						/>
+					</base-field>
+				</div>
+				<div class="col-lg-4">
+					<base-field name="auditable" label="Auditor">
+						<div v-if="!new_auditable.new && model.auditable != null">
+							<span class="mr-md-4 text-uppercase"
+								>{{ model.auditable.user.name }}
+								{{ model.auditable.user.last_name }}</span
+							>
+							<base-button
+								@click="new_auditable.new = true"
+								size="sm"
+								type="default"
+								:outline="true"
+								><i class="fa-solid fa-pencil"></i
+							></base-button>
+						</div>
+						<div v-show="new_auditable.new || model.auditable == null">
+							<field-validate
+								name="auditable"
+								label="Auditor"
+								v-slot="{ field }"
+								v-model="new_auditable.value"
+							>
+								<Multiselect
+									:searchable="true"
+									v-bind="field"
+									:min-chars="2"
+									:delay="500"
+									:required="true"
+									:options="fetchItems"
+									:resolve-on-load="false"
+									ref="multiselect"
+									@select="new_auditable.value = $event"
+								>
+								</Multiselect>
+							</field-validate>
+							<div class="mt-md-2" @click="handleForm" v-if="new_auditable.new">
+								<base-button
+									@click="handleCancel('auditable')"
+									size="sm"
+									type="danger"
+									:outline="true"
+									><i class="fa-solid fa-rotate-left"></i
+								></base-button>
+							</div>
+						</div>
+					</base-field>
+				</div>
+				<div class="col-lg-6">
+					<base-field name="province_id" label="Provincia">
+						<div v-if="!new_province.new">
+							<base-input :view="true" lable="Provincia">
+								{{ model.province.name }}
+
+								<base-button
+									@click="new_province.new = true"
+									size="sm"
+									type="default"
+									:outline="true"
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
+							</base-input>
+						</div>
+						<field-validate
+							v-show="new_province.new"
+							:standalone="vare"
+							class="form-control"
+							as="select"
+							name="province_id"
+							label="Provincia"
+							v-model="model.province_id"
+						>
+							<option value="" selected>Selecciona una provincia</option>
+							<option
+								v-for="province in provinces"
+								:key="province.id"
+								:value="province.id"
+							>
+								{{ province.name }}
+							</option>
+						</field-validate>
+						<div class="mt-md-2">
+							<base-button
+								v-if="new_province.new"
+								@click="new_province.new = false, model.province_id = original_model.province_id"
+								size="sm"
+								type="danger"
+								:outline="true"
+								><i class="fa-solid fa-rotate-left"></i
+							></base-button>
+						</div>
+					</base-field>
+				</div>
+				<div class="col-lg-6">
+					<base-field name="file_document" label="Documentacion">
+						<div v-if="(model.documents.length >= 1) & !new_document.new">
+							<a
+								class="mr-md-4"
+								@click.prevent="getDocument(model.documents[0].id)"
+							>
+								{{ model.documents[0].type.name }}
+							</a>
+							<base-button
+								@click="new_document.new = true"
+								size="sm"
+								type="default"
+								:outline="true"
+								><i class="fa-solid fa-pencil"></i
+							></base-button>
+						</div>
+						<field-validate
+							v-show="new_document.new || model.documents.length < 1"
+							class="form-control"
+							type="file"
+							name="file_document"
+							rules="ext:pdf"
+							:validateOnInput="true"
+							label="documentacion"
+							v-model="model.file_document"
+						/>
+						<div class="mt-md-2">
+							<base-button
+								v-if="new_document.new"
+								@click="handleCancel('document')"
+								size="sm"
+								type="danger"
+								:outline="true"
+								><i class="fa-solid fa-rotate-left"></i
+							></base-button>
+						</div>
+					</base-field>
+				</div>
+			</div>
+			<!-- </form-validate> -->
+
 			<div class="row border rounded border-light px-1 py-1 mt-md-4 mt-2">
-				<div class="col-md-12">
-					<h4>Responsable de la instalación</h4>
+				<div class="col-md-12 py-2">
+                    <div class="d-flex justify-content-between">
+                        <h4>Responsable de la instalación</h4>
+                        <div class="">
+                            <base-button size="sm" @click="modal = true">Editar</base-button>
+                        </div>
+                    </div>
 				</div>
 				<div class="col-md-12 overflow-auto p-0">
-					<table class="table table-sm"> 
+					<table class="table table-sm">
 						<thead>
 							<tr>
 								<th>RESPONSABLE</th>
@@ -209,7 +209,7 @@
 									<div v-if="responsible.formation_document != null">
 										<span class="d-block">{{
 											this.formatDate(
-												row.item.formation_document.document_date,
+												responsible.formation_document.document_date,
 												"GB"
 											)
 										}}</span>
@@ -217,11 +217,11 @@
 											href="#"
 											class="text-uppercase d-block"
 											@click.prevent="
-												getDocument(row.item.formation_document.id)
+												getDocument(responsible.formation_document.id)
 											"
 										>
 											<i class="fa fa-file-pdf" aria-hidden="true"></i>
-											{{ row.item.formation_document.type.name }}
+											{{ responsible.formation_document.type.name }}
 										</a>
 									</div>
 								</td>
@@ -230,136 +230,101 @@
 					</table>
 				</div>
 			</div>
+            <modal
+			v-if="modal"
+			v-model:show="modal"
+			action="editar"
+			modalClasses="modal-xl"
+			model="empleado"
+            >
+                <form-employee
+                    @close="modal = false"
+                    @reload="index()"
+                    :employee_id="responsible.id"
+                ></form-employee>
+            </modal>
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == 2">
 			<div>
-				<form-validate
-					@submit="onSubmit"
-					ref="form"
-					v-slot="{ meta }"
-					v-if="model != null"
-				>
-					<div class="d-flex justify-content-end mb-md-2">
-						<base-button
-							@click="update = !update"
-							type="default"
-							size="sm"
-							:outline="true"
-							>{{ update ? "Cancelar" : "Editar" }}</base-button
-						>
-					</div>
-					<div class="row border rounded border-light px-4 py-2">
-						<div class="col-lg-12">
-							<div class="row">
-								<div class="col-lg-6">
-									<base-field name="operations" label="Tipos de operaciones">
-										<div
-											v-for="operation in operations"
-											:key="operation.key"
-											class="form-check"
-										>
-											<div class="form-check">
-												<input
-													class="form-check-input"
-													type="checkbox"
-													:value="operation.value"
-													v-model="oper"
-													:disabled="!update"
-													:checked="operation.checked"
-												/>
-												<label class="form-check-label" for="flexCheckDefault">
-													{{ operation.label }}
-												</label>
-											</div>
+				<div class="row border rounded border-light px-4 py-2">
+					<div class="col-lg-12">
+						<div class="row">
+							<div class="col-lg-6">
+								<base-field name="operations" label="Tipos de operaciones">
+									<div
+										v-for="operation in operations"
+										:key="operation.key"
+										class="form-check"
+									>
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="checkbox"
+												:value="operation.value"
+												v-model="oper"
+												:checked="operation.checked"
+											/>
+											<label class="form-check-label" for="flexCheckDefault">
+												{{ operation.label }}
+											</label>
 										</div>
-									</base-field>
-									<field-validate
-										v-show="false"
-										v-model="oper"
-										name="operation_ids"
-										rules="required"
-									/>
-								</div>
-								<div class="col-lg-6">
-									<base-field name="deposits" label="Tipos de depósitos">
-										<div
-											v-for="deposit in deposits"
-											:key="deposit.key"
-											class="form-check"
-										>
-											<div class="form-check">
-												<input
-													class="form-check-input"
-													type="checkbox"
-													:value="deposit.value"
-													v-model="deps"
-													:disabled="!update"
-													:checked="deposit.checked"
-												/>
-												<label class="form-check-label" for="flexCheckDefault">
-													{{ deposit.label }}
-												</label>
-											</div>
+									</div>
+								</base-field>
+							</div>
+							<div class="col-lg-6">
+								<base-field name="deposits" label="Tipos de depósitos">
+									<div
+										v-for="deposit in deposits"
+										:key="deposit.key"
+										class="form-check"
+									>
+										<div class="form-check">
+											<input
+												class="form-check-input"
+												type="checkbox"
+												:value="deposit.value"
+												v-model="deps"
+												:checked="deposit.checked"
+											/>
+											<label class="form-check-label" for="flexCheckDefault">
+												{{ deposit.label }}
+											</label>
 										</div>
-									</base-field>
-									<field-validate
-										v-show="false"
-										v-model="oper"
-										name="operation_ids"
-										rules="required"
-									/>
-								</div>
+									</div>
+								</base-field>
 							</div>
 						</div>
 					</div>
-					<div class="row border rounded border-light px-4 py-2 mt-3">
-						<div class="col-lg-12">
-							<base-field
-								name="equipments"
-								label="Tipos de equipamientos"
-								labelClasses="d-block"
-							>
-								<div
-									v-for="equipment in equipments"
-									:key="equipment.key"
-									class="d-inline-block"
-								>
-									<div class="form-check ml-3">
-										<input
-											class="form-check-input"
-											type="checkbox"
-											:value="equipment.value"
-											v-model="equips"
-											:disabled="!update"
-											:checked="equipment.checked"
-										/>
-										<label class="form-check-label" for="flexCheckDefault">
-											{{ equipment.label }}
-										</label>
-									</div>
-								</div>
-								<field-validate
-									v-show="false"
-									v-model="equips"
-									name="equips_ids"
-									rules="required"
-								/>
-							</base-field>
-						</div>
-					</div>
-					<div class="mt-md-2">
-						<base-button
-							type="default"
-							nativeType="submit"
-							size="sm"
-							v-if="update"
-							:disabled="!meta.valid"
+				</div>
+				<div class="row border rounded border-light px-4 py-2 mt-3">
+					<div class="col-lg-12">
+						<base-field
+							name="equipments"
+							label="Tipos de equipamientos"
+							labelClasses="d-block"
 						>
-							Actualizar
-						</base-button>
+							<div
+								v-for="equipment in equipments"
+								:key="equipment.key"
+								class="d-inline-block"
+							>
+								<div class="form-check ml-3">
+									<input
+										class="form-check-input"
+										type="checkbox"
+										:value="equipment.value"
+										v-model="equips"
+										:checked="equipment.checked"
+									/>
+									<label class="form-check-label" for="flexCheckDefault">
+										{{ equipment.label }}
+									</label>
+								</div>
+							</div>
+						</base-field>
 					</div>
-				</form-validate>
+				</div>
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
@@ -407,7 +372,7 @@
 			>
 			<base-button
 				type="default"
-				@click="currentStep++"
+				@click="handleNext"
 				v-if="currentStep < steps.length"
 				>Siguiente</base-button
 			>
@@ -435,6 +400,7 @@
 	import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
 	import _ from "lodash";
 	import { mapGetters } from "vuex";
+    import FormEmployee from '../../components/forms/FormEmployee.vue';
 
 	export default {
 		components: {
@@ -444,6 +410,7 @@
 			SubcontractorTable,
 			EmployeesTable,
 			DashboardEmployee,
+            FormEmployee,
 		},
 		name: "installation-show",
 		mixins: [utils],
@@ -461,7 +428,11 @@
 					new: false,
 					base64: "",
 				},
-				update: false,
+				update: {
+					op: false,
+					dep: false,
+					eqp: false,
+				},
 				equips: [],
 				oper: [],
 				deps: [],
@@ -497,13 +468,14 @@
 						valid: false,
 					},
 				],
+                modal:false,
+				original_model: null,
 				new_auditable: {
 					new: false,
-					value: null,
+                    value: null
 				},
 				new_province: {
 					new: false,
-					value: null,
 				},
 				currentStep: 1,
 				provinces: [],
@@ -513,52 +485,14 @@
 				responsible: null,
 			};
 		},
-		async created() {
-			await this.getInst();
-			await this.loadProvinces();
-			this.loadOperations();
-			this.loadEquipments();
-			this.loadDeposits();
+		async beforeCreate() {
+			
 		},
+        created() {
+            this.getInst();
+			this.loadProvinces();
+        },
 		methods: {
-			async onSubmit() {
-				let data = [];
-
-				if (this.currentStep == 1) {
-					data = {
-						name: this.model.name,
-						address: this.model.address,
-					};
-					if (this.new_document.new || (this.model.documents < 1 && _.isArray(this.new_document.value))) {
-						data.file_document = {
-							base64: await this.toBase64(this.new_document.value[0]),
-						};
-					}
-					if (this.new_auditable.new || this.model.auditable == null) {
-						data.auditable_id = this.new_auditable.value.id;
-					}
-					if (this.new_province.new) {
-						data.province_id = this.new_province.value;
-					}
-				}
-
-				if (this.currentStep == 2) {
-					data = {
-						operation_types_ids: this.oper,
-						equipments_ids: this.equips,
-						deposit_types_ids: this.deps,
-					};
-				}
-
-				try {
-					await service.update("installation", this.installation_id, data);
-					this.$toast.success("Datos actualizados");
-					await this.getInst();
-					this.resetNews();
-				} catch (err) {
-					this.$toast.error("No se pudieron guardar los cambios.");
-				}
-			},
 			async getInst() {
 				try {
 					const res = await service.show(
@@ -567,20 +501,96 @@
 						"includes[]=operations&includes[]=equipments&includes[]=auditable.user&includes[]=documents.type&includes[]=province&includes[]=depositTypes" +
 							"&responsible=true"
 					);
-                    this.model = this.COPY(res.data.data);
+					this.model = this.COPY(res.data.data);
 					this.responsible = this.COPY(res.data.data.responsible);
+                    this.model.file_document = null
+                    this.model.auditable_id = null
+
+					
                     let f_doc = null;
-                    _.forEach(this.responsible.documents, (doc) => {
-							if (doc.type.name == "CERTIFICADO") {
-								f_doc = doc;
-							}
-						});
-                    this.responsible.formation_document = f_doc;
+					_.forEach(this.responsible.documents, (doc) => {
+						if (doc.type.name == "CERTIFICADO") {
+							f_doc = doc;
+						}
+					});
+					this.responsible.formation_document = f_doc;
 
 					this.model.responsible = null;
+
+                    this.original_model = this.COPY(this.model)
 				} catch (err) {
 					console.log(err);
 				}
+			},
+			async handleNext() {
+				if (this.currentStep == 1) {
+					console.log(!_.isEqual(this.model, this.original_model), this.model, this.original_model);
+                    let data = {
+                        name: this.model.name,
+                        address: this.model.address,
+                    };
+                    if (
+                        this.new_document.new ||
+                        (this.model.documents < 1 && _.isArray(this.model.file_document))
+                    ) {
+                        data.file_document = {
+                            base64: await this.toBase64(this.model.file_document[0]),
+                        };
+                    }
+                    if (this.new_auditable.new || this.model.auditable == null) {
+                        data.auditable_id = this.model.auditable_id;
+                    }
+                    if (this.new_province.new) {
+                        data.province_id = this.model.province_id;
+                    }
+					if (!_.isEqual(this.model, this.original_model)) {
+						try {
+							await service.update("installation", this.installation_id, data);
+							this.$toast.success("Datos actualizados");
+                            this.$emit('reload')
+							await this.getInst();
+							this.resetNews();
+						} catch (err) {
+							this.$toast.error("No se pudieron guardar los cambios.");
+                            return 
+						}
+					}
+
+                    this.loadOperations();
+                    this.loadEquipments();
+                    this.loadDeposits();
+				}
+
+				if (this.currentStep == 2) {
+					let data = {};
+
+					if (this.update.op) {
+						data.operation_types_ids = this.oper;
+					}
+					if (this.update.eqp) {
+						data.equipments_ids = this.equips;
+					}
+					if (this.update.dep) {
+						data.deposit_types_ids = this.deps;
+					}
+
+					if (this.update.op || this.update.eqp || this.update.dep) {
+						try {
+							await service.update("installation", this.installation_id, data);
+							this.$toast.success("Datos actualizados");
+                            this.$emit('reload')
+							await this.getInst();
+							this.update.op = false;
+							this.update.eqp = false;
+							this.update.dep = false;
+						} catch (err) {
+							this.$toast.error("No se pudieron guardar los cambios.");
+                            return
+						}
+					}
+				}
+
+				this.currentStep++;
 			},
 			handleClose() {
 				this.$emit("close");
@@ -604,12 +614,12 @@
 							value: auditor,
 							label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
 						});
-					}else if(auditor.id != this.model.auditable.id){
-                        options.push({
+					} else if (auditor.id != this.model.auditable.id) {
+						options.push({
 							value: auditor,
 							label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
 						});
-                    }
+					}
 				}
 				return options;
 			},
@@ -660,29 +670,61 @@
 				this.equipments = equipments;
 				return;
 			},
-			handleCancel(modell) {
-				modell.new = false;
-				modell.value = null;
+			handleCancel(model) {
+                switch (model) {
+                    case 'document':
+                        this.new_document.new = false;
+                        this.model.file_document = null
+                        break;
+
+                    case 'auditable':
+                        this.new_auditable.new = false;
+                        this.new_auditable.value = false;
+                        break;
+                
+                    default:
+                        break;
+                }
 			},
 			resetNews() {
 				this.new_auditable = {
 					new: false,
-					value: null,
 				};
 				this.new_province = {
 					new: false,
-					value: null,
 				};
 				this.new_document = {
-					value: null,
 					new: false,
-					base64: "",
 				};
-				this.update = false;
+                this.model.file_document = null
 			},
 		},
 		computed: {
-			...mapGetters(["COPY"]),
+			...mapGetters(["COPY", "PLUK", "FILTER_DOC"]),
+            formation_doc(){
+                return this.FILTER_DOC(this.responsible.documents,'CERTIFICADO')
+            }
+		},
+		watch: {
+			oper() {
+				let oper_ids = this.PLUK(this.model.operations, "id");
+				this.update.op = !_.isEqual(this.oper,oper_ids)
+			},
+			equips() {
+				let equip_ids = this.PLUK(this.model.equipments, "id");
+				this.update.eqp = !_.isEqual(this.equips,equip_ids);
+			},
+			deps() {
+				let deps_ids = this.PLUK(this.model.deposit_types, "id");
+				this.update.dep = !_.isEqual(this.deps,deps_ids);;
+			},
+            'new_auditable.value': {
+                handler(newValue) {
+                    if (!_.isUndefined(newValue.id)) {
+                        this.model.auditable_id = newValue.id
+                    }
+                },
+            }
 		},
 	};
 </script>

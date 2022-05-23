@@ -4,6 +4,7 @@ import reset from "./modules/reset";
 import profile from "./modules/profile-module";
 import { axios } from '@/axios';
 import $Swal from 'sweetalert2';
+import _ from 'lodash';
 
 const $swal = $Swal.mixin({
     customClass: {
@@ -109,6 +110,9 @@ export const store = createStore({
                 delegation_phone: "",
                 cif_nif: "",
                 address: "",
+                province: {
+                    name: null
+                },
                 last_name: "",
                 documents: null,
                 file_certification: "",
@@ -205,6 +209,24 @@ export const store = createStore({
         CURRENT_DATE(state) {
             console.log(state);
             return state.current
+        },
+        PLUK: () => (arr, key) => {
+            return arr.map(i => i[key]);
+        },
+        FILTER_DOC: () => (arr, doc_name) => {
+            return _.filter(arr, function(o) { return o.type.name == doc_name })[0];
+        },
+        DIFFERENCE: () => (origObj, newObj) => {
+            function changes(newObj, origObj) {
+                let arrayIndexCounter = 0
+                return _.transform(newObj, function(result, value, key) {
+                    if (!_.isEqual(value, origObj[key])) {
+                        let resultKey = _.isArray(origObj) ? arrayIndexCounter++ : key
+                        result[resultKey] = (_.isObject(value) && _.isObject(origObj[key])) ? changes(value, origObj[key]) : value
+                    }
+                })
+            }
+            return changes(newObj, origObj)
         }
     },
     mutations: {
@@ -300,7 +322,8 @@ export const store = createStore({
                     return true
                 }
             });
-        }
+        },
+
     },
     modules: {
         auth: auth,

@@ -44,7 +44,7 @@ export default {
     },
     icon: String,
     title: String,
-    subTitle: String,
+    subTitle: Number,
     iconClasses: [String, Array],
   },
 };
