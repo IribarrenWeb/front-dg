@@ -1,9 +1,6 @@
 <template>
 	<div class="card shadow" :class="classes">
-		<div
-			class="card-header border-0"
-			:class="classes"
-		>
+		<div class="card-header border-0" :class="classes">
 			<div class="row align-items-center">
 				<div class="col">
 					<h3 class="mb-0" :class="type === 'dark' ? 'text-white' : ''">
@@ -98,9 +95,21 @@
 								</a>
 							</template>
 							<a class="dropdown-item" href="#" @click.prevent="">Archivar</a>
-							<a class="dropdown-item" href="#" @click.prevent="toSchedule(row.item.id)">Agendar</a>
+							<a
+								class="dropdown-item"
+								href="#"
+								@click.prevent="toSchedule(row.item.id)"
+								>Agendar</a
+							>
 							<a class="dropdown-item" href="#" @click.prevent="">Eliminar</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
+							<a
+								class="dropdown-item"
+								v-if="row.item.status == 'COMPLETADO'"
+								:href="url + '/audits/report/' + row.item.id"
+                                target="_blank"
+								>Imprimir</a
+							>
 							<router-link
 								class="dropdown-item"
 								v-if="row.item.status != 'COMPLETADO'"
@@ -130,9 +139,9 @@
 	</div>
 </template>
 <script>
-// import { axios } from '@/axios';
+	// import { axios } from '@/axios';
 
-import { mapGetters} from 'vuex';
+	import { mapGetters } from "vuex";
 	import service from "../../store/services/model-service";
 	export default {
 		name: "audits-table",
@@ -141,9 +150,9 @@ import { mapGetters} from 'vuex';
 				type: String,
 			},
 			title: String,
-            classes: {
-                type: String
-            }
+			classes: {
+				type: String,
+			},
 		},
 		data() {
 			return {
@@ -152,15 +161,15 @@ import { mapGetters} from 'vuex';
 				baseImage: process.env.VUE_APP_API_URL + "img/dg_logo.png",
 				loader: false,
 				page: 1,
-                url: this.$store.state.api_url
+				url: this.$store.state.api_url,
 			};
 		},
 		mounted() {
 			this.getAudits(this.page);
 		},
-        computed: {
-            ...mapGetters(['CURRENT_DATE'])
-        },
+		computed: {
+			...mapGetters(["CURRENT_DATE"]),
+		},
 		methods: {
 			async getAudits(page = 1) {
 				const resp = await service.getIndex(
@@ -198,11 +207,15 @@ import { mapGetters} from 'vuex';
 				}
 				this.getAudits(event);
 			},
-            async toSchedule(id){
-                await this.$store.dispatch('toSchedule', {model:'audits',id: id, name: 'auditoria'})
-                console.log('asdasdasd');
-                this.getAudits()
-            }
+			async toSchedule(id) {
+				await this.$store.dispatch("toSchedule", {
+					model: "audits",
+					id: id,
+					name: "auditoria",
+				});
+				console.log("asdasdasd");
+				this.getAudits();
+			},
 		},
 	};
 </script>

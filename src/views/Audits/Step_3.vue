@@ -243,7 +243,7 @@
 					</form-validate>
 					<hr />
 					<div class="row" v-for="(dep, idx) in adr_deposits" :key="idx">
-						<div class="col-md-11">
+						<div class="col-md-11 border-bottom border-primary">
 							<div class="row">
 								<div class="col-md-2">
 									<base-input
