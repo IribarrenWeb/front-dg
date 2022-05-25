@@ -555,10 +555,6 @@
                             return 
 						}
 					}
-
-                    this.loadOperations();
-                    this.loadEquipments();
-                    this.loadDeposits();
 				}
 
 				if (this.currentStep == 2) {
@@ -724,6 +720,13 @@
                         this.model.auditable_id = newValue.id
                     }
                 },
+            },
+            currentStep(newVal) {
+                if (newVal == 2) {
+                    this.loadOperations();
+                    this.loadEquipments();
+                    this.loadDeposits();
+                }
             }
 		},
 	};
