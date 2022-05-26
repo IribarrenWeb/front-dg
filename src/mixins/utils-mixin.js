@@ -11,9 +11,7 @@ export default {
             permits: {},
         };
     },
-    mounted() {
-        this.getCities();
-    },
+    mounted() {},
     methods: {
         /* extract API server validation errors and assigns them to local mixin data */
         async getDocument(id) {

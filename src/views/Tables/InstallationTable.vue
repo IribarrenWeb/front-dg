@@ -1,5 +1,5 @@
 <template>
-	<div class="card mt-3">
+	<div :class="`card shadow mt-3 ${classes}`">
 		<div class="card-header border-0">
 			<div class="row align-items-center">
 				<div class="col">
@@ -45,21 +45,21 @@
 							>{{ row.item.auditable.user.name }}
 							{{ row.item.auditable.user.last_name }}</a
 						>
-                        <span v-else>SIN AUDITOR</span>
+						<span v-else>SIN AUDITOR</span>
 					</td>
 					<td>
 						<a
 							href="#"
 							@click.prevent="view(row.item.id)"
 							class="btn btn-sm btn-default"
-							><i class="fa-regular fa-eye"></i></a
-						>
+							><i class="fa-regular fa-eye"></i
+						></a>
 						<a
 							href="#"
 							@click.prevent="destroy(row.item.id)"
 							class="btn btn-sm btn-outline-default"
-							><i class="fa-regular fa-trash-can"></i></a
-						>
+							><i class="fa-regular fa-trash-can"></i
+						></a>
 					</td>
 				</template>
 			</base-table>
@@ -101,11 +101,19 @@
 	import FormInstallation from "../../components/forms/Installation/FormInstallation.vue";
 	import service from "../../store/services/model-service";
 	import InstallationShow from "../Shows/InstallationShow.vue";
+	import { isNull } from "lodash";
+
 	export default {
 		components: { FormInstallation, InstallationShow },
 		name: "installation-table",
 		props: {
-			business_id: {},
+			business_id: {
+				required: false,
+				default: null,
+			},
+			classes: {
+				type: String,
+			},
 		},
 		data() {
 			return {
@@ -126,14 +134,16 @@
 			handleAdd() {
 				this.modal = true;
 			},
-			async getInstallations() {
-				const response = await service.instByBusiness(
-					this.business_id,
-					this.page
-				);
+			async getInstallations(page = 1) {
+				let response = null;
+				if (isNull(this.business_id)) {
+					response = await service.getIndex("installation", page, 'includes[]=auditable.user&includes[]=employees&includes[]=province');
+				} else {
+					response = await service.instByBusiness(this.business_id, page);
+				}
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;
-				this.page = this.metaData.currentPage;
+				this.page = page;
 			},
 			async destroy(id) {
 				try {
@@ -148,10 +158,7 @@
 					return;
 				}
 
-				const response = await service.instByBusiness(this.business_id, event);
-				this.tableData = response.data.data;
-				this.metaData = response.data.meta.page;
-				this.page = this.metaData.currentPage;
+				await service.getInstallations(event);
 			},
 			async view(id) {
 				try {

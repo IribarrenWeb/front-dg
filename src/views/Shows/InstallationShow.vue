@@ -328,7 +328,7 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<template v-if="currentStep == 3">
+		<template v-if="currentStep == 3 && ROLE != 'business'">
 			<dashboard-employee :id="installation_id"></dashboard-employee>
 			<employees-table
 				:installation_id="installation_id"
@@ -436,38 +436,7 @@
 				equips: [],
 				oper: [],
 				deps: [],
-				steps: [
-					{
-						number: 1,
-						title: "Instalacion",
-						valid: false,
-					},
-					{
-						number: 2,
-						title: "Operaciones",
-						valid: false,
-					},
-					{
-						number: 3,
-						title: "Empleados",
-						valid: false,
-					},
-					{
-						number: 4,
-						title: "Materiales",
-						valid: false,
-					},
-					{
-						number: 5,
-						title: "Vehiculos",
-						valid: false,
-					},
-					{
-						number: 6,
-						title: "Subcontratistas",
-						valid: false,
-					},
-				],
+				steps: {},
                 modal:false,
 				original_model: null,
 				new_auditable: {
@@ -491,6 +460,7 @@
         created() {
             this.getInst();
 			this.loadProvinces();
+            this.formatSteps();
         },
 		methods: {
 			async getInst() {
@@ -694,12 +664,35 @@
 				};
                 this.model.file_document = null
 			},
+            formatSteps() {
+                let steps = ['Instalacion','Operaciones', 'Empleados', 'Materiales', 'Vehiculos', 'Subcontratistas'];
+                let format_steps = [];
+                let count = 1;
+                const $this = this;
+                _.forEach(steps, function(s) {
+                    if ($this.ROLE == 'business' && s != 'Empleados') {
+                        format_steps.push({
+                            number: count,
+                            title: s,
+                            valid: false
+                        });
+                    }else{
+                        format_steps.push({
+                            number: count,
+                            title: s,
+                            valid: false
+                        });
+                    }
+                    count++;
+                });
+                this.steps = format_steps;
+            }
 		},
 		computed: {
-			...mapGetters(["COPY", "PLUK", "FILTER_DOC"]),
+			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE"]),
             formation_doc(){
                 return this.FILTER_DOC(this.responsible.documents,'CERTIFICADO')
-            }
+            },
 		},
 		watch: {
 			oper() {

@@ -32,17 +32,21 @@ const apis = {
     training: "trainings",
     visit: "visits",
     non: "nonconformities",
+    report: "reports",
 }
 
-async function getIndex(model, page = 1, params) {
+async function getIndex(model, page = 1, params = null) {
     storage.commit('loading');
+    console.log(model);
     let url_model = `${url}/${apis[model]}?`;
 
     if (page != null) {
         url_model += `page=${page}&`
     }
 
-    url_model += params
+    if (params != null) {
+        url_model += params
+    }
 
     return await axios.get(url_model).then((response) => {
         storage.commit('loading');

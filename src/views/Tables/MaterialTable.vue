@@ -1,5 +1,5 @@
 <template>
-	<div class="card shadow" :class="type === 'dark' ? 'bg-default' : ''">
+	<div :class="`card shadow ${classes}`">
 		<div
 			class="card-header border-0"
 			:class="type === 'dark' ? 'bg-transparent' : ''"
@@ -51,11 +51,14 @@
 							class="btn btn-primary btn-sm"
 							href="#"
 							@click.prevent="handleView(row.item.id)"
-							><i class="fa-regular fa-eye"></i></a
-						>
-						<a class="btn btn-outline-primary btn-sm" href="#" @click.prevent="destroy(row.item.id)"
-							><i class="fa-regular fa-trash-can"></i></a
-						>
+							><i class="fa-regular fa-eye"></i
+						></a>
+						<a
+							class="btn btn-outline-primary btn-sm"
+							href="#"
+							@click.prevent="destroy(row.item.id)"
+							><i class="fa-regular fa-trash-can"></i
+						></a>
 					</td>
 				</template>
 			</base-table>
@@ -98,16 +101,19 @@
 				type: String,
 			},
 			installation_id: {
-				required: true,
+				required: false,
 				default: null,
 			},
 			residue: {
 				type: String,
-				default: 'false',
+				default: "false",
 			},
 			title: {
 				type: String,
 				default: "Mercancías",
+			},
+			classes: {
+				type: String,
 			},
 		},
 		data() {
@@ -124,7 +130,6 @@
 		},
 		methods: {
 			async getMaterials(page = 1, id = null) {
-                console.log('reload');
 				let params =
 					"includes[]=material.class&includes[]=equipment&includes[]=material.packing";
 
@@ -132,7 +137,7 @@
 					params += "&installation_id=" + id;
 				}
 
-				if (this.residue == 'false') {
+				if (this.residue == "false") {
 					params += "&is_residue=false";
 				} else {
 					params += "&is_residue=true";
@@ -159,10 +164,10 @@
 				this.modal = false;
 				this.material_id = null;
 			},
-            async destroy(id) {
+			async destroy(id) {
 				try {
-					await service.destroy("material", id)
-                    this.getMaterials(this.page,this.installation_id);
+					await service.destroy("material", id);
+					this.getMaterials(this.page, this.installation_id);
 				} catch (error) {
 					console.log(error);
 				}

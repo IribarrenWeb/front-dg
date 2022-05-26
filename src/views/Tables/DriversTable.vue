@@ -3,13 +3,13 @@
 		<div class="card-header border-0">
 			<div class="row align-items-center">
 				<div class="col">
-					<h3 class="mb-0">Empleados {{ adr != null ? "ADR" : "" }}</h3>
+					<h3 class="mb-0">Choferes ADR</h3>
 				</div>
-				<div class="col text-right">
+				<!-- <div class="col text-right">
 					<a href="#" class="btn btn-sm btn-default" @click="handleAdd"
 						>Agregar</a
 					>
-				</div>
+				</div> -->
 			</div>
 		</div>
 
@@ -19,9 +19,7 @@
 					<th>Nombre</th>
 					<th>Dni</th>
 					<th>Email</th>
-					<th v-if="!isClient">Móvil</th>
-					<th v-if="isClient">Cargo</th>
-					<th v-if="isClient">Mercancías peligrosas</th>
+					<th>Móvil</th>
 					<th>Formación</th>
 					<th></th>
 				</template>
@@ -36,14 +34,8 @@
 					<td>
 						{{ row.item.email }}
 					</td>
-					<td v-if="!isClient">
+					<td>
 						{{ row.item.phone_number }}
-					</td>
-                    <td v-if="isClient">
-						{{ row.item.position }}
-					</td>
-                    <td v-if="isClient">
-						{{ row.item.is_dangerous_goods ? 'SI' : 'NO' }}
 					</td>
 					<td>
 						<div v-if="row.item.formation_document != null">
@@ -96,7 +88,6 @@
 	import service from "@/store/services/model-service";
 	import _ from "lodash";
 	import FormEmployee from "../../components/forms/FormEmployee.vue";
-    import { mapGetters } from 'vuex';
 
 	export default {
 		components: { FormEmployee },
@@ -105,20 +96,13 @@
 		props: {
 			installation_id: {
 				default: null,
-				required: false,
 			},
 			adr: {
-				default: null,
-			},
-			driver: {
-				type: Boolean,
-				required: false,
 				default: null,
 			},
 			classes: {
 				type: String,
 			},
-            title: {}
 		},
 		data() {
 			return {
@@ -140,10 +124,7 @@
 						params += "&installation_id=" + this.installation_id;
 					}
 					if (this.adr != null) {
-						params += "&adr=true";
-					}
-					if (this.driver != null) {
-						params += "&driver=true";
+						params += "&adr=true" + this.installation_id;
 					}
 
 					const res = await service.getIndex("employee", page, params);
@@ -176,12 +157,6 @@
 				this.index(event);
 			},
 		},
-        computed: {
-            isClient(){
-                return this.ROLE == 'business' && this.driver == null
-            },
-            ...mapGetters(['ROLE'])
-        }
 	};
 </script>
 <style></style>

@@ -35,15 +35,6 @@
 		name: "tables",
 		components: {
 		},
-        mounted() {
-            console.log('on mounted bebe');
-            console.log(this.$router.currentRoute.value.path);
-        },
-        updated() {
-            if (this.$router.currentRoute.value.path == '/audits') {
-                this.$router.push('/audits')
-            }
-        },
 	};
 </script>
 <style></style>

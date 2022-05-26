@@ -28,7 +28,7 @@
 					<th>Ultima auditoria</th>
 					<th>Estado</th>
 					<th>Hora y fecha</th>
-					<th></th>
+					<th v-if="ROLE !=  'business'"></th>
 				</template>
 
 				<template v-slot:default="row">
@@ -77,7 +77,7 @@
               </div>
             </div>
           </td> -->
-					<td class="text-right">
+					<td class="text-right" v-if="ROLE != 'business'">
 						<base-dropdown
 							class="dropdown audit-drop"
 							position="right"
@@ -168,7 +168,7 @@
 			this.getAudits(this.page);
 		},
 		computed: {
-			...mapGetters(["CURRENT_DATE"]),
+			...mapGetters(["CURRENT_DATE", "ROLE"]),
 		},
 		methods: {
 			async getAudits(page = 1) {

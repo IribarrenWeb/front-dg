@@ -6,8 +6,36 @@ const Dashboard = defineAsyncComponent(() =>
     import ("@/views/Dashboard.vue")
 );
 
+const Vehicle = defineAsyncComponent(() =>
+    import ("@/views/Vehicles.vue")
+);
+
+const Installations = defineAsyncComponent(() =>
+    import ("@/views/Installations.vue")
+);
+
 const Delegate = defineAsyncComponent(() =>
     import ("@/views/Delegate.vue")
+);
+
+const Materials = defineAsyncComponent(() =>
+    import ("@/views/Materials.vue")
+);
+
+const Employees = defineAsyncComponent(() =>
+    import ("@/views/Employees.vue")
+);
+
+const EmployeesTable = defineAsyncComponent(() =>
+    import ("@/views/Tables/EmployeesTable.vue")
+);
+
+const VehiclesTable = defineAsyncComponent(() =>
+    import ("@/views/Tables/VehiclesTable.vue")
+);
+
+const MaterialsTable = defineAsyncComponent(() =>
+    import ("@/views/Tables/MaterialTable.vue")
 );
 
 const AuditsTable = defineAsyncComponent(() =>
@@ -124,11 +152,20 @@ const routes = [{
                 components: { default: Auditors },
                 meta: { middleware: auth },
             },
+
+            {
+                path: "/installations",
+                name: "instalaciones",
+                components: { default: Installations },
+                meta: { middleware: auth },
+            },
+
             {
                 path: "/audits",
                 name: "auditorias",
                 components: { default: Audits },
                 meta: { middleware: auth },
+                redirect: "",
                 children: [{
                         path: "",
                         name: "auditorias",
@@ -144,6 +181,69 @@ const routes = [{
                     },
                 ]
             },
+            {
+                path: "/vehicles",
+                name: "vehiculos",
+                components: { default: Vehicle },
+                meta: { middleware: auth },
+                children: [{
+                        path: "",
+                        name: "vehiculos",
+                        components: { default: VehiclesTable },
+                        meta: { middleware: auth },
+                    },
+                    {
+                        path: "drivers",
+                        name: "choferes adr",
+                        components: { default: EmployeesTable },
+                        meta: { middleware: auth },
+
+                    },
+                ]
+            },
+
+            {
+                path: "/materials",
+                name: "materiales",
+                components: { default: Materials },
+                meta: { middleware: auth },
+                children: [{
+                        path: "",
+                        name: "materiales",
+                        components: { default: MaterialsTable },
+                        meta: { middleware: auth },
+                    },
+                    {
+                        path: "residues",
+                        name: "residuos",
+                        components: { default: MaterialsTable },
+                        meta: { middleware: auth },
+
+                    },
+                ]
+            },
+
+            {
+                path: "/employees",
+                name: "empleados",
+                components: { default: Employees },
+                meta: { middleware: auth },
+                children: [{
+                        path: "",
+                        name: "empleados",
+                        components: { default: EmployeesTable },
+                        meta: { middleware: auth },
+                    },
+                    {
+                        path: "formations",
+                        name: "formaciones",
+                        components: { default: EmployeesTable },
+                        meta: { middleware: auth },
+
+                    },
+                ]
+            },
+
             {
                 path: "/visits",
                 name: "visitas",

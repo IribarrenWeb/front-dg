@@ -9,21 +9,21 @@
                     <ul class="nav nav-tabs border-bottom-0" >
                         <li class="nav-item">
                             <router-link
-                            to="/audits"
+                            to="/vehicles"
                             class="nav-link tab-custom-link"
                             exact-active-class="active"
                             >
-                            Auditorias
+                            Vehiculos
                             </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link to="/audits/nonconformities" class="nav-link tab-custom-link" exact-active-class="active">
-                            No conformidades
+                            <router-link to="/vehicles/drivers" class="nav-link tab-custom-link" exact-active-class="active">
+                            Chofer adr
                             </router-link>
                         </li>
                     </ul>
                     <router-view v-slot="{Component}">
-                        <component classes="border-radius-top-0" title="Auditorias" :is="Component"></component>
+                        <component classes="border-radius-top-0" :driver="true" title="Vehiculos" :is="Component"></component>
                     </router-view>
 				</div>
 			</div>
@@ -35,15 +35,6 @@
 		name: "tables",
 		components: {
 		},
-        mounted() {
-            console.log('on mounted bebe');
-            console.log(this.$router.currentRoute.value.path);
-        },
-        updated() {
-            if (this.$router.currentRoute.value.path == '/audits') {
-                this.$router.push('/audits')
-            }
-        },
 	};
 </script>
 <style></style>

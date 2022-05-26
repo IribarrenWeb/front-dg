@@ -48,7 +48,7 @@
 				<visits-table></visits-table>
 			</div>
 			<div class="my-md-4">
-				<informs-table></informs-table>
+				<informs-table :dash="true"></informs-table>
 			</div>
 			<div>
 				<non-table :dash="true"></non-table>

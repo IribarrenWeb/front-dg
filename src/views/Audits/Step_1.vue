@@ -8,27 +8,38 @@
 		</div>
 		<div v-else>
 			<span class="col-2 font-weight-bold text-muted h5"
-				>Referencia de informe: #{{audit_id}}</span
+				>Referencia de informe: #{{ audit_id }}</span
 			>
 			<hr />
 			<div class="row px-md-2">
 				<div class="col-12">
 					<h4 class="text-uppercase">Datos iniciales</h4>
 					<div class="row">
-						<base-input
-							:view="true"
-							formClasses="col-md-6"
-							:modelValue="installation.auditable.user.name"
-							label="Consejero de seguridad designado"
-							disabled
-						/>
-						<base-input
-							:view="true"
-							formClasses="col-md-6"
-							:modelValue="installation.auditable.user.email"
-							label="Email Consejero de seguridad"
-							disabled
-						/>
+						<div class="col row" v-if="installation.auditable != null">
+							<base-input
+								:view="true"
+								formClasses="col-md-6"
+								:modelValue="installation.auditable.user.name"
+								label="Consejero de seguridad designado"
+								disabled
+							/>
+							<base-input
+								:view="true"
+								formClasses="col-md-6"
+								:modelValue="installation.auditable.user.email"
+								label="Email Consejero de seguridad"
+								disabled
+							/>
+						</div>
+                        <div class="col row" v-else>
+                            <base-input
+								:view="true"
+								formClasses="col-md-6"
+								modelValue="No posee auditor"
+								label="Email Consejero de seguridad"
+								disabled
+							/>
+                        </div>
 					</div>
 				</div>
 				<div class="col-12 row">
@@ -89,7 +100,7 @@
 						disabled
 					/>
 				</div>
-				<div class="col-md-12 row">
+				<div class="col-md-12 row" v-if="installation.responsible != null">
 					<base-input
 						:view="true"
 						formClasses="col-md-6"
@@ -105,6 +116,7 @@
 						disabled
 					/>
 				</div>
+				<div class="col-md-12 row" v-else>No posee responsable</div>
 				<div class="col-12">
 					<div class="mt-4 float-md-right">
 						<!-- <base-button type="default" @click="prevStep()" v-if="currentStep !== 1"

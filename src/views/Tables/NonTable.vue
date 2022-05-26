@@ -6,7 +6,12 @@
 					<h4 class="mb-0">No conformidades</h4>
 				</div>
 				<div class="col text-right">
-                    <router-link v-if="dash" to="/audits/nonconformities" class="btn btn-sm btn-default">Ver todas</router-link>
+					<router-link
+						v-if="dash"
+						to="/audits/nonconformities"
+						class="btn btn-sm btn-default"
+						>Ver todas</router-link
+					>
 				</div>
 			</div>
 		</div>
@@ -44,18 +49,23 @@
 						{{ row.item.priority.term }}
 					</td>
 					<td>
-						<badge class="badge-dot mr-4" :type="row.item.status != 1 ? 'danger' : 'success'">
+						<badge
+							class="badge-dot mr-4"
+							:type="row.item.status != 1 ? 'danger' : 'success'"
+						>
 							<i :class="`bg-danger`"></i>
-							<span class="status">{{ row.item.status ? 'Completado' : 'Pendiente' }}</span>
+							<span class="status">{{
+								row.item.status ? "Completado" : "Pendiente"
+							}}</span>
 						</badge>
 					</td>
 					<td v-if="!dash">
-						<!-- <a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a> -->
+						<a href="#" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
 					</td>
 				</template>
 			</base-table>
-            <base-pagination
-                v-if="!dash"
+			<base-pagination
+				v-if="!dash"
 				:perPage="this.metaData.perPage"
 				:value="this.page"
 				@changePage="handleChange($event)"
@@ -64,35 +74,47 @@
 			>
 			</base-pagination>
 		</div>
+		<modal
+			v-if="this.modal"
+			v-model:show="this.modal"
+			modalClasses="modal-xl"
+			model="actiación"
+		>
+			<form-action @close="modal = false" :nonconformity="selected_non"></form-action>
+		</modal>
 	</div>
 </template>
 <script>
 	import service from "../../store/services/model-service";
-    import {isEmpty} from 'lodash';
+	import { isEmpty } from "lodash";
+    import FormAction from '../../components/forms/FormAction.vue';
 
 	export default {
+	components: { FormAction },
 		name: "non-table",
-        props: {
-            dash: {
-                type: Boolean,
-                default: false
-            },
-            classes: {
-                type: String
-            }
-        },
+		props: {
+			dash: {
+				type: Boolean,
+				default: false,
+			},
+			classes: {
+				type: String,
+			},
+		},
 		data() {
 			return {
 				tableData: [],
 				metaData: {},
 				page: 1,
+                modal: false,
+                selected_non: null
 			};
 		},
-        mounted(){
-            this.index()
-        },
-        methods: {
-            async index(page = 1) {
+		mounted() {
+			this.index();
+		},
+		methods: {
+			async index(page = 1) {
 				const resp = await service.getIndex(
 					"non",
 					page,
@@ -110,7 +132,7 @@
 				}
 				this.index(event);
 			},
-        },
+		},
 	};
 </script>
 <style></style>

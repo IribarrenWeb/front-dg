@@ -1,0 +1,62 @@
+<template>
+	<div>
+		<base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8">
+		</base-header>
+
+		<div class="container-fluid mt--7">
+			<div class="row">
+				<div class="col">
+					<ul class="nav nav-tabs border-bottom-0">
+						<li class="nav-item">
+							<router-link
+								to="/materials"
+								class="nav-link tab-custom-link"
+								exact-active-class="active"
+							>
+								Mercancías
+							</router-link>
+						</li>
+						<li class="nav-item">
+							<router-link
+								to="/materials/residues"
+								class="nav-link tab-custom-link"
+								exact-active-class="active"
+							>
+								Residuos
+							</router-link>
+						</li>
+					</ul>
+					<material-table
+						v-if="!isResidue"
+						classes="border-radius-top-0"
+						title="Mercancías"
+					></material-table>
+					<material-table
+						v-if="isResidue"
+						classes="border-radius-top-0"
+						residue="true"
+					></material-table>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+<script>
+	import MaterialTable from "./Tables/MaterialTable.vue";
+	export default {
+		name: "tables",
+		components: {
+			MaterialTable,
+		},
+		data() {
+			return {};
+		},
+		mounted() {},
+		computed: {
+			isResidue() {
+				return this.$router.currentRoute.value.path == "/materials/residues";
+			},
+		},
+	};
+</script>
+<style></style>

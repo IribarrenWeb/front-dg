@@ -9,21 +9,22 @@
                     <ul class="nav nav-tabs border-bottom-0" >
                         <li class="nav-item">
                             <router-link
-                            to="/audits"
+                            to="/employees"
                             class="nav-link tab-custom-link"
                             exact-active-class="active"
+                            @click="residue = 'false'"
                             >
-                            Auditorias
+                            Empleados
                             </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link to="/audits/nonconformities" class="nav-link tab-custom-link" exact-active-class="active">
-                            No conformidades
+                            <router-link  to="/employees/formations" class="nav-link tab-custom-link disabled" exact-active-class="active" @click="residue = 'true'">
+                            Formaciones
                             </router-link>
                         </li>
                     </ul>
                     <router-view v-slot="{Component}">
-                        <component classes="border-radius-top-0" title="Auditorias" :is="Component"></component>
+                        <component classes="border-radius-top-0" title="Empleados" :is="Component"></component>
                     </router-view>
 				</div>
 			</div>
@@ -35,13 +36,9 @@
 		name: "tables",
 		components: {
 		},
-        mounted() {
-            console.log('on mounted bebe');
-            console.log(this.$router.currentRoute.value.path);
-        },
-        updated() {
-            if (this.$router.currentRoute.value.path == '/audits') {
-                this.$router.push('/audits')
+        data() {
+            return {
+                residue: 'false'
             }
         },
 	};

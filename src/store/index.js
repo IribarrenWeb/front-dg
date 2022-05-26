@@ -193,7 +193,7 @@ export const store = createStore({
                     role = 'auditor';
                     break;
                 case 4:
-                    role = 'empresa';
+                    role = 'business';
                     break;
 
                 default:

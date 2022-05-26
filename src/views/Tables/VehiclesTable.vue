@@ -1,5 +1,5 @@
 <template>
-	<div class="card shadow" :class="type === 'dark' ? 'bg-default' : ''">
+	<div :class="`card shadow ${classes}`">
 		<div
 			class="card-header border-0"
 			:class="type === 'dark' ? 'bg-transparent' : ''"
@@ -71,8 +71,8 @@
 							class="btn btn-danger btn-sm"
 							href="#"
 							@click.prevent="destroy(row.item.id)"
-							><i class="fa-regular fa-trash-can"></i></a
-						>
+							><i class="fa-regular fa-trash-can"></i
+						></a>
 					</td>
 				</template>
 			</base-table>
@@ -107,7 +107,7 @@
 	import service from "../../store/services/model-service";
 
 	export default {
-        mixins: [utils],
+		mixins: [utils],
 		components: { FormVehicle },
 		name: "vehicle-table",
 		props: {
@@ -116,8 +116,11 @@
 			},
 			title: String,
 			installation_id: {
-				required: true,
+				required: false,
 				default: null,
+			},
+			classes: {
+				type: String,
 			},
 		},
 		data() {
