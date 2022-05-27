@@ -39,11 +39,20 @@
                             </div>
                         </base-field>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-3">
                         <base-field   name="province_id" label="Provincia">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id" rules="required" label="Provincia" v-model="model.province_id">
                                 <option value="" selected>Selecciona una provincia</option>
                                 <option v-for="province in provinces" :key="province.id" :value="province.id">{{province.name}}</option>
+                            </field-validate>
+                        </base-field>
+                    </div>
+                    <div class="col-lg-3">
+                        <base-field   name="periodicy" label="Periodicidad de visitas">
+                            <field-validate :disabled="isSaved" class="form-control" as="select" name="periodicy" rules="required" label="periodicidad" v-model="model.periodicity">
+                                <option value="" selected>Selecciona una periodicidad</option>
+                                <option value="ANUAL">ANUAL</option>
+                                <option value="BIANUAL">BIANUAL</option>
                             </field-validate>
                         </base-field>
                     </div>
@@ -73,7 +82,7 @@
                                                 class="form-check-input" 
                                                 :value="operation.value"
                                                 v-model="model.operation_types_ids"
-                                                rules="required" label="operaciones">
+                                                rules="" label="operaciones">
                                             </field-validate>
                                             <label for="" class="form-check-label">{{operation.label}}</label>
                                         </div>
@@ -88,7 +97,7 @@
                                                 class="form-check-input" 
                                                 :value="deposit.value"
                                                 v-model="model.deposit_types_ids"
-                                                rules="required" label="depósitos">
+                                                rules="" label="depósitos">
                                             </field-validate>
                                             <label for="" class="form-check-label">{{deposit.label}}</label>
                                         </div>
@@ -107,7 +116,7 @@
                                         name="equipments"
                                         :value="equipment.value"
                                         v-model="model.equipments_ids"
-                                        rules="required" label="equipamientos">
+                                        rules="" label="equipamientos">
                                     </field-validate>
                                     <label for=""  class="mx-4">{{equipment.label}}</label>
                                 </div>

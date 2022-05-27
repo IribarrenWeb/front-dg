@@ -23,22 +23,22 @@ export const store = createStore({
             apiErrors: {},
             tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
             business_schema: {
-                business_name: "",
-                property_phone: "",
-                property_dni: "",
-                business_phone: "",
-                address: "",
-                business_nif: "",
-                name: "",
-                last_name: "",
-                province_id: "",
-                email: "",
-                bank_code: "",
-                iban_number: "",
-                holder_name: "",
+                business_name: null,
+                property_phone: null,
+                property_dni: null,
+                business_phone: null,
+                address: null,
+                business_nif: null,
+                name: null,
+                last_name: null,
+                province_id: null,
+                email: null,
+                bank_code: null,
+                iban_number: null,
+                holder_name: null,
                 file_document: {
-                    base64: "",
-                    file: ""
+                    base64: null,
+                    file: null
                 },
                 file_date: "",
                 postal_code: ""
@@ -49,6 +49,7 @@ export const store = createStore({
                 business_id: null,
                 auditable_id: null,
                 province_id: null,
+                periodicity: null,
                 file_document: {
                     base64: "",
                     file: []
@@ -230,6 +231,34 @@ export const store = createStore({
         },
         EMPTY: () => (val) => {
             return _.isEmpty(val)
+        },
+        SET_STATUS: () => (status) => {
+            let type = "";
+            switch (status) {
+                case "PENDIENTE":
+                    type = "danger";
+                    break;
+                case "POR REVISAR":
+                    type = "warning";
+                    break;
+                case "COMPLETADO":
+                    type = "success";
+                    break;
+
+                default:
+                    break;
+            }
+            return type;
+        },
+        CLEAN_DATA: () => (model, excludes = []) => {
+            let keys_pluck = _.keys(model);
+            let data = {};
+            _.forEach(keys_pluck, function(k) {
+                if ((!_.isEmpty(model[k]) && !_.isNull(model[k]) || (_.isNumber(model[k]) && model[k] >= 1) || (_.isBoolean(model[k]))) && !_.includes(excludes, k)) {
+                    data[k] = model[k]
+                }
+            })
+            return data;
         }
     },
     mutations: {

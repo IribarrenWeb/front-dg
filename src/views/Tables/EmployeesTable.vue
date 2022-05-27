@@ -16,6 +16,7 @@
 		<div class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
+					<th v-if="isClient">Instalación</th>
 					<th>Nombre</th>
 					<th>Dni</th>
 					<th>Email</th>
@@ -27,6 +28,9 @@
 				</template>
 
 				<template v-slot:default="row">
+                    <th v-if="isClient" scope="row">
+						{{ row.item.installation.name }}
+					</th>
 					<th scope="row">
 						{{ row.item.name }}
 					</th>
@@ -61,7 +65,7 @@
 						</div>
 					</td>
 					<td>
-						<!-- <a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a> -->
+						<a href="#" class="btn btn-sm btn-default" @click="employee_id = row.item.id, modal = true"><i class="fa-regular fa-eye"></i></a>
 					</td>
 				</template>
 			</base-table>
@@ -86,6 +90,7 @@
 			<form-employee
 				@close="this.modal = false"
 				@reload="index()"
+                :employee_id="employee_id"
 				:installation_id="installation_id"
 			></form-employee>
 		</modal>
@@ -127,6 +132,7 @@
 				action: "registrar",
 				modal: false,
 				metaData: {},
+                employee_id: null
 			};
 		},
 		mounted() {
@@ -135,7 +141,7 @@
 		methods: {
 			async index(page) {
 				try {
-					let params = "includes[]=documents.type";
+					let params = "includes[]=documents.type&includes[]=installation";
 					if (this.installation_id != null) {
 						params += "&installation_id=" + this.installation_id;
 					}

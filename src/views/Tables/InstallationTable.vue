@@ -19,6 +19,7 @@
 		<div class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
+                    <th>#</th>
 					<th>Nombre</th>
 					<th>Direccion</th>
 					<th>Provincia</th>
@@ -28,6 +29,7 @@
 				</template>
 
 				<template v-slot:default="row">
+                    <th>{{row.item.id}}</th>
 					<th scope="row" class="text-capitalize">
 						{{ row.item.name }}
 					</th>
@@ -48,7 +50,11 @@
 						<span v-else>SIN AUDITOR</span>
 					</td>
 					<td>
+                        <router-link v-if="client" class="btn btn-sm btn-default" :to="`/installations/${row.item.id}`">
+                            <i class="fa-regular fa-eye"></i>
+                        </router-link>
 						<a
+                            v-else
 							href="#"
 							@click.prevent="view(row.item.id)"
 							class="btn btn-sm btn-default"
@@ -114,6 +120,10 @@
 			classes: {
 				type: String,
 			},
+            client: {
+                type: Boolean,
+                default: false
+            }
 		},
 		data() {
 			return {

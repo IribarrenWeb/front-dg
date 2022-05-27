@@ -33,6 +33,7 @@ const apis = {
     visit: "visits",
     non: "nonconformities",
     report: "reports",
+    non_actions: "nonconformities-action",
 }
 
 async function getIndex(model, page = 1, params = null) {
@@ -281,6 +282,20 @@ function dashboard() {
     });;
 }
 
+function instOperations(id) {
+    storage.commit('loading');
+    return axios.get(url + '/installations/' + id + '/operations').then((response) => {
+        storage.commit('loading');
+        return response
+    }).catch(err => {
+        storage.commit('loading');
+        const status = err.response.status
+
+        errors(status)
+        throw Error('Error');
+    });;
+}
+
 function errors(code, message = null) {
     switch (code) {
         case 500:
@@ -330,5 +345,6 @@ export default {
     users,
     errors,
     dashboard,
-    dashEmployee
+    dashEmployee,
+    instOperations
 }

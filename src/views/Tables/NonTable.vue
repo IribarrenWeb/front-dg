@@ -22,11 +22,11 @@
 					<th>Instalación</th>
 					<th>Tipo</th>
 					<th>Descripción</th>
-					<th>Fecha actuación</th>
+					<th v-if="!dash">Fecha actuación</th>
 					<th>Prioridad</th>
 					<th>Plazo</th>
 					<th>Estado</th>
-					<th></th>
+					<th v-if="!dash"></th>
 				</template>
 
 				<template v-slot:default="row">
@@ -36,12 +36,12 @@
 					<th scope="row">
 						{{ row.item.type.name }}
 					</th>
-					<th scope="row">
+					<td>
 						{{ row.item.description }}
-					</th>
-					<th scope="row">
-						<!-- {{ row.item.date }} -->
-					</th>
+					</td>
+					<td v-if="!dash">
+						{{ row.item.action ? row.item.action.date_end : 'SIN ACTUACIÓN' }}
+					</td>
 					<td :class="`text-${row.item.priority.colour}`">
 						{{ row.item.priority.name }}
 					</td>
@@ -51,16 +51,15 @@
 					<td>
 						<badge
 							class="badge-dot mr-4"
-							:type="row.item.status != 1 ? 'danger' : 'success'"
+							:type="SET_STATUS(row.item.status)"
 						>
-							<i :class="`bg-danger`"></i>
-							<span class="status">{{
-								row.item.status ? "Completado" : "Pendiente"
-							}}</span>
+							<i :class="`bg-${SET_STATUS(row.item.status)}`"></i>
+							<span class="status">{{ row.item.status }}</span>
 						</badge>
 					</td>
 					<td v-if="!dash">
-						<a href="#" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
+						<a href="#" v-if="row.item.status == 'PENDIENTE' && ROLE == 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
+						<a href="#" v-if="row.item.status == 'POR REVISAR' && ROLE != 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
 					</td>
 				</template>
 			</base-table>
@@ -78,9 +77,9 @@
 			v-if="this.modal"
 			v-model:show="this.modal"
 			modalClasses="modal-xl"
-			model="actiación"
+			model="actuación de no conformidad"
 		>
-			<form-action @close="modal = false" :nonconformity="selected_non"></form-action>
+			<form-action :role="ROLE" @close="modal = false" :nonconformity="selected_non" :show="ROLE != 'business'" @reload="index(page)"></form-action>
 		</modal>
 	</div>
 </template>
@@ -88,6 +87,7 @@
 	import service from "../../store/services/model-service";
 	import { isEmpty } from "lodash";
     import FormAction from '../../components/forms/FormAction.vue';
+    import { mapGetters } from 'vuex';
 
 	export default {
 	components: { FormAction },
@@ -115,10 +115,16 @@
 		},
 		methods: {
 			async index(page = 1) {
+                let params = "includes[]=installation";
+                
+                if (this.ROLE != 'business' && !this.dash) {
+                    params += '&includes[]=action.responsible'
+                }
+
 				const resp = await service.getIndex(
 					"non",
 					page,
-					"includes[]=installation"
+					params
 				);
 				if (!isEmpty(resp.data.data)) {
 					this.tableData = resp.data.data;
@@ -133,6 +139,9 @@
 				this.index(event);
 			},
 		},
+        computed: {
+            ...mapGetters(['SET_STATUS', 'ROLE']),
+        }
 	};
 </script>
 <style></style>

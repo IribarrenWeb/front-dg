@@ -6,7 +6,7 @@
 		<div class="container-fluid mt--7">
 			<div class="row">
 				<div class="col">
-					<installation-table></installation-table>
+					<installation-table :client="true"></installation-table>
 				</div>
 			</div>
 		</div>

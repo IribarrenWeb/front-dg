@@ -8,7 +8,18 @@
 			@step="currentStep = $event"
 			@navigate="currentStep = $event"
 		></base-steps>
-		<template v-if="currentStep == number('Instalacion')">
+		<template v-if="currentStep == 1">
+			<!-- <form-validate
+				@submit="onSubmit"
+				ref="form"
+				v-slot="{ meta }"
+				v-if="model != null"
+				:initial-values="{
+					auditable: null,
+					province_id: null,
+					file_document: null,
+				}"
+			> -->
 			<div class="row border rounded border-light bg-white px-4 py-2">
 				<div class="col-lg-4">
 					<base-field name="name" label="Nombre de instalacion">
@@ -81,7 +92,7 @@
 						</div>
 					</base-field>
 				</div>
-				<div class="col-lg-3">
+				<div class="col-lg-6">
 					<base-field name="province_id" label="Provincia">
 						<div v-if="!new_province.new">
 							<base-input :view="true" lable="Provincia">
@@ -126,15 +137,6 @@
 						</div>
 					</base-field>
 				</div>
-                <div class="col-lg-3">
-                        <base-field   name="periodicy" label="Periodicidad de visitas">
-                            <field-validate class="form-control" as="select" name="periodicy" rules="required" label="periodicidad" v-model="model.periodicity">
-                                <option value="" selected>Selecciona una periodicidad</option>
-                                <option value="ANUAL">ANUAL</option>
-                                <option value="BIANUAL">BIANUAL</option>
-                            </field-validate>
-                        </base-field>
-                    </div>
 				<div class="col-lg-6">
 					<base-field name="file_document" label="Documentacion">
 						<div v-if="(model.documents.length >= 1) & !new_document.new">
@@ -243,7 +245,7 @@
             </modal>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<template v-if="currentStep == number('Operaciones')">
+		<template v-if="currentStep == 2">
 			<div>
 				<div class="row border rounded border-light bg-white px-4 py-2">
 					<div class="col-lg-12">
@@ -326,7 +328,7 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<template v-if="currentStep == number('Empleados') && ROLE != 'business'">
+		<template v-if="currentStep == 3 && ROLE != 'business'">
 			<dashboard-employee :id="installation_id"></dashboard-employee>
 			<employees-table
 				:installation_id="installation_id"
@@ -334,7 +336,7 @@
 			></employees-table>
 		</template>
 		<!-- ------------------------------------------------------- -->
-		<template v-if="currentStep == number('Materiales')">
+		<template v-if="currentStep == 4">
 			<div>
 				<material-table :installation_id="installation_id"></material-table>
 			</div>
@@ -347,13 +349,13 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------- -->
-		<template v-if="currentStep == number('Vehiculos')">
+		<template v-if="currentStep == 5">
 			<div>
 				<vehicles-table :installation_id="installation_id"></vehicles-table>
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<template v-if="currentStep == number('Subcontratistas')">
+		<template v-if="currentStep == 6">
 			<div>
 				<subcontractor-table
 					:installation_id="installation_id"
@@ -458,6 +460,8 @@
         created() {
             this.getInst();
 			this.loadProvinces();
+        },
+        mounted() {
             this.formatSteps();
         },
 		methods: {
@@ -494,10 +498,10 @@
 			},
 			async handleNext() {
 				if (this.currentStep == 1) {
+					console.log(!_.isEqual(this.model, this.original_model), this.model, this.original_model);
                     let data = {
                         name: this.model.name,
                         address: this.model.address,
-                        periodicity: this.model.periodicity
                     };
                     if (
                         this.new_document.new ||
@@ -670,30 +674,22 @@
                 let count = 1;
                 const $this = this;
                 _.forEach(steps, function(s) {
-                    if ($this.ROLE == 'business' && s != 'Empleados' && s != 'Materiales' && s != 'Vehiculos') {
+                    if ($this.ROLE == 'business' && s != 'Empleados') {
                         format_steps.push({
                             number: count,
                             title: s,
                             valid: false
                         });
-                        count++;
                     }else if($this.ROLE != 'business'){
                         format_steps.push({
                             number: count,
                             title: s,
                             valid: false
                         });
-                        count++;
                     }
+                    count++;
                 });
                 this.steps = format_steps;
-            },
-            number(query){
-                let steps = this.COPY(this.steps);
-                const step = _.filter(steps, function(s){
-                    return s.title == query
-                });
-                return _.isUndefined(step[0]) ? 0 : step[0].number
             }
 		},
 		computed: {
@@ -728,11 +724,6 @@
                     this.loadEquipments();
                     this.loadDeposits();
                 }
-            },
-            ROLE(newVal) {
-              if (newVal != false) {
-                  this.formatSteps()
-              }  
             }
 		},
 	};

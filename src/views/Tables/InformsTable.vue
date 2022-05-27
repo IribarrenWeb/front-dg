@@ -14,31 +14,31 @@
 		<div class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
-					<th>Instalación</th>
-					<th>Consejero ADR</th>
+					<th>Empresa</th>
 					<th>Provincia</th>
 					<th>Dirección</th>
-					<th>Fecha auditoria</th>
+					<th>Instalaciones</th>
+					<th>Año</th>
 					<th>Estado</th>
                     <th></th>
 				</template>
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.installation.name }}
+						{{ row.item.business.business_name }}
 					</th>
 					<td>
-						{{ row.item.installation.auditable.user.name }} {{ row.item.installation.auditable.user.last_name }}
+						{{ row.item.business.province.name }}
 					</td>
 					<td>
-						{{ row.item.installation.province.name }}
-					</td>
-					<td>
-						{{ row.item.installation.address }}
+						{{ row.item.business.address }}
 					</td>
                     <td>
-						{{ row.item.audit.date_end }}
+						{{ row.item.installations_count }}
 					</td>
+                    <th>
+						{{ row.item.period }}
+					</th>
                     <td>
 						<badge
 							class="badge-dot mr-4"
@@ -49,7 +49,7 @@
 						</badge>
 					</td>
 					<td>
-						<a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a>
+						<a href="#" class="btn btn-sm btn-default" @click="handleView(row.item)"><i class="fa-regular fa-eye"></i></a>
 					</td>
 				</template>
 			</base-table>
@@ -92,9 +92,11 @@
                 const resp = await service.getIndex(
 					"report",
 					page,
-					"includes[]=installation.province.city"+
-                    "&includes[]=installation.auditable.user"+
-                    "&includes[]=audit",
+					"includes[]=business.province.city"+
+                    "&counts[]=nonconformities"+
+                    "&counts[]=installations"+
+                    "&counts[]=audits"+
+                    "&counts[]=audits_completed"
 				);
 				if (!isEmpty(resp.data.data)) {
 					this.tableData = resp.data.data;
@@ -108,6 +110,14 @@
 				}
 				this.index(event);
 			},
+            handleView(item){
+                let audits_completed = item.audits_count == item.audits_completed_count;
+                let hasPendingCon = item.nonconformities_count == 0;
+                if (!audits_completed || !hasPendingCon) {
+                    this.$swal('No puedes realizar el informe', 'Aun no puedes realizar el informe ya que los datos estan incompletos o estan pendientes.', 'warning')
+                    return;
+                }
+            },
             setStatusType(status) {
 				let type = "";
 				switch (status) {

@@ -14,6 +14,10 @@ const Installations = defineAsyncComponent(() =>
     import ("@/views/Installations.vue")
 );
 
+const InstallationDetail = defineAsyncComponent(() =>
+    import ("@/views/InstallationDetail.vue")
+);
+
 const Delegate = defineAsyncComponent(() =>
     import ("@/views/Delegate.vue")
 );
@@ -139,17 +143,20 @@ const routes = [{
                 name: "informes",
                 components: { default: Informs },
                 meta: { middleware: auth },
+
             },
-            {
-                path: "/formations",
-                name: "formaciones",
-                components: { default: Formations },
-                meta: { middleware: auth },
-            },
+
             {
                 path: "/auditors",
                 name: "auditores",
                 components: { default: Auditors },
+                meta: { middleware: auth },
+            },
+
+            {
+                path: "/installations/:id",
+                name: "instalacion",
+                components: { default: InstallationDetail },
                 meta: { middleware: auth },
             },
 
@@ -235,13 +242,20 @@ const routes = [{
                         meta: { middleware: auth },
                     },
                     {
-                        path: "formations",
+                        path: "/employees/formations",
                         name: "formaciones",
                         components: { default: EmployeesTable },
                         meta: { middleware: auth },
 
                     },
                 ]
+            },
+
+            {
+                path: "/formations",
+                name: "formaciones",
+                components: { default: Formations },
+                meta: { middleware: auth },
             },
 
             {

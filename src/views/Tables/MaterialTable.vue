@@ -81,6 +81,7 @@
 			></material-show>
 			<form-material
 				v-else
+                :installations="installations"
 				@close="handleClose"
 				@reload="getMaterials(page, installation_id)"
 				:installation_id="installation_id"
@@ -115,6 +116,11 @@
 			classes: {
 				type: String,
 			},
+            installations: {
+                type: Object,
+                required: false,
+                default: null
+            }
 		},
 		data() {
 			return {
