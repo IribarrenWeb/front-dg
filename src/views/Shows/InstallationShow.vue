@@ -98,7 +98,6 @@
 						</div>
 						<field-validate
 							v-show="new_province.new"
-							:standalone="vare"
 							class="form-control"
 							as="select"
 							name="province_id"
@@ -419,7 +418,6 @@
 		},
 		data() {
 			return {
-				vare: false,
 				model: null,
 				new_document: {
 					value: null,

@@ -37,12 +37,12 @@
 				</div>
 
 				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="dni" name="dni" label="Dni">
+					<base-field apiName="dni" name="dni" label="DNI">
 						<field-validate
 							type="number"
 							class="form-control"
 							name="dni"
-							rules="required|alpha_num|min:5|max:15"
+							rules="required|alpha_num|min:9|max:9"
 							label="dni"
 							v-model="model.dni"
 						/>

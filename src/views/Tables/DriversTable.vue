@@ -17,7 +17,7 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
-					<th>Dni</th>
+					<th>DNI</th>
 					<th>Email</th>
 					<th>Móvil</th>
 					<th>Formación</th>

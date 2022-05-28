@@ -122,6 +122,10 @@
 			classes: {
 				type: String,
 			},
+            business_id: {
+				required: false,
+				default: null,
+			},
 		},
 		data() {
 			return {
@@ -141,6 +145,10 @@
 
 				if (this.installation_id != null) {
 					params += "&installation_id=" + this.installation_id;
+				}
+
+                if (this.business_id != null) {
+					params += "&business_id=" + this.business_id;
 				}
 
 				const resp = await service.getIndex("vehicle", page, params);

@@ -18,7 +18,7 @@
 				<template v-slot:columns>
 					<th v-if="isClient">Instalación</th>
 					<th>Nombre</th>
-					<th>Dni</th>
+					<th>DNI</th>
 					<th>Email</th>
 					<th v-if="!isClient">Móvil</th>
 					<th v-if="isClient">Cargo</th>

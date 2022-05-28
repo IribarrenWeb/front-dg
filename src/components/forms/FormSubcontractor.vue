@@ -14,7 +14,7 @@
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="dni" label="DNI/CIF/NIF">
-                        <field-validate type="number" class="form-control text-uppercase" name="dni" rules="required|alpha_num" label="dni" v-model="model.dni"/>
+                        <field-validate type="number" class="form-control text-uppercase" name="dni" rules="required|alpha_num|min:9|max:9" label="dni" v-model="model.dni"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">

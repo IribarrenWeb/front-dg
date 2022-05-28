@@ -55,7 +55,7 @@
 
         <div class="col-lg-4">
           <base-field name="dni" label="DNI">
-            <field-validate class="form-control" name="dni" label="dni" rules="required|min:5|max:15|alpha_num" v-model="model.dni"/>
+            <field-validate class="form-control" name="dni" label="dni" rules="required|min:9|max:9|alpha_num" v-model="model.dni"/>
           </base-field>
         </div>
 

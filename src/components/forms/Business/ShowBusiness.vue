@@ -44,7 +44,7 @@
 									type="text"
 									class="form-control text-uppercase"
 									name="property_dni"
-									rules="required|min:8|max:10"
+									rules="required|alpha_num|min:9|max:9"
 									label="dni"
 									v-model.trim="model.property_dni"
 								/>
@@ -154,7 +154,7 @@
 									type="number"
 									class="form-control"
 									name="postal_code"
-									rules="required|numeric|min:5|max:6"
+									rules="required|numeric|min:5|max:5"
 									label="postal_code"
 									v-model="model.postal_code"
 								/>

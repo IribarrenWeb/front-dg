@@ -259,6 +259,20 @@ export const store = createStore({
                 }
             })
             return data;
+        },
+        FORMAT_DOC_B64: () => (b64) => {
+            console.log(b64);
+            var byteCharacters = atob(b64);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            var byteArray = new Uint8Array(byteNumbers);
+            var file = new Blob([byteArray], {
+                type: "application/pdf;base64",
+            });
+            var fileURL = URL.createObjectURL(file);
+            return fileURL;
         }
     },
     mutations: {

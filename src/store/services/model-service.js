@@ -296,6 +296,20 @@ function instOperations(id) {
     });;
 }
 
+function getReport(id) {
+    storage.commit('loading');
+    return axios.get(url + '/reports/' + id + '/generate').then((response) => {
+        storage.commit('loading');
+        return response
+    }).catch(err => {
+        storage.commit('loading');
+        const status = err.response.status
+
+        errors(status)
+        throw Error('Error');
+    });;
+}
+
 function errors(code, message = null) {
     switch (code) {
         case 500:
@@ -346,5 +360,6 @@ export default {
     errors,
     dashboard,
     dashEmployee,
-    instOperations
+    instOperations,
+    getReport
 }

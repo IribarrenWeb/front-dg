@@ -109,7 +109,7 @@
 							class="form-control"
 							name="dni"
 							label="dni"
-							rules="required|min:5|max:15|alpha_num"
+							rules="required|min:9|max:9|alpha_num"
 							v-model="model.dni"
 						/>
 					</base-field>

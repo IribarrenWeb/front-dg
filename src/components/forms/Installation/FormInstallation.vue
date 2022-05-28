@@ -146,7 +146,7 @@
 
                         <div class="col-lg-6 col-lg-4">
                             <base-field   apiName="responsible.dni" name="dni" label="DNI">
-                                <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required|alpha_num|min:8|max:10" label="dni" v-model="model.responsible.dni"/>
+                                <field-validate :disabled="isSaved" type="number" class="form-control" name="dni" rules="required|alpha_num|min:9|max:9" label="dni" v-model="model.responsible.dni"/>
                             </base-field>
                         </div>
                         <div class="col-lg-6 col-lg-4">
