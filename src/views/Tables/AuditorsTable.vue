@@ -20,7 +20,6 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
-					<th>Apellido</th>
 					<th>Email</th>
 					<th>Móvil</th>
 					<th>Delegado</th>
@@ -29,11 +28,8 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.user.name }}
+						{{ row.item.user.full_name}}
 					</th>
-					<td>
-						{{ row.item.user.last_name }}
-					</td>
 					<td>
 						{{ row.item.user.email }}
 					</td>
@@ -41,7 +37,7 @@
 						{{ row.item.phone_number }}
 					</td>
 					<td>
-						{{ row.item.delegate.user.name }}
+						{{ row.item.delegate.user.full_name }}
 					</td>
 					<td>
 						<a

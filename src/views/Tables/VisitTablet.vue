@@ -26,6 +26,7 @@
 				<template v-slot:columns>
 					<th>Nombre</th>
 					<th>Instalacion</th>
+					<th>Responsable</th>
 					<th>Tipo</th>
 					<th>Fecha</th>
 					<th>Hora</th>
@@ -45,11 +46,14 @@
 							</div>
 						</div>
 					</th>
+                    <td class="budget">
+						{{ row.item.visitable.installation.auditable.user.full_name }}
+					</td>
 					<td class="text-uppercase">
 						{{ row.item.type }}
 					</td>
 					<td>
-						{{ row.item.date_scheduled }}
+						{{ FORMAT_DATE(row.item.date_scheduled) }}
 					</td>
                     <td>
 						{{ row.item.time }}
@@ -69,7 +73,7 @@
 	</div>
 </template>
 <script>
-import { mapGetters} from 'vuex';
+    import { mapGetters} from 'vuex';
 	import service from "../../store/services/model-service";
 	export default {
 		name: "audits-table",
@@ -92,14 +96,14 @@ import { mapGetters} from 'vuex';
 			this.getVisits(this.page);
 		},
         computed: {
-            ...mapGetters(['CURRENT_DATE'])
+            ...mapGetters(['CURRENT_DATE', 'FORMAT_DATE'])
         },
 		methods: {
 			async getVisits(page = 1) {
 				const resp = await service.getIndex(
 					"visit",
 					page,
-					"includes[]=visitable.installation"
+					"includes[]=visitable.installation.auditable.user"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;

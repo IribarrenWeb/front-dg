@@ -11,13 +11,13 @@
         </div>
         <div class="col-lg-4">
           <base-field label="Nombre">
-            <field-validate class="form-control" name="name" label="nombre" rules="required|max:20|alpha_spaces" v-model="model.name"/>
+            <field-validate class="form-control text-capitalize" name="name" label="nombre" rules="required|max:20|alpha_spaces" v-model="model.name"/>
           </base-field>
         </div>
 
         <div class="col-lg-4">
           <base-field name="last_name" label="Apellido">
-            <field-validate class="form-control" name="last_name" label="apellido" rules="required|max:20|alpha_spaces" v-model="model.last_name"/>
+            <field-validate class="form-control text-capitalize" name="last_name" label="apellido" rules="required|max:20|alpha_spaces" v-model="model.last_name"/>
           </base-field>
         </div>
 
@@ -49,13 +49,13 @@
 
         <div class="col-lg-4">
           <base-field name="phone_number" label="Móvil">
-            <field-validate class="form-control" name="phone_number" label="móvil" rules="required|min:7|max:15" v-model="model.phone_number"/>
+            <field-validate class="form-control" name="phone_number" label="móvil" type="number" rules="required|min:7|max:15" v-model="model.phone_number"/>
           </base-field>
         </div>
 
         <div class="col-lg-4">
           <base-field name="dni" label="DNI">
-            <field-validate class="form-control" name="dni" label="dni" rules="required|min:9|max:9|alpha_num" v-model="model.dni"/>
+            <field-validate class="form-control text-uppercase" name="dni" label="dni" rules="required|min:9|max:9|alpha_num" v-model="model.dni"/>
           </base-field>
         </div>
 
@@ -135,7 +135,7 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-lg-end">
+      <div class="d-flex justify-content-lg-end mt-2">
         <base-button
           type="default"
           nativeType="submit"
@@ -255,7 +255,7 @@ import { mapGetters } from 'vuex';
         if (_.isEmpty(search)) {
           return {};
         }
-        const res = await service.getIndex('delegate',`name=${search}&includes[]=user`);
+        const res = await service.getIndex('delegate',null,`name=${search}&includes[]=user`);
         const data = res.data.data;
         let options = _.map(data, (delegate) => {
             return {value: delegate, label: `${delegate.user.name} ${delegate.user.last_name} - ${delegate.dni}`}

@@ -15,6 +15,7 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Formación</th>
+					<th>Responsable</th>
 					<th>Empresa</th>
 					<th>Instalación</th>
 					<th>Empleados</th>
@@ -27,8 +28,11 @@
 					<th scope="row" class="text-uppercase">
 						{{ row.item.formation.name }}
 					</th>
+                    <th scope="row" class="text-uppercase">
+						{{ row.item.formation.responsible.user.full_name }}
+					</th>
 					<td class="text-uppercase">
-						{{ row.item.installation.company.business_name }}
+						{{ row.item.installation.company.name }}
 					</td>
                     <td class="text-uppercase">
 						{{ row.item.installation.name }}
@@ -61,7 +65,6 @@
 				align="center"
 			>
 			</base-pagination>
-
 		</div>
 	</div>
 </template>
@@ -94,7 +97,7 @@
 				const resp = await service.getIndex(
 					"training",
 					page,
-					"includes[]=installation.company&counts[]=employees&includes[]=formation"
+					"includes[]=installation.company&counts[]=employees&includes[]=formation.responsible.user"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;

@@ -27,7 +27,7 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>{{ business.business_name }}</td>
+							<td>{{ business.user.full_name }}</td>
 							<td>{{ business.business_nif }}</td>
 							<td>{{ business.province.city.name }}</td>
 							<td>{{ business.province.name }}</td>
@@ -42,9 +42,9 @@
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
 						<tr>
-							<td>{{ business.user.name }}</td>
+							<td>{{ business.property_name }}</td>
 							<td>{{ business.property_dni }}</td>
-							<td>{{ business.user.email }}</td>
+							<td>{{ business.property_email }}</td>
 							<td colspan="4">{{ business.property_phone }}</td>
 						</tr>
 						<tr class="text-uppercase">

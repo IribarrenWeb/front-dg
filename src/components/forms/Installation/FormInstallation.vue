@@ -208,7 +208,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-lg-12" v-if="isTransported">
                             <div class="row">
                                 <div class="col-lg-2">
                                     <base-switch
@@ -266,7 +266,7 @@
             <!-- ------------------------------------------------------- -->
             <template v-if="currentStep == 5 && isSaved">
                 <div>
-                    <vehicles-table :installation_id="installation_id"></vehicles-table>
+                    <vehicles-table :transported="isTransported" :installation_id="installation_id"></vehicles-table>
                 </div>
             </template>
             <!-- ------------------------------------------------------ -->
@@ -492,7 +492,18 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['CURRENT_DATE'])
+        ...mapGetters(['CURRENT_DATE']),
+        isTransported(){
+            let check = false
+            for (let i = 0; i < this.model.operation_types_ids.length; i++) {
+                const op = this.model.operation_types_ids[i];
+                console.log(op);
+                if (op == 5) {
+                    check = true
+                }                
+            }
+            return check;
+        }
     }
 }
 </script>

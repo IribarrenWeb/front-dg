@@ -59,7 +59,7 @@
 				<base-input
 					:view="true"
 					formClasses="col-md-4"
-					:modelValue="`${installation.company.business_name} - ${installation.name}`"
+					:modelValue="`${installation.company.name} - ${installation.name}`"
 					label="EMPRESA/INSTALACIÓN QUE SE REALIZA LA VISITA"
 					disabled
 				/>
@@ -152,11 +152,9 @@
 			this.audit_id = id;
 			if (typeof this.audit.id == "undefined") {
 				const res = await service.show("audit", id);
-				console.log(this.audit.visit_date);
 				this.visit_date = res.data.data.visit_date;
 				this.installation_id = res.data.data.installation_id;
 			} else {
-				console.log(this.audit.visit_date);
 				this.visit_date = this.audit.visit_date;
 				this.installation_id = this.audit.installation_id;
 			}
@@ -188,7 +186,8 @@
 					const res = await service.show(
 						"installation",
 						this.installation_id,
-						"responsible=responsible&includes[]=company&includes[]=province.city&includes[]=auditable.user"
+						"includes[]=company&includes[]=province.city&includes[]=auditable.user"+
+                        "&includes[]=responsible"
 					);
 					this.installation = res.data.data;
 				} catch (err) {

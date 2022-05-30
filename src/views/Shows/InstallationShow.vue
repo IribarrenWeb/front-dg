@@ -116,7 +116,10 @@
 						<div class="mt-md-2">
 							<base-button
 								v-if="new_province.new"
-								@click="new_province.new = false, model.province_id = original_model.province_id"
+								@click="
+									(new_province.new = false),
+										(model.province_id = original_model.province_id)
+								"
 								size="sm"
 								type="danger"
 								:outline="true"
@@ -125,15 +128,22 @@
 						</div>
 					</base-field>
 				</div>
-                <div class="col-lg-3">
-                        <base-field   name="periodicy" label="Periodicidad de visitas">
-                            <field-validate class="form-control" as="select" name="periodicy" rules="required" label="periodicidad" v-model="model.periodicity">
-                                <option value="" selected>Selecciona una periodicidad</option>
-                                <option value="ANUAL">ANUAL</option>
-                                <option value="BIANUAL">BIANUAL</option>
-                            </field-validate>
-                        </base-field>
-                    </div>
+				<div class="col-lg-3">
+					<base-field name="periodicy" label="Periodicidad de visitas">
+						<field-validate
+							class="form-control"
+							as="select"
+							name="periodicy"
+							rules="required"
+							label="periodicidad"
+							v-model="model.periodicity"
+						>
+							<option value="" selected>Selecciona una periodicidad</option>
+							<option value="ANUAL">ANUAL</option>
+							<option value="BIANUAL">BIANUAL</option>
+						</field-validate>
+					</base-field>
+				</div>
 				<div class="col-lg-6">
 					<base-field name="file_document" label="Documentacion">
 						<div v-if="(model.documents.length >= 1) & !new_document.new">
@@ -176,14 +186,16 @@
 			</div>
 			<!-- </form-validate> -->
 
-			<div class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2">
+			<div
+				class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2"
+			>
 				<div class="col-md-12 py-2">
-                    <div class="d-flex justify-content-between">
-                        <h4>Responsable de la instalación</h4>
-                        <div class="">
-                            <base-button size="sm" @click="modal = true">Editar</base-button>
-                        </div>
-                    </div>
+					<div class="d-flex justify-content-between">
+						<h4>Responsable de la instalación</h4>
+						<div class="">
+							<base-button size="sm" @click="modal = true">Editar</base-button>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-12 overflow-auto p-0">
 					<table class="table table-sm">
@@ -193,7 +205,7 @@
 								<th>DNI</th>
 								<th>MÓVIL</th>
 								<th>EMAIL</th>
-								<th>FORMACIÓN</th>
+								<th>ALTA</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -203,10 +215,10 @@
 								<td>{{ responsible.phone_number }}</td>
 								<td>{{ responsible.email }}</td>
 								<td>
-									<div v-if="responsible.formation_document != null">
+									<div v-if="responsible.firm_document != null">
 										<span class="d-block">{{
 											this.formatDate(
-												responsible.formation_document.document_date,
+												responsible.firm_document.document_date,
 												"GB"
 											)
 										}}</span>
@@ -214,11 +226,11 @@
 											href="#"
 											class="text-uppercase d-block"
 											@click.prevent="
-												getDocument(responsible.formation_document.id)
+												getDocument(responsible.firm_document.id)
 											"
 										>
 											<i class="fa fa-file-pdf" aria-hidden="true"></i>
-											{{ responsible.formation_document.type.name }}
+											ALTA
 										</a>
 									</div>
 								</td>
@@ -227,19 +239,19 @@
 					</table>
 				</div>
 			</div>
-            <modal
-			v-if="modal"
-			v-model:show="modal"
-			action="editar"
-			modalClasses="modal-xl"
-			model="empleado"
-            >
-                <form-employee
-                    @close="modal = false"
-                    @reload="index()"
-                    :employee_id="responsible.id"
-                ></form-employee>
-            </modal>
+			<modal
+				v-if="modal"
+				v-model:show="modal"
+				action="editar"
+				modalClasses="modal-xl"
+				model="empleado"
+			>
+				<form-employee
+					@close="modal = false"
+					@reload="index()"
+					:employee_id="responsible.id"
+				></form-employee>
+			</modal>
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Operaciones')">
@@ -326,11 +338,15 @@
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Empleados') && ROLE != 'business'">
-			<dashboard-employee :reload="reload_dash_employee" @reloaded="reload_dash_employee = false" :id="installation_id"></dashboard-employee>
+			<dashboard-employee
+				:reload="reload_dash_employee"
+				@reloaded="reload_dash_employee = false"
+				:id="installation_id"
+			></dashboard-employee>
 			<employees-table
 				:installation_id="installation_id"
 				:adr="true"
-                @reload_dash="reload_dash_employee = true"
+				@reload_dash="reload_dash_employee = true"
 			></employees-table>
 		</template>
 		<!-- ------------------------------------------------------- -->
@@ -349,7 +365,8 @@
 		<!-- ------------------------------------------------------- -->
 		<template v-if="currentStep == number('Vehiculos')">
 			<div>
-				<vehicles-table :installation_id="installation_id"></vehicles-table>
+                {{isTransported}}
+				<vehicles-table :transported="isTransported" :installation_id="installation_id"></vehicles-table>
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
@@ -398,10 +415,10 @@
 	import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
 	import _ from "lodash";
 	import { mapGetters } from "vuex";
-    import FormEmployee from '../../components/forms/FormEmployee.vue';
+	import FormEmployee from "../../components/forms/FormEmployee.vue";
 
 	export default {
-        name: 'installation-show',
+		name: "installation-show",
 		components: {
 			Multiselect,
 			MaterialTable,
@@ -409,7 +426,7 @@
 			SubcontractorTable,
 			EmployeesTable,
 			DashboardEmployee,
-            FormEmployee,
+			FormEmployee,
 		},
 		mixins: [utils],
 		props: {
@@ -425,7 +442,7 @@
 					new: false,
 					base64: "",
 				},
-                reload_dash_employee: false,
+				reload_dash_employee: false,
 				update: {
 					op: false,
 					dep: false,
@@ -435,11 +452,11 @@
 				oper: [],
 				deps: [],
 				steps: {},
-                modal:false,
+				modal: false,
 				original_model: null,
 				new_auditable: {
 					new: false,
-                    value: null
+					value: null,
 				},
 				new_province: {
 					new: false,
@@ -452,30 +469,29 @@
 				responsible: null,
 			};
 		},
-		async beforeCreate() {
-			
-		},
-        created() {
-            this.getInst();
+		async beforeCreate() {},
+		created() {
+			this.getInst();
 			this.loadProvinces();
-            this.formatSteps();
-        },
+			this.formatSteps();
+		},
 		methods: {
 			async getInst() {
 				try {
 					const res = await service.show(
 						"installation",
 						this.installation_id,
-						"includes[]=operations&includes[]=equipments&includes[]=auditable.user&includes[]=documents.type&includes[]=province&includes[]=depositTypes" +
-							"&responsible=true"
+						"includes[]=operations&includes[]=equipments"+
+                        "&includes[]=auditable.user&includes[]=documents.type"+
+                        "&includes[]=province&includes[]=depositTypes" +
+                        "&includes[]=responsible.firm_document"
 					);
 					this.model = this.COPY(res.data.data);
 					this.responsible = this.COPY(res.data.data.responsible);
-                    this.model.file_document = null
-                    this.model.auditable_id = null
+					this.model.file_document = null;
+					this.model.auditable_id = null;
 
-					
-                    let f_doc = null;
+					let f_doc = null;
 					_.forEach(this.responsible.documents, (doc) => {
 						if (doc.type.name == "CERTIFICADO") {
 							f_doc = doc;
@@ -485,44 +501,44 @@
 
 					this.model.responsible = null;
 
-                    this.original_model = this.COPY(this.model)
+					this.original_model = this.COPY(this.model);
 
-                    this.$emit('installation', this.model)
+					this.$emit("installation", this.model);
 				} catch (err) {
 					console.log(err);
 				}
 			},
 			async handleNext() {
 				if (this.currentStep == 1) {
-                    let data = {
-                        name: this.model.name,
-                        address: this.model.address,
-                        periodicity: this.model.periodicity
-                    };
-                    if (
-                        this.new_document.new ||
-                        (this.model.documents < 1 && _.isArray(this.model.file_document))
-                    ) {
-                        data.file_document = {
-                            base64: await this.toBase64(this.model.file_document[0]),
-                        };
-                    }
-                    if (this.new_auditable.new || this.model.auditable == null) {
-                        data.auditable_id = this.model.auditable_id;
-                    }
-                    if (this.new_province.new) {
-                        data.province_id = this.model.province_id;
-                    }
+					let data = {
+						name: this.model.name,
+						address: this.model.address,
+						periodicity: this.model.periodicity,
+					};
+					if (
+						this.new_document.new ||
+						(this.model.documents < 1 && _.isArray(this.model.file_document))
+					) {
+						data.file_document = {
+							base64: await this.toBase64(this.model.file_document[0]),
+						};
+					}
+					if (this.new_auditable.new || this.model.auditable == null) {
+						data.auditable_id = this.model.auditable_id;
+					}
+					if (this.new_province.new) {
+						data.province_id = this.model.province_id;
+					}
 					if (!_.isEqual(this.model, this.original_model)) {
 						try {
 							await service.update("installation", this.installation_id, data);
 							this.$toast.success("Datos actualizados");
-                            this.$emit('reload')
+							this.$emit("reload");
 							await this.getInst();
 							this.resetNews();
 						} catch (err) {
 							this.$toast.error("No se pudieron guardar los cambios.");
-                            return 
+							return;
 						}
 					}
 				}
@@ -544,14 +560,14 @@
 						try {
 							await service.update("installation", this.installation_id, data);
 							this.$toast.success("Datos actualizados");
-                            this.$emit('reload')
+							this.$emit("reload");
 							await this.getInst();
 							this.update.op = false;
 							this.update.eqp = false;
 							this.update.dep = false;
 						} catch (err) {
 							this.$toast.error("No se pudieron guardar los cambios.");
-                            return
+							return;
 						}
 					}
 				}
@@ -637,20 +653,20 @@
 				return;
 			},
 			handleCancel(model) {
-                switch (model) {
-                    case 'document':
-                        this.new_document.new = false;
-                        this.model.file_document = null
-                        break;
+				switch (model) {
+					case "document":
+						this.new_document.new = false;
+						this.model.file_document = null;
+						break;
 
-                    case 'auditable':
-                        this.new_auditable.new = false;
-                        this.new_auditable.value = false;
-                        break;
-                
-                    default:
-                        break;
-                }
+					case "auditable":
+						this.new_auditable.new = false;
+						this.new_auditable.value = false;
+						break;
+
+					default:
+						break;
+				}
 			},
 			resetNews() {
 				this.new_auditable = {
@@ -662,78 +678,100 @@
 				this.new_document = {
 					new: false,
 				};
-                this.model.file_document = null
+				this.model.file_document = null;
 			},
-            formatSteps() {
-                let steps = ['Instalacion','Operaciones', 'Empleados', 'Materiales', 'Vehiculos', 'Subcontratistas'];
-                let format_steps = [];
-                let count = 1;
-                const $this = this;
-                _.forEach(steps, function(s) {
-                    if ($this.ROLE == 'business' && s != 'Empleados' && s != 'Materiales' && s != 'Vehiculos') {
-                        format_steps.push({
-                            number: count,
-                            title: s,
-                            valid: false
-                        });
-                        count++;
-                    }else if($this.ROLE != 'business'){
-                        format_steps.push({
-                            number: count,
-                            title: s,
-                            valid: false
-                        });
-                        count++;
-                    }
-                });
-                this.steps = format_steps;
-            },
-            number(query){
-                let steps = this.COPY(this.steps);
-                const step = _.filter(steps, function(s){
-                    return s.title == query
-                });
-                return _.isUndefined(step[0]) ? 0 : step[0].number
-            }
+			formatSteps() {
+				let steps = [
+					"Instalacion",
+					"Operaciones",
+					"Empleados",
+					"Materiales",
+					"Vehiculos",
+					"Subcontratistas",
+				];
+				let format_steps = [];
+				let count = 1;
+				const $this = this;
+				_.forEach(steps, function (s) {
+					if (
+						$this.ROLE == "business" &&
+						s != "Empleados" &&
+						s != "Materiales" &&
+						s != "Vehiculos"
+					) {
+						format_steps.push({
+							number: count,
+							title: s,
+							valid: false,
+						});
+						count++;
+					} else if ($this.ROLE != "business") {
+						format_steps.push({
+							number: count,
+							title: s,
+							valid: false,
+						});
+						count++;
+					}
+				});
+				this.steps = format_steps;
+			},
+			number(query) {
+				let steps = this.COPY(this.steps);
+				const step = _.filter(steps, function (s) {
+					return s.title == query;
+				});
+				return _.isUndefined(step[0]) ? 0 : step[0].number;
+			},
 		},
 		computed: {
 			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE"]),
-            formation_doc(){
-                return this.FILTER_DOC(this.responsible.documents,'CERTIFICADO')
-            },
+			formation_doc() {
+				return this.FILTER_DOC(this.responsible.documents, "CERTIFICADO");
+			},
+            isTransported() {
+                let check = false;
+                for (let i = 0; i < this.model.operations.length; i++) {
+                    const op = this.model.operations[i];
+                    if (op.id == 5) {
+                        check = true;
+                    }
+                }
+				return check;
+			},
 		},
 		watch: {
 			oper() {
 				let oper_ids = this.PLUK(this.model.operations, "id");
-				this.update.op = !_.isEqual(this.oper,oper_ids)
+				this.update.op = !_.isEqual(this.oper, oper_ids);
 			},
 			equips() {
 				let equip_ids = this.PLUK(this.model.equipments, "id");
-				this.update.eqp = !_.isEqual(this.equips,equip_ids);
+				this.update.eqp = !_.isEqual(this.equips, equip_ids);
 			},
 			deps() {
 				let deps_ids = this.PLUK(this.model.deposit_types, "id");
-				this.update.dep = !_.isEqual(this.deps,deps_ids);;
+				this.update.dep = !_.isEqual(this.deps, deps_ids);
 			},
-            'new_auditable.value': {
-                handler(newValue) {
-                    if (!_.isUndefined(newValue.id)) {
-                        this.model.auditable_id = newValue.id
-                    }
-                },
-            },
-            currentStep(newVal) {
-                if (newVal == 2) {
-                    this.loadOperations();
-                    this.loadEquipments();
-                    this.loadDeposits();
-                }
-            },
-            ROLE(newVal) {
-              if (newVal != false) {
-                  this.formatSteps()
-              }  
-            }
+			"new_auditable.value": {
+				handler(newValue) {
+					if (!_.isUndefined(newValue.id)) {
+						this.model.auditable_id = newValue.id;
+					}
+				},
+			},
+			currentStep(newVal) {
+				if (newVal == 2) {
+					this.loadOperations();
+					this.loadEquipments();
+					this.loadDeposits();
+				}
+			},
+			ROLE(newVal) {
+				if (newVal != false) {
+					this.formatSteps();
+				}
+			},
 		},
 	};
 </script>

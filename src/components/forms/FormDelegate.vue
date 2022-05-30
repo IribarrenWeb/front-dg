@@ -16,7 +16,7 @@
 				<div class="col-lg-6">
 					<base-field name="delegation_name" label="Nombre de delegación">
 						<field-validate
-							class="form-control"
+							class="form-control text-capitalize"
 							name="delegation_name"
 							type="text"
 							label="nombre de delegación"
@@ -70,7 +70,7 @@
 				<div class="col-lg-4">
 					<base-field label="Nombre">
 						<field-validate
-							class="form-control"
+							class="form-control text-capitalize"
 							name="name"
 							label="nombre"
 							rules="required|max:20"
@@ -82,7 +82,7 @@
 				<div class="col-lg-4">
 					<base-field name="last_name" label="Apellido">
 						<field-validate
-							class="form-control"
+							class="form-control text-capitalize"
 							name="last_name"
 							label="apellido"
 							rules="required|max:20|alpha_spaces"
@@ -106,7 +106,7 @@
 				<div class="col-lg-4">
 					<base-field name="dni" label="DNI">
 						<field-validate
-							class="form-control"
+							class="form-control text-uppercase"
 							name="dni"
 							label="dni"
 							rules="required|min:9|max:9|alpha_num"

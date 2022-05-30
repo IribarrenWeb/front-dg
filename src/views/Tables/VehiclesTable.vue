@@ -11,7 +11,7 @@
 					</h3>
 				</div>
 				<div class="col text-right">
-					<base-button type="default" size="sm" @click="this.modal = true"
+					<base-button type="default" size="sm" @click="handleAdd"
 						>Agregar</base-button
 					>
 				</div>
@@ -126,6 +126,10 @@
 				required: false,
 				default: null,
 			},
+            transported: {
+                required: false,
+                default: false
+            }
 		},
 		data() {
 			return {
@@ -188,6 +192,13 @@
 					console.log(error);
 				}
 			},
+            handleAdd(){
+                if (!this.transported) {
+                    this.$swal('No puede agregar vehiculos', 'No puede agregar vehiculos ya que las operaciones de esta instalación no son de transporte.', 'warning')
+                }else{
+                    this.modal = true;
+                }
+            }
 		},
 	};
 </script>

@@ -23,14 +23,15 @@ export const store = createStore({
             apiErrors: {},
             tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
             business_schema: {
-                business_name: null,
+                name: null,
                 property_phone: null,
+                property_email: null,
                 property_dni: null,
                 business_phone: null,
                 address: null,
                 business_nif: null,
-                name: null,
-                last_name: null,
+                property_name: null,
+                property_last_name: null,
                 province_id: null,
                 email: null,
                 bank_code: null,
@@ -273,6 +274,9 @@ export const store = createStore({
             });
             var fileURL = URL.createObjectURL(file);
             return fileURL;
+        },
+        FORMAT_DATE: () => (date, format = "en-US") => {
+            return new Date(date).toLocaleDateString(format);
         }
     },
     mutations: {
@@ -321,9 +325,6 @@ export const store = createStore({
                 return true; // Pass: All other tokens
             }
             return false
-        },
-        formatDate(date, format = "en-US") {
-            return new Date(date).toLocaleDateString(format);
         },
         toSchedule({ state }, payload) {
             return $swal.fire({

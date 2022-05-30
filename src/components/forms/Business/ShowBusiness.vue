@@ -15,26 +15,26 @@
 							<h4>Datos generales</h4>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="name" label="Nombre representante">
+							<base-field name="property_name" label="Nombre representante">
 								<field-validate
 									type="text"
 									class="form-control"
-									name="name"
-									rules="required|"
+									name="property_name"
+									rules="required"
 									label="nombre"
-									v-model="model.name"
+									v-model="model.property_name"
 								/>
 							</base-field>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="last_name" label="Apellido representante">
+							<base-field name="property_last_name" label="Apellido representante">
 								<field-validate
 									type="text"
 									class="form-control"
-									name="last_name"
+									name="property_last_name"
 									rules="required|"
 									label="apellido"
-									v-model="model.last_name"
+									v-model="model.property_last_name"
 								/>
 							</base-field>
 						</div>
@@ -63,14 +63,14 @@
 							</base-field>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="email" label="Email">
+							<base-field name="property_email" label="Email">
 								<field-validate
 									type="text"
 									class="form-control"
 									name="email"
 									rules="required|email"
 									label="email"
-									v-model.trim="model.email"
+									v-model.trim="model.property_email"
 								/>
 							</base-field>
 						</div>
@@ -80,14 +80,26 @@
 							<h4>Datos de empresa</h4>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="business_name" label="Nombre">
+							<base-field name="name" label="Nombre">
 								<field-validate
 									type="text"
 									class="form-control"
-									name="business_name"
+									name="name"
 									rules="required|"
 									label="nombre empresa"
-									v-model="model.business_name"
+									v-model="model.name"
+								/>
+							</base-field>
+						</div>
+                        <div class="col-lg-4">
+							<base-field name="email" label="Email">
+								<field-validate
+									type="text"
+									class="form-control"
+									name="email"
+									rules="required|email"
+									label="email"
+									v-model.trim="model.email"
 								/>
 							</base-field>
 						</div>
@@ -326,10 +338,9 @@ export default {
             }
         },
         async show(){
-            // const res = await service.show('business', this.id, 'includes[]=bank')
             this.model = this.COPY(this.business);
             this.model.name = this.model.user.name;
-            this.model.last_name = this.model.user.last_name;
+            this.model.email = this.model.user.email;
             this.model.email = this.model.user.email;
             this.model.holder_name = this.model.bank.holder_name;
             this.model.iban_number = this.model.bank.iban_number;

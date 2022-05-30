@@ -36,7 +36,7 @@
 							<td>Provincia</td>
 						</tr>
 						<tr>
-							<th>{{ report.business.business_name }}</th>
+							<th>{{ report.business.user.full_name }}</th>
 							<th>{{ report.business.address }}</th>
 							<th>{{ report.business.postal_code }}</th>
 							<th>{{ report.business.province.city.name }}</th>

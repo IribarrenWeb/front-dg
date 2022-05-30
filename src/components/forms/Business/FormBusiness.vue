@@ -15,29 +15,29 @@
 							<h4>Datos generales</h4>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="name" label="Nombre representante">
+							<base-field name="property_name" label="Nombre representante">
 								<field-validate
 									type="text"
 									class="form-control"
-									name="name"
-									rules="required|"
+									name="property_name"
+									rules="required"
 									label="nombre"
-									v-model="model.name"
+									v-model="model.property_name"
 								/>
 							</base-field>
 						</div>
-						<div class="col-lg-4">
-							<base-field name="last_name" label="Apellido representante">
+                        <div class="col-lg-4">
+                            <base-field name="property_last_name" label="Apellido representante">
 								<field-validate
 									type="text"
 									class="form-control"
-									name="last_name"
-									rules="required|"
+									name="property_last_name"
+									rules="required"
 									label="apellido"
-									v-model="model.last_name"
+									v-model="model.property_last_name"
 								/>
 							</base-field>
-						</div>
+                        </div>
 						<div class="col-lg-4">
 							<base-field name="property_dni" label="DNI">
 								<field-validate
@@ -63,14 +63,14 @@
 							</base-field>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="email" label="Email">
+                            <base-field name="property_email" label="Email">
 								<field-validate
-									type="text"
+									type="email"
 									class="form-control"
-									name="email"
+									name="property_email"
 									rules="required|email"
-									label="email"
-									v-model.trim="model.email"
+									label="email de la empresa"
+									v-model="model.property_email"
 								/>
 							</base-field>
 						</div>
@@ -80,14 +80,26 @@
 							<h4>Datos de empresa</h4>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="business_name" label="Nombre">
+							<base-field name="name" label="Nombre">
 								<field-validate
 									type="text"
 									class="form-control"
-									name="business_name"
-									rules="required|"
+									name="name"
+									rules="required"
 									label="nombre empresa"
-									v-model="model.business_name"
+									v-model="model.name"
+								/>
+							</base-field>
+						</div>
+                        <div class="col-lg-4">
+							<base-field name="email" label="Email">
+								<field-validate
+									type="text"
+									class="form-control"
+									name="property_email"
+									rules="required|email"
+									label="email"
+									v-model.trim="model.email"
 								/>
 							</base-field>
 						</div>
@@ -95,9 +107,9 @@
 							<base-field name="business_nif" label="CIF/NIF">
 								<field-validate
 									type="text"
-									class="form-control"
+									class="form-control text-uppercase"
 									name="business_nif"
-									rules="required|"
+									rules="required|alpha_num"
 									label="nombre"
 									v-model.trim="model.business_nif"
 								/>
@@ -184,7 +196,7 @@
 						<base-field name="bank_code" label="BIC/SWIFT">
 							<field-validate
 								type="text"
-								class="form-control"
+								class="form-control text-uppercase"
 								name="bank_code"
 								rules="required|min:5|max:20|alpha_num"
 								label="BIC/SWIFT"
@@ -378,7 +390,7 @@
 
 					<div class="col-12 mt-2">
 						<base-button
-							type="danger"
+							type="primary"
 							:outline="true"
 							@click="remove(id)"
 							:disabled="installations.length == 1"
@@ -455,7 +467,7 @@
 									type="number"
 									class="form-control"
 									name="dni"
-									rules="required"
+									rules="required|min:9|max:9|alpha_num"
 									label="dni"
 									v-model="installations[id].responsible.dni"
 								/>
@@ -471,7 +483,7 @@
 									type="text"
 									class="form-control"
 									name="email"
-									rules="required"
+									rules="required|email"
 									label="email"
 									v-model="installations[id].responsible.email"
 								/>
@@ -488,7 +500,7 @@
 									type="text"
 									class="form-control"
 									name="position"
-									rules="required"
+									rules="required|alpha_spaces"
 									label="cargo"
 									v-model="installations[id].responsible.position"
 								/>
@@ -888,6 +900,7 @@
 			async fetchItems(search) {
 				const res = await service.getIndex(
 					"auditor",
+                    null,
 					`name=${search}&includes[]=user`
 				);
 				const data = res.data.data;

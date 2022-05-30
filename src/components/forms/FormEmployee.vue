@@ -384,7 +384,7 @@
 							values.file_driver[0]
 						);
 					}
-					if (this.model.dangerous_goods && (this.new_driver_doc || !this.file_cer)) {
+					if (this.model.dangerous_goods && (this.new_cer_doc || !this.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
@@ -406,7 +406,7 @@
 
 				try {
 					if (this.update) {
-
+                        
                         let data = this.DIFFERENCE(this.original_model, this.model);
 
 						await service.update("employee", this.model.id, data);

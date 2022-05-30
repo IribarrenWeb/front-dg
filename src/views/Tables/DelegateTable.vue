@@ -20,19 +20,15 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
-					<th>Apellido</th>
 					<th>Email</th>
 					<th>Móvil</th>
 					<th>Acciones</th>
 				</template>
 
 				<template v-slot:default="row">
-					<th scope="row">
-						{{ row.item.user.name }}
+					<th scope="row" class="text-uppercase">
+						{{ row.item.user.full_name }}
 					</th>
-					<td>
-						{{ row.item.user.last_name }}
-					</td>
 					<td>
 						{{ row.item.user.email }}
 					</td>

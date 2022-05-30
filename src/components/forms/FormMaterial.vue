@@ -18,8 +18,11 @@
 				</li>
 			</ul>
 			<template v-if="currentStep == 1">
-				<div v-if="ROLE == 'business'" class="row border rounded border-light px-4 py-2 mb-2">
-                    <div class="col">
+				<div
+					v-if="ROLE == 'business'"
+					class="row border rounded border-light px-4 py-2 mb-2"
+				>
+					<div class="col">
 						<base-field name="installation_id" label="Instalación">
 							<field-validate
 								as="select"
@@ -33,14 +36,14 @@
 									v-for="installation in installations"
 									:key="installation.key"
 									:value="installation.id"
-                                    class="text-uppercase"
+									class="text-uppercase"
 								>
-									#{{installation.id}} - {{ installation.name }}
+									#{{ installation.id }} - {{ installation.name }}
 								</option>
 							</field-validate>
 						</base-field>
 					</div>
-                </div>
+				</div>
 				<div class="row border rounded border-light px-4 py-2">
 					<div class="col-lg-3">
 						<base-field name="is_residue" label="Tipo">
@@ -49,7 +52,7 @@
 								id=""
 								v-model="model.is_residue"
 								class="form-control"
-                                :disabled="residue != null"
+								:disabled="residue != null"
 							>
 								<option value="true" selected>Residuo ADR</option>
 								<option value="false">Material</option>
@@ -132,28 +135,27 @@
 					</div>
 					<div class="col-lg-12">
 						<div class="row">
-                            <div class="col-md-3">
-                                <base-field name="operation_type" label="Tipo de operación">
-                                    <field-validate
-                                        as="select"
-                                        class="form-control"
-                                        name="operation_type_id"
-                                        rules="required"
-                                        label="tipo de operación"
-                                        v-model="model.operation_type_id"
-                                    >
-                                        <option v-for="(operation, idx) in operations" :key="idx" :value="operation.id">{{operation.code}} - {{operation.name}}</option>
-                                    </field-validate>
-                                </base-field>
-                            </div>
-							<div class="col-lg-3">
-								<base-switch
-									v-model="model.is_dangerous"
-                                    label="Contaminante del medioambiente"
-									:value="model.is_dangerous != 0 ? true : false"
-								></base-switch>
+							<div class="col-md-3">
+								<base-field name="operation_type" label="Tipo de operación">
+									<field-validate
+										as="select"
+										class="form-control"
+										name="operation_type_id"
+										rules="required"
+										label="tipo de operación"
+										v-model="model.operation_type_id"
+									>
+										<option
+											v-for="(operation, idx) in operations"
+											:key="idx"
+											:value="operation.id"
+										>
+											{{ operation.code }} - {{ operation.name }}
+										</option>
+									</field-validate>
+								</base-field>
 							</div>
-							<div class="col-lg-5" v-if="model.is_dangerous">
+							<div class="col-lg-5">
 								<base-field
 									apiName="file_document"
 									name="file_document"
@@ -182,8 +184,14 @@
 									/>
 								</base-field>
 							</div>
+							<div class="col-lg-3">
+								<base-switch
+									v-model="model.is_dangerous"
+									label="Contaminante del medioambiente"
+									:value="model.is_dangerous != 0 ? true : false"
+								></base-switch>
+							</div>
 						</div>
-						
 					</div>
 				</div>
 			</template>
@@ -198,7 +206,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-3" v-if="model.operation_type_id == 4">
-						<base-field name="buy" label="Compra" >
+						<base-field name="buy" label="Compra">
 							<field-validate
 								type="number"
 								class="form-control"
@@ -209,7 +217,7 @@
 							/>
 						</base-field>
 					</div>
-                    <div class="col-lg-3" v-else-if="model.operation_type_id == 5">
+					<div class="col-lg-3" v-else-if="model.operation_type_id == 5">
 						<base-field name="transported" label="Transportada">
 							<field-validate
 								type="number"
@@ -222,7 +230,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-3" v-else>
-						<base-field name="sell" label="Venta" >
+						<base-field name="sell" label="Venta">
 							<field-validate
 								type="number"
 								class="form-control"
@@ -233,13 +241,13 @@
 							/>
 						</base-field>
 					</div>
-                    <div class="col-lg-3">
-						<base-field name="quantity" label="Cantidad">
+					<div class="col-lg-3">
+						<base-field name="quantity" label="Volumen del Envase">
 							<field-validate
 								type="number"
 								class="form-control"
 								name="quantity"
-								label="Cantidad"
+								label="volumen del envase"
 								v-model="model.quantity"
 							/>
 						</base-field>
@@ -276,25 +284,25 @@
 	import service from "@/store/services/model-service";
 
 	import _ from "lodash";
-    import { mapGetters } from 'vuex';
+	import { mapGetters } from "vuex";
 
 	export default {
-        mixins: [utils],
+		mixins: [utils],
 		props: {
 			installation_id: {
 				required: true,
 				default: null,
 			},
 			residue: {
-                type: String,
+				type: String,
 				required: false,
-				default: 'false',
+				default: "false",
 			},
-            installations: {
-                type: Object,
-                required: false,
-                default: null
-            }
+			installations: {
+				type: Object,
+				required: false,
+				default: null,
+			},
 		},
 		components: { Multiselect },
 		data() {
@@ -325,29 +333,29 @@
 					unit: null,
 					is_residue: null,
 					is_dangerous: false,
-                    file_document: {
-                        file: [],
-                        base64: ""
-                    },
-                    operation_type_id: null
+					file_document: {
+						file: [],
+						base64: "",
+					},
+					operation_type_id: null,
 				},
 				material: {},
 				equipments: {},
-                operations: {}
+				operations: {},
 			};
 		},
 		mounted() {
 			this.loadEquipments();
-            if (this.ROLE != 'business') {
-                this.loadOperations();
-            }
-            if (this.residue == 'true' || this.residue == 'false') {
-                this.model.is_residue = this.residue
-            }
+			if (this.ROLE != "business") {
+				this.loadOperations();
+			}
+			if (this.residue == "true" || this.residue == "false") {
+				this.model.is_residue = this.residue;
+			}
 		},
-        computed: {
-            ...mapGetters(['CLEAN_DATA', 'ROLE'])
-        },
+		computed: {
+			...mapGetters(["CLEAN_DATA", "ROLE"]),
+		},
 		methods: {
 			prevStep() {
 				if (this.currentStep == 0 || this.currentStep == 1) {
@@ -373,12 +381,11 @@
 						return this.$toast.error("Selecciona el tipo de unidad");
 					}
 
-                    if (this.model.is_dangerous) {
-                        this.model.file_document.base64 = await this.toBase64(this.model.file_document.file[0])
-                    }
+                    this.model.file_document.base64 = await this.toBase64(
+                        this.model.file_document.file[0]
+                    );
 					try {
-                        console.log(this.model);
-                        const data = this.CLEAN_DATA(this.model, ['material'])
+						const data = this.CLEAN_DATA(this.model, ["material"]);
 						await service.store("material", data);
 						resetForm();
 						this.$emit("close");
@@ -408,20 +415,24 @@
 					this.$toast.error("No se pudieron cargar los equipmentos");
 				}
 			},
-            async loadOperations(id = null) {
+			async loadOperations(id = null) {
 				try {
-                    let inst_id = null;
-                    if (id != null) {
-                        inst_id = id;
-                    }else{
-                        inst_id = this.installation_id
-                    }
+					let inst_id = null;
+					if (id != null) {
+						inst_id = id;
+					} else {
+						inst_id = this.installation_id;
+					}
 
 					const resp = await service.instOperations(inst_id);
 					this.operations = resp.data.data;
-                    if (this.operations.length < 1) {
-                        this.$swal('Esta instalación no tiene operaciones', 'Esta instalación no tienen ningun tipo de operacion registrada. Es necesario para agregar un material', 'warning')
-                    }
+					if (this.operations.length < 1) {
+						this.$swal(
+							"Esta instalación no tiene operaciones",
+							"Esta instalación no tienen ningun tipo de operacion registrada. Es necesario para agregar un material",
+							"warning"
+						);
+					}
 				} catch (err) {
 					console.log(err.response);
 					this.$toast.error("No se pudieron cargar las operaciones");
@@ -443,13 +454,12 @@
 				this.$emit("close");
 			},
 		},
-        watch: {
-            'model.installation_id': function (newVal){
-                console.log(newVal);
-                if (this.ROLE == 'business' && newVal >= 1) {
-                    this.loadOperations(newVal)
-                }
-            } 
-        }
+		watch: {
+			"model.installation_id": function (newVal) {
+				if (this.ROLE == "business" && newVal >= 1) {
+					this.loadOperations(newVal);
+				}
+			},
+		},
 	};
 </script>

@@ -25,7 +25,7 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.business.business_name }}
+						{{ row.item.business.user.full_name }}
 					</th>
 					<td>
 						{{ row.item.business.province.name }}
@@ -133,6 +133,7 @@
 					"report",
 					page,
 					"includes[]=business.province.city" +
+					"&includes[]=business.user" +
 						"&counts[]=nonconformities" +
 						"&counts[]=installations" +
 						"&counts[]=audits" +

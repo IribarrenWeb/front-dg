@@ -97,7 +97,7 @@
                                     {{employee.position}}
                                 </td>
                                 <td>
-                                    
+                                    {{employee.last_formation == null ? 'SIN FORMACIÓN' : FORMAT_DATE(employee.last_formation.document_date)}}
                                 </td>
                             </tr>
                         </tbody>
@@ -130,6 +130,7 @@
 
 <script>
 import service from "@/store/services/model-service";
+import { mapGetters } from 'vuex';
 
 export default {
     props: ['formation_id'],
@@ -195,12 +196,10 @@ export default {
         },
         async loadEmployees(id){
             try {
-                const resp = await service.getIndex('employee', null, 'installation_id=' + id + '&not_formation_id='+this.formation_id);
+                const resp = await service.getIndex('employee', null, 'installation_id=' + id + '&not_formation_id='+this.formation_id + '&includes[]=last_formation');
                 this.employees = resp.data.data;
             } catch (err) {
                 this.model.date = ''
-                console.log(err.response);
-                // this.$toast.error('No se pudieron cargar los tipos de vehiculos')
             }
         },
         async loadInstallations(){
@@ -215,7 +214,10 @@ export default {
         handleClose(reset){
             reset()
             this.$emit('close')
-        }
+        },
+    },
+    computed: {
+        ...mapGetters(['FORMAT_DATE'])
     }
 }
 </script>

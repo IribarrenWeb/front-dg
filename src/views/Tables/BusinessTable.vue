@@ -28,7 +28,7 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.business_name }}
+						{{ row.item.user.full_name }}
 					</th>
 					<td class="text-uppercase">BARCELONA</td>
 					<td>
