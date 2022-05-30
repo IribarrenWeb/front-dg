@@ -326,10 +326,11 @@
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Empleados') && ROLE != 'business'">
-			<dashboard-employee :id="installation_id"></dashboard-employee>
+			<dashboard-employee :reload="reload_dash_employee" @reloaded="reload_dash_employee = false" :id="installation_id"></dashboard-employee>
 			<employees-table
 				:installation_id="installation_id"
 				:adr="true"
+                @reload_dash="reload_dash_employee = true"
 			></employees-table>
 		</template>
 		<!-- ------------------------------------------------------- -->
@@ -424,6 +425,7 @@
 					new: false,
 					base64: "",
 				},
+                reload_dash_employee: false,
 				update: {
 					op: false,
 					dep: false,

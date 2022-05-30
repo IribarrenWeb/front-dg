@@ -24,7 +24,7 @@
 import service from "@/store/services/model-service";
 export default {
     name: "dashboard-employee",
-    props:['id'],
+    props:['id','reload'],
     data() {
         return {
             tableData: [
@@ -44,9 +44,17 @@ export default {
                 const res = await service.dashEmployee(this.id);
                 let data = res.data.data
                 this.tableData[0].total = data.total >= 1 ? data.total : '0'; 
-                this.tableData[0].adr = data.adr >= 1 ? data.adr : '0'; 
+                this.tableData[0].adr = data.adr >= 1 ? data.adr : '0';
+                this.$emit('reloaded');
             } catch (err) {
                 console.log(err);
+            }
+        }
+    },
+    watch: {
+        reload(newVal){
+            if (newVal) {
+                this.index()
             }
         }
     }

@@ -89,7 +89,7 @@
 		>
 			<form-employee
 				@close="this.modal = false"
-				@reload="index()"
+				@reload="index(), this.$emit('reload_dash')"
                 :employee_id="employee_id"
 				:installation_id="installation_id"
 			></form-employee>

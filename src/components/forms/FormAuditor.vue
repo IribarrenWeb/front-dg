@@ -83,7 +83,7 @@
 
         <div class="col-lg-8">
           <base-field name="address" label="Dirección">
-            <field-validate class="form-control" name="address" label="dirección" rules="max:20|alpha_spaces" v-model="model.address"/>
+            <field-validate class="form-control" name="address" label="dirección" rules="max:50|alpha_spaces" v-model="model.address"/>
           </base-field>
         </div>
       
