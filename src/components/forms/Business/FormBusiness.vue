@@ -223,7 +223,7 @@
 					</div>
 					<div class="col-lg-6">
 						<base-field name="file_document.base64" label="Documentación">
-							<div v-if="model.file_document.file.length >= 1">
+							<div v-if="model.file_document.file != null">
 								<span class="mr-md-4">{{
 									model.file_document.file[0].name
 								}}</span>
@@ -236,7 +236,7 @@
 								>
 							</div>
 							<field-validate
-								v-show="model.file_document.file.length < 1"
+								v-show="model.file_document.file == null"
 								type="file"
 								class="form-control"
 								name="file_document.base64"
