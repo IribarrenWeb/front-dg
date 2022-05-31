@@ -17,31 +17,31 @@
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="mma" label="MMA">
-                        <field-validate type="number" class="form-control" name="mma" rules="required" label="mma" v-model="model.mma"/>
+                        <field-validate type="number" class="form-control" name="mma" rules="required" label="mma" v-model.number="model.mma"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="tara" label="TARA">
-                        <field-validate type="number" class="form-control" name="tara" rules="required" label="tara" v-model="model.tara"/>
+                        <field-validate type="number" class="form-control" name="tara" rules="required" label="tara" v-model.number="model.tara"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="adr_kit" label="Kit ADR">
-                        <field-validate type="date" class="form-control" name="adr_kit" rules="required" label="kit adr" v-model="model.adr_kit.toForm"/>
+                        <field-validate type="date" class="form-control" name="adr_kit" rules="required" label="kit adr" v-model="model.adr_kit"/>
                     </base-field>
                 </div>
-                <div class=" col-lg-4">
-                    <base-field   name="vehicle_type_id" label="Tipo">
-                        <field-validate as="select" class="form-control" name="vehicle_type_id" rules="required" label="tipo de vehiculo" v-model="model.vehicle_type_id">
+                <div class=" col-lg-4" v-if="(update && types != null) || !update">
+                    <base-field name="vehicle_type_id" label="Tipo">
+                        <field-validate as="select" class="form-control" name="vehicle_type_id" rules="required" label="tipo de vehiculo" v-model.number="model.vehicle_type_id">
                             <option v-for="type in types" :key="type.key" :value="type.id">
                                 {{type.name}}
                             </option>
                         </field-validate>
                     </base-field>
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-4" v-if="(update && designations != null) || !update">
                     <base-field   name="adr_designation_id" label="Designacion Adr">
-                        <field-validate as="select" class="form-control" name="adr_designation_id" rules="required" label="designacion adr" v-model="model.adr_designation_id">
+                        <field-validate as="select" class="form-control" name="adr_designation_id" rules="required" label="designacion adr" v-model.number="model.adr_designation_id">
                             <option v-for="designation in designations" :key="designation.key" :value="designation.id">
                                 {{designation.code}}
                             </option>
@@ -51,6 +51,10 @@
             </div>
 
             <div class="mt-4 float-md-right">
+                <base-button type="default" nativeType="submit"
+                :disabled="!canUpdate"
+                >Actualizar</base-button
+                >
                 <base-button type="default" nativeType="submit"
                 >Enviar</base-button
                 >
@@ -71,13 +75,19 @@ import dataService from "../../store/services/data-service";
 import service from "@/store/services/model-service";
  
 import utils from "@/mixins/utils-mixin";
-import _ from "lodash";
+import {isEqual} from "lodash";
+import { mapGetters } from 'vuex';
 
 export default {
     mixins: [utils],
     props: {
         installation_id: {
             required: true,
+            default: null
+        },
+        vehicle: {
+            type: Object,
+            required: false,
             default: null
         }
     },
@@ -90,29 +100,50 @@ export default {
                 fleet: "",
                 mma: "",
                 tara: "",
-                adr_kit: {
-                    date: "",
-                    toForm: ""
-                },
+                adr_kit: "",
                 adr_designation_id: null,
             },
-            types: {},
-            designations: {},
+            original_vehicle: null,
+            types: null,
+            designations: null,
             loader: false
+        }
+    },
+    created() {
+        if (this.vehicle != null) {
+            this.original_vehicle = this.COPY(this.vehicle)
+            this.model = this.COPY(this.vehicle);
         }
     },
     mounted() {
         this.loadTypes();
         this.loadDesignations();
     },
+    computed: {
+        ...mapGetters(['COPY', 'DIFFERENCE']),
+        update(){
+            return this.vehicle != null && typeof this.vehicle.id != undefined
+        },
+        canUpdate() {
+            return !isEqual(this.model,this.original_vehicle)
+        }
+    },
     methods: {
         async onSubmit(values, { resetForm }){
-            this.model.adr_kit.date = this.formatDate(values.adr_kit)
             try {
-                await service.store('vehicle',this.model)
-                this.$toast.success('Vehiculo registrado')
-                resetForm()
-                this.$emit('close')
+                if (this.update) {
+                    const data = this.DIFFERENCE(this.vehicle,this.model)
+
+                    const res = await service.update('vehicle', this.vehicle.id, data)
+                    this.$toast.success('Vehiculo registrado')
+                    this.model = this.COPY(res.data.data) 
+                    this.original_vehicle = this.COPY(this.model)
+                }else{
+                    await service.store('vehicle',this.model)
+                    this.$toast.success('Vehiculo registrado')
+                    resetForm()
+                    this.$emit('close')
+                }
                 this.$emit('reload')
             } catch (error) {
                 console.log(error);
@@ -136,14 +167,6 @@ export default {
                 console.log(err.response);
                 this.$toast.error('No se pudieron cargar las designaciones adr')
             }
-        },
-        async fetchItems(search){
-            const res = await dataService.getAdrMaterials(`un_code=${search}`);
-            const data = res.data.data;
-            let options = _.map(data, (material) => {
-                return {value: material, label: `${material.un_code} - ${material.denomination_name}`}
-            })
-            return options
         },
         handleClose(reset){
             reset()

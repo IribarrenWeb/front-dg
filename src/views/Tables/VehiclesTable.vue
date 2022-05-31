@@ -51,7 +51,7 @@
 					<td>{{ row.item.mma }}</td>
 					<td>{{ row.item.type.name }}</td>
 					<td>{{ row.item.adr.code }}</td>
-					<td>{{ row.item.adr_kit }}</td>
+					<td>{{ row.item.adr_kit_date }}</td>
 					<td>
 						<badge
 							class="badge-dot mr-4"
@@ -64,9 +64,9 @@
 						</badge>
 					</td>
 					<td class="text-right">
-						<!-- <a class="btn btn-primary btn-sm" href="#" @click.prevent=""
-              ><i class="fa-regular fa-eye"></i></a
-            > -->
+						<a class="btn btn-primary btn-sm" href="#" @click.prevent="vehicle = row.item, modal = true"
+							><i class="fa-regular fa-eye"></i
+						></a>
 						<a
 							class="btn btn-danger btn-sm"
 							href="#"
@@ -94,7 +94,8 @@
 			model="vehiculos"
 		>
 			<form-vehicle
-				@close="this.modal = false"
+				@close="this.modal = false, vehicle = null"
+				:vehicle="vehicle"
 				@reload="getVehicles(page)"
 				:installation_id="installation_id"
 			></form-vehicle>
@@ -122,14 +123,14 @@
 			classes: {
 				type: String,
 			},
-            business_id: {
+			business_id: {
 				required: false,
 				default: null,
 			},
-            transported: {
-                required: false,
-                default: false
-            }
+			transported: {
+				required: false,
+				default: false,
+			},
 		},
 		data() {
 			return {
@@ -138,6 +139,7 @@
 				loader: false,
 				page: 1,
 				modal: false,
+				vehicle: null,
 			};
 		},
 		mounted() {
@@ -151,7 +153,7 @@
 					params += "&installation_id=" + this.installation_id;
 				}
 
-                if (this.business_id != null) {
+				if (this.business_id != null) {
 					params += "&business_id=" + this.business_id;
 				}
 
@@ -192,13 +194,17 @@
 					console.log(error);
 				}
 			},
-            handleAdd(){
-                if (!this.transported) {
-                    this.$swal('No puede agregar vehiculos', 'No puede agregar vehiculos ya que las operaciones de esta instalación no son de transporte.', 'warning')
-                }else{
-                    this.modal = true;
-                }
-            }
+			handleAdd() {
+				if (!this.transported) {
+					this.$swal(
+						"No puede agregar vehiculos",
+						"No puede agregar vehiculos ya que las operaciones de esta instalación no son de transporte.",
+						"warning"
+					);
+				} else {
+					this.modal = true;
+				}
+			},
 		},
 	};
 </script>

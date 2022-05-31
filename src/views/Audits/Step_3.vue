@@ -223,12 +223,10 @@
 										/>
 									</div>
 									<div class="col-md-3">
-										<base-input
-											:view="true"
-											:modelValue="deposit.quantity"
-											label="Cantidad"
-											disabled
-										/>
+                                        <base-field label="Volumen envase">
+                                            <field-validate name="quantity" type="number" class="form-control" v-model="deposit.quantity" :disabled="deposit.quantity == null">
+                                            </field-validate>
+                                        </base-field>
 									</div>
 								</div>
 							</div>
@@ -296,7 +294,7 @@
 							<div class="align-self-center">
 								<base-button
 									size="sm"
-									@click="unlink(dep.id, false)"
+									@click="unlink(dep.id, 'deposits')"
 									type="danger"
 									:outline="true"
 								>
@@ -393,12 +391,10 @@
 										/>
 									</div>
 									<div class="col-md-3">
-										<base-input
-											:view="true"
-											:modelValue="residue.quantity"
-											label="Cantidad"
-											disabled
-										/>
+                                        <base-field label="Volumen envase">
+                                            <field-validate name="quantity" type="number" class="form-control" v-model="residue.quantity" :disabled="residue.quantity == null">
+                                            </field-validate>
+                                        </base-field>
 									</div>
 								</div>
 							</div>
@@ -466,7 +462,7 @@
 							<div class="align-self-center">
 								<base-button
 									size="sm"
-									@click="unlink(res.id, false)"
+									@click="unlink(res.id, 'residues')"
 									type="danger"
 									:outline="true"
 								>
@@ -570,6 +566,7 @@
 	import data_service from "@/store/services/data-service";
 	import _, { random } from "lodash";
 	import UploadImages from "vue-upload-drop-images";
+import { mapGetters } from 'vuex';
 
 	export default {
 		props: ["audit", "currentStep"],
@@ -611,6 +608,7 @@
 					buy: null,
 					is_residue: false,
 				},
+                selected_quantity: null,
 				adr_residues: [],
 				adr_deposits: [],
 				material_observations: "",
@@ -684,13 +682,24 @@
 					console.log(err);
 				}
 			},
-			addMaterial(values, op) {
+			async addMaterial(values, op) {
 				let model = op == "deposit" ? this.adr_deposits : this.adr_residues;
 				let compare = op == "deposit" ? this.deposit : this.residue;
 				if (this.find(model, compare)) {
 					this.$toast.error(`El ${op} ya se ha seleccionado`);
 					return;
 				}
+
+                if (this.selected_quantity != compare.quantity) {
+                    try {
+                        await service.update('material', compare.id, {quantity: compare.quantity})
+                        this.$toast.success('Cantidad actualizada')
+                    } catch (err) {
+                        this.$toast.error('No se pudo actualizar la cantidad')
+                        console.log(err);
+                        return 
+                    }
+                }
 
 				model.push({
 					index: compare.index,
@@ -768,7 +777,7 @@
 				for (let index = 0; index < arr.length; index++) {
 					const element = arr[index];
 					if (element.id == item.id) {
-						return true;
+						return element;
 					}
 				}
 				return false;
@@ -801,7 +810,7 @@
 					position_item,
 					id
 				);
-
+                console.log(arr);
 				arr.splice(position_item, 1);
 			},
 			formatMaterials(materials, op_residue = true) {
@@ -871,6 +880,7 @@
 					return op;
 				});
 			},
+            ...mapGetters(['COPY'])
 		},
 		watch: {
 			"residue.index": function (newVal) {
@@ -883,6 +893,7 @@
 				this.residue.buy = this.audit.installation.residues[newVal].buy;
 				this.residue.is_residue =
 					this.audit.installation.residues[newVal].is_residue;
+                this.selected_quantity = this.COPY(this.residue.quantity)
 			},
 			"deposit.index": function (newVal) {
 				this.deposit.name = this.audit.installation.deposits[newVal].name;
@@ -894,6 +905,7 @@
 				this.deposit.buy = this.audit.installation.deposits[newVal].buy;
 				this.deposit.is_residue =
 					this.audit.installation.deposits[newVal].is_residue;
+                this.selected_quantity = this.COPY(this.deposit.quantity)
 			},
 		},
 	};

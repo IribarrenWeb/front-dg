@@ -26,8 +26,11 @@
 								/>
 							</base-field>
 						</div>
-                        <div class="col-lg-4">
-                            <base-field name="property_last_name" label="Apellido representante">
+						<div class="col-lg-4">
+							<base-field
+								name="property_last_name"
+								label="Apellido representante"
+							>
 								<field-validate
 									type="text"
 									class="form-control"
@@ -37,7 +40,7 @@
 									v-model="model.property_last_name"
 								/>
 							</base-field>
-                        </div>
+						</div>
 						<div class="col-lg-4">
 							<base-field name="property_dni" label="DNI">
 								<field-validate
@@ -63,7 +66,7 @@
 							</base-field>
 						</div>
 						<div class="col-lg-4">
-                            <base-field name="property_email" label="Email">
+							<base-field name="property_email" label="Email">
 								<field-validate
 									type="email"
 									class="form-control"
@@ -91,7 +94,7 @@
 								/>
 							</base-field>
 						</div>
-                        <div class="col-lg-4">
+						<div class="col-lg-4">
 							<base-field name="email" label="Email">
 								<field-validate
 									type="text"
@@ -127,7 +130,7 @@
 								/>
 							</base-field>
 						</div>
-                        <div class="col-lg-4">
+						<div class="col-lg-4">
 							<base-field name="address" label="Dirección">
 								<field-validate
 									type="text"
@@ -170,6 +173,41 @@
 									label="postal_code"
 									v-model="model.postal_code"
 								/>
+							</base-field>
+						</div>
+						<div class="col-lg-4" v-if="ROLE == 'admin'">
+							<base-field name="delegate_id" label="Delegado">
+								<div v-if="delegate != null">
+									<span class="mr-md-4 text-uppercase"
+										>{{ delegate.full_name }}</span
+									>
+									<base-button
+										@click="delegate = null"
+										size="sm"
+										type="default"
+										:outline="true"
+										><i class="fa-solid fa-pencil"></i
+									></base-button>
+								</div>
+								<div v-else>
+									<field-validate
+										name="delegate_id"
+										label="Delegado"
+										rules="required"
+										v-slot="{ field }"
+									>
+										<Multiselect
+											:searchable="true"
+											v-bind="field"
+											:min-chars="2"
+											:delay="500"
+											:required="true"
+											:options="getDelegates"
+											@select="delegate = $event"
+										>
+										</Multiselect>
+									</field-validate>
+								</div>
 							</base-field>
 						</div>
 					</div>
@@ -244,8 +282,8 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									><i class="fa-solid fa-pencil"></i></base-button
-								>
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
 							</div>
 							<field-validate
 								v-show="model.file_document.file == null"
@@ -300,24 +338,21 @@
 						<base-field :name="`auditable[${id}]`" label="Auditor">
 							<div v-if="installations[id].auditable != null">
 								<span class="mr-md-4 text-uppercase"
-									>{{ installations[id].auditable.user.name }}
-									{{ installations[id].auditable.user.last_name }}</span
+									>{{ installations[id].auditable.full_name }}</span
 								>
 								<base-button
 									@click="installations[id].auditable = null"
 									size="sm"
 									type="default"
 									:outline="true"
-									><i class="fa-solid fa-pencil"></i></base-button
-								>
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
 							</div>
 							<div v-else>
 								<field-validate
 									:name="`auditable[${id}]`"
 									label="Auditor"
-									rules="required"
 									v-slot="{ field }"
-									v-model="installations[id].auditable"
 								>
 									<Multiselect
 										:searchable="true"
@@ -325,7 +360,7 @@
 										:min-chars="2"
 										:delay="500"
 										:required="true"
-										:options="fetchItems"
+										:options="getUsers"
 										ref="multiselect"
 										@select="installations[id].auditable = $event"
 									>
@@ -372,8 +407,8 @@
 									size="sm"
 									type="default"
 									:outline="true"
-									><i class="fa-solid fa-pencil"></i></base-button
-								>
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
 							</div>
 							<field-validate
 								v-show="!installations[id].file_document.file.length >= 1"
@@ -394,8 +429,8 @@
 							:outline="true"
 							@click="remove(id)"
 							:disabled="installations.length == 1"
-							><i class="fa-regular fa-trash-can"></i></base-button
-						>
+							><i class="fa-regular fa-trash-can"></i
+						></base-button>
 					</div>
 				</fieldset>
 
@@ -543,7 +578,7 @@
 								/>
 							</base-field>
 						</div>
-                        <div class="col-lg-6">
+						<div class="col-lg-6">
 							<base-field
 								:name="`installations.${id}.responsible.file_firm.base64`"
 								label="Documento de Alta"
@@ -561,8 +596,8 @@
 										size="sm"
 										type="default"
 										:outline="true"
-										><i class="fa-solid fa-pencil"></i></base-button
-									>
+										><i class="fa-solid fa-pencil"></i
+									></base-button>
 								</div>
 								<field-validate
 									v-else
@@ -575,7 +610,7 @@
 								/>
 							</base-field>
 						</div>
-                        <div class="col-lg-12">
+						<div class="col-lg-12">
 							<div class="row">
 								<div class="col-lg-2">
 									<base-switch
@@ -635,8 +670,8 @@
 												size="sm"
 												type="default"
 												:outline="true"
-												><i class="fa-solid fa-pencil"></i></base-button
-											>
+												><i class="fa-solid fa-pencil"></i
+											></base-button>
 										</div>
 										<field-validate
 											v-else
@@ -653,13 +688,15 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="col-lg-12">
 							<div class="row">
 								<div class="col-lg-2">
 									<base-switch
 										v-model="installations[id].responsible.driver"
-                                        :value="installations[id].responsible.driver != 0 ? true : false"
+										:value="
+											installations[id].responsible.driver != 0 ? true : false
+										"
 										label="Conductor"
 									></base-switch>
 								</div>
@@ -735,8 +772,8 @@
 												size="sm"
 												type="default"
 												:outline="true"
-												><i class="fa-solid fa-pencil"></i></base-button
-											>
+												><i class="fa-solid fa-pencil"></i
+											></base-button>
 										</div>
 										<field-validate
 											v-else
@@ -783,6 +820,7 @@
 	import Multiselect from "@vueform/multiselect";
 	import service from "../../../store/services/model-service";
 	import _ from "lodash";
+import { mapGetters } from 'vuex';
 
 	export default {
 		components: { Multiselect },
@@ -793,6 +831,7 @@
 				model: this.$store.getters.BUSINESS_SCHEMA,
 				currentStep: 1,
 				installations: [],
+                delegate: null
 			};
 		},
 		mounted() {
@@ -832,7 +871,9 @@
 					}
 				}
 				if (this.currentStep === 1) {
-					// console.log(values);
+                    if (this.ROLE == 'admin') {
+                        this.model.delegate_id = this.delegate.delegate.id;
+                    }
 				}
 				if (this.currentStep === 2) {
 					console.log(values);
@@ -847,18 +888,18 @@
 						installation.file_document.base64 = await this.toBase64(
 							installation.file_document.file[0]
 						);
-						installation.auditable_id = installation.auditable.id;
+                        if (!_.isEmpty(installation.auditable_id)) {
+                            installation.auditable_id = installation.auditable.id;
+                        }
 					}
 				}
 				if (this.currentStep == 4) {
 					for (let i = 0; i < this.installations.length; i++) {
-						console.log(this.installations[i].responsible);
 						// Format firm
 						this.installations[i].responsible.file_firm.base64 =
 							await this.toBase64(
 								this.installations[i].responsible.file_firm.file[0]
 							);
-
 
 						// Format driver documents
 						if (this.installations[i].responsible.driver) {
@@ -897,20 +938,15 @@
 
 				this.currentStep--;
 			},
-			async fetchItems(search) {
-				const res = await service.getIndex(
-					"auditor",
-                    null,
-					`name=${search}&includes[]=user`
-				);
-				const data = res.data.data;
-				let options = _.map(data, (auditor) => {
-					return {
-						value: auditor,
-						label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
-					};
-				});
-				return options;
+			getUsers(query) {
+                let params = null;
+                if (this.ROLE == 'admin') {
+                    params = '&delegate_id=' + this.delegate.delegate.id;
+                }
+				return this.$store.dispatch("users", { query: query, roles: [2, 3], params: params });
+			},
+            getDelegates(query) {
+				return this.$store.dispatch("users", { query: query, roles: [2], params: '&includes[]=delegate' });
 			},
 			remove(id) {
 				let position = 0;
@@ -938,6 +974,8 @@
 				this.$emit("close");
 			},
 		},
-		computed: {},
+		computed: {
+            ...mapGetters(['ROLE'])
+        },
 	};
 </script>

@@ -5,6 +5,7 @@ import profile from "./modules/profile-module";
 import { axios } from '@/axios';
 import $Swal from 'sweetalert2';
 import _ from 'lodash';
+import service from './services/model-service';
 
 const $swal = $Swal.mixin({
     customClass: {
@@ -28,6 +29,7 @@ export const store = createStore({
                 property_email: null,
                 property_dni: null,
                 business_phone: null,
+                delegate_id: null,
                 address: null,
                 business_nif: null,
                 property_name: null,
@@ -251,11 +253,11 @@ export const store = createStore({
             }
             return type;
         },
-        CLEAN_DATA: () => (model, excludes = []) => {
+        CLEAN_DATA: () => (model, excludes = [], includes = []) => {
             let keys_pluck = _.keys(model);
             let data = {};
             _.forEach(keys_pluck, function(k) {
-                if ((!_.isEmpty(model[k]) && !_.isNull(model[k]) || (_.isNumber(model[k]) && model[k] >= 1) || (_.isBoolean(model[k]))) && !_.includes(excludes, k)) {
+                if (_.includes(includes, k) || (!_.isEmpty(model[k]) && !_.isNull(model[k]) || (_.isNumber(model[k]) && model[k] >= 1) || (_.isBoolean(model[k]))) && !_.includes(excludes, k)) {
                     data[k] = model[k]
                 }
             })
@@ -369,6 +371,20 @@ export const store = createStore({
                     return true
                 }
             });
+        },
+        async users(state, payload) {
+            if (payload.query == null) {
+                return []
+            }
+            let params = typeof payload.params != undefined ? payload.params : null;
+
+            try {
+                const res = await service.users_select(payload.query, payload.roles, params);
+                console.log(res);
+                return res
+            } catch (err) {
+                console.log(err);
+            }
         },
 
     },

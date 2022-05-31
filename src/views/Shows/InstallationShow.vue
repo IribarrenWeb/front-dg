@@ -62,7 +62,7 @@
 									:min-chars="2"
 									:delay="500"
 									:required="true"
-									:options="fetchItems"
+									:options="getUsers"
 									:resolve-on-load="false"
 									ref="multiselect"
 									@select="new_auditable.value = $event"
@@ -484,7 +484,8 @@
 						"includes[]=operations&includes[]=equipments"+
                         "&includes[]=auditable.user&includes[]=documents.type"+
                         "&includes[]=province&includes[]=depositTypes" +
-                        "&includes[]=responsible.firm_document"
+                        "&includes[]=responsible.firm_document" +
+                        "&includes[]=company"
 					);
 					this.model = this.COPY(res.data.data);
 					this.responsible = this.COPY(res.data.data.responsible);
@@ -532,7 +533,6 @@
 					if (!_.isEqual(this.model, this.original_model)) {
 						try {
 							await service.update("installation", this.installation_id, data);
-							this.$toast.success("Datos actualizados");
 							this.$emit("reload");
 							await this.getInst();
 							this.resetNews();
@@ -548,6 +548,8 @@
 
 					if (this.update.op) {
 						data.operation_types_ids = this.oper;
+                        
+                        
 					}
 					if (this.update.eqp) {
 						data.equipments_ids = this.equips;
@@ -557,14 +559,30 @@
 					}
 
 					if (this.update.op || this.update.eqp || this.update.dep) {
+                        let result = true
+                        if (this.hasTransportedOper && !this.oper.includes(5)) {
+                            result = await this.$swal({
+                                title: "¿Esta seguro?",
+                                icon: 'question',
+                                text: "Si deselecciona la operación de transporte se eliminaran los vehiculos asociados a esta instalación, ¿esta seguro?",
+                                showCancelButton: true
+                            }).then(res => {
+                                if (!res.isConfirmed) {
+                                    return false
+                                }else{
+                                    return true
+                                }
+                            })
+                        }
 						try {
-							await service.update("installation", this.installation_id, data);
-							this.$toast.success("Datos actualizados");
-							this.$emit("reload");
-							await this.getInst();
-							this.update.op = false;
-							this.update.eqp = false;
-							this.update.dep = false;
+                            if (result) {
+                                await service.update("installation", this.installation_id, data);
+                                this.$emit("reload");
+                                await this.getInst();
+                                this.update.op = false;
+                                this.update.eqp = false;
+                                this.update.dep = false;
+                            }
 						} catch (err) {
 							this.$toast.error("No se pudieron guardar los cambios.");
 							return;
@@ -581,30 +599,13 @@
 				const res = await dataService.getProvinces();
 				this.provinces = res.data.data;
 			},
-			async fetchItems(search) {
-				const res = await service.getIndex(
-					"auditor",
-					null,
-					`name=${search}&includes[]=user`
-				);
-				const data = res.data.data;
-				let options = [];
-				for (let i = 0; i < data.length; i++) {
-					const auditor = data[i];
-					if (this.model.auditable == null) {
-						options.push({
-							value: auditor,
-							label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
-						});
-					} else if (auditor.id != this.model.auditable.id) {
-						options.push({
-							value: auditor,
-							label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`,
-						});
-					}
-				}
-				return options;
-			},
+			getUsers(query){
+                let params = null
+                if (this.ROLE == 'admin') {
+                    params = '&delegate_id=' + this.model.company.administrable_id;
+                }
+                return this.$store.dispatch('users', {query: query, roles: [2,3], params: params})
+            },
 			async loadOperations() {
 				const res = await dataService.getOperations();
 				const data = res.data.data;
@@ -739,6 +740,15 @@
                 }
 				return check;
 			},
+            hasTransportedOper(){
+                let has = false
+                _.forEach(this.model.operations, function(op){
+                    if (op.id == 5) {
+                        has = true
+                    }
+                });
+                return has;
+            }
 		},
 		watch: {
 			oper() {

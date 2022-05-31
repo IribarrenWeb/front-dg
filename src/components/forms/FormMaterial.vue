@@ -48,9 +48,7 @@
 					<div class="col-lg-3">
 						<base-field name="is_residue" label="Tipo">
 							<select
-								name=""
-								id=""
-								v-model="model.is_residue"
+								v-model="model_is_residue"
 								class="form-control"
 								:disabled="residue != null"
 							>
@@ -72,7 +70,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-3">
-						<base-field name="equipment_type_id" label="Depósito">
+						<base-field name="equipment_type_id" label="Depósito" v-if="(update && equipments != null) || !update">
 							<field-validate
 								as="select"
 								class="form-control"
@@ -93,18 +91,18 @@
 					</div>
 					<div class="col-lg-3">
 						<base-field name="material" label="UN">
-							<div v-if="model.material != null">
+							<div v-if="model_material">
 								<span
 									class="
 										mr-md-4
 										text-uppercase text-text-truncate
 										d-inline-block
 									"
-									>{{ material.un_code }} -
-									{{ material.denomination_name }}</span
+									>{{ model_material.un_code }} -
+									{{ model_material.denomination_name }}</span
 								>
 								<base-button
-									@click="model.material = null"
+									@click="resetMaterial"
 									size="sm"
 									type="default"
 									:outline="true"
@@ -117,7 +115,6 @@
 									label="Material adr"
 									rules="required"
 									v-slot="{ field }"
-									v-model="model.material"
 								>
 									<Multiselect
 										:searchable="true"
@@ -126,7 +123,7 @@
 										:delay="1000"
 										:required="true"
 										:options="fetchItems"
-										@select="material = $event"
+										@select="adr_material = $event"
 									>
 									</Multiselect>
 								</field-validate>
@@ -136,7 +133,7 @@
 					<div class="col-lg-12">
 						<div class="row">
 							<div class="col-md-3">
-								<base-field name="operation_type" label="Tipo de operación">
+								<base-field name="operation_type" label="Tipo de operación" v-if="(update && operations != null) || !update">
 									<field-validate
 										as="select"
 										class="form-control"
@@ -145,6 +142,7 @@
 										label="tipo de operación"
 										v-model="model.operation_type_id"
 									>
+                                        <option selected>Selecciona una operación</option>
 										<option
 											v-for="(operation, idx) in operations"
 											:key="idx"
@@ -161,27 +159,38 @@
 									name="file_document"
 									label="Ficha de datos de seguridad"
 								>
-									<div v-if="model.file_document.file.length >= 1">
+									<div v-if="file_document">
 										<span class="mr-md-4">{{
-											model.file_document.file[0].name
+											file_document.name
 										}}</span>
 										<base-button
-											@click="model.file_document.file = []"
+											@click="resetFile"
 											size="sm"
 											type="default"
 											:outline="true"
-											><i class="fa-solid fa-pencil"></i
-										></base-button>
+											>
+                                            <i class="fa-solid fa-pencil"></i>
+                                        </base-button>
 									</div>
-									<field-validate
-										v-else
-										type="file"
-										class="form-control"
-										name="file_document"
-										rules="required"
-										label="Ficha de datos de seguridad"
-										v-model="model.file_document.file"
-									/>
+                                    <div v-else>
+                                        <field-validate
+                                            type="file"
+                                            class="form-control mb-1"
+                                            name="file_document"
+                                            rules="required"
+                                            label="Ficha de datos de seguridad"
+                                            v-model="model.file_document.file"
+                                        />
+                                        <base-button
+                                            @click="new_document = false"
+                                            v-if="update && !file_document"
+                                            size="sm"
+                                            type="default"
+                                            :outline="true"
+                                            >
+                                            Cancelar
+                                        </base-button>
+                                    </div>
 								</base-field>
 							</div>
 							<div class="col-lg-3">
@@ -262,7 +271,10 @@
 				<base-button type="default" nativeType="submit" v-if="currentStep !== 2"
 					>Siguiente</base-button
 				>
-				<base-button type="default" nativeType="submit" v-if="currentStep === 2"
+                <base-button type="default" nativeType="submit" v-if="currentStep == 2 && update && canUpdate"
+					>Actualizar</base-button
+				>
+				<base-button type="default" nativeType="submit" v-if="currentStep === 2 && !update"
 					>Enviar</base-button
 				>
 				<base-button
@@ -283,7 +295,7 @@
 	import Multiselect from "@vueform/multiselect";
 	import service from "@/store/services/model-service";
 
-	import _ from "lodash";
+	import { isEmpty, isEqual, map } from "lodash";
 	import { mapGetters } from "vuex";
 
 	export default {
@@ -303,6 +315,11 @@
 				required: false,
 				default: null,
 			},
+            material: {
+                type: Object,
+                required: false,
+                default: null
+            }
 		},
 		components: { Multiselect },
 		data() {
@@ -335,26 +352,76 @@
 					is_dangerous: false,
 					file_document: {
 						file: [],
-						base64: "",
+						base64: null,
 					},
 					operation_type_id: null,
 				},
-				material: {},
-				equipments: {},
-				operations: {},
+                adr_material: null,
+				original_material: null,
+				equipments: null,
+				operations: null,
+                new_document: false,
+                new_material: false,
+                model_is_residue: null
 			};
 		},
+        created() {
+            if (this.update) {
+                this.original_material = this.COPY(this.material)
+                this.original_material.file_document = {
+                    file: [],
+                    base64: null,
+                };
+                this.original_material.adr_material_id = this.original_material.material.id
+
+                this.model = this.COPY(this.original_material)
+            }
+        },
 		mounted() {
 			this.loadEquipments();
 			if (this.ROLE != "business") {
 				this.loadOperations();
 			}
 			if (this.residue == "true" || this.residue == "false") {
-				this.model.is_residue = this.residue;
+				this.model_is_residue = this.residue;
 			}
 		},
 		computed: {
-			...mapGetters(["CLEAN_DATA", "ROLE"]),
+			...mapGetters(["CLEAN_DATA", "ROLE", "COPY", "DIFFERENCE"]),
+            update(){
+                return this.material != null && typeof this.material.id != undefined
+            },
+            file_document(){
+                let file = false
+                if (this.update && !this.new_document) {
+                    if (this.model.documents != null && !isEmpty(this.model.documents)) {
+                        file = {
+                            document: this.model.documents[0],
+                            name: "FICHA SEGURIDAD"
+                        }
+                    }
+                }
+                if(!this.update && this.model.file_document.file.length >= 1){
+                    file = {
+                        document: this.model.file_document.file,
+                        name: this.model.file_document.file[0].name
+                    }
+                }
+                return file;
+            },
+            model_material(){
+                let material = false
+                if (this.update && !this.new_material) {
+                    material = typeof this.model.material != undefined ? this.model.material : false
+                }
+                if (!this.update && this.adr_material != null){
+                    material = this.adr_material
+                }
+                return material;
+            },
+            canUpdate(){
+                return !isEqual(this.model,this.original_material)
+            }
 		},
 		methods: {
 			prevStep() {
@@ -363,37 +430,61 @@
 				}
 				this.currentStep--;
 			},
+            resetFile(){
+                if (this.update) {
+                    this.new_document = true
+                    this.model.file_document.file = []
+                }else{
+                    this.model.file_document.file = []
+                }
+            },
+            resetMaterial() {
+                if (this.update) {
+                    this.new_material = true
+                    this.adr_material = null
+                }else{
+                    this.adr_material = null
+                }
+            },
 			async onSubmit(values, { resetForm }) {
 				if (this.currentStep === 1) {
-					if (this.model.is_residue == null) {
+					if (this.model_is_residue == null) {
 						return this.$toast.error("Selecciona el tipo de material");
-					}
-					this.model.adr_material_id = this.material.id;
+					}else{
+                        this.model.is_residue = this.model_is_residue == 'true' ? 1 : 0
+                    }
+                    
+                    if (this.adr_material != null) {
+                        this.model.adr_material_id = this.adr_material.id;
+                    }
+
+                    if (!isEmpty(this.model.file_document.file)) {
+                        this.model.file_document.base64 = await this.toBase64(
+                            this.model.file_document.file[0]
+                        );
+                    }
 				}
 				if (this.currentStep === 2) {
-					if (this.model.is_residue === "true") {
-						this.model.is_residue = true;
-					} else {
-						this.model.is_residue = false;
-					}
 
 					if (this.model.unit == null) {
 						return this.$toast.error("Selecciona el tipo de unidad");
 					}
-
-                    this.model.file_document.base64 = await this.toBase64(
-                        this.model.file_document.file[0]
-                    );
-					try {
-						const data = this.CLEAN_DATA(this.model, ["material"]);
-						await service.store("material", data);
-						resetForm();
-						this.$emit("close");
-						this.$emit("reload");
-					} catch (error) {
-						console.log(error);
-					}
 				}
+
+                try {
+                     if (this.update) {
+                        await this.toUpdate()
+                    }else if(this.currentStep === 2){
+                        const data = this.CLEAN_DATA(this.model, ["material"], ["is_residue"]);
+                        await service.store("material", data);
+                        resetForm();
+                        this.$emit("close");
+                        this.$emit("reload");
+                    }
+                } catch (error) {
+                    console.log(error);
+                    return
+                }
 
 				for (let index = 0; index < this.steps.length; index++) {
 					const step = this.steps[index];
@@ -415,6 +506,26 @@
 					this.$toast.error("No se pudieron cargar los equipmentos");
 				}
 			},
+            async toUpdate() {
+                if (!isEqual(this.model, this.original_material)) {
+                    try {
+                        const data = this.DIFFERENCE(this.original_material, this.model)
+                        
+                        const res = await service.update('material', this.material.id, data)
+                        this.original_material = this.COPY(res.data.data)
+                        this.original_material.file_document = {
+                            file: [],
+                            base64: null,
+                        };
+                        this.model = this.COPY(this.original_material)
+                        this.new_document = false
+                        this.new_material = false
+                        this.$emit("reload");
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }
+            },
 			async loadOperations(id = null) {
 				try {
 					let inst_id = null;
@@ -439,14 +550,17 @@
 				}
 			},
 			async fetchItems(search) {
-				const res = await dataService.getAdrMaterials(`un_code=${search}`);
-				const data = res.data.data;
-				let options = _.map(data, (material) => {
-					return {
-						value: material,
-						label: `${material.un_code} - ${material.denomination_name}`,
-					};
-				});
+                let options = []
+                if (search != null) {
+                    const res = await dataService.getAdrMaterials(`un_code=${search}`);
+                    const data = res.data.data;
+                    options = map(data, (material) => {
+                        return {
+                            value: material,
+                            label: `${material.un_code} - ${material.denomination_name}`,
+                        };
+                    });
+                }
 				return options;
 			},
 			handleClose(reset) {

@@ -35,7 +35,7 @@
                           :min-chars="2"
                           :delay="1000"
                           :required="true"
-                          :options="fetchItems"
+                          :options="getUsers"
                           ref="multiselect"
                           @select="model.delegate = $event"
                           :resolve-on-load="false"
@@ -251,17 +251,9 @@ import { mapGetters } from 'vuex';
             const res = await dataService.getProvinces()
             this.provinces = res.data.data;
         },
-      async fetchItems(search) {
-        if (_.isEmpty(search)) {
-          return {};
-        }
-        const res = await service.getIndex('delegate',null,`name=${search}&includes[]=user`);
-        const data = res.data.data;
-        let options = _.map(data, (delegate) => {
-            return {value: delegate, label: `${delegate.user.name} ${delegate.user.last_name} - ${delegate.dni}`}
-        })
-        return options
-      },
+      getUsers(query){
+            return this.$store.dispatch('users', {query: query, roles: [2]})
+        },
       async show(id){
         console.log(this.$refs)
         try {

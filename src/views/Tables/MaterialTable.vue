@@ -44,6 +44,7 @@
 					<td>{{ row.item.name }}</td>
 					<td>{{ row.item.material.denomination_name }}</td>
 					<td>{{ row.item.material.class.code }}</td>
+					<td>{{ row.item.material.packing.code }}</td>
 					<td>{{ row.item.equipment.name }}</td>
 					<td>{{ row.item.quantity }}</td>
 					<td class="text-right">
@@ -53,6 +54,12 @@
 							@click.prevent="handleView(row.item.id)"
 							><i class="fa-regular fa-eye"></i
 						></a>
+                        <a
+							class="btn btn-primary btn-sm"
+							href="#"
+							@click.prevent="handleEdit(row.item)"
+							><i class="fa-solid fa-pen"></i>
+                        </a>
 						<a
 							class="btn btn-outline-primary btn-sm"
 							href="#"
@@ -82,6 +89,7 @@
 			<form-material
 				v-else
                 :installations="installations"
+                :material="material"
 				@close="handleClose"
 				@reload="getMaterials(page, installation_id)"
 				:installation_id="installation_id"
@@ -129,6 +137,7 @@
 				metaData: {},
 				page: 1,
 				modal: false,
+                material: null
 			};
 		},
 		mounted() {
@@ -137,7 +146,7 @@
 		methods: {
 			async getMaterials(page = 1, id = null) {
 				let params =
-					"includes[]=material.class&includes[]=equipment&includes[]=material.packing";
+					"includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents";
 
 				if (id != null) {
 					params += "&installation_id=" + id;
@@ -166,9 +175,14 @@
 			handleView(id) {
 				(this.material_id = id), (this.modal = true);
 			},
+            handleEdit(material) {
+                this.material = material;
+                this.modal = true
+			},
 			handleClose() {
 				this.modal = false;
 				this.material_id = null;
+                this.material = null
 			},
 			async destroy(id) {
 				try {

@@ -6,30 +6,21 @@
           <div class="text-center text-muted mb-4">
             <small>Login</small>
           </div>
-          <form role="form" @submit.prevent="handleSubmit()">
-            <base-input
-              formClasses="input-group-alternative mb-3"
-              placeholder="Email"
-              addon-left-icon="ni ni-email-83"
-              v-model="model.email"
-            >
-            </base-input>
-
-            <base-input
-              formClasses="input-group-alternative mb-3"
-              placeholder="Password"
-              type="password"
-              addon-left-icon="ni ni-lock-circle-open"
-              v-model="model.password"
-            >
-            </base-input>
-
+          <form-validate @submit="handleSubmit()" v-slot="{meta, isSubmitting}">
+            <base-field name="email" addon-left-icon="ni ni-email-83">
+                <field-validate name="email" label="contraseña" type="email" class="form-control border-0 shadow pl-2" rules="required|email" placeholder="Email" v-model="model.email"></field-validate>
+            </base-field>
+            <base-field name="password" addon-left-icon="ni ni-lock-circle-open">
+                <field-validate name="password" label="contraseña" type="password" class="form-control border-0 shadow pl-2" rules="required" placeholder="Password" v-model="model.password"></field-validate>
+            </base-field>
             <div class="text-center">
-              <base-button type="default" class="my-4" @click="handleSubmit()"
-                >Sign in</base-button
-              >
+                <base-button type="default" :disabled="!meta.valid || isSubmitting" nativeType="submit" class="my-4">
+                    <div class="spinner-border text-light spinner-border-sm mr-2" v-if="isSubmitting" role="status">
+                    </div>
+                    <span>{{ isSubmitting ? 'Enviando' : 'Ingresar' }}</span>
+                </base-button>
             </div>
-          </form>
+          </form-validate>
         </div>
       </div>
       <div class="row mt-3">
@@ -46,7 +37,6 @@
   </div>
 </template>
 <script>
-   
   export default {
     name: "login",
     data() {
@@ -56,6 +46,9 @@
           password: "secret",
         },
       };
+    },
+    mounted() {
+        this.$store.commit('resetApiErrors')
     },
     methods: {
       async handleSubmit() {

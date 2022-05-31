@@ -17,7 +17,7 @@
                     <div class="col-lg-4">
                         <base-field   name="auditable" label="Auditor">
                             <div v-if="model.auditable != null">
-                                <span class="mr-md-4 text-uppercase">{{model.auditable.user.name}} {{model.auditable.user.last_name}}</span>
+                                <span class="mr-md-4 text-uppercase">{{model.auditable.name}} {{model.auditable.last_name}}</span>
                                 <base-button @click="model.auditable = null" size="sm" type="default" :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                             </div>
                             <div v-else>
@@ -28,7 +28,7 @@
                                         :min-chars="2"
                                         :delay="500"
                                         :required="true"
-                                        :options="fetchItems"
+                                        :options="getUsers"
                                         ref="multiselect"
                                         @select="auditable = $event"
                                         :disabled="isSaved"
@@ -318,7 +318,11 @@ export default {
         business_id: {
             type:Number,
             required:true
-        }
+        },
+        delegate_id: {
+            type:Number,
+            required:true
+        },
     },
     data() {
         return {
@@ -399,13 +403,8 @@ export default {
                 this.currentStep++
             }
         },
-        async fetchItems(search){
-            const res = await service.getIndex('auditor',null,`name=${search}&includes[]=user`);
-            const data = res.data.data;
-            let options = _.map(data, (auditor) => {
-                return {value: auditor, label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`}
-            })
-            return options
+        getUsers(query){
+            return this.$store.dispatch('users', {query: query, roles: [2,3]})
         },
         handleClose(reset){
             reset()

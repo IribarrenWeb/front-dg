@@ -98,6 +98,7 @@
 							<a
 								class="dropdown-item"
 								href="#"
+                                v-if="row.item.status == 'PENDIENTE'"
 								@click.prevent="toSchedule(row.item.id)"
 								>Agendar</a
 							>

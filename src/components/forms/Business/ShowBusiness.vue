@@ -67,7 +67,7 @@
 								<field-validate
 									type="text"
 									class="form-control"
-									name="email"
+									name="property_email"
 									rules="required|email"
 									label="email"
 									v-model.trim="model.property_email"
@@ -340,7 +340,6 @@ export default {
         async show(){
             this.model = this.COPY(this.business);
             this.model.name = this.model.user.name;
-            this.model.email = this.model.user.email;
             this.model.email = this.model.user.email;
             this.model.holder_name = this.model.bank.holder_name;
             this.model.iban_number = this.model.bank.iban_number;

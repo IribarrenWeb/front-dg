@@ -405,23 +405,6 @@
 				const res = await dataService.getProvinces();
 				this.provinces = res.data.data;
 			},
-			async fetchItems(search) {
-				if (_.isEmpty(search)) {
-					return {};
-				}
-				const res = await service.getIndex(
-					"delegate",
-					`name=${search}&includes[]=user`
-				);
-				const data = res.data.data;
-				let options = _.map(data, (delegate) => {
-					return {
-						value: delegate,
-						label: `${delegate.user.name} ${delegate.user.last_name} - ${delegate.dni}`,
-					};
-				});
-				return options;
-			},
 			async show(id) {
 				console.log(this.$refs);
 				try {

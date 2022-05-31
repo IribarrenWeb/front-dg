@@ -6,23 +6,18 @@
           <div class="text-center text-muted mb-4">
             <small>Resetear password</small>
           </div>
-          <form role="form" @submit.prevent="handleReset()">
-            <base-input formClasses="input-group-alternative mb-3" placeholder="Email" addon-left-icon="ni ni-email-83"
-              v-model="email">
-            </base-input>
-
+          <form-validate @submit="handleReset()" v-slot="{meta, isSubmitting}">
+            <base-field name="email" addon-left-icon="ni ni-email-83">
+                <field-validate name="email" label="email" type="email" class="form-control border-0 shadow pl-2" rules="required|email" placeholder="Email" v-model="email"></field-validate>
+            </base-field>
             <div class="text-center">
-              <base-button type="default" :loading="loading" loading_text="Enviando..." class="my-4"
-                @clicked="handleReset()">
-                <div class="spinner-border text-light" role="status" v-if="loading">
-                  <span class="visually-hidden">Enviado email...</span>
-                </div>
-                <span v-else>
-                  Enviar codigo
-                </span>
-              </base-button>
+              <base-button type="default" :disabled="!meta.valid || isSubmitting" nativeType="submit" class="my-4">
+                    <div class="spinner-border text-light spinner-border-sm mr-2" v-if="isSubmitting" role="status">
+                    </div>
+                    <span>{{ isSubmitting ? 'Enviando' : 'Enviar' }}</span>
+                </base-button>
             </div>
-          </form>
+          </form-validate>
         </div>
       </div>
       <div class="row mt-3">
@@ -36,21 +31,14 @@
 <script>
    
   export default {
-    name: "login",
-    mixins: [  ],
+    name: "reset",
     data() {
       return {
         email: '',
-        loading: false
       };
     },
     methods: {
       async handleReset() {
-        console.log('click');
-        if (this.email == '') {
-          this.$toast.error('El campo email es requerido');
-        } else {
-          this.loading = true;
           try {
             const response = await this.$store.dispatch('auth/sendResetEmail', {
               email: this.email
@@ -65,8 +53,6 @@
           } catch (err) {
             this.$toast.error(err.response.data.message);
           }
-          this.loading = false;
-        }
       },
     }
   };

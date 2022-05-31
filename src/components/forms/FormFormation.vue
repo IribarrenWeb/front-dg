@@ -30,7 +30,7 @@
                                 :min-chars="2"
                                 :delay="500"
                                 :required="true"
-                                :options="fetchItems"
+                                :options="getUsers"
                                 ref="multiselect"
                                 @select="auditable = $event"
                                 
@@ -79,7 +79,6 @@
 <script>
 import dataService from "../../store/services/data-service";
 import service from "@/store/services/model-service";
-import _ from "lodash";
 import Multiselect from "@vueform/multiselect";
 
 export default {
@@ -133,15 +132,8 @@ export default {
                 // this.$toast.error('No se pudieron cargar los tipos de vehiculos')
             }
         },
-        async fetchItems(search){
-            if (!_.isEmpty(search)) {
-                const res = await service.getIndex('auditor',null,`name=${search}&includes[]=user`);
-                const data = res.data.data;
-                let options = _.map(data, (auditor) => {
-                    return {value: auditor, label: `${auditor.user.name} ${auditor.user.last_name} - ${auditor.dni}`}
-                })
-                return options
-            }
+        getUsers(query){
+            return this.$store.dispatch('users', {query: query, roles: [2,3]})
         },
         handleClose(reset){
             reset()

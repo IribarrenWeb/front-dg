@@ -13,6 +13,7 @@ const $swal = $Swal.mixin({
 })
 
 import { createToaster } from "@meforma/vue-toaster";
+import { map } from 'lodash';
 const toaster = createToaster({ /* options */ });
 
 const url = process.env.VUE_APP_API_BASE_URL;
@@ -61,6 +62,49 @@ async function getIndex(model, page = 1, params = null) {
             message = err.response.data.message
         }
         errors(status, message)
+    });
+}
+
+/**
+ * 
+ * @param {String} query User name query to search
+ * @param {Array} roles Users roles ids
+ * @returns Object|Any
+ */
+function users_select(query, roles = [], ext_params = null) {
+    storage.commit('loading');
+    let params = `users?name=${query}`;
+
+    if (roles) {
+        for (let i = 0; i < roles.length; i++) {
+            const role = roles[i];
+            params += '&roles[]=' + role
+        }
+    }
+    if (ext_params != null) {
+        params += ext_params;
+    }
+
+    return axios.get(params).then((response) => {
+        storage.commit('loading');
+        const data = response.data.data;
+        let options = map(data, (user) => {
+            return {
+                value: user,
+                label: `${user.full_name}`,
+            };
+        });
+        return options;
+    }).catch(err => {
+        storage.commit('loading');
+        const status = err.response.status
+
+        let message = null;
+        if (status == 422) {
+            message = err.response.data.message
+        }
+        errors(status, message)
+        throw Error('Error');
     });
 }
 
@@ -361,5 +405,6 @@ export default {
     dashboard,
     dashEmployee,
     instOperations,
-    getReport
+    getReport,
+    users_select
 }
