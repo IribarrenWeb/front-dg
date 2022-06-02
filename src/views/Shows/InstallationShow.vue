@@ -42,6 +42,7 @@
 								{{ model.auditable.user.last_name }}</span
 							>
 							<base-button
+                                v-if="!this.$store.state.is_auditor"
 								@click="new_auditable.new = true"
 								size="sm"
 								type="default"
@@ -365,7 +366,6 @@
 		<!-- ------------------------------------------------------- -->
 		<template v-if="currentStep == number('Vehiculos')">
 			<div>
-                {{isTransported}}
 				<vehicles-table :transported="isTransported" :installation_id="installation_id"></vehicles-table>
 			</div>
 		</template>
@@ -532,6 +532,7 @@
 					}
 					if (!_.isEqual(this.model, this.original_model)) {
 						try {
+                            data = this.CLEAN_DATA(data)
 							await service.update("installation", this.installation_id, data);
 							this.$emit("reload");
 							await this.getInst();
@@ -726,7 +727,7 @@
 			},
 		},
 		computed: {
-			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE"]),
+			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE", "CLEAN_DATA"]),
 			formation_doc() {
 				return this.FILTER_DOC(this.responsible.documents, "CERTIFICADO");
 			},

@@ -51,7 +51,7 @@
             </div>
 
             <div class="mt-4 float-md-right">
-                <base-button type="default" nativeType="submit"
+                <base-button type="default" v-if="update" nativeType="submit"
                 :disabled="!canUpdate"
                 >Actualizar</base-button
                 >

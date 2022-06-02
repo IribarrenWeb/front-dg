@@ -5,7 +5,7 @@
 				<div class="col">
 					<h4 class="mb-0">Formaciones</h4>
 				</div>
-				<div class="col text-right">
+				<div v-if="!this.$store.state.is_auditor" class="col text-right">
 					<a href="#" class="btn btn-sm btn-default" @click.prevent="handleAdd">Agregar</a>
 				</div>
 			</div>
@@ -35,7 +35,7 @@
 						{{ row.item.responsible.user.name }} {{ row.item.responsible.user.last_name }}
 					</td>
 					<td>
-						<a href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item.id)">Asignar</a>
+						<a v-if="!this.$store.state.is_auditor" href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item.id)">Asignar</a>
 					</td>
 				</template>
 			</base-table>

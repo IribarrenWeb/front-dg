@@ -23,12 +23,12 @@
 
         <div class="col-lg-4" v-if="ROLE != 'delegate'">
           <base-field name="delegate" label="Delegado">
-              <div v-if="model.delegate != null">
-                  <span class="mr-md-4 text-uppercase">{{model.delegate.user.name}} {{model.delegate.user.last_name}}</span>
-                  <base-button @click="model.delegate = null" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
+              <div v-if="modelDelegate">
+                  <span class="mr-md-4 text-uppercase">{{ modelDelegate.name }}</span>
+                  <base-button @click="new_delegate = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
               </div>
-              <div v-show="model.delegate == null">
-                  <field-validate name="delegate" label="Delegado" :rules="{'required':model.delegate == null}" v-slot="{ field }" v-model="model.delegate">
+              <div v-else>
+                  <field-validate name="delegate" label="Delegado" rules="required" v-slot="{ field }">
                       <Multiselect
                           :searchable="true"
                           v-bind="field"
@@ -37,7 +37,7 @@
                           :required="true"
                           :options="getUsers"
                           ref="multiselect"
-                          @select="model.delegate = $event"
+                          @select="delegate = $event"
                           :resolve-on-load="false"
                       >
                       </Multiselect>
@@ -104,14 +104,15 @@
               </div>
               <div v-show="!cert_document || cer_update">
                 <field-validate class="form-control"  type="file" name="file_certification" :rules="{'required':!cert_document || cer_update, ext:['pdf']}" label="documento certificado" v-model="model.file_certification"/>
-                <base-button v-if="update && !typeof auditor.documents[0] == undefined" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
+                <base-button v-if="update && !typeof auditor.documents[0] == 'undefined'" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>
 
         <div class="col-lg-6">
           <base-field name="certification_date" label="Fecha certificado">
-            <field-validate class="form-control" name="certification_date" type="date" label="Fecha certificado" rules="required" v-model="model.certification_date"/>
+            <field-validate class="form-control" name="certification_date" type="date" label="Fecha certificado" rules="required" v-model="model.certification_date">
+            </field-validate>
           </base-field>
         </div>
 
@@ -123,7 +124,7 @@
               </div>
               <div v-show="firm_update || !firm_document">
                 <field-validate class="form-control" type="file" name="file_firm" :rules="{'required':firm_update || !firm_document, ext:['pdf']}" label="documento alta" v-model="model.file_firm"/>
-                <base-button v-if="update && !typeof auditor.documents[1] == undefined" @click="firm_update = false" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
+                <base-button v-if="update && !typeof auditor.documents[1] == 'undefined'" @click="firm_update = false" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
           </base-field>
         </div>
@@ -197,7 +198,9 @@ import { mapGetters } from 'vuex';
         cer_update: false,
         firm_update: false,
         current_values: null,
-        prov_update: null
+        prov_update: null,
+        delegate: null,
+        new_delegate: false
       };
     },
     mounted() {
@@ -214,7 +217,7 @@ import { mapGetters } from 'vuex';
         formData.append("address", this.model.address);
         formData.append("province_id", this.model.province_id);
         if (this.ROLE != 'delegate') {
-            formData.append("delegate_id", this.model.delegate.id);
+            formData.append("delegate_id", this.modelDelegate.id);
         }
         formData.append("certification_date", this.model.certification_date);
         formData.append("firm_date", this.model.firm_date);
@@ -252,7 +255,7 @@ import { mapGetters } from 'vuex';
             this.provinces = res.data.data;
         },
       getUsers(query){
-            return this.$store.dispatch('users', {query: query, roles: [2]})
+            return this.$store.dispatch('users', {query: query, roles: [2], params: '&includes[]=delegate'})
         },
       async show(id){
         console.log(this.$refs)
@@ -305,7 +308,8 @@ import { mapGetters } from 'vuex';
       reset(op){
         switch (op) {
           case 'delegate':
-            this.model.delegate = this.COPY(this.auditor.delegate)
+            this.delegate = null
+            this.new_delegate = false
             break;
           case 'file_cer':
             this.model.file_certification = undefined 
@@ -337,6 +341,21 @@ import { mapGetters } from 'vuex';
         }
         return doc;
       },
+      modelDelegate(){
+          let delegate = false
+          if (this.update && typeof this.model.delegate.id != 'undefined' && !this.new_delegate) {
+              delegate = {
+                  id: this.model.delegate.id,
+                  name: this.model.delegate.user.full_name
+              }
+          }else if(!this.update && this.delegate != null && !this.new_delegate){
+              delegate = {
+                  id: this.delegate.delegate.id,
+                  name: this.delegate.full_name
+              }
+          }
+          return delegate;
+      },
       cert_document(){
         let doc = false;
         if (this.model.documents != null && typeof this.model.documents == 'object') {
@@ -358,11 +377,8 @@ import { mapGetters } from 'vuex';
       ]),
       canShow() {
           let show = false
-          if (this.update && !_.isNull(this.model.id)) {
+          if ((this.update && typeof this.model.id != 'undefined') || !this.update) {
               show = true;
-          }
-          if (!this.update) {
-              show = true
           }
           return show;
       }

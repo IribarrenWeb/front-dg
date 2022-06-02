@@ -104,7 +104,7 @@
 								: this.currentStep,
 						comprobations: this.comprobations,
 					});
-					this.$emit("next", 6);
+					this.$emit("next", 5);
 				} catch (err) {
 					let message = err.response.message
 						? err.response.message

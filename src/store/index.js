@@ -20,6 +20,10 @@ export const store = createStore({
     state() {
         return {
             role: 0,
+            is_admin: false,
+            is_delegate: false,
+            is_auditor: false,
+            is_business: false,
             loader: false,
             apiErrors: {},
             tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
@@ -162,7 +166,8 @@ export const store = createStore({
             },
             provinces: null,
             current: new Date().toISOString().split('T')[0],
-            api_url: process.env.VUE_APP_API_BASE_URL
+            api_url: process.env.VUE_APP_API_BASE_URL,
+            api_url_base: process.env.VUE_APP_API_URL
         }
     },
     getters: {
@@ -293,6 +298,10 @@ export const store = createStore({
         },
         setRole(state, payload) {
             state.role = payload
+            state.is_admin = payload == 1;
+            state.is_delegate = payload == 2;
+            state.is_auditor = payload == 3;
+            state.is_business = payload == 4;
         }
     },
     actions: {

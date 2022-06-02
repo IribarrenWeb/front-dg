@@ -88,7 +88,7 @@
 			model="empleado"
 		>
 			<form-employee
-				@close="this.modal = false"
+				@close="this.modal = false, employee_id = null"
 				@reload="index(), this.$emit('reload_dash')"
                 :employee_id="employee_id"
 				:installation_id="installation_id"

@@ -27,7 +27,6 @@ import { ElTooltip, ElPopover } from "element-plus";
 import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
 import ErrorBoundary from "vue-error-boundary";
 
-
 const GlobalComponents = {
     install(app) {
         app.component("form-auditor", FormAuditor);

@@ -30,6 +30,7 @@
 					<th>Tipo</th>
 					<th>Fecha</th>
 					<th>Hora</th>
+                    <th>Estado</th>
 					<th></th>
 				</template>
 
@@ -47,7 +48,7 @@
 						</div>
 					</th>
                     <td class="budget">
-						{{ row.item.visitable.installation.auditable.user.full_name }}
+						{{ row.item.visitable.installation.auditable != null ? row.item.visitable.installation.auditable.user.full_name : 'SIN RESPONSABLE'}}
 					</td>
 					<td class="text-uppercase">
 						{{ row.item.type }}
@@ -57,6 +58,15 @@
 					</td>
                     <td>
 						{{ row.item.time }}
+					</td>
+                    <td>
+						<badge
+							class="badge-dot mr-4"
+							:type="setStatusType(row.item.status)"
+						>
+							<i :class="`bg-${setStatusType(row.item.status)}`"></i>
+							<span class="status">{{ row.item.status == 0 ? 'PENDIENTE' : 'COMPLETADO' }}</span>
+						</badge>
 					</td>
 				</template>
 			</base-table>
@@ -116,6 +126,21 @@
 					return;
 				}
 				this.getVisits(event);
+			},
+            setStatusType(status) {
+				let type = "";
+				switch (status) {
+					case 0:
+						type = "danger";
+						break;
+					case 1:
+						type = "success";
+						break;
+
+					default:
+						break;
+				}
+				return type;
 			},
 		},
 	};

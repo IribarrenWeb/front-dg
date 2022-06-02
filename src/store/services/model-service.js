@@ -55,13 +55,8 @@ async function getIndex(model, page = 1, params = null) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-        console.log(status);
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
+        errors(err)
+        throw Error('Error')
     });
 }
 
@@ -97,14 +92,8 @@ function users_select(query, roles = [], ext_params = null) {
         return options;
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });
 }
 
@@ -132,16 +121,8 @@ function store(model, payload, multipart = false) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-        console.log(status);
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
-
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -160,14 +141,8 @@ function show(model, id, params = "") {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });
 }
 
@@ -195,15 +170,9 @@ async function destroy(model, id) {
             return response
         }).catch(err => {
             storage.commit('loading');
-            const status = err.response.status
-
-            let message = null;
-            if (status == 422) {
-                message = err.response.data.message
-            }
-            errors(status, message)
+            errors(err)
             toaster.error('No se pudo eliminar el registro')
-            throw Error('Error');
+            throw Error('Error')
         })
     } else {
         storage.commit('loading');
@@ -218,14 +187,8 @@ function instByBusiness(id, page = 1) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -236,14 +199,8 @@ function dashEmployee(id) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -265,14 +222,8 @@ function update(model, id, data, multipart = false) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422 || status == 403) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error(message ? message : 'Error');
+        errors(err)
+        throw Error('Error')
     });
 }
 
@@ -283,14 +234,8 @@ function getDocument(id) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -301,14 +246,8 @@ function users(params) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        let message = null;
-        if (status == 422) {
-            message = err.response.data.message
-        }
-        errors(status, message)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -319,10 +258,9 @@ function dashboard() {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
 
-        errors(status)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -333,10 +271,8 @@ function instOperations(id) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        errors(status)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
@@ -347,41 +283,51 @@ function getReport(id) {
         return response
     }).catch(err => {
         storage.commit('loading');
-        const status = err.response.status
-
-        errors(status)
-        throw Error('Error');
+        errors(err)
+        throw Error('Error')
     });;
 }
 
-function errors(code, message = null) {
-    switch (code) {
+function errors(err) {
+    const status = err.response.status;
+    const message = err.response.message;
+    let title = '';
+    let body = '';
+
+    switch (status) {
         case 500:
-            // router.back()
-            $swal.fire('Error', message != null ? message : 'Parece que ocurrio un error en el servidor, porfavor intentalo mas tarde.', 'error')
+            title = 'Error inesperado';
+            body = message != null ? message : 'Parece que ocurrio un error en el servidor, porfavor intentalo mas tarde.';
             break;
 
         case 404:
-            $swal.fire('No encontrado', message != null ? message : 'Parece que ocurrio un error al intentar entontrar el recurso solicitado.', 'error')
+            title = 'No encontrado';
+            body = message != null ? message : 'Parece que ocurrio un error al intentar entontrar el recurso solicitado.';
             break;
 
         case 422:
-            $swal.fire('Algunos campos son incorrectos', message != null ? message : "Algunos de los datos enviados son incorrectos.", 'error')
+            title = 'Problema con los datos enviados';
+            body = message != null ? message : "Algunos de los datos enviados son incorrectos.";
             break;
 
         case 401:
+            title = 'No autenticado';
+            body = message != null ? message : 'No estas autenticado en el sistema';
             window.location.href = '/';
             break
 
         case 403:
-            $swal.fire('Algunos campos son incorrectos', message != null ? message : "Algunos de los datos enviados son incorrectos.", 'error')
+            title = 'No estas autorizado';
+            body = message != null ? message : "No tienes el rol necesario para realizar esta acción";
             break
 
         default:
-            // router.back()
-            $swal.fire('Error inesperado', message != null ? message : 'Ocurrio un error inesperado', 'error')
+            title = 'Error inesperado';
+            body = message != null ? message : 'Ocurrio un error inesperado';
             break;
     }
+    const type = status >= 500 ? 'error' : 'warning';
+    $swal.fire(title, body, type)
 }
 
 function getMessage(res) {

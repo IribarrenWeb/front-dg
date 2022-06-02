@@ -100,7 +100,7 @@
 								href="#"
                                 v-if="row.item.status == 'PENDIENTE'"
 								@click.prevent="toSchedule(row.item.id)"
-								>Agendar</a
+								>{{ row.item.scheduled_date != null ? 'Re-agendar' : 'Agendar'}}</a
 							>
 							<a class="dropdown-item" href="#" @click.prevent="">Eliminar</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
@@ -111,16 +111,17 @@
                                 target="_blank"
 								>Imprimir</a
 							>
-							<router-link
+                            <a href="#" class="dropdown-item" @click="handleInit(row.item)" v-if="row.item.status != 'COMPLETADO' && row.item.scheduled_date != null"> 
+                                {{ row.item.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
+                            </a>
+								
+                            <router-link
 								class="dropdown-item"
-								v-if="row.item.status != 'COMPLETADO'"
-								:to="`/audit-init/${row.item.id}`"
+								v-if="row.item.status == 'COMPLETADO'"
+								to="/audits/nonconformities"
 							>
-								{{ row.item.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
-							</router-link>
-							<a class="dropdown-item" href="#" @click.prevent=""
-								>No conformidades</a
-							>
+								No conformidades
+                            </router-link>
 							<a class="dropdown-item" href="#" @click.prevent="">Delegar</a>
 						</base-dropdown>
 					</td>
@@ -176,7 +177,8 @@
 				const resp = await service.getIndex(
 					"audit",
 					page,
-					"includes[]=installation.province"
+					"includes[]=installation.province"+
+					"&includes[]=installation.auditable"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;
@@ -184,6 +186,21 @@
 					this.page = this.metaData.currentPage;
 				}
 			},
+            handleInit(item){
+                const link = `/audit-init/${item.id}`;
+                if (item.can_init == null || item.can_init == false) {
+                    let msg = 'Esta auditoria no se puede iniciar ya que no esta programada';
+                    if (item.can_init == false) {
+                        msg = 'Esta auditoria esta programada para la fecha: <b>' + item.scheduled_date + '</b>';
+                    }
+                    this.$swal('Auditoria no programada', msg, 'warning')
+                }else if(item.installation.auditable == null){
+                    this.$swal('Instalación sin responsable', `La instalación <b>${item.installation.name}</b> no cuenta con un responsable.`, 'warning')
+                }else{
+                    this.$router.push(link)
+                }
+
+            },
 			setStatusType(status) {
 				let type = "";
 				switch (status) {

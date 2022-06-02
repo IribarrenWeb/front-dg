@@ -20,6 +20,7 @@
 					<th>Consejero ADR</th>
 					<th>Fecha</th>
 					<th>Hora</th>
+					<th>Estado</th>
 					<th></th>
 				</template>
 
@@ -42,6 +43,7 @@
 					<td>
 						{{ row.item.hour }}
 					</td>
+                    
 					<td>
 						<a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a>
 					</td>

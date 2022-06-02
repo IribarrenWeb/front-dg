@@ -15,6 +15,7 @@
                     {{ row.item.adr }}
                 </td>
                 <td colspan="2">
+                    {{ row.item.security }}
                 </td>
             </template>
         </base-table>
@@ -31,6 +32,7 @@ export default {
                 {
                     total: '0',
                     adr: '0',
+                    security: 0
                 }
             ]
         }
@@ -45,6 +47,7 @@ export default {
                 let data = res.data.data
                 this.tableData[0].total = data.total >= 1 ? data.total : '0'; 
                 this.tableData[0].adr = data.adr >= 1 ? data.adr : '0';
+                this.tableData[0].security = data.security;
                 this.$emit('reloaded');
             } catch (err) {
                 console.log(err);

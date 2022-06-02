@@ -50,9 +50,9 @@
 							<td>Email</td>
 						</tr>
 						<tr>
-							<th>{{ report.business.nif }}</th>
+							<th>{{ report.business.business_nif }}</th>
 							<th>{{ report.business.employees_count }}</th>
-							<th>{{ report.vs }}</th>
+							<th>{{ report.business.security }}</th>
 							<th>{{ report.business.business_phone }}</th>
 							<th>{{ report.business.user.email }}</th>
 						</tr>
@@ -76,10 +76,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-for="auditor in report.business.auditors" :key="auditor.id">
-							<th>{{ auditor.user.name }}</th>
+						<tr v-for="auditor in report.auditables" :key="auditor.id">
+							<th>{{ auditor.user.full_name }}</th>
 							<th>{{ auditor.dni }}</th>
-							<th>{{ auditor.phonhe_number }}</th>
+							<th>{{ auditor.phone_number }}</th>
 							<th>{{ auditor.user.email }}</th>
 						</tr>
 					</tbody>
@@ -374,6 +374,7 @@
 						this.report_id,
 						"includes[]=business.province.city&includes[]=business.user" +
 							"&includes[]=business.auditors.user" +
+							"&includes[]=business.delegates.user" +
 							"&includes[]=business.operations"
 					);
 					this.report = this.COPY(res.data.data);

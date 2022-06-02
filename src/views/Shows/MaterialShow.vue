@@ -1,7 +1,13 @@
 <template>
 	<div v-if="material != null">
 		<div class="d-flex align-items-center">
-			<div class="d-flex">
+                <img
+                    v-if="material.is_dangerous"
+					:src="dangerous_label"
+					alt="is dangerous material"
+					width="75"
+				/>
+			<div class="d-flex align-content-center justify-center">
 				<img
 					v-for="label in material.material.labels"
 					:key="label.id"
@@ -186,7 +192,6 @@
 						"includes[]=installation.operations&includes[]=installation.province.city&includes[]=equipment&includes[]=documents"
 					);
 					this.material = this.COPY(res.data.data);
-					console.log(this.material);
 				} catch (err) {
 					console.log(err);
 				}
@@ -201,6 +206,9 @@
 			},
             document(){
                 return _.isEmpty(this.material.documents) ? false : this.material.documents[0]
+            },
+            dangerous_label(){
+                return this.$store.state.api_url_base + '/labels/is_dangerous.jpg'
             }
 		},
 		watch: {

@@ -99,7 +99,7 @@
 								<field-validate
 									type="text"
 									class="form-control"
-									name="property_email"
+									name="email"
 									rules="required|email"
 									label="email"
 									v-model.trim="model.email"
