@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container-fluid mt-4">
+		<div class="container-fluid mt--7">
             <div class="d-flex justify-content-lg-end mb-2">
                 <base-button
                     @click="this.modal = true"
@@ -10,7 +10,7 @@
                     ><i class="fa-solid fa-pencil"></i
                 > Editar</base-button>
             </div>
-			<div class="card overflow-auto" style="min-height: 300px; min-width: 100%;">
+			<div class="card overflow-auto">
 				<table class="table table-sm table-bordered" v-if="business != null">
 					<thead>
 						<tr class="text-uppercase">

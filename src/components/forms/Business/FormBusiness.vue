@@ -919,7 +919,8 @@ import { mapGetters } from 'vuex';
 					this.model.installations = this.installations;
 
 					try {
-						await service.store("business", this.model);
+						const data = this.$store.getters.CLEAN_DATA(this.model)
+						await service.store("business", data);
 						resetForm();
 						this.$emit("close");
 						this.$emit("reload");

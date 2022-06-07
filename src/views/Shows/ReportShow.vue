@@ -9,81 +9,72 @@
 			@navigate="currentStep = $event"
 		></base-steps>
 		<template v-if="currentStep == 1">
-			<!-- <form-validate
-				@submit="onSubmit"
-				ref="form"
-				v-slot="{ meta }"
-				v-if="model != null"
-				:initial-values="{
-					auditable: null,
-					province_id: null,
-					file_document: null,
-				}"
-			> -->
 			<div>
 				<div class="mb-1">
 					<h4>Datos de la empresa</h4>
 				</div>
-				<table
-					class="table table-bordered table-sm table-responsive mb-3 rounded"
-				>
-					<tbody>
-						<tr>
-							<td>Nombre de empresa</td>
-							<td>Dirección</td>
-							<td>Código Postal</td>
-							<td>Ciudad</td>
-							<td>Provincia</td>
-						</tr>
-						<tr>
-							<th>{{ report.business.user.full_name }}</th>
-							<th>{{ report.business.address }}</th>
-							<th>{{ report.business.postal_code }}</th>
-							<th>{{ report.business.province.city.name }}</th>
-							<th>{{ report.business.province.name }}</th>
-						</tr>
-						<tr>
-							<td>CIF</td>
-							<td>Empleados</td>
-							<td>VS</td>
-							<td>Fijo</td>
-							<td>Email</td>
-						</tr>
-						<tr>
-							<th>{{ report.business.business_nif }}</th>
-							<th>{{ report.business.employees_count }}</th>
-							<th>{{ report.business.security }}</th>
-							<th>{{ report.business.business_phone }}</th>
-							<th>{{ report.business.user.email }}</th>
-						</tr>
-					</tbody>
-				</table>
+				<div class="overflow-auto">
+					<table class="table table-bordered table-sm mb-3 rounded">
+						<tbody>
+							<tr>
+								<td>Nombre de empresa</td>
+								<td>Dirección</td>
+								<td>Código Postal</td>
+								<td>Ciudad</td>
+								<td>Provincia</td>
+							</tr>
+							<tr>
+								<th>{{ report.business.user.full_name }}</th>
+								<th>{{ report.business.address }}</th>
+								<th>{{ report.business.postal_code }}</th>
+								<th>{{ report.business.province.city.name }}</th>
+								<th>{{ report.business.province.name }}</th>
+							</tr>
+							<tr>
+								<td>CIF</td>
+								<td>Empleados</td>
+								<td>VS</td>
+								<td>Fijo</td>
+								<td>Email</td>
+							</tr>
+							<tr>
+								<th>{{ report.business.business_nif }}</th>
+								<th>{{ report.business.employees_count }}</th>
+								<th>{{ report.business.security }}</th>
+								<th>{{ report.business.business_phone }}</th>
+								<th>{{ report.business.user.email }}</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 			<div class="mt-3">
 				<div class="mb-1">
 					<h4>Consejeros ADR</h4>
 				</div>
-				<table
-					class="table table-bordered table-responsive-sm table-sm rounded"
-				>
-					<thead>
-						<tr>
-							<td>Nombre</td>
-							<td>NIF</td>
-							<td>Móvil</td>
-							<td>Email</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="auditor in report.auditables" :key="auditor.id">
-							<th>{{ auditor.user.full_name }}</th>
-							<th>{{ auditor.dni }}</th>
-							<th>{{ auditor.phone_number }}</th>
-							<th>{{ auditor.user.email }}</th>
-						</tr>
-					</tbody>
-				</table>
+				<div class="overflow-auto">
+					<table
+						class="table table-bordered table-responsive-sm table-sm rounded"
+					>
+						<thead>
+							<tr>
+								<td>Nombre</td>
+								<td>NIF</td>
+								<td>Móvil</td>
+								<td>Email</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="auditor in report.auditables" :key="auditor.id">
+								<th>{{ auditor.user.full_name }}</th>
+								<th>{{ auditor.dni }}</th>
+								<th>{{ auditor.phone_number }}</th>
+								<th>{{ auditor.user.email }}</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 			<!-- </form-validate> -->
@@ -122,35 +113,38 @@
 			<div class="mb-1">
 				<h4>Materiales</h4>
 			</div>
-			<table class="table table-bordered table-sm table-responsive rounded">
-				<thead>
-					<tr>
-						<td>Instalación</td>
-						<td>Tipo de operación</td>
-						<td>Grupo de embalaje</td>
-						<td>Peligros</td>
-						<td>Cantidad</td>
-						<td>Domicilio</td>
-					</tr>
-				</thead>
-				<tbody v-if="materials != null && materials.length >= 1">
-					<tr v-for="material in materials" :key="material.id">
-						<th>
-							#{{ material.installation.id }} - {{ material.installation.name }}
-						</th>
-						<th>{{ material.operation.name }}</th>
-						<th>{{ material.material.packing.code }}</th>
-						<th>{{ material.material.danger }}</th>
-						<th>{{ material.quantity_operation }} {{ material.unit }}</th>
-						<th>{{ material.installation.address }}</th>
-					</tr>
-				</tbody>
-				<tbody v-else>
-					<tr>
-						<td>No hay materiales registrados</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="overflow-auto">
+				<table class="table table-bordered table-sm rounded">
+					<thead>
+						<tr>
+							<td>Instalación</td>
+							<td>Tipo de operación</td>
+							<td>Grupo de embalaje</td>
+							<td>Peligros</td>
+							<td>Cantidad</td>
+							<td>Domicilio</td>
+						</tr>
+					</thead>
+					<tbody v-if="materials != null && materials.length >= 1">
+						<tr v-for="material in materials" :key="material.id">
+							<th>
+								#{{ material.installation.id }} -
+								{{ material.installation.name }}
+							</th>
+							<th>{{ material.operation.name }}</th>
+							<th>{{ material.material.packing.code }}</th>
+							<th>{{ material.material.class.code }}</th>
+							<th>{{ material.quantity_operation }} {{ material.unit }}</th>
+							<th>{{ material.installation.address }}</th>
+						</tr>
+					</tbody>
+					<tbody v-else>
+						<tr>
+							<td colspan="6">No hay materiales registrados</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</template>
 		<!-- ------------------------------------------------------- -->
 
@@ -169,27 +163,29 @@
 				<div class="mb-1">
 					<h4>Visitas</h4>
 				</div>
-				<table class="table table-bordered table-sm rounded">
-					<thead>
-						<tr>
-							<td>Fecha</td>
-							<td>Periodicidad</td>
-							<td>Domicilio</td>
-						</tr>
-					</thead>
-					<tbody v-if="visits != null && visits.length >= 1">
-						<tr v-for="visit in visits" :key="visit.id">
-							<th>{{ visit.date }}</th>
-							<th>{{ visit.installation.periodicity }}</th>
-							<th>{{ visit.installation.address }}</th>
-						</tr>
-					</tbody>
-					<tbody v-else>
-						<tr>
-							<td colspan="3">No hay visitas registradas</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="overflow-auto">
+					<table class="table table-bordered table-sm rounded">
+						<thead>
+							<tr>
+								<td>Fecha</td>
+								<td>Periodicidad</td>
+								<td>Domicilio</td>
+							</tr>
+						</thead>
+						<tbody v-if="visits != null && visits.length >= 1">
+							<tr v-for="visit in visits" :key="visit.id">
+								<th>{{ visit.date }}</th>
+								<th>{{ visit.installation.periodicity }}</th>
+								<th>{{ visit.installation.address }}</th>
+							</tr>
+						</tbody>
+						<tbody v-else>
+							<tr>
+								<td colspan="3">No hay visitas registradas</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
@@ -437,8 +433,8 @@
 					try {
 						const data = this.CLEAN_DATA(this.model);
 						await service.update("report", this.report_id, data);
-                        this.$emit('close')
-                        this.$emit('reload')
+						this.$emit("close");
+						this.$emit("reload");
 					} catch (err) {
 						console.log(err);
 						// this.$toast.error(
@@ -544,13 +540,7 @@
 			},
 		},
 		computed: {
-			...mapGetters([
-				"COPY",
-				"PLUK",
-				"FILTER_DOC",
-				"ROLE",
-				"CLEAN_DATA",
-			]),
+			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE", "CLEAN_DATA"]),
 		},
 		watch: {
 			oper() {

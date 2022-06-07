@@ -15,6 +15,7 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Empresa</th>
+					<th v-if="this.$store.state.is_admin">Delegación</th>
 					<th>Provincia</th>
 					<th>Dirección</th>
 					<th>Instalaciones</th>
@@ -26,6 +27,9 @@
 				<template v-slot:default="row">
 					<th scope="row">
 						{{ row.item.business.user.full_name }}
+					</th>
+					<th scope="row" v-if="this.$store.state.is_admin">
+						{{ row.item.business.administrable.user.full_name }}
 					</th>
 					<td>
 						{{ row.item.business.province.name }}
@@ -121,24 +125,27 @@
 				report_id: null,
 			};
 		},
-		mounted() {
-			this.index();
-		},
 		computed: {
-			...mapGetters(["ROLE","FORMAT_DOC_B64"]),
+			hasRole() {
+				return this.$store.state.role != 0;
+			},
+			...mapGetters(["ROLE", "FORMAT_DOC_B64"]),
 		},
 		methods: {
 			async index(page = 1) {
-				const resp = await service.getIndex(
-					"report",
-					page,
+				let params =
 					"includes[]=business.province.city" +
 					"&includes[]=business.user" +
-						"&counts[]=nonconformities" +
-						"&counts[]=installations" +
-						"&counts[]=audits" +
-						"&counts[]=audits_completed"
-				);
+					"&counts[]=nonconformities" +
+					"&counts[]=installations" +
+					"&counts[]=audits" +
+					"&counts[]=audits_completed";
+
+				if (this.$store.state.is_admin) {
+					params += "&includes[]=business.administrable.user";
+				}
+
+				const resp = await service.getIndex("report", page, params);
 				if (!isEmpty(resp.data.data)) {
 					this.tableData = resp.data.data;
 					this.metaData = resp.data.meta.page;
@@ -187,10 +194,10 @@
 			async generate(report) {
 				if (report.status == "COMPLETADO") {
 					try {
-                        const rep = await service.getReport(report.id);
-                        const b64 = rep.data.data;
-                        const fileUrl = await this.FORMAT_DOC_B64(b64);
-                        window.open(fileUrl);
+						const rep = await service.getReport(report.id);
+						const b64 = rep.data.data;
+						const fileUrl = await this.FORMAT_DOC_B64(b64);
+						window.open(fileUrl);
 					} catch (err) {
 						console.log(err);
 						this.$toast.error(
@@ -200,6 +207,16 @@
 						);
 					}
 				}
+			},
+		},
+		watch: {
+			hasRole: {
+				handler(val) {
+					if (val) {
+						this.index();
+					}
+				},
+				immediate: true,
 			},
 		},
 	};

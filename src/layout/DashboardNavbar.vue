@@ -16,7 +16,7 @@
                 <img :src="logo" class="navbar-brand-img" alt="dgsoft_logo" />
               </span>
               <div class="media-body ml-2 d-none d-lg-block">
-                <span class="mb-0 text-sm font-weight-bold">{{me.name}} {{me.last_name}}</span>
+                <span class="mb-0 text-sm font-weight-bold">{{me.full_name}}</span>
               </div>
             </div>
           </template>

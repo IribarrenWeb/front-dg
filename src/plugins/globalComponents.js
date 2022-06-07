@@ -26,7 +26,7 @@ import Loader from "../components/Loader.vue";
 import { ElTooltip, ElPopover } from "element-plus";
 import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
 import ErrorBoundary from "vue-error-boundary";
-import Multiselect from '@vueform/multiselect';
+// import Multiselect from '@vueform/multiselect';
 
 const GlobalComponents = {
     install(app) {
@@ -59,7 +59,7 @@ const GlobalComponents = {
         app.component("form-validate", Form);
         app.component("error-boundary", ErrorBoundary);
         app.component("field-array-validate", FieldArray);
-        app.component("multi-selecty", Multiselect);
+        // app.component("multi-selecty", Multiselect);
         app.component("error-message-validate", ErrorMessage);
         app.use(ElTooltip);
         app.use(ElPopover);
