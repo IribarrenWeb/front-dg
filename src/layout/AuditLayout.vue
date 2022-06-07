@@ -1,8 +1,5 @@
 <template>
   <div>
-    <base-header class="py-5">
-    </base-header>
-
     <div class="container py-5">
       <base-steps containerClassess="border rounded border-ligth" listClasses="p-3 nav-fill" :audit="true" :steps="steps" @navigate="handleNavigate" :currentStep="currentStep" :meta="true" :id="audit.id"></base-steps>
       <div class="p-3 mt-3 border rounded border-ligth">

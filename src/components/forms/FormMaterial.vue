@@ -251,12 +251,12 @@
 						</base-field>
 					</div>
 					<div class="col-lg-3">
-						<base-field name="quantity" label="Volumen del Envase">
+						<base-field name="quantity" label="Volumen Depósito">
 							<field-validate
-								type="number"
+								type="text"
 								class="form-control"
 								name="quantity"
-								label="volumen del envase"
+								label="volumen del depósito"
 								v-model="model.quantity"
 							/>
 						</base-field>

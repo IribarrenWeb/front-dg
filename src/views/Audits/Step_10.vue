@@ -11,7 +11,7 @@
 				<!-- <h4 class="text-uppercase">VERIFICACIÓN DE LAS INSTALACIONES DE CARGA/DESCARGA Y ALMACENAMIENTO</h4> -->
 				<div class="row">
 					<div class="col-md-12">
-						<base-checkbox :checked="check" @changed="changeHas">
+						<base-checkbox :checked="check" @changed="changeHas" disabled>
 							<b>
 								- DISPONE DE VEHÍCULOS PROPIOS LA EMPRESA QUE TRANSPORTAN ADR
 							</b>
@@ -29,6 +29,7 @@
 											name="matricula"
 											label="un"
 											rules="required"
+											:disabled="!check"
 											v-model="vehicle.index"
 										>
 											<option selected>Matricula</option>
@@ -68,7 +69,7 @@
 								</div>
 								<div class="col-md-2 d-flex">
 									<div class="align-self-center">
-										<base-button size="sm" nativeType="submit" :outline="true">
+										<base-button size="sm" nativeType="submit" :outline="true" :disabled="!check">
 											<i class="fa fa-plus" aria-hidden="true"></i>
 										</base-button>
 									</div>
@@ -227,11 +228,7 @@
 			};
 		},
 		async mounted() {
-			if (!this.audit.has_vehicles) {
-				this.check = false;
-			} else {
-				this.check = true;
-			}
+			this.check = this.audit.installation.hasTransport;
 
 			this.loadImages();
 		},

@@ -14,7 +14,7 @@
     </tbody>
     <tbody v-else :class="tbodyClasses">
       <tr v-for="(item, index) in data" :key="index">
-        <slot :item="item">
+        <slot :item="item" :idx="index">
           <td v-for="column in columns" :key="column">
             <template v-if="hasValue(item, column)">
               {{ itemValue(item, column) }}

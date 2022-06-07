@@ -29,7 +29,7 @@
 				</template>
 
 				<template v-slot:default="row">
-                    <th>{{row.item.id}}</th>
+                    <th>{{row.idx + 1}}</th>
 					<th scope="row" class="text-capitalize">
 						{{ row.item.name }}
 					</th>

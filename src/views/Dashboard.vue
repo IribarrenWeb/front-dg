@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<base-header type="gradient-default" class="pb-6 pb-8 pt-5 pt-md-8">
-			<div class="row" v-if="role == 'admin'">
+		<div class="container-fluid mt--5">
+			<div class="row mb-3" v-if="role == 'admin'">
 				<div class="col-xl-3 col-lg-6">
 					<stats-card
 						title="Delegados"
@@ -41,9 +41,6 @@
 					</stats-card>
 				</div>
 			</div>
-		</base-header>
-
-		<div class="container-fluid mt--5">
 			<div>
 				<visits-table></visits-table>
 			</div>

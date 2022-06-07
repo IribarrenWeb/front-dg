@@ -236,7 +236,7 @@
 								type="text"
 								class="form-control text-uppercase"
 								name="bank_code"
-								rules="required|min:5|max:20|alpha_num"
+								rules="required|min:11|max:11|alpha_num"
 								label="BIC/SWIFT"
 								v-model="model.bank_code"
 							/>
@@ -245,10 +245,10 @@
 					<div class="col-lg-4">
 						<base-field name="iban_number" label="IBAN">
 							<field-validate
-								type="number"
+								type="text"
 								class="form-control"
 								name="iban_number"
-								rules="required|min:3|max:50"
+								rules="required|min:24|max:24|alpha_num"
 								label="numero iban"
 								v-model="model.iban_number"
 							/>
@@ -888,7 +888,7 @@ import { mapGetters } from 'vuex';
 						installation.file_document.base64 = await this.toBase64(
 							installation.file_document.file[0]
 						);
-                        if (!_.isEmpty(installation.auditable_id)) {
+                        if (!_.isEmpty(installation.auditable)) {
                             installation.auditable_id = installation.auditable.id;
                         }
 					}

@@ -5,15 +5,15 @@
                 <div class="col-12">
                     <h4>DATOS GENERALES</h4>
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-3">
                     <base-input
                         :view="true"
                         :modelValue="nonconformity.installation.name"
-                        label="Nombre de la instalación"
+                        label="Instalación"
                         disabled
                     />
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-3">
                     <base-input
                         :view="true"
                         :modelValue="formatDate(nonconformity.created_at, 'en-GB')"
@@ -21,7 +21,7 @@
                         disabled
                     />
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-3">
                     <base-input
                         :view="true"
                         :modelValue="nonconformity.priority.name"
@@ -29,7 +29,7 @@
                         disabled
                     />
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-3">
                     <base-input
                         :view="true"
                         :modelValue="'<'+nonconformity.priority.term + 'MES'"
@@ -42,6 +42,14 @@
                         :view="true"
                         :modelValue="nonconformity.description"
                         label="Razón y medidas"
+                        disabled
+                    />
+                </div>
+                <div class=" col-lg-8">
+                    <base-input
+                        :view="true"
+                        :modelValue="nonconformity.audit.general_observations"
+                        label="Observaciones generales"
                         disabled
                     />
                 </div>
@@ -60,7 +68,7 @@
                         <div v-if="show" class="d-flex align-content-center">
                             <a :href="nonconformity.action.url" target="_blank"><i class="fa-regular fa-file-pdf"></i> Archivo</a>
                         </div>
-                        <field-validate v-else :disabled="show" type="file" class="form-control" name="file" rules="required|ext:pdf" label="archivo" v-model="model.file"/>
+                        <field-validate v-else :disabled="show" type="file" class="form-control" name="file" rules="ext:pdf" label="archivo" v-model="model.file"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-3">
@@ -158,7 +166,7 @@ export default {
             model: {
                 nonconformity_id: this.nonconformity.id,
                 date_end: "",
-                file: "",
+                file: null,
                 comment: "",
                 employee_id: "",
             },
@@ -189,7 +197,7 @@ export default {
             forEach(keys_arr, function(key) {
                 if (!isNull($this.model[key]) && !isObject($this.model[key])) {
                     formData.append(key,$this.model[key])
-                }else{
+                }else if(key == 'file' && $this.model.file != null){
                     formData.append(key,$this.model[key][0])
                 }    
             })
@@ -231,10 +239,6 @@ export default {
         }
     },
     computed: {
-        // employee_selected(){
-        //     const $this = this;
-        //     return filter(this.employees, function(o) { return o.id == $this.model.employee_id; })[0]
-        // },
     },
     watch: {
         'model.employee_id': function (newVal) {

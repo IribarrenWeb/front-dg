@@ -198,7 +198,7 @@
 								type="text"
 								class="form-control"
 								name="bank_code"
-								rules="required|min:5|max:20|alpha_num"
+								rules="required|min:11|max:11|alpha_num"
 								label="BIC/SWIFT"
 								v-model="model.bank_code"
 							/>
@@ -210,7 +210,7 @@
 								type="text"
 								class="form-control"
 								name="iban_number"
-								rules="required|min:3|max:50|alpha_num"
+								rules="required|min:24|max:24|alpha_num"
 								label="numero iban"
 								v-model="model.iban_number"
 							/>

@@ -46,7 +46,7 @@
 						{{ row.item.priority.name }}
 					</td>
 					<td>
-						{{ row.item.priority.term }}
+						{{ row.item.priority.term }}MESES
 					</td>
 					<td>
 						<badge
@@ -115,7 +115,7 @@
 		},
 		methods: {
 			async index(page = 1) {
-                let params = "includes[]=installation";
+                let params = "includes[]=installation&includes[]=audit";
                 
                 if (this.ROLE != 'business' && !this.dash) {
                     params += '&includes[]=action.responsible'

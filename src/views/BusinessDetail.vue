@@ -1,7 +1,5 @@
 <template>
 	<div>
-		<base-header type="gradient-default" class="py-5"> </base-header>
-
 		<div class="container-fluid mt-4">
             <div class="d-flex justify-content-lg-end mb-2">
                 <base-button
@@ -12,8 +10,8 @@
                     ><i class="fa-solid fa-pencil"></i
                 > Editar</base-button>
             </div>
-			<div class="card overflow-auto" v-if="business != null">
-				<table class="table table-sm table-bordered">
+			<div class="card overflow-auto" style="min-height: 300px; min-width: 100%;">
+				<table class="table table-sm table-bordered" v-if="business != null">
 					<thead>
 						<tr class="text-uppercase">
 							<th scope="row">Nombre empresa</th>
@@ -73,8 +71,31 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="card" v-else>
-				<h3>No hay resultados</h3>
+
+			<div class="mt-3 card">
+				<div class="my-2 ml-md-4 ml-2">
+					<h4>Delegado</h4>
+				</div>
+				<table
+					class="table table-bordered table-responsive-md table-sm rounded"
+				>
+					<thead>
+						<tr>
+							<td>Nombre</td>
+							<td>NIF</td>
+							<td>Móvil</td>
+							<td>Email</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>{{ business.administrable.user.full_name }}</th>
+							<th>{{ business.administrable.dni }}</th>
+							<th>{{ business.administrable.phone_number }}</th>
+							<th>{{ business.administrable.user.email }}</th>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 
             <modal
@@ -131,7 +152,8 @@
 				const response = await service.show(
 					"business",
 					id,
-					"includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank"
+					"includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank"+
+					"&includes[]=administrable.user"
 				);
 				this.business = response.data.data;
 			},

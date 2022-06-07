@@ -113,6 +113,10 @@
 		>
 			<dashboard-navbar :me="me"></dashboard-navbar>
 
+			
+			<base-header type="gradient-default" class="pb-6 pt-5 pt-md-8">
+			</base-header>
+
 			<div @click="toggleSidebar">
 				<router-view v-slot="{ Component }">
 					<Transition name="fade">

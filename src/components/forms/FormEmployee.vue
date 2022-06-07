@@ -44,7 +44,7 @@
 							name="dni"
 							rules="required|alpha_num|min:9|max:9"
 							label="dni"
-							v-model="model.dni"
+							v-model.trim="model.dni"
 						/>
 					</base-field>
 				</div>

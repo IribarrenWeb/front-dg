@@ -1,7 +1,6 @@
 <template>
   <div
     class="modal fade"
-    @click.self="closeModal"
     :class="[
       { 'show d-block': show },
       { 'd-none': !show },
