@@ -160,8 +160,8 @@
 			},
 			handleView(item) {
 				let audits_completed = item.audits_count == item.audits_completed_count;
-				let hasPendingCon = item.nonconformities_count == 0;
-				if (!audits_completed || !hasPendingCon) {
+				// let hasPendingCon = item.nonconformities_count == 0;
+				if (!audits_completed) {
 					this.$swal(
 						"No puedes realizar el informe",
 						"Aun no puedes realizar el informe ya que los datos estan incompletos o estan pendientes.",
