@@ -499,7 +499,7 @@
 								label="DNI"
 							>
 								<field-validate
-									type="number"
+									type="text"
 									class="form-control"
 									name="dni"
 									rules="required|min:9|max:9|alpha_num"

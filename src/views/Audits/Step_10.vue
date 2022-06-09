@@ -69,7 +69,12 @@
 								</div>
 								<div class="col-md-2 d-flex">
 									<div class="align-self-center">
-										<base-button size="sm" nativeType="submit" :outline="true" :disabled="!check">
+										<base-button
+											size="sm"
+											nativeType="submit"
+											:outline="true"
+											:disabled="!check"
+										>
 											<i class="fa fa-plus" aria-hidden="true"></i>
 										</base-button>
 									</div>
@@ -151,7 +156,35 @@
 									>
 								</div>
 							</div>
-							<div v-if="images.length < 1 || addImages">
+							<div
+								class="d-flex my-3 border border-ligth rounded p-2"
+								v-if="addImages || images?.length < 1"
+							>
+								<base-button
+									:type="takePic ? 'secondary' : 'primary'"
+									size="sm"
+									@click="takePic = true"
+								>
+									Tomar foto
+								</base-button>
+								<base-button
+									:type="takePic === false ? 'secondary' : 'primary'"
+									size="sm"
+									@click="
+										(takePic = false), this.$store.commit('stopedCamera', true)
+									"
+								>
+									Subir foto
+								</base-button>
+							</div>
+							<camera
+								v-if="takePic && takePic != null"
+								apiModel="audit"
+								:apiId="audit?.id"
+								data-name="vehicle_images_base64"
+								@photo_taken="loadImages"
+							></camera>
+							<div v-else-if="takePic === false">
 								<UploadImages @changed="handleImages" />
 								<div class="float-lg-right mt-2">
 									<base-button
@@ -203,7 +236,7 @@
 	import _ from "lodash";
 	export default {
 		props: ["audit", "currentStep"],
-        components: {
+		components: {
 			UploadImages,
 		},
 		data() {
@@ -220,11 +253,12 @@
 					adr: null,
 					fleet: null,
 				},
+				takePic: null,
 				vehicle_observations: this.audit.vehicle_observations,
 				addImages: false,
 				upBtn: false,
 				images: {},
-                vehicle_images: {}
+				vehicle_images: {},
 			};
 		},
 		async mounted() {
@@ -313,7 +347,7 @@
 
 				this.vehicles.splice(position_item, 1);
 			},
-            async deleteImg(id) {
+			async deleteImg(id) {
 				try {
 					await service.destroy("audit_image", id);
 
@@ -322,7 +356,7 @@
 					console.log(err);
 				}
 			},
-            handleImages(imgs) {
+			handleImages(imgs) {
 				this.vehicle_images = imgs;
 				if (imgs.length >= 1) {
 					this.upBtn = true;
@@ -330,20 +364,19 @@
 					this.upBtn = false;
 				}
 			},
-            async loadImages() {
+			async loadImages() {
 				try {
 					const res_images = await service.getIndex(
 						"audit_image",
-                        null,
-						"audit_id=" + this.audit_id + 
-                        "&type=VEHICULO"
+						null,
+						"audit_id=" + this.audit_id + "&type=VEHICULO"
 					);
 					this.images = res_images.data.data;
 				} catch (err) {
 					console.log(err);
 				}
 			},
-            async submitImages() {
+			async submitImages() {
 				try {
 					let data = new FormData();
 					_.each(this.vehicle_images, function (img) {
@@ -352,7 +385,8 @@
 
 					await service.update("audit", this.audit_id, data);
 					this.loadImages();
-                    this.upBtn = false
+					this.upBtn = false;
+					this.takePic = null;
 				} catch (err) {
 					console.log(err);
 				}

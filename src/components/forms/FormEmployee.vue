@@ -39,7 +39,7 @@
 				<div class="col-lg-6 col-lg-4">
 					<base-field apiName="dni" name="dni" label="DNI">
 						<field-validate
-							type="number"
+							type="text"
 							class="form-control"
 							name="dni"
 							rules="required|alpha_num|min:9|max:9"

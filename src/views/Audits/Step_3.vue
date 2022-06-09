@@ -516,7 +516,16 @@
 								>
 							</div>
 						</div>
-						<div v-if="images.length < 1 || addImages">
+						<div class="d-flex my-3 border border-ligth rounded p-2" v-if="addImages || images?.length < 1">
+							<base-button :type="takePic ? 'secondary' : 'primary'" size="sm" @click="takePic = true">
+								Tomar foto
+							</base-button>
+							<base-button :type="takePic === false ? 'secondary' : 'primary'" size="sm" @click="takePic = false, this.$store.commit('stopedCamera', true)">
+								Subir foto
+							</base-button>
+						</div>
+						<camera v-if="takePic && takePic != null" apiModel="audit" :apiId="audit?.id" data-name="material_images_base64" @photo_taken="loadImages"></camera>
+						<div v-else-if="takePic === false">
 							<UploadImages @changed="handleImages" />
 							<div class="float-lg-right mt-2">
 								<base-button
@@ -566,7 +575,7 @@
 	import data_service from "@/store/services/data-service";
 	import _, { random } from "lodash";
 	import UploadImages from "vue-upload-drop-images";
-import { mapGetters } from 'vuex';
+	import { mapGetters } from 'vuex';
 
 	export default {
 		props: ["audit", "currentStep"],
@@ -575,6 +584,7 @@ import { mapGetters } from 'vuex';
 		},
 		data() {
 			return {
+				takePic: null,
 				adr_classes: {},
 				packing_types: {},
 				operations_data: {},

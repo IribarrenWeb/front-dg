@@ -40,7 +40,7 @@
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
 						<tr>
-							<td>{{ business.property_name }}</td>
+							<td>{{ business.property_name }} {{ business.last_name }}</td>
 							<td>{{ business.property_dni }}</td>
 							<td>{{ business.property_email }}</td>
 							<td colspan="4">{{ business.property_phone }}</td>

@@ -134,6 +134,7 @@
         }
       },
       handleNext(evnt){
+        this.$store.commit('stopedCamera', true)
         for (let i = 0; i < this.steps.length; i++) {
           if (this.steps[i].number == evnt) {
             this.steps[i].valid = true

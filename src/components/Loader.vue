@@ -1,5 +1,5 @@
 <template>
-<div v-if="loading">
+<div v-if="loading || isLoading">
   <Transition name="fade">
     <div class="d-flex justify-content-center" id="loader">
       <div class="spinner-border" role="status"></div>
@@ -10,6 +10,12 @@
 <script>
 import { mapState } from 'vuex';
   export default {
+    props: {
+      isLoading: { //for manual loading
+        type: Boolean,
+        defaul: false
+      } 
+    }, 
     computed: mapState({
       loading: state => state.loader
     })

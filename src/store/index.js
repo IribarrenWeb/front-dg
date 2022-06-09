@@ -24,8 +24,10 @@ export const store = createStore({
             is_delegate: false,
             is_auditor: false,
             is_business: false,
+            is_mobile: screen.width <= 760,
             loader: false,
             apiErrors: {},
+            stopCamera: false,
             tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
             business_schema: {
                 name: null,
@@ -284,7 +286,14 @@ export const store = createStore({
         },
         FORMAT_DATE: () => (date, format = "en-US") => {
             return new Date(date).toLocaleDateString(format);
-        }
+        },
+        isMobile() {
+            if (screen.width <= 760) {
+            return true
+            } else {
+            return false
+            }
+        },   
     },
     mutations: {
         loading(state) {
@@ -302,6 +311,9 @@ export const store = createStore({
             state.is_delegate = payload == 2;
             state.is_auditor = payload == 3;
             state.is_business = payload == 4;
+        },
+        stopedCamera(state, payload = null) {
+            state.stopCamera = payload != null ? payload : !state.stopCamera
         }
     },
     actions: {

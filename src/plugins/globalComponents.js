@@ -13,6 +13,7 @@ import BaseSwitch from "../components/BaseSwitch";
 import BaseRadio from "../components/BaseRadio";
 import BaseTable from "../components/BaseTable";
 import Card from "../components/Card";
+import Camera from "../components/Camera";
 import Modal from "../components/Modal";
 import StatsCard from "../components/StatsCard";
 import TabPane from "../components/Tabs/TabPane";
@@ -50,6 +51,7 @@ const GlobalComponents = {
         app.component("base-steps", BaseSteps);
         app.component("base-select", BaseSelect);
         app.component("card", Card);
+        app.component("camera", Camera);
         app.component("loader", Loader);
         app.component("modal", Modal);
         app.component("stats-card", StatsCard);
