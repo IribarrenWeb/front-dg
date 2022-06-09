@@ -22,6 +22,7 @@
 					<th>Nombre</th>
 					<th>Email</th>
 					<th>Móvil</th>
+					<th>Provincia</th>
 					<th>Acciones</th>
 				</template>
 
@@ -34,6 +35,9 @@
 					</td>
 					<td>
 						{{ row.item.phone_number }}
+					</td>
+					<td>
+						{{ row.item.province.name }}
 					</td>
 					<td>
 						<a
@@ -108,7 +112,8 @@
 				const response = await service.getIndex(
 					"delegate",
 					page,
-					`&includes[]=user`
+					`&includes[]=user`+
+					'&includes[]=province'
 				);
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;
