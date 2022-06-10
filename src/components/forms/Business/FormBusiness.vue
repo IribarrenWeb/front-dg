@@ -200,7 +200,7 @@
 											:searchable="true"
 											v-bind="field"
 											:min-chars="2"
-											:delay="500"
+											:delay="1000"
 											:required="true"
 											:options="getDelegates"
 											@select="delegate = $event"

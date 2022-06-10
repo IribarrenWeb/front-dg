@@ -1,7 +1,7 @@
 import { axios } from '@/axios';
 import { store as storage } from '@/store';
 import $Swal from 'sweetalert2';
-// import _ from "lodash";
+import { toUpper } from "lodash";
 
 const $swal = $Swal.mixin({
     customClass: {
@@ -84,9 +84,22 @@ function users_select(query, roles = [], ext_params = null) {
         storage.commit('loading');
         const data = response.data.data;
         let options = map(data, (user) => {
+            let label = user.full_name;
+            if (user.role_id == 2) {
+                const compare = toUpper(query)
+                const name = toUpper(user.name),
+                    last_name = toUpper(user.last_name),
+                    delegation_name = toUpper(user.delegate.delegation_name);
+
+                if (name.includes(compare) || last_name.includes(compare)) {
+                    label = name + ' ' + last_name;
+                }else if(delegation_name.includes(compare)){
+                    label = delegation_name
+                }
+            }
             return {
                 value: user,
-                label: `${user.full_name}`,
+                label: label,
             };
         });
         return options;

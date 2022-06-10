@@ -26,6 +26,18 @@
 					</base-field>
 				</div>
 				<div class="col-lg-6">
+					<base-field name="delegation_email" label="Email de delegación">
+						<field-validate
+							class="form-control"
+							name="delegation_email"
+							type="text"
+							label="email de delegación"
+							rules="required|email"
+							v-model="model.delegation_email"
+						/>
+					</base-field>
+				</div>
+				<div class="col-lg-6">
 					<base-field name="cif_nif" label="CIF/NIF">
 						<field-validate
 							class="form-control"
@@ -431,11 +443,11 @@
 					current = {
 						name: data.user.name,
 						last_name: data.user.last_name,
-						// delegate_id: "",
 						dni: data.dni,
 						phone_number: data.phone_number,
 						delegation_phone: data.delegation_phone != null ? data.delegation_phone : '',
 						delegation_name: data.delegation_name != null ? data.delegation_name : '',
+						delegation_email: data.delegation_email != null ? data.delegation_email : '',
 						address: data.address != null ? data.address : '',
 						cif_nif: data.cif_nif != null ? data.cif_nif : '',
 						province_id: data.province_id,

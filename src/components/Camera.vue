@@ -32,6 +32,24 @@
 				<i class="fa-solid fa-upload"></i> Guardar</base-button
 			>
 		</div>
+		<div class="container my-2">
+			<base-field label="Dispositivos (camaras)">
+				<select
+					v-model="selectedDevice"
+					:options="options"
+					class="form-control"
+					v-on:change="deviceChange()"
+				>
+					<option
+						v-for="(option, idx) in options"
+						:key="idx"
+						:value="option.value"
+					>
+						{{ option.text }}
+					</option>
+				</select>
+			</base-field>
+		</div>
 		<div v-show="canTake" class="position-relative py-4">
 			<loader :isLoading="isLoading"></loader>
 			<div v-show="canTake" class="d-flex justify-content-center">
@@ -82,15 +100,25 @@
 				isPhotoTaken: false,
 				w: null,
 				h: null,
+				options: [],
+				devices: [],
 				image: null,
+				constraints: null,
+				currentStream: null,
+				selectedDevice: null,
 			};
 		},
 		mounted() {
 			this.initVideo();
 			this.setSizes();
+			this.setConstraints();
+			this.getDevices().then(() => {
+				this.selectedDevice = this.options[0].value;
+			});
 		},
 		methods: {
 			camera(face) {
+				this.initVideo();
 				this.gum(face);
 			},
 			stop() {
@@ -98,10 +126,19 @@
 				this.image = null;
 				this.canvas = null;
 				this.isPhotoTaken = false;
-				return (
-					this.video.srcObject &&
-					this.video.srcObject.getTracks().map((t) => t.stop())
-				);
+				this.video.pause();
+				if (this.currentStream) {
+					this.currentStream.getTracks().forEach((track) => {
+						track.stop();
+					});
+					this.video.srcObject = null;
+				}
+				this.video.removeAttribute("src");
+				this.video.load();
+				// this.canvas
+				// 	.getContext("2d")
+				// 	.clearRect(0, 0, this.w, this.h);
+				// return;
 			},
 			initVideo() {
 				if (this.video == null) {
@@ -111,6 +148,34 @@
 				if (this.canvas == null) {
 					this.canvas = this.$refs.canvas;
 				}
+			},
+			setConstraints() {
+				const videoContstraints = {};
+				if (this.selectedDevice === null) {
+					videoContstraints.facingMode = "environment";
+				} else {
+					videoContstraints.deviceId = {
+						exact: this.selectedDevice,
+					};
+				}
+				this.constraints = {
+					video: videoContstraints,
+					audio: false,
+				};
+			},
+			deviceChange() {
+				this.stop();
+				this.isLoading = true;
+
+				//don't change selected device
+				this.setConstraints();
+				this.gum().then((result) => {
+					this.isLoading = false;
+
+					this.initVideo();
+					this.canTake = true;
+					console.log("device change:", result);
+				});
 			},
 			async save() {
 				try {
@@ -130,48 +195,24 @@
 				this.$emit("photo_taken", true);
 			},
 			async gum(face) {
+				console.log(face);
 				this.isLoading = true;
 				this.setSizes();
 
-				if (face === "user") {
-					return navigator.mediaDevices
-						.getUserMedia({ video: { facingMode: face } })
-						.then((stream) => {
-							this.isLoading = false;
-							this.initVideo();
-							this.video.srcObject = stream;
-							this.localstream = stream;
-						})
-						.catch((err) => {
-							console.log(err);
-							this.isLoading = false;
-						});
-				}
-				if (face === "environment") {
-					return navigator.mediaDevices
-						.getUserMedia({ video: { facingMode: { exact: face } } })
-						.then((stream) => {
-							this.isLoading = false;
-							this.initVideo();
-							this.video.srcObject = stream;
-							this.localstream = stream;
-						})
-						.catch(() => {
-							console.log("error");
-							this.isLoading = false;
-						});
-				}
+				return navigator.mediaDevices
+					.getUserMedia(this.constraints)
+					.then((stream) => {
+						this.isLoading = false;
+						window.stream = stream;
+						this.currentStream = window.stream;
+						this.video.srcObject = stream;
+					})
+					.catch((err) => {
+						console.log(err);
+						this.isLoading = false;
+					});
 			},
 			takePic() {
-				// if (!this.isPhotoTaken) {
-				// 	this.isShotPhoto = true;
-
-				// 	const FLASH_TIMEOUT = 50;
-
-				// 	setTimeout(() => {
-				// 		this.isShotPhoto = false;
-				// 	}, FLASH_TIMEOUT);
-				// }
 				this.setSizes();
 				this.isPhotoTaken = !this.isPhotoTaken;
 
@@ -185,14 +226,30 @@
 				this.$refs?.canvas?.setAttribute("width", this.w);
 				this.$refs?.canvas?.setAttribute("height", this.h);
 			},
+			async getDevices() {
+				if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+					return false;
+				}
+				let allDevices = await navigator.mediaDevices.enumerateDevices();
+				for (let mediaDevice of allDevices) {
+					if (mediaDevice.kind === "videoinput") {
+						let option = {};
+						option.text = mediaDevice.label;
+						option.value = mediaDevice.deviceId;
+						this.options.push(option);
+						this.devices.push(mediaDevice);
+					}
+				}
+				return true;
+			},
 		},
 		computed: {
 			textCaptured() {
 				return this.isPhotoTaken ? "Volver a tomar" : "Capturar";
 			},
-			stopCamera(){
-				return this.$store.state.stopCamera
-			}
+			stopCamera() {
+				return this.$store.state.stopCamera;
+			},
 		},
 		watch: {
 			canTake(val) {
@@ -201,12 +258,12 @@
 					this.camera(env);
 				}
 			},
-			stopCamera(val){
+			stopCamera(val) {
 				if (val) {
 					this.stop();
-					this.$store.commit('stopedCamera')
+					this.$store.commit("stopedCamera");
 				}
-			}
+			},
 		},
 	};
 </script>

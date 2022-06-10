@@ -114,6 +114,7 @@ export const store = createStore({
                 dni: "",
                 phone_number: "",
                 email: "",
+                delegation_email: "",
                 province_id: null,
                 name: "",
                 delegation_name: "",
@@ -401,7 +402,6 @@ export const store = createStore({
 
             try {
                 const res = await service.users_select(payload.query, payload.roles, params);
-                console.log(res);
                 return res
             } catch (err) {
                 console.log(err);
