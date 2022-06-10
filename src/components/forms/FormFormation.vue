@@ -85,12 +85,6 @@ export default {
     components: {
         Multiselect
     },
-    props: {
-        installation_id: {
-            required: true,
-            default: null
-        }
-    },
     data() {
         return {
             model: this.$store.getters.FORMATION_SCHEMA,
