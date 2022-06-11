@@ -24,7 +24,7 @@ export const store = createStore({
             is_delegate: false,
             is_auditor: false,
             is_business: false,
-            is_mobile: screen.width <= 760,
+            is_mobile: window.innerWidth <= 760,
             loader: false,
             apiErrors: {},
             stopCamera: false,

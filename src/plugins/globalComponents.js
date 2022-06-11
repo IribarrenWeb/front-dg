@@ -27,6 +27,7 @@ import Loader from "../components/Loader.vue";
 import { ElTooltip, ElPopover } from "element-plus";
 import { Field, Form, ErrorMessage, FieldArray } from "vee-validate";
 import ErrorBoundary from "vue-error-boundary";
+import CameraComponent from "simple-vue-camera";
 // import Multiselect from '@vueform/multiselect';
 
 const GlobalComponents = {
@@ -35,6 +36,7 @@ const GlobalComponents = {
         app.component("form-delegate", FormDelegate);
         app.component("form-material", FormMaterial);
         app.component("badge", Badge);
+        app.component("camera-component", CameraComponent);
         app.component("base-alert", BaseAlert);
         app.component("base-button", BaseButton);
         app.component("base-checkbox", BaseCheckbox);
