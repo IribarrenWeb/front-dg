@@ -3,6 +3,7 @@
 		<side-bar
 			:background-color="sidebarBackground"
 			short-title="DG"
+			:me="me"
 			:sidebarClasses="$route.meta.audit ? 'd-lg-none' : ''"
 			title="DG SOFTWARE"
 		>
