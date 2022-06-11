@@ -14,7 +14,7 @@
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="address" rules="required" label="dirección" v-model="model.address"/>
                         </base-field>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
                         <base-field   name="auditable" label="Auditor">
                             <div v-if="model.auditable != null">
                                 <span class="mr-md-4 text-uppercase">{{model.auditable.name}} {{model.auditable.last_name}}</span>
@@ -491,7 +491,7 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['CURRENT_DATE']),
+        ...mapGetters(['CURRENT_DATE', 'ROLE']),
         isTransported(){
             let check = false
             for (let i = 0; i < this.model.operation_types_ids.length; i++) {

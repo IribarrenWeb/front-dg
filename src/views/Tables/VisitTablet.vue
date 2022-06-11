@@ -113,7 +113,8 @@
 				const resp = await service.getIndex(
 					"visit",
 					page,
-					"includes[]=visitable.installation.auditable.user"
+					"includes[]=visitable.installation.auditable.user"+
+					"&status=false"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;

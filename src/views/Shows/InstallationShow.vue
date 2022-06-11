@@ -34,7 +34,7 @@
 						/>
 					</base-field>
 				</div>
-				<div class="col-lg-4">
+				<div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
 					<base-field name="auditable" label="Auditor">
 						<div v-if="!new_auditable.new && model.auditable != null">
 							<span class="mr-md-4 text-uppercase"
@@ -696,10 +696,11 @@
 				const $this = this;
 				_.forEach(steps, function (s) {
 					if (
-						$this.ROLE == "business" &&
-						s != "Empleados" &&
-						s != "Materiales" &&
-						s != "Vehiculos"
+						$this.ROLE == "business" 
+						// &&
+						// s != "Empleados" &&
+						// s != "Materiales" &&
+						// s != "Vehiculos"
 					) {
 						format_steps.push({
 							number: count,

@@ -27,6 +27,7 @@
 				:data="tableData"
 			>
 				<template v-slot:columns>
+					<th v-if="ROLE == 'business'">Instalación</th>
 					<th>UN</th>
 					<th>Nombre</th>
 					<th>Denominación</th>
@@ -38,6 +39,7 @@
 				</template>
 
 				<template v-slot:default="row">
+					<td v-if="ROLE == 'business'">{{ row.item.installation.name }}</td>
 					<td>
 						{{ row.item.material.un_code }}
 					</td>
@@ -99,6 +101,7 @@
 	</div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 	import service from "../../store/services/model-service";
 	import MaterialShow from "../Shows/MaterialShow.vue";
 
@@ -143,10 +146,13 @@
 		mounted() {
 			this.getMaterials(this.page, this.installation_id);
 		},
+		computed: {
+			...mapGetters(['ROLE'])
+		},
 		methods: {
 			async getMaterials(page = 1, id = null) {
 				let params =
-					"includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents";
+					"includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents&includes[]=installation";
 
 				if (id != null) {
 					params += "&installation_id=" + id;

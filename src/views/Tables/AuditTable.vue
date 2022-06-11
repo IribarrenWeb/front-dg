@@ -178,7 +178,9 @@
 					"audit",
 					page,
 					"includes[]=installation.province"+
-					"&includes[]=installation.auditable"
+					"&includes[]=installation.auditable"+
+					"&order_by=scheduled_date"+
+					"&order_direction=desc"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;

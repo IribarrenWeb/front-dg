@@ -9,7 +9,7 @@
     </thead>
     <tbody v-if="!data.length >= 1" :class="tbodyClasses">
       <tr>
-        <td class="text-center" :colspan="columns.length">No hay datos para mostrar</td>
+        <td class="text-center h1" :colspan="columns.length">No hay datos para mostrar</td>
       </tr>
     </tbody>
     <tbody v-else :class="tbodyClasses">
