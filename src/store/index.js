@@ -226,12 +226,12 @@ export const store = createStore({
             return arr.map(i => i[key]);
         },
         FILTER_DOC: () => (arr, doc_name) => {
-            return _.filter(arr, function(o) { return o.type.name == doc_name })[0];
+            return _.filter(arr, function (o) { return o.type.name == doc_name })[0];
         },
         DIFFERENCE: () => (origObj, newObj) => {
             function changes(newObj, origObj) {
                 let arrayIndexCounter = 0
-                return _.transform(newObj, function(result, value, key) {
+                return _.transform(newObj, function (result, value, key) {
                     if (!_.isEqual(value, origObj[key])) {
                         let resultKey = _.isArray(origObj) ? arrayIndexCounter++ : key
                         result[resultKey] = (_.isObject(value) && _.isObject(origObj[key])) ? changes(value, origObj[key]) : value
@@ -264,7 +264,7 @@ export const store = createStore({
         CLEAN_DATA: () => (model, excludes = [], includes = []) => {
             let keys_pluck = _.keys(model);
             let data = {};
-            _.forEach(keys_pluck, function(k) {
+            _.forEach(keys_pluck, function (k) {
                 if (_.includes(includes, k) || (!_.isEmpty(model[k]) && !_.isNull(model[k]) || (_.isNumber(model[k]) && model[k] >= 1) || (_.isBoolean(model[k]))) && !_.includes(excludes, k)) {
                     data[k] = model[k]
                 }
@@ -290,11 +290,51 @@ export const store = createStore({
         },
         isMobile() {
             if (screen.width <= 760) {
-            return true
+                return true
             } else {
-            return false
+                return false
             }
-        },   
+        },
+       COMPRESS_IMAGE: () => async (imgToCompress, resizingFactor = 0.8, quality = 0.6) => {
+            return new Promise((resolve) => {
+                // showing the compressed image
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+
+                const originalWidth = imgToCompress.width;
+                const originalHeight = imgToCompress.height;
+                console.log(originalHeight, originalWidth);
+                if (originalWidth >= 700) {
+                    resizingFactor = 0.5
+                }
+                const canvasWidth = originalWidth * resizingFactor;
+                const canvasHeight = originalHeight * resizingFactor;
+
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+
+                context.drawImage(
+                    imgToCompress,
+                    0,
+                    0,
+                    originalWidth * resizingFactor,
+                    originalHeight * resizingFactor
+                );
+
+                // reducing the quality of the image
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) {
+                            // let compressedImageBlob = blob;
+                            resolve(blob)
+                            // let src = URL.createObjectURL(compressedImageBlob);
+                        }
+                    },
+                    "image/jpeg",
+                    quality
+                )
+            })
+        }
     },
     mutations: {
         loading(state) {

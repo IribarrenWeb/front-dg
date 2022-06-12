@@ -302,8 +302,9 @@ function getReport(id) {
 }
 
 function errors(err) {
+    console.log(err.response);
     const status = err.response.status;
-    const message = err.response.message;
+    const message = err.response?.data?.message;
     let title = '';
     let body = '';
 

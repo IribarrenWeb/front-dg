@@ -343,7 +343,7 @@
 							<camera v-if="takePic && takePic != null" apiModel="audit" :apiId="audit?.id"
 								data-name="material_images_base64" @photo_taken="loadImages"></camera>
 							<div v-else-if="takePic === false">
-								<UploadImages @changed="handleImages" />
+								<UploadImages uploadMsg="Sube imagenes" @changed="handleImages" />
 								<div class="float-lg-right mt-2">
 									<base-button type="primary" @click="submitImages" size="sm" v-if="upBtn">Guardar
 									</base-button>
@@ -486,6 +486,7 @@ export default {
 				await service.update("audit", this.audit_id, data);
 				this.loadImages();
 				this.upBtn = false
+				this.takePic = null
 			} catch (err) {
 				console.log(err);
 			}

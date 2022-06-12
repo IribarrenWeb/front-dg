@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="row mb-2">
-			<div class="col-12 d-flex justify-content-center" @click="canTake = true">
+			<div class="col-12 d-flex justify-content-center" @click="handleClick">
 				<div class="btn btn-primary rounded-circle py-2 px-3">
 					<i class="fa-solid fa-camera"></i>
 				</div>
@@ -10,7 +10,7 @@
 		</div>
 		<div v-show="canTake" class="position-relative py-4">
 			<Transition name="fade">
-				<modal v-model:show="canTake" model="imagen" action="Capturar" @close="stop" modalClasses="modal-xl">
+				<modal v-if="!isMobile" v-model:show="canTake" model="imagen" action="Capturar" @close="stop" modalClasses="modal-xl">
 					<div class="container my-2">
 						<base-field label="Dispositivos (camaras)">
 							<select v-model="selectedDevice" class="form-control" v-on:change="deviceChange()">
@@ -45,7 +45,7 @@
 								</div>
 								<div class="col-md-4">
 									<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true"
-										:outline="true" @click="stop" v-if="canTake && cameraRef != null" size="sm">
+										:outline="true" @click="stop" v-if="isPhotoTaken && cameraRef != null" size="sm">
 										Cancelar</base-button>
 								</div>
 							</div>
@@ -54,15 +54,48 @@
 				</modal>
 			</Transition>
 		</div>
-
-		<div class="mt-3 container"></div>
+		<input ref="camera_input" type="file" name="file" accept="image/*;capture=camera" @change="handleInput"
+			class="d-none w-100 h-auto" id="input_file">
+		<div v-if="isMobile && isPhotoTaken && mobileImageInput" class="container">
+			<Transition name="fade">
+				<modal v-model:show="isPhotoTaken" model="imagen" action="Capturar" modalClasses="modal-xl">
+					<div class="col-12" style="min-height: 500px;">
+						<img :src="mobileImageInput" alt="mobile-photo" id="image-element" class="mobile-photo">
+					</div>
+					<div class="col-12">
+						<div class="row">
+							<div class="col-md-4">
+								<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true"
+									@click="handleClick" v-if="isPhotoTaken" size="sm">{{
+											textCaptured
+									}}</base-button>
+							</div>
+							<div class="col-md-4">
+								<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true"
+									:disabled="!isPhotoTaken" @click="save" v-if="isPhotoTaken" size="sm">
+									<i class="fa-solid fa-upload"></i> Guardar
+								</base-button>
+							</div>
+							<div class="col-md-4">
+								<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true" :outline="true"
+									@click="stop" v-if="isPhotoTaken" size="sm">
+									Cancelar</base-button>
+							</div>
+						</div>
+					</div>
+				</modal>
+			</Transition>
+		</div>
 	</div>
 </template>
 <script>
 import service from "../store/services/model-service";
+import utils from "../mixins/utils-mixin.js";
+import { mapGetters } from 'vuex';
 
 export default {
 	name: "camera",
+	mixins: [utils],
 	props: {
 		apiId: {
 			type: Number,
@@ -83,9 +116,11 @@ export default {
 			isLoading: false,
 			isPhotoTaken: false,
 			cameraRef: null,
+			cameraInput: null,
 			options: [],
 			devices: [],
 			image: null,
+			mobile_image: null,
 			constraints: null,
 			currentStream: null,
 			selectedDevice: null,
@@ -102,13 +137,26 @@ export default {
 			this.initVideo();
 			this.startCam()
 		},
+		handleClick() {
+			if (this.isMobile) {
+				this.cameraInput.click()
+				this.isPhotoTaken = false
+				this.mobile_image = null
+			} else {
+				this.canTake = true;
+			}
+		},
 		stop() {
 			this.cameraRef?.stop()
 			this.canTake = false
+			this.isPhotoTaken = false
 		},
 		initVideo() {
 			if (this.cameraRef == null) {
 				this.cameraRef = this.$refs.camera;
+			}
+			if (this.cameraInput == null) {
+				this.cameraInput = this.$refs.camera_input;
 			}
 		},
 		deviceChange() {
@@ -116,11 +164,18 @@ export default {
 		},
 		async save() {
 			try {
-				console.log(this.canvas);
+				if (this.isMobile) {
+					let img_tag = document.getElementById('image-element')
+					if (this.mobile_image != null) {
+						const res = await this.COMPRESS_IMAGE(img_tag);
+						this.image = await this.toBase64(res)
+					}
+				}
 
-				let data = new FormData();
-				data.append(this.dataName, this.image);
-
+				let data = {};
+				
+				data[this.dataName] = this.image
+				console.log(data);
 				await service.update(this.apiModel, this.apiId, data);
 				this.saved();
 			} catch (err) {
@@ -145,17 +200,6 @@ export default {
 			}
 			this.isPhotoTaken = !this.isPhotoTaken;
 		},
-		toBase64(blob) {
-			return new Promise((resolve) => {
-				let image64 = null;
-				var reader = new FileReader();
-				reader.readAsDataURL(blob);
-				reader.onloadend = function () {
-					image64 = reader.result;
-					resolve(image64)
-				}
-			})
-		},
 		async getDevices() {
 			if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
 				return false;
@@ -175,6 +219,11 @@ export default {
 			console.log(this.options);
 			return true;
 		},
+		async handleInput(evt) {
+			this.mobile_image = evt.target.files;
+			this.isPhotoTaken = true
+			console.log(this.isPhotoTaken);
+		}
 	},
 	computed: {
 		textCaptured() {
@@ -185,12 +234,26 @@ export default {
 		},
 		resolution() {
 			let resolution = { width: 500, height: 500 }
-			if (this.$store.state.is_mobile) {
+			if (this.isMobile) {
 				resolution = { width: 375, height: 812 }
 			}
-			console.log(resolution, this.$store.state.is_mobile);
+			console.log(resolution, this.isMobile);
 			return resolution
 		},
+		mobileImageInput() {
+			let img = false;
+			if (this.mobile_image != null) {
+				img = URL.createObjectURL(this.mobile_image[0]);
+				// img.onload = function () {
+				// 	URL.revokeObjectURL(output.src) // free memory
+				// }
+			}
+			return img
+		},
+		isMobile(){
+			return this.$store.state.is_mobile
+		},
+		...mapGetters(['COMPRESS_IMAGE'])
 	},
 	watch: {
 		canTake(val) {
@@ -207,3 +270,9 @@ export default {
 	},
 };
 </script>
+<style lang="scss">
+	.mobile-photo{
+		width: inherit;
+		height: auto;
+	}
+</style>

@@ -2,7 +2,8 @@
 <div v-if="loading || isLoading">
   <Transition name="fade">
     <div class="d-flex justify-content-center" id="loader">
-      <div class="spinner-border" role="status"></div>
+      <div class="spinner-border text-primary" role="status"></div>
+      {{msg}}
     </div>
   </Transition>
 </div>
@@ -14,6 +15,10 @@ import { mapState } from 'vuex';
       isLoading: { //for manual loading
         type: Boolean,
         defaul: false
+      },
+      msg: {
+        type: String,
+        default: "Cargando..."
       } 
     }, 
     computed: mapState({
@@ -23,7 +28,7 @@ import { mapState } from 'vuex';
 </script>
 <style>
   #loader {
-    position: absolute;
+    position: fixed;
     text-align: center;
     top: 0;
     left: 0;
