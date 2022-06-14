@@ -1,83 +1,39 @@
 <template>
 	<div>
-		<base-steps
-			:currentStep="currentStep"
-			listClasses="mb-md-4 pb-md-2"
-			:steps="steps"
-			:edit="true"
-			@step="currentStep = $event"
-			@navigate="currentStep = $event"
-		></base-steps>
+		<base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :edit="true"
+			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
 		<template v-if="currentStep == number('Instalacion')">
 			<div class="row border rounded border-light bg-white px-4 py-2">
 				<div class="col-lg-4">
 					<base-field name="name" label="Nombre de instalacion">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="name"
-							rules="required"
-							label="Nombre"
-							v-model="model.name"
-						/>
+						<field-validate type="text" class="form-control" name="name" rules="required" label="Nombre"
+							v-model="model.name" />
 					</base-field>
 				</div>
 				<div class="col-lg-4">
 					<base-field name="address" label="Direccion">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="address"
-							rules="required"
-							label="direccion"
-							v-model="model.address"
-						/>
+						<field-validate type="text" class="form-control" name="address" rules="required"
+							label="direccion" v-model="model.address" />
 					</base-field>
 				</div>
 				<div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
 					<base-field name="auditable" label="Auditor">
 						<div v-if="!new_auditable.new && model.auditable != null">
-							<span class="mr-md-4 text-uppercase"
-								>{{ model.auditable.user.name }}
-								{{ model.auditable.user.last_name }}</span
-							>
-							<base-button
-                                v-if="!this.$store.state.is_auditor"
-								@click="new_auditable.new = true"
-								size="sm"
-								type="default"
-								:outline="true"
-								><i class="fa-solid fa-pencil"></i
-							></base-button>
+							<span class="mr-md-4 text-uppercase">{{ model.auditable.user.name }}
+								{{ model.auditable.user.last_name }}</span>
+							<base-button v-if="!this.$store.state.is_auditor" @click="new_auditable.new = true"
+								size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i>
+							</base-button>
 						</div>
 						<div v-show="new_auditable.new || model.auditable == null">
-							<field-validate
-								name="auditable"
-								label="Auditor"
-								v-slot="{ field }"
-								v-model="new_auditable.value"
-							>
-								<Multiselect
-									:searchable="true"
-									v-bind="field"
-									:min-chars="2"
-									:delay="500"
-									:required="true"
-									:options="getUsers"
-									:resolve-on-load="false"
-									ref="multiselect"
-									@select="new_auditable.value = $event"
-								>
-								</Multiselect>
+							<field-validate name="auditable" label="Auditor" rules="required">
+								<async-select @selected="new_auditable.value = $event" :roles="[2,3]"
+									:params="queryParams">
+								</async-select>
 							</field-validate>
 							<div class="mt-md-2" @click="handleForm" v-if="new_auditable.new">
-								<base-button
-									@click="handleCancel('auditable')"
-									size="sm"
-									type="danger"
-									:outline="true"
-									><i class="fa-solid fa-rotate-left"></i
-								></base-button>
+								<base-button @click="handleCancel('auditable')" size="sm" type="danger" :outline="true">
+									<i class="fa-solid fa-rotate-left"></i></base-button>
 							</div>
 						</div>
 					</base-field>
@@ -86,59 +42,31 @@
 					<base-field name="province_id" label="Provincia">
 						<div v-if="!new_province.new">
 							<base-input :view="true" lable="Provincia">
-								{{ model.province.name }}
+								{{ model.province?.name }}
 
-								<base-button
-									@click="new_province.new = true"
-									size="sm"
-									type="default"
-									:outline="true"
-									><i class="fa-solid fa-pencil"></i
-								></base-button>
+								<base-button @click="new_province.new = true" size="sm" type="default" :outline="true">
+									<i class="fa-solid fa-pencil"></i></base-button>
 							</base-input>
 						</div>
-						<field-validate
-							v-show="new_province.new"
-							class="form-control"
-							as="select"
-							name="province_id"
-							label="Provincia"
-							v-model="model.province_id"
-						>
+						<field-validate v-show="new_province.new" class="form-control" as="select" name="province_id"
+							label="Provincia" v-model="model.province_id">
 							<option value="" selected>Selecciona una provincia</option>
-							<option
-								v-for="province in provinces"
-								:key="province.id"
-								:value="province.id"
-							>
-								{{ province.name }}
+							<option v-for="province in provinces" :key="province.id" :value="province.id">
+								{{ province?.name }}
 							</option>
 						</field-validate>
 						<div class="mt-md-2">
-							<base-button
-								v-if="new_province.new"
-								@click="
-									(new_province.new = false),
-										(model.province_id = original_model.province_id)
-								"
-								size="sm"
-								type="danger"
-								:outline="true"
-								><i class="fa-solid fa-rotate-left"></i
-							></base-button>
+							<base-button v-if="new_province.new" @click="
+								(new_province.new = false),
+								(model.province_id = original_model.province_id)
+							" size="sm" type="danger" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
 						</div>
 					</base-field>
 				</div>
 				<div class="col-lg-3">
 					<base-field name="periodicy" label="Periodicidad de visitas">
-						<field-validate
-							class="form-control"
-							as="select"
-							name="periodicy"
-							rules="required"
-							label="periodicidad"
-							v-model="model.periodicity"
-						>
+						<field-validate class="form-control" as="select" name="periodicy" rules="required"
+							label="periodicidad" v-model="model.periodicity">
 							<option value="" selected>Selecciona una periodicidad</option>
 							<option value="ANUAL">ANUAL</option>
 							<option value="BIANUAL">BIANUAL</option>
@@ -148,48 +76,25 @@
 				<div class="col-lg-6">
 					<base-field name="file_document" label="Documentacion">
 						<div v-if="(model.documents.length >= 1) & !new_document.new">
-							<a
-								class="mr-md-4"
-								@click.prevent="getDocument(model.documents[0].id)"
-							>
+							<a class="mr-md-4" @click.prevent="getDocument(model.documents[0].id)">
 								{{ model.documents[0].type.name }}
 							</a>
-							<base-button
-								@click="new_document.new = true"
-								size="sm"
-								type="default"
-								:outline="true"
-								><i class="fa-solid fa-pencil"></i
-							></base-button>
+							<base-button @click="new_document.new = true" size="sm" type="default" :outline="true"><i
+									class="fa-solid fa-pencil"></i></base-button>
 						</div>
-						<field-validate
-							v-show="new_document.new || model.documents.length < 1"
-							class="form-control"
-							type="file"
-							name="file_document"
-							rules="ext:pdf"
-							:validateOnInput="true"
-							label="documentacion"
-							v-model="model.file_document"
-						/>
+						<field-validate v-show="new_document.new || model.documents.length < 1" class="form-control"
+							type="file" name="file_document" rules="ext:pdf" :validateOnInput="true"
+							label="documentacion" v-model="model.file_document" />
 						<div class="mt-md-2">
-							<base-button
-								v-if="new_document.new"
-								@click="handleCancel('document')"
-								size="sm"
-								type="danger"
-								:outline="true"
-								><i class="fa-solid fa-rotate-left"></i
-							></base-button>
+							<base-button v-if="new_document.new" @click="handleCancel('document')" size="sm"
+								type="danger" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
 						</div>
 					</base-field>
 				</div>
 			</div>
 			<!-- </form-validate> -->
 
-			<div
-				class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2"
-			>
+			<div class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2">
 				<div class="col-md-12 py-2">
 					<div class="d-flex justify-content-between">
 						<h4>Responsable de la instalación</h4>
@@ -211,25 +116,21 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>{{ responsible.name }} {{ responsible.last_name }}</td>
-								<td>{{ responsible.dni }}</td>
-								<td>{{ responsible.phone_number }}</td>
-								<td>{{ responsible.email }}</td>
+								<td>{{ responsible?.name }} {{ responsible?.last_name }}</td>
+								<td>{{ responsible?.dni }}</td>
+								<td>{{ responsible?.phone_number }}</td>
+								<td>{{ responsible?.email }}</td>
 								<td>
-									<div v-if="responsible.firm_document != null">
+									<div v-if="responsible?.firm_document != null">
 										<span class="d-block">{{
-											this.formatDate(
-												responsible.firm_document.document_date,
-												"GB"
-											)
+												this.formatDate(
+													responsible.firm_document.document_date,
+													"GB"
+												)
 										}}</span>
-										<a
-											href="#"
-											class="text-uppercase d-block"
-											@click.prevent="
-												getDocument(responsible.firm_document.id)
-											"
-										>
+										<a href="#" class="text-uppercase d-block" @click.prevent="
+											getDocument(responsible.firm_document.id)
+										">
 											<i class="fa fa-file-pdf" aria-hidden="true"></i>
 											ALTA
 										</a>
@@ -240,18 +141,8 @@
 					</table>
 				</div>
 			</div>
-			<modal
-				v-if="modal"
-				v-model:show="modal"
-				action="editar"
-				modalClasses="modal-xl"
-				model="empleado"
-			>
-				<form-employee
-					@close="modal = false"
-					@reload="index()"
-					:employee_id="responsible.id"
-				></form-employee>
+			<modal v-if="modal" v-model:show="modal" action="editar" modalClasses="modal-xl" model="empleado">
+				<form-employee @close="modal = false" @reload="index()" :employee_id="responsible?.id"></form-employee>
 			</modal>
 		</template>
 		<!-- ------------------------------------------------------ -->
@@ -262,19 +153,10 @@
 						<div class="row">
 							<div class="col-lg-6">
 								<base-field name="operations" label="Tipos de operaciones">
-									<div
-										v-for="operation in operations"
-										:key="operation.key"
-										class="form-check"
-									>
+									<div v-for="operation in operations" :key="operation.key" class="form-check">
 										<div class="form-check">
-											<input
-												class="form-check-input"
-												type="checkbox"
-												:value="operation.value"
-												v-model="oper"
-												:checked="operation.checked"
-											/>
+											<input class="form-check-input" type="checkbox" :value="operation.value"
+												v-model="oper" :checked="operation.checked" />
 											<label class="form-check-label" for="flexCheckDefault">
 												{{ operation.label }}
 											</label>
@@ -284,19 +166,10 @@
 							</div>
 							<div class="col-lg-6">
 								<base-field name="deposits" label="Tipos de depósitos">
-									<div
-										v-for="deposit in deposits"
-										:key="deposit.key"
-										class="form-check"
-									>
+									<div v-for="deposit in deposits" :key="deposit.key" class="form-check">
 										<div class="form-check">
-											<input
-												class="form-check-input"
-												type="checkbox"
-												:value="deposit.value"
-												v-model="deps"
-												:checked="deposit.checked"
-											/>
+											<input class="form-check-input" type="checkbox" :value="deposit.value"
+												v-model="deps" :checked="deposit.checked" />
 											<label class="form-check-label" for="flexCheckDefault">
 												{{ deposit.label }}
 											</label>
@@ -309,24 +182,11 @@
 				</div>
 				<div class="row border rounded border-light bg-white px-4 py-2 mt-3">
 					<div class="col-lg-12">
-						<base-field
-							name="equipments"
-							label="Tipos de equipamientos"
-							labelClasses="d-block"
-						>
-							<div
-								v-for="equipment in equipments"
-								:key="equipment.key"
-								class="d-inline-block"
-							>
+						<base-field name="equipments" label="Tipos de equipamientos" labelClasses="d-block">
+							<div v-for="equipment in equipments" :key="equipment.key" class="d-inline-block">
 								<div class="form-check ml-3">
-									<input
-										class="form-check-input"
-										type="checkbox"
-										:value="equipment.value"
-										v-model="equips"
-										:checked="equipment.checked"
-									/>
+									<input class="form-check-input" type="checkbox" :value="equipment.value"
+										v-model="equips" :checked="equipment.checked" />
 									<label class="form-check-label" for="flexCheckDefault">
 										{{ equipment.label }}
 									</label>
@@ -339,16 +199,10 @@
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Empleados') && ROLE != 'business'">
-			<dashboard-employee
-				:reload="reload_dash_employee"
-				@reloaded="reload_dash_employee = false"
-				:id="installation_id"
-			></dashboard-employee>
-			<employees-table
-				:installation_id="installation_id"
-				:adr="true"
-				@reload_dash="reload_dash_employee = true"
-			></employees-table>
+			<dashboard-employee :reload="reload_dash_employee" @reloaded="reload_dash_employee = false"
+				:id="installation_id"></dashboard-employee>
+			<employees-table :installation_id="installation_id" :adr="true" @reload_dash="reload_dash_employee = true">
+			</employees-table>
 		</template>
 		<!-- ------------------------------------------------------- -->
 		<template v-if="currentStep == number('Materiales')">
@@ -356,11 +210,7 @@
 				<material-table :installation_id="installation_id"></material-table>
 			</div>
 			<div class="mt-5">
-				<material-table
-					:installation_id="installation_id"
-					residue="true"
-					title="Residuos"
-				></material-table>
+				<material-table :installation_id="installation_id" residue="true" title="Residuos"></material-table>
 			</div>
 		</template>
 		<!-- ------------------------------------------------------- -->
@@ -372,418 +222,404 @@
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Subcontratistas')">
 			<div>
-				<subcontractor-table
-					:installation_id="installation_id"
-				></subcontractor-table>
+				<subcontractor-table :installation_id="installation_id"></subcontractor-table>
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<div class="mt-4 float-md-right">
-			<base-button
-				type="default"
-				@click="currentStep--"
-				v-if="currentStep !== 1"
-				>Anterior</base-button
-			>
-			<base-button
-				type="default"
-				@click="handleNext"
-				v-if="currentStep < steps.length"
-				>Siguiente</base-button
-			>
-			<base-button
-				type="default"
-				:outline="true"
-				class="ml-auto"
-				@click="handleClose"
-				>Cerrar
+			<base-button type="default" @click="currentStep--" v-if="currentStep !== 1">Anterior</base-button>
+			<base-button type="default" @click="handleNext" v-if="currentStep < steps.length">Siguiente</base-button>
+			<base-button type="default" :outline="true" class="ml-auto" @click="handleClose">Cerrar
 			</base-button>
 		</div>
 	</div>
 </template>
 
 <script>
-	import service from "../../store/services/model-service";
-	import dataService from "@/store/services/data-service";
-	import MaterialTable from "@/views/Tables/MaterialTable.vue";
-	import VehiclesTable from "@/views/Tables/VehiclesTable.vue";
-	import SubcontractorTable from "@/views/Tables/SubcontractorTable.vue";
-	import Multiselect from "@vueform/multiselect";
-	import EmployeesTable from "../Tables/EmployeesTable.vue";
-	import utils from "@/mixins/utils-mixin";
+import service from "../../store/services/model-service";
+import dataService from "@/store/services/data-service";
+import MaterialTable from "@/views/Tables/MaterialTable.vue";
+import VehiclesTable from "@/views/Tables/VehiclesTable.vue";
+import SubcontractorTable from "@/views/Tables/SubcontractorTable.vue";
+import EmployeesTable from "../Tables/EmployeesTable.vue";
+import utils from "@/mixins/utils-mixin";
 
-	import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
-	import _ from "lodash";
-	import { mapGetters } from "vuex";
-	import FormEmployee from "../../components/forms/FormEmployee.vue";
+import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
+import _ from "lodash";
+import { mapGetters } from "vuex";
+import FormEmployee from "../../components/forms/FormEmployee.vue";
+import AsyncSelect from '../../components/AsyncSelect.vue';
 
-	export default {
-		name: "installation-show",
-		components: {
-			Multiselect,
-			MaterialTable,
-			VehiclesTable,
-			SubcontractorTable,
-			EmployeesTable,
-			DashboardEmployee,
-			FormEmployee,
+export default {
+	name: "installation-show",
+	components: {
+		MaterialTable,
+		VehiclesTable,
+		SubcontractorTable,
+		EmployeesTable,
+		DashboardEmployee,
+		FormEmployee,
+AsyncSelect,
+	},
+	mixins: [utils],
+	props: {
+		installation_id: {
+			required: true,
 		},
-		mixins: [utils],
-		props: {
-			installation_id: {
-				required: true,
+	},
+	data() {
+		return {
+			model: null,
+			new_document: {
+				value: null,
+				new: false,
+				base64: "",
 			},
-		},
-		data() {
-			return {
-				model: null,
-				new_document: {
-					value: null,
-					new: false,
-					base64: "",
-				},
-				reload_dash_employee: false,
-				update: {
-					op: false,
-					dep: false,
-					eqp: false,
-				},
-				equips: [],
-				oper: [],
-				deps: [],
-				steps: {},
-				modal: false,
-				original_model: null,
-				new_auditable: {
-					new: false,
-					value: null,
-				},
-				new_province: {
-					new: false,
-				},
-				currentStep: 1,
-				provinces: [],
-				operations: [],
-				deposits: [],
-				equipments: [],
-				responsible: null,
-			};
-		},
-		async beforeCreate() {},
-		created() {
-			this.getInst();
-			this.loadProvinces();
-			this.formatSteps();
-		},
-		methods: {
-			async getInst() {
-				try {
-					const res = await service.show(
-						"installation",
-						this.installation_id,
-						"includes[]=operations&includes[]=equipments"+
-                        "&includes[]=auditable.user&includes[]=documents.type"+
-                        "&includes[]=province&includes[]=depositTypes" +
-                        "&includes[]=responsible.firm_document" +
-                        "&includes[]=company"
-					);
-					this.model = this.COPY(res.data.data);
-					this.responsible = this.COPY(res.data.data.responsible);
-					this.model.file_document = null;
-					this.model.auditable_id = null;
-
-					let f_doc = null;
-					_.forEach(this.responsible.documents, (doc) => {
-						if (doc.type.name == "CERTIFICADO") {
-							f_doc = doc;
-						}
-					});
-					this.responsible.formation_document = f_doc;
-
-					this.model.responsible = null;
-
-					this.original_model = this.COPY(this.model);
-
-					this.$emit("installation", this.model);
-				} catch (err) {
-					console.log(err);
-				}
+			reload_dash_employee: false,
+			update: {
+				op: false,
+				dep: false,
+				eqp: false,
 			},
-			async handleNext() {
-				if (this.currentStep == 1) {
-					let data = {
-						name: this.model.name,
-						address: this.model.address,
-						periodicity: this.model.periodicity,
+			equips: [],
+			oper: [],
+			deps: [],
+			steps: {},
+			modal: false,
+			original_model: null,
+			new_auditable: {
+				new: false,
+				value: null,
+			},
+			new_province: {
+				new: false,
+			},
+			currentStep: 1,
+			provinces: [],
+			operations: [],
+			deposits: [],
+			equipments: [],
+			responsible: null,
+		};
+	},
+	async beforeCreate() { },
+	created() {
+		this.getInst();
+		this.loadProvinces();
+		this.formatSteps();
+	},
+	methods: {
+		async getInst() {
+			try {
+				const res = await service.show(
+					"installation",
+					this.installation_id,
+					"includes[]=operations&includes[]=equipments" +
+					"&includes[]=auditable.user&includes[]=documents.type" +
+					"&includes[]=province&includes[]=depositTypes" +
+					"&includes[]=responsible.firm_document" +
+					"&includes[]=company"
+				);
+				this.model = this.COPY(res.data.data);
+				this.responsible = this.COPY(res.data.data.responsible);
+				this.model.file_document = null;
+				this.model.auditable_id = null;
+
+				let f_doc = null;
+				_.forEach(this.responsible.documents, (doc) => {
+					if (doc.type.name == "CERTIFICADO") {
+						f_doc = doc;
+					}
+				});
+				this.responsible.formation_document = f_doc;
+
+				this.model.responsible = null;
+
+				this.original_model = this.COPY(this.model);
+
+				this.$emit("installation", this.model);
+			} catch (err) {
+				console.log(err);
+			}
+		},
+		async handleNext() {
+			if (this.currentStep == 1) {
+				let data = {
+					name: this.model.name,
+					address: this.model.address,
+					periodicity: this.model.periodicity,
+				};
+				if (
+					this.new_document.new ||
+					(this.model.documents < 1 && _.isArray(this.model.file_document))
+				) {
+					data.file_document = {
+						base64: await this.toBase64(this.model.file_document[0]),
 					};
-					if (
-						this.new_document.new ||
-						(this.model.documents < 1 && _.isArray(this.model.file_document))
-					) {
-						data.file_document = {
-							base64: await this.toBase64(this.model.file_document[0]),
-						};
+				}
+				if (this.new_auditable.new || this.model.auditable == null) {
+					data.auditable_id = this.model.auditable_id;
+				}
+				if (this.new_province.new) {
+					data.province_id = this.model.province_id;
+				}
+				if (!_.isEqual(this.model, this.original_model)) {
+					try {
+						data = this.CLEAN_DATA(data)
+						await service.update("installation", this.installation_id, data);
+						this.$emit("reload");
+						await this.getInst();
+						this.resetNews();
+					} catch (err) {
+						this.$toast.error("No se pudieron guardar los cambios.");
+						return;
 					}
-					if (this.new_auditable.new || this.model.auditable == null) {
-						data.auditable_id = this.model.auditable_id;
+				}
+			}
+
+			if (this.currentStep == 2) {
+				let data = {};
+
+				if (this.update.op) {
+					data.operation_types_ids = this.oper;
+
+
+				}
+				if (this.update.eqp) {
+					data.equipments_ids = this.equips;
+				}
+				if (this.update.dep) {
+					data.deposit_types_ids = this.deps;
+				}
+
+				if (this.update.op || this.update.eqp || this.update.dep) {
+					let result = true
+					if (this.hasTransportedOper && !this.oper.includes(5)) {
+						result = await this.$swal({
+							title: "¿Esta seguro?",
+							icon: 'question',
+							text: "Si deselecciona la operación de transporte se eliminaran los vehiculos asociados a esta instalación, ¿esta seguro?",
+							showCancelButton: true
+						}).then(res => {
+							if (!res.isConfirmed) {
+								return false
+							} else {
+								return true
+							}
+						})
 					}
-					if (this.new_province.new) {
-						data.province_id = this.model.province_id;
-					}
-					if (!_.isEqual(this.model, this.original_model)) {
-						try {
-                            data = this.CLEAN_DATA(data)
+					try {
+						if (result) {
 							await service.update("installation", this.installation_id, data);
 							this.$emit("reload");
 							await this.getInst();
-							this.resetNews();
-						} catch (err) {
-							this.$toast.error("No se pudieron guardar los cambios.");
-							return;
+							this.update.op = false;
+							this.update.eqp = false;
+							this.update.dep = false;
 						}
+					} catch (err) {
+						this.$toast.error("No se pudieron guardar los cambios.");
+						return;
 					}
 				}
+			}
 
-				if (this.currentStep == 2) {
-					let data = {};
-
-					if (this.update.op) {
-						data.operation_types_ids = this.oper;
-                        
-                        
-					}
-					if (this.update.eqp) {
-						data.equipments_ids = this.equips;
-					}
-					if (this.update.dep) {
-						data.deposit_types_ids = this.deps;
-					}
-
-					if (this.update.op || this.update.eqp || this.update.dep) {
-                        let result = true
-                        if (this.hasTransportedOper && !this.oper.includes(5)) {
-                            result = await this.$swal({
-                                title: "¿Esta seguro?",
-                                icon: 'question',
-                                text: "Si deselecciona la operación de transporte se eliminaran los vehiculos asociados a esta instalación, ¿esta seguro?",
-                                showCancelButton: true
-                            }).then(res => {
-                                if (!res.isConfirmed) {
-                                    return false
-                                }else{
-                                    return true
-                                }
-                            })
-                        }
-						try {
-                            if (result) {
-                                await service.update("installation", this.installation_id, data);
-                                this.$emit("reload");
-                                await this.getInst();
-                                this.update.op = false;
-                                this.update.eqp = false;
-                                this.update.dep = false;
-                            }
-						} catch (err) {
-							this.$toast.error("No se pudieron guardar los cambios.");
-							return;
-						}
-					}
-				}
-
-				this.currentStep++;
-			},
-			handleClose() {
-				this.$emit("close");
-			},
-			async loadProvinces() {
-				const res = await dataService.getProvinces();
-				this.provinces = res.data.data;
-			},
-			getUsers(query){
-                let params = null
-                if (this.ROLE == 'admin') {
-                    params = '&delegate_id=' + this.model.company.administrable_id;
-                }
-                return this.$store.dispatch('users', {query: query, roles: [2,3], params: params})
-            },
-			async loadOperations() {
-				const res = await dataService.getOperations();
-				const data = res.data.data;
-				let ids = [];
-				let operations = _.map(data, (operation) => {
-					let checked = false;
-					return { value: operation.id, label: operation.name, checked: checked };
-				});
-				for (let i = 0; i < this.model.operations.length; i++) {
-					const op = this.model.operations[i];
-					ids.push(op.id);
-				}
-				this.oper = ids;
-				this.operations = operations;
-				return;
-			},
-			async loadDeposits() {
-				const res = await dataService.getDeposits();
-				const data = res.data.data;
-				let ids = [];
-				let deposits = _.map(data, (deposit) => {
-					let checked = false;
-					return { value: deposit.id, label: deposit.name, checked: checked };
-				});
-				for (let i = 0; i < this.model.deposit_types.length; i++) {
-					const op = this.model.deposit_types[i];
-					ids.push(op.id);
-				}
-				this.deps = ids;
-				this.deposits = deposits;
-				return;
-			},
-			async loadEquipments() {
-				const res = await dataService.getEquipments();
-				const data = res.data.data;
-				let ids = [];
-				let equipments = _.map(data, (equipment) => {
-					return { value: equipment.id, label: equipment.name, checked: false };
-				});
-				for (let i = 0; i < this.model.equipments.length; i++) {
-					const eq = this.model.equipments[i];
-					ids.push(eq.id);
-				}
-				this.equips = ids;
-				this.equipments = equipments;
-				return;
-			},
-			handleCancel(model) {
-				switch (model) {
-					case "document":
-						this.new_document.new = false;
-						this.model.file_document = null;
-						break;
-
-					case "auditable":
-						this.new_auditable.new = false;
-						this.new_auditable.value = false;
-						break;
-
-					default:
-						break;
-				}
-			},
-			resetNews() {
-				this.new_auditable = {
-					new: false,
-				};
-				this.new_province = {
-					new: false,
-				};
-				this.new_document = {
-					new: false,
-				};
-				this.model.file_document = null;
-			},
-			formatSteps() {
-				let steps = [
-					"Instalacion",
-					"Operaciones",
-					"Empleados",
-					"Materiales",
-					"Vehiculos",
-					"Subcontratistas",
-				];
-				let format_steps = [];
-				let count = 1;
-				const $this = this;
-				_.forEach(steps, function (s) {
-					if (
-						$this.ROLE == "business" 
-						// &&
-						// s != "Empleados" &&
-						// s != "Materiales" &&
-						// s != "Vehiculos"
-					) {
-						format_steps.push({
-							number: count,
-							title: s,
-							valid: false,
-						});
-						count++;
-					} else if ($this.ROLE != "business") {
-						format_steps.push({
-							number: count,
-							title: s,
-							valid: false,
-						});
-						count++;
-					}
-				});
-				this.steps = format_steps;
-			},
-			number(query) {
-				let steps = this.COPY(this.steps);
-				const step = _.filter(steps, function (s) {
-					return s.title == query;
-				});
-				return _.isUndefined(step[0]) ? 0 : step[0].number;
-			},
+			this.currentStep++;
 		},
-		computed: {
-			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE", "CLEAN_DATA"]),
-			formation_doc() {
-				return this.FILTER_DOC(this.responsible.documents, "CERTIFICADO");
-			},
-            isTransported() {
-                let check = false;
-                for (let i = 0; i < this.model.operations.length; i++) {
-                    const op = this.model.operations[i];
-                    if (op.id == 5) {
-                        check = true;
-                    }
-                }
-				return check;
-			},
-            hasTransportedOper(){
-                let has = false
-                _.forEach(this.model.operations, function(op){
-                    if (op.id == 5) {
-                        has = true
-                    }
-                });
-                return has;
-            }
+		handleClose() {
+			this.$emit("close");
 		},
-		watch: {
-			oper() {
-				let oper_ids = this.PLUK(this.model.operations, "id");
-				this.update.op = !_.isEqual(this.oper, oper_ids);
-			},
-			equips() {
-				let equip_ids = this.PLUK(this.model.equipments, "id");
-				this.update.eqp = !_.isEqual(this.equips, equip_ids);
-			},
-			deps() {
-				let deps_ids = this.PLUK(this.model.deposit_types, "id");
-				this.update.dep = !_.isEqual(this.deps, deps_ids);
-			},
-			"new_auditable.value": {
-				handler(newValue) {
-					if (!_.isUndefined(newValue.id)) {
-						this.model.auditable_id = newValue.id;
-					}
-				},
-			},
-			currentStep(newVal) {
-				if (newVal == 2) {
-					this.loadOperations();
-					this.loadEquipments();
-					this.loadDeposits();
+		async loadProvinces() {
+			const res = await dataService.getProvinces();
+			this.provinces = res.data.data;
+		},
+		getUsers(query) {
+			let params = null
+			if (this.ROLE == 'admin') {
+				params = '&delegate_id=' + this.model.company.administrable_id;
+			}
+			return this.$store.dispatch('users', { query: query, roles: [2, 3], params: params })
+		},
+		async loadOperations() {
+			const res = await dataService.getOperations();
+			const data = res.data.data;
+			let ids = [];
+			let operations = _.map(data, (operation) => {
+				let checked = false;
+				return { value: operation.id, label: operation.name, checked: checked };
+			});
+			for (let i = 0; i < this.model.operations.length; i++) {
+				const op = this.model.operations[i];
+				ids.push(op.id);
+			}
+			this.oper = ids;
+			this.operations = operations;
+			return;
+		},
+		async loadDeposits() {
+			const res = await dataService.getDeposits();
+			const data = res.data.data;
+			let ids = [];
+			let deposits = _.map(data, (deposit) => {
+				let checked = false;
+				return { value: deposit.id, label: deposit.name, checked: checked };
+			});
+			for (let i = 0; i < this.model.deposit_types.length; i++) {
+				const op = this.model.deposit_types[i];
+				ids.push(op.id);
+			}
+			this.deps = ids;
+			this.deposits = deposits;
+			return;
+		},
+		async loadEquipments() {
+			const res = await dataService.getEquipments();
+			const data = res.data.data;
+			let ids = [];
+			let equipments = _.map(data, (equipment) => {
+				return { value: equipment.id, label: equipment.name, checked: false };
+			});
+			for (let i = 0; i < this.model.equipments.length; i++) {
+				const eq = this.model.equipments[i];
+				ids.push(eq.id);
+			}
+			this.equips = ids;
+			this.equipments = equipments;
+			return;
+		},
+		handleCancel(model) {
+			switch (model) {
+				case "document":
+					this.new_document.new = false;
+					this.model.file_document = null;
+					break;
+
+				case "auditable":
+					this.new_auditable.new = false;
+					this.new_auditable.value = false;
+					break;
+
+				default:
+					break;
+			}
+		},
+		resetNews() {
+			this.new_auditable = {
+				new: false,
+			};
+			this.new_province = {
+				new: false,
+			};
+			this.new_document = {
+				new: false,
+			};
+			this.model.file_document = null;
+		},
+		formatSteps() {
+			let steps = [
+				"Instalacion",
+				"Operaciones",
+				"Empleados",
+				"Materiales",
+				"Vehiculos",
+				"Subcontratistas",
+			];
+			let format_steps = [];
+			let count = 1;
+			const $this = this;
+			_.forEach(steps, function (s) {
+				if (
+					$this.ROLE == "business"
+					// &&
+					// s != "Empleados" &&
+					// s != "Materiales" &&
+					// s != "Vehiculos"
+				) {
+					format_steps.push({
+						number: count,
+						title: s,
+						valid: false,
+					});
+					count++;
+				} else if ($this.ROLE != "business") {
+					format_steps.push({
+						number: count,
+						title: s,
+						valid: false,
+					});
+					count++;
 				}
-			},
-			ROLE(newVal) {
-				if (newVal != false) {
-					this.formatSteps();
+			});
+			this.steps = format_steps;
+		},
+		number(query) {
+			let steps = this.COPY(this.steps);
+			const step = _.filter(steps, function (s) {
+				return s.title == query;
+			});
+			return _.isUndefined(step[0]) ? 0 : step[0].number;
+		},
+	},
+	computed: {
+		...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE", "CLEAN_DATA"]),
+		formation_doc() {
+			return this.FILTER_DOC(this.responsible.documents, "CERTIFICADO");
+		},
+		isTransported() {
+			let check = false;
+			for (let i = 0; i < this.model.operations.length; i++) {
+				const op = this.model.operations[i];
+				if (op.id == 5) {
+					check = true;
+				}
+			}
+			return check;
+		},
+		hasTransportedOper() {
+			let has = false
+			_.forEach(this.model.operations, function (op) {
+				if (op.id == 5) {
+					has = true
+				}
+			});
+			return has;
+		},
+		queryParams(){
+			return this.ROLE == 'admin' ? '&delegate_id=' + this.model?.company?.administrable_id : null
+		}
+	},
+	watch: {
+		oper() {
+			let oper_ids = this.PLUK(this.model.operations, "id");
+			this.update.op = !_.isEqual(this.oper, oper_ids);
+		},
+		equips() {
+			let equip_ids = this.PLUK(this.model.equipments, "id");
+			this.update.eqp = !_.isEqual(this.equips, equip_ids);
+		},
+		deps() {
+			let deps_ids = this.PLUK(this.model.deposit_types, "id");
+			this.update.dep = !_.isEqual(this.deps, deps_ids);
+		},
+		"new_auditable.value": {
+			handler(newValue) {
+				if (!_.isUndefined(newValue.id)) {
+					this.model.auditable_id = newValue.id;
 				}
 			},
 		},
-	};
+		currentStep(newVal) {
+			if (newVal == 2) {
+				this.loadOperations();
+				this.loadEquipments();
+				this.loadDeposits();
+			}
+		},
+		ROLE(newVal) {
+			if (newVal != false) {
+				this.formatSteps();
+			}
+		},
+	},
+};
 </script>

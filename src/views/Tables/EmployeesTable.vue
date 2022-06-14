@@ -66,6 +66,7 @@
 					</td>
 					<td>
 						<a href="#" class="btn btn-sm btn-default" @click="employee_id = row.item.id, modal = true"><i class="fa-regular fa-eye"></i></a>
+						<a href="#" class="btn btn-outline-primary btn-sm btn-default" @click="deleteEmployee(row.item.id)"><i class="fa-solid fa-trash-can"></i></a>
 					</td>
 				</template>
 			</base-table>
@@ -180,6 +181,14 @@
 				}
 
 				this.index(event);
+			},
+			async deleteEmployee(id) {
+				try {
+					await service.destroy("employee", id);
+					this.index()
+				} catch (err) {
+					console.log(err);
+				}
 			},
 		},
         computed: {

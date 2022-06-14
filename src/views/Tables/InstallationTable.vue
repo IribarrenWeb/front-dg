@@ -92,6 +92,7 @@
 					@close="this.modal = false"
 					@reload="getInstallations()"
 					:business_id="business_id"
+					:delegate_id="delegate_id"
 				></form-installation>
 				<installation-show
 					v-else
@@ -114,6 +115,10 @@
 		name: "installation-table",
 		props: {
 			business_id: {
+				required: false,
+				default: null,
+			},
+			delegate_id: {
 				required: false,
 				default: null,
 			},

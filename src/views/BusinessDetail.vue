@@ -11,7 +11,7 @@
                 > Editar</base-button>
             </div>
 			<div class="card overflow-auto">
-				<table class="table table-sm table-bordered" v-if="business != null">
+				<table class="table table-sm table-bordered">
 					<thead>
 						<tr class="text-uppercase">
 							<th scope="row">Nombre empresa</th>
@@ -25,13 +25,13 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>{{ business.user.full_name }}</td>
-							<td>{{ business.business_nif }}</td>
-							<td>{{ business.province.city.name }}</td>
-							<td>{{ business.province.name }}</td>
-							<td>{{ business.postal_code }}</td>
+							<td>{{ business?.user.full_name }}</td>
+							<td>{{ business?.business_nif }}</td>
+							<td>{{ business?.province.city.name }}</td>
+							<td>{{ business?.province.name }}</td>
+							<td>{{ business?.postal_code }}</td>
 							<td>ESPANA</td>
-							<td>{{ business.installations_count }}</td>
+							<td>{{ business?.installations_count }}</td>
 						</tr>
 						<tr class="text-uppercase">
 							<th scope="col">Nombre Responsable</th>
@@ -40,10 +40,10 @@
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
 						<tr>
-							<td>{{ business.property_name }} {{ business.last_name }}</td>
-							<td>{{ business.property_dni }}</td>
-							<td>{{ business.property_email }}</td>
-							<td colspan="4">{{ business.property_phone }}</td>
+							<td>{{ business?.property_name }} {{ business?.last_name }}</td>
+							<td>{{ business?.property_dni }}</td>
+							<td>{{ business?.property_email }}</td>
+							<td colspan="4">{{ business?.property_phone }}</td>
 						</tr>
 						<tr class="text-uppercase">
 							<th scope="row">Fecha de ALTA</th>
@@ -52,7 +52,7 @@
 						<tr>
 							<td>
 								<span v-if="file_doc">
-									{{ formatDate(file_doc.document_date, "en-GB") }}
+									{{ formatDate(file_doc?.document_date, "en-GB") }}
 								</span>
 								<span v-else>SIN DOCUMENTACIÓN</span>
 							</td>
@@ -60,7 +60,7 @@
 								<a
 									v-if="file_doc"
 									href="#"
-									@click.prevent="getDocument(file_doc.id)"
+									@click.prevent="getDocument(file_doc?.id)"
 								>
 									<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
 									Documentación
@@ -89,10 +89,10 @@
 					</thead>
 					<tbody>
 						<tr>
-							<th>{{ business.administrable.user.full_name }}</th>
-							<th>{{ business.administrable.dni }}</th>
-							<th>{{ business.administrable.phone_number }}</th>
-							<th>{{ business.administrable.user.email }}</th>
+							<th>{{ business?.administrable.user.full_name }}</th>
+							<th>{{ business?.administrable.dni }}</th>
+							<th>{{ business?.administrable.phone_number }}</th>
+							<th>{{ business?.administrable.user.email }}</th>
 						</tr>
 					</tbody>
 				</table>
@@ -113,7 +113,8 @@
 
 			<installation-table
 				v-if="business != null"
-				:business_id="business.id"
+				:business_id="business?.id"
+				:delegate_id="business?.administrable?.id"
 			></installation-table>
 		</div>
 	</div>
@@ -161,7 +162,7 @@
         computed: {
             ...mapGetters(['FILTER_DOC']),
             file_doc(){
-                return this.FILTER_DOC(this.business.documents, 'DOCUMENTACION')
+                return this.FILTER_DOC(this.business?.documents, 'DOCUMENTACION')
             }
         }
 	};

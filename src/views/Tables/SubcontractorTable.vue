@@ -30,11 +30,12 @@
 				:data="tableData"
 			>
 				<template v-slot:columns>
-					<th>Servicio(s)</th>
+					<th>Servicio / Producto Ofrecido</th>
+					<th>Empresa</th>
 					<th>Nombre</th>
 					<th>Apellido</th>
 					<th>DNI/CIF/NIF</th>
-					<th>Móvil</th>
+					<th>Teléfono</th>
 					<th>Email</th>
 					<th>Fecha</th>
 					<th></th>
@@ -44,6 +45,9 @@
 				<template v-slot:default="row">
 					<th scope="row">
 						{{ row.item.service }}
+					</th>
+					<th scope="row">
+						{{ row.item.business }}
 					</th>
 					<td class="budget">{{ row.item.name }}</td>
                     <td class="budget">

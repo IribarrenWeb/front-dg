@@ -33,7 +33,7 @@
 					<th>MMA</th>
 					<th>Tipo</th>
 					<th>Designacion ADR</th>
-					<th>Kit ADR</th>
+					<th>Fecha Instalación KIT ADR</th>
 					<th>Estado</th>
 					<th></th>
 				</template>

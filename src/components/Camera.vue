@@ -175,7 +175,6 @@ export default {
 				let data = {};
 				
 				data[this.dataName] = this.image
-				console.log(data);
 				await service.update(this.apiModel, this.apiId, data);
 				this.saved();
 			} catch (err) {

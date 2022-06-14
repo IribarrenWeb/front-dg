@@ -26,8 +26,8 @@
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
-                    <base-field   name="adr_kit" label="Kit ADR">
-                        <field-validate type="date" class="form-control" name="adr_kit" rules="required" label="kit adr" v-model="model.adr_kit"/>
+                    <base-field   name="adr_kit" label="Fecha Instalación KIT ADR">
+                        <field-validate type="date" class="form-control" name="adr_kit" rules="required" label="Fecha Instalación KIT ADR" v-model="model.adr_kit"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4" v-if="(update && types != null) || !update">

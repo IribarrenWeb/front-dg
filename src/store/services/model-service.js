@@ -87,9 +87,9 @@ function users_select(query, roles = [], ext_params = null) {
             let label = user.full_name;
             if (user.role_id == 2) {
                 const compare = toUpper(query)
-                const name = toUpper(user.name),
-                    last_name = toUpper(user.last_name),
-                    delegation_name = toUpper(user.delegate.delegation_name);
+                const name = toUpper(user?.name),
+                    last_name = toUpper(user?.last_name),
+                    delegation_name = toUpper(user?.delegate?.delegation_name);
 
                 if (name.includes(compare) || last_name.includes(compare)) {
                     label = name + ' ' + last_name;
@@ -302,9 +302,9 @@ function getReport(id) {
 }
 
 function errors(err) {
-    console.log(err.response);
-    const status = err.response.status;
-    const message = err.response?.data?.message;
+    console.log(err?.response, err);
+    const status = err?.response?.status;
+    const message = err?.response?.data?.message;
     let title = '';
     let body = '';
 

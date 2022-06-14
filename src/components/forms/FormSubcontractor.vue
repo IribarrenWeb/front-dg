@@ -3,6 +3,11 @@
         <form-validate @submit="onSubmit" v-slot="{resetForm}">
             <div class="row border rounded border-light px-4 py-2">
                 <div class=" col-lg-4">
+                    <base-field   name="business" label="Empresa">
+                        <field-validate type="text" class="form-control text-uppercase" name="business" label="business" v-model="model.business"/>
+                    </base-field>
+                </div>
+                <div class=" col-lg-4">
                     <base-field   name="name" label="Nombre">
                         <field-validate type="text" class="form-control text-uppercase" name="name" rules="required" label="Nombre" v-model="model.name"/>
                     </base-field>
@@ -14,12 +19,12 @@
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="dni" label="DNI/CIF/NIF">
-                        <field-validate type="number" class="form-control text-uppercase" name="dni" rules="required|alpha_num|min:9|max:9" label="dni" v-model="model.dni"/>
+                        <field-validate type="number" class="form-control text-uppercase" name="dni" rules="required|alpha_num" label="dni" v-model.trim="model.dni"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
-                    <base-field   name="phone_number" label="Móvil">
-                        <field-validate type="number" class="form-control" name="phone_number" rules="required" label="Móvil" v-model="model.phone_number"/>
+                    <base-field   name="phone_number" label="Teléfono">
+                        <field-validate type="number" class="form-control" name="phone_number" rules="required" label="Teléfono" v-model="model.phone_number"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
@@ -28,7 +33,7 @@
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
-                    <base-field   name="service" label="Servicio">
+                    <base-field   name="service" label="Servicio / Producto Ofrecido">
                         <field-validate type="text" class="form-control text-uppercase" name="service" rules="required" label="servicio" v-model="model.service"/>
                     </base-field>
                 </div>
@@ -95,6 +100,7 @@ export default {
                     base64: "",
                     file: []
                 },
+                business: ""
             },
             types: {},
             designations: {},

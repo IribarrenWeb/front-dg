@@ -25,22 +25,11 @@
           <base-field name="delegate" label="Delegado">
               <div v-if="modelDelegate">
                   <span class="mr-md-4 text-uppercase">{{ modelDelegate.name }}</span>
-                  <base-button @click="new_delegate = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
+                  <base-button @click="new_delegate = true, delegate = null" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
               </div>
               <div v-else>
-                  <field-validate name="delegate" label="Delegado" rules="required" v-slot="{ field }">
-                      <Multiselect
-                          :searchable="true"
-                          v-bind="field"
-                          :min-chars="2"
-                          :delay="1000"
-                          :required="true"
-                          :options="getUsers"
-                          ref="multiselect"
-                          @select="delegate = $event"
-                          :resolve-on-load="false"
-                      >
-                      </Multiselect>
+                  <field-validate name="delegate" label="Delegado" rules="required" v-model="delegate">
+                      <async-select @selected="delegate = $event" params="&includes[]=delegate"></async-select>
                   </field-validate>
                   <base-button v-if="update" @click="reset('delegate')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
               </div>
@@ -170,16 +159,16 @@
   </div>
 </template>
 <script>
-  import Multiselect from "@vueform/multiselect";
 
   import service from "@/store/services/model-service";
   import dataService from "@/store/services/data-service";
   import _ from "lodash";
-   
   import utils from "@/mixins/utils-mixin";
-import { mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
+  import AsyncSelect from '../AsyncSelect.vue';
+
   export default {
-    components: { Multiselect },
+    components: { AsyncSelect },
     mixins: [utils],
     name: "form-auditor",
     props: {
@@ -306,8 +295,10 @@ import { mapGetters } from 'vuex';
         this.current_values = current
       },
       reset(op){
+        console.log(op, 'delelele');
         switch (op) {
           case 'delegate':
+            console.log('aqui');
             this.delegate = null
             this.new_delegate = false
             break;
@@ -348,7 +339,8 @@ import { mapGetters } from 'vuex';
                   id: this.model.delegate.id,
                   name: this.model.delegate.user.full_name
               }
-          }else if(!this.update && this.delegate != null && !this.new_delegate){
+          }
+          else if(this.delegate != null){
               delegate = {
                   id: this.delegate.delegate.id,
                   name: this.delegate.full_name
@@ -392,8 +384,12 @@ import { mapGetters } from 'vuex';
           }
         },
         immediate: true, 
+      },
+      delegate: {
+        handler (val) {
+          console.log(val);
+        }
       }
     }
   };
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>

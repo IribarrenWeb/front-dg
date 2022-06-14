@@ -29,7 +29,7 @@
         "vue-axios": "^3.4.1",
         "vue-error-boundary": "^2.0.1",
         "vue-flatpickr-component": "^9.0.6",
-        "vue-multiselect": "^2.1.6",
+        "vue-multiselect": "^3.0.0-alpha.2",
         "vue-router": "^4.0.14",
         "vue-select": "^4.0.0-beta.3",
         "vue-select-3": "^1.0.1",
