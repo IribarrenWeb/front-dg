@@ -111,7 +111,7 @@
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == 3">
 			<div class="mb-1">
-				<h4>Materiales</h4>
+				<h4>Mercancías ADR</h4>
 			</div>
 			<div class="overflow-auto">
 				<table class="table table-bordered table-sm rounded">

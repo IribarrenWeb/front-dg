@@ -82,7 +82,7 @@
 			</base-pagination>
 		</div>
 
-		<modal v-if="this.modal" v-model:show="this.modal" model="material">
+		<modal v-if="this.modal" v-model:show="this.modal" model="mercancías">
 			<material-show
 				@close="handleClose"
 				:id="material_id"
@@ -122,7 +122,7 @@ import { mapGetters } from 'vuex';
 			},
 			title: {
 				type: String,
-				default: "Mercancías",
+				default: "Mercancías ADR",
 			},
 			classes: {
 				type: String,

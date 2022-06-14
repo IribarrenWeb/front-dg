@@ -15,7 +15,7 @@
                         <field-validate type="text" class="form-control text-uppercase" name="registration" rules="required" label="matricula" v-model="model.registration_number"/>
                     </base-field>
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-5">
                     <base-field   name="mma" label="MMA">
                         <field-validate type="number" class="form-control" name="mma" rules="required" label="mma" v-model.number="model.mma"/>
                     </base-field>

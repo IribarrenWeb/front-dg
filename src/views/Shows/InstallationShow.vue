@@ -205,7 +205,7 @@
 			</employees-table>
 		</template>
 		<!-- ------------------------------------------------------- -->
-		<template v-if="currentStep == number('Materiales')">
+		<template v-if="currentStep == number('Mercancías')">
 			<div>
 				<material-table :installation_id="installation_id"></material-table>
 			</div>
@@ -520,7 +520,7 @@ AsyncSelect,
 				"Instalacion",
 				"Operaciones",
 				"Empleados",
-				"Materiales",
+				"Mercancías",
 				"Vehiculos",
 				"Subcontratistas",
 			];
