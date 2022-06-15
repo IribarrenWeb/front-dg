@@ -51,7 +51,7 @@
 					<tbody>
 						<tr>
 							<td>{{ material.installation.name }}</td>
-							<td>{{ material.installation.province.city.name }}</td>
+							<td>{{ material.installation?.province?.city.name }}</td>
 							<td>
 								<span
 									v-for="op in material.installation.operations"
@@ -189,7 +189,7 @@
 					const res = await service.show(
 						"material",
 						id,
-						"includes[]=installation.operations&includes[]=installation.province.city&includes[]=equipment&includes[]=documents"
+						"includes[]=installation.operations&includes[]=installation?.province?.city&includes[]=equipment&includes[]=documents"
 					);
 					this.material = this.COPY(res.data.data);
 				} catch (err) {

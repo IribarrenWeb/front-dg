@@ -67,21 +67,21 @@
 					<base-input
 						:view="true"
 						formClasses="col-md-6"
-						:modelValue="installation.address"
+						:modelValue="installation?.address"
 						label="Dirección de la instalación"
 						disabled
 					/>
 					<base-input
 						:view="true"
 						formClasses="col-md-6"
-						:modelValue="installation.province.name"
+						:modelValue="installation?.province?.name"
 						label="Provincia"
 						disabled
 					/>
 					<base-input
 						:view="true"
 						formClasses="col-md-4"
-						:modelValue="installation.province.city.name"
+						:modelValue="installation?.province?.city.name"
 						label="Ciudad"
 						disabled
 					/>
@@ -100,11 +100,11 @@
 						disabled
 					/>
 				</div>
-				<div class="col-md-12 row" v-if="installation.responsible != null">
+				<div class="col-md-12 row" v-if="installation?.responsible != null">
 					<base-input
 						:view="true"
 						formClasses="col-md-6"
-						:modelValue="installation.responsible.name"
+						:modelValue="installation?.responsible.name"
 						label="Nombre del responsable"
 						disabled
 					/>
