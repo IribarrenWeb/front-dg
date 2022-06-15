@@ -59,7 +59,7 @@
 				<base-input
 					:view="true"
 					formClasses="col-md-4"
-					:modelValue="`${installation.company.name} - ${installation.name}`"
+					:modelValue="`${installation.name}`"
 					label="EMPRESA/INSTALACIÓN QUE SE REALIZA LA VISITA"
 					disabled
 				/>
