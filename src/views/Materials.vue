@@ -27,13 +27,11 @@
 					</ul>
 					<material-table
 						v-if="!isResidue"
-                        :installations="installations"
 						classes="border-radius-top-0"
 						title="Mercancías"
 					></material-table>
 					<material-table
 						v-if="isResidue"
-                        :installations="installations"
 						classes="border-radius-top-0"
 						residue="true"
 					></material-table>
@@ -43,7 +41,6 @@
 	</div>
 </template>
 <script>
-    import service from "@/store/services/model-service";
 	import MaterialTable from "./Tables/MaterialTable.vue";
 
 	export default {
@@ -57,13 +54,9 @@
             };
 		},
 		mounted() {
-            this.getInstallations();
         },
         methods: {
-            async getInstallations() {
-                const response = await service.getIndex("installation", null, 'includes[]=auditable.user&includes[]=employees&includes[]=province');
-				this.installations = response.data.data;
-			},
+            
         },
 		computed: {
 			isResidue() {

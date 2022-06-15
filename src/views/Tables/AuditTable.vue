@@ -35,30 +35,30 @@
 							</a>
 							<div class="media-body">
 								<span class="name mb-0 text-sm">{{
-										row.item.installation.company.user.full_name
+										row.item?.installation.company.user.full_name
 								}}</span>
 							</div>
 						</div>
 					</th>
 					<td>
-						{{row.item.installation.name}}
+						{{row.item?.installation.name}}
 					</td>
 					<td class="budget">
 						<!-- AUDITORIA2022 -->
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</td>
 					<td>
-						{{ row.item.installation.province.name }}
+						{{ row.item?.installation?.province?.name }}
 					</td>
 					<td>Sin datos</td>
 					<td>
-						<badge class="badge-dot mr-4" :type="setStatusType(row.item.status)">
-							<i :class="`bg-${setStatusType(row.item.status)}`"></i>
-							<span class="status">{{ row.item.status }}</span>
+						<badge class="badge-dot mr-4" :type="setStatusType(row.item?.status)">
+							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
+							<span class="status">{{ row.item?.status }}</span>
 						</badge>
 					</td>
 					<td>
-						{{ row.item.scheduled_date }}
+						{{ row.item?.scheduled_date }}
 					</td>
 					<td class="text-right" v-if="ROLE != 'business'">
 						<base-dropdown class="dropdown audit-drop" position="right" direction="down">
@@ -69,20 +69,20 @@
 								</a>
 							</template>
 							<a class="dropdown-item" href="#" @click.prevent="">Archivar</a>
-							<a class="dropdown-item" href="#" v-if="row.item.status == 'PENDIENTE'"
-								@click.prevent="toSchedule(row.item.id)">{{ row.item.scheduled_date != null ?
+							<a class="dropdown-item" href="#" v-if="row.item?.status == 'PENDIENTE'"
+								@click.prevent="toSchedule(row.item?.id)">{{ row.item?.scheduled_date != null ?
 										'Re-agendar' : 'Agendar'
 								}}</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Eliminar</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
-							<a class="dropdown-item" v-if="row.item.status == 'COMPLETADO'"
-								:href="url + '/audits/report/' + row.item.id" target="_blank">Imprimir</a>
+							<a class="dropdown-item" v-if="row.item?.status == 'COMPLETADO'"
+								:href="url + '/audits/report/' + row.item?.id" target="_blank">Imprimir</a>
 							<a href="#" class="dropdown-item" @click="handleInit(row.item)"
-								v-if="row.item.status != 'COMPLETADO' && row.item.scheduled_date != null">
-								{{ row.item.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
+								v-if="row.item?.status != 'COMPLETADO' && row.item?.scheduled_date != null">
+								{{ row.item?.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
 							</a>
 
-							<router-link class="dropdown-item" v-if="row.item.status == 'COMPLETADO'"
+							<router-link class="dropdown-item" v-if="row.item?.status == 'COMPLETADO'"
 								to="/audits/nonconformities">
 								No conformidades
 							</router-link>

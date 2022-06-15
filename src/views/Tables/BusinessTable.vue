@@ -28,15 +28,15 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.user.full_name }}
+						{{ row.item?.user.full_name }}
 					</th>
 					<td class="text-uppercase">BARCELONA</td>
 					<td>
-						{{ row.item.installations.length }}
+						{{ row.item?.installations.length }}
 					</td>
 					<td>
 						<span
-							v-for="installation in row.item.installations"
+							v-for="installation in row.item?.installations"
 							:key="installation.key"
 						>
 							{{ installation.name }},
@@ -44,13 +44,13 @@
 					</td>
 					<td>
 						<router-link
-							:to="`/business/${row.item.id}`"
+							:to="`/business/${row.item?.id}`"
 							class="btn btn-sm btn-default"
 							><i class="fa-regular fa-eye"></i></router-link
 						>
 						<a
 							href="#"
-							@click.prevent="destroy(row.item.id)"
+							@click.prevent="destroy(row.item?.id)"
 							class="btn btn-sm btn-outline-default"
 							><i class="fa-regular fa-trash-can"></i></a
 						>

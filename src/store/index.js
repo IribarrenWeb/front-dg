@@ -261,12 +261,19 @@ export const store = createStore({
             }
             return type;
         },
-        CLEAN_DATA: () => (model, excludes = [], includes = []) => {
+        CLEAN_DATA: () => (model, excludes = [], includes = [], formData = false) => {
             let keys_pluck = _.keys(model);
             let data = {};
+            if (formData) {
+                data = new FormData
+            }
             _.forEach(keys_pluck, function (k) {
                 if (_.includes(includes, k) || (!_.isEmpty(model[k]) && !_.isNull(model[k]) || (_.isNumber(model[k]) && model[k] >= 1) || (_.isBoolean(model[k]))) && !_.includes(excludes, k)) {
-                    data[k] = model[k]
+                    if (formData) {
+                        data.append(k,model[k])
+                    }else{
+                        data[k] = model[k]
+                    }
                 }
             })
             return data;
@@ -435,13 +442,22 @@ export const store = createStore({
             });
         },
         async users(state, payload) {
-            if (payload.query == null) {
-                return []
-            }
+            // if (payload.query == null) {
+            //     return []
+            // }
             let params = typeof payload.params != undefined ? payload.params : null;
 
             try {
                 const res = await service.users_select(payload.query, payload.roles, params);
+                return res
+            } catch (err) {
+                console.log(err);
+            }
+        },
+
+        async delete(state, payload) {
+            try {
+                const res = await service.destroy(payload.model, payload.id);
                 return res
             } catch (err) {
                 console.log(err);

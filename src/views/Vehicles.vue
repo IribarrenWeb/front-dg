@@ -1,7 +1,5 @@
 <template>
 	<div>
-		
-
 		<div class="container-fluid mt--7">
 			<div class="row">
 				<div class="col">
@@ -22,7 +20,7 @@
                         </li>
                     </ul>
                     <router-view v-slot="{Component}">
-                        <component classes="border-radius-top-0" :driver="true" title="Vehiculos" :is="Component"></component>
+                        <component classes="border-radius-top-0" :transported="true" :driver="true" title="Vehiculos" :is="Component"></component>
                     </router-view>
 				</div>
 			</div>

@@ -26,29 +26,29 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</th>
 					<td>
-						{{ row.item.last_name }}
+						{{ row.item?.last_name }}
 					</td>
 					<td>
-						{{ row.item.email }}
+						{{ row.item?.email }}
 					</td>
 					<td>
-						{{ row.item.phone_number }}
+						{{ row.item?.phone_number }}
 					</td>
 					<td>
-						<div v-if="row.item.formation_document != null">
+						<div v-if="row.item?.formation_document != null">
 							<span class="d-block">{{
-								this.formatDate(row.item.formation_document.document_date, "GB")
+								this.formatDate(row.item?.formation_document.document_date, "GB")
 							}}</span>
 							<a
 								href="#"
 								class="text-uppercase d-block"
-								@click.prevent="getDocument(row.item.formation_document.id)"
+								@click.prevent="getDocument(row.item?.formation_document.id)"
 							>
 								<i class="fa fa-file-pdf" aria-hidden="true"></i>
-								{{ row.item.formation_document.type.name }}
+								{{ row.item?.formation_document.type.name }}
 							</a>
 						</div>
 					</td>

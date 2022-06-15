@@ -1,6 +1,7 @@
 <template>
     <div>
         <form-validate @submit="onSubmit" v-slot="{resetForm}">
+            <installation-select v-model="model.installation_id"></installation-select>
             <div class="row border rounded border-light px-3 py-2">
                 <div class=" col-lg-3">
                     <base-field   name="fleet" label="Flota">
@@ -77,8 +78,10 @@ import service from "@/store/services/model-service";
 import utils from "@/mixins/utils-mixin";
 import {isEqual} from "lodash";
 import { mapGetters } from 'vuex';
+import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 export default {
+	components: { InstallationSelect },
     mixins: [utils],
     props: {
         installation_id: {
@@ -94,7 +97,7 @@ export default {
     data() {
         return {
             model: {
-                installation_id: this.installation_id,
+                installation_id: this.installation_id ?? null,
                 vehicle_type_id: null,
                 registration_number: "",
                 fleet: "",

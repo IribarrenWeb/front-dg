@@ -20,6 +20,10 @@ export default {
             type: String,
             required: false
         },
+        list: {
+            type: Boolean,
+            required: false
+        },
         minSearch: {
             type: Number,
             default: 2
@@ -53,8 +57,8 @@ export default {
         const store = useStore()
         const content = ref(props.value)
         
-        const getUsers = debounce(async function seacrh(query) {
-            if (query.length >= props.minSearch) {
+        const getUsers = debounce(async function search(query = null) {
+            if (query?.length >= props.minSearch || props.list) {
                 try {
                     if (props.materials) {
                         const res = await dataService.getAdrMaterials(`un_code=${query}`);
@@ -66,7 +70,7 @@ export default {
                             };
                         });
                     }else{
-                        const res = await store.dispatch('users', { query: query, roles: props.roles, params: props.params })
+                        const res = await store.dispatch('users', { query: query ?? '', roles: props.roles, params: props.params })
                         options.value = res
                     }
                 } catch (error) {
@@ -76,6 +80,9 @@ export default {
         }, props.wait)
 
         onMounted(() => {
+            if (props.list) {
+                getUsers(null)
+            }
             options.value = []
         })
 

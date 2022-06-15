@@ -28,24 +28,25 @@
 
 				<template v-slot:default="row">
 					<th scope="row" class="text-uppercase">
-						{{ row.item.user.full_name }}
+						{{ row.item?.user.full_name }}
 					</th>
 					<td>
-						{{ row.item.user.email }}
+						{{ row.item?.user.email }}
 					</td>
 					<td>
-						{{ row.item.phone_number }}
+						{{ row.item?.phone_number }}
 					</td>
 					<td>
-						{{ row.item.province.name }}
+						{{ row.item?.province.name }}
 					</td>
-					<td>
+					<td class="d-flex">
 						<a
 							href="#"
 							class="btn btn-sm btn-default"
-							@click.prevent="handleView(row.item.id)"
+							@click.prevent="handleView(row.item?.id)"
 							><i class="fa-regular fa-eye"></i></a
 						>
+						<delete-button @deleted="getDelegates" model="delegate" :id="row.item.id"></delete-button>
 					</td>
 				</template>
 			</base-table>
@@ -88,9 +89,11 @@
 </template>
 
 <script>
+import DeleteButton from '../../components/Utils/DeleteButton.vue';
 	import service from "../../store/services/model-service";
 
 	export default {
+	components: { DeleteButton },
 		name: "delegate-table",
 		data() {
 			return {

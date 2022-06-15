@@ -31,35 +31,35 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.installation.name }}
+						{{ row.item?.installation.name }}
 					</th>
 					<th scope="row">
-						{{ row.item.type.name }}
+						{{ row.item?.type.name }}
 					</th>
 					<td>
-						{{ row.item.description }}
+						{{ row.item?.description }}
 					</td>
 					<td v-if="!dash">
-						{{ row.item.action ? row.item.action.date_end : 'SIN ACTUACIÓN' }}
+						{{ row.item?.action ? row.item?.action.date_end : 'SIN ACTUACIÓN' }}
 					</td>
-					<td :class="`text-${row.item.priority.colour}`">
-						{{ row.item.priority.name }}
+					<td :class="`text-${row.item?.priority.colour}`">
+						{{ row.item?.priority.name }}
 					</td>
 					<td>
-						{{ row.item.priority.term }}MESES
+						{{ row.item?.priority.term }}MESES
 					</td>
 					<td>
 						<badge
 							class="badge-dot mr-4"
-							:type="SET_STATUS(row.item.status)"
+							:type="SET_STATUS(row.item?.status)"
 						>
-							<i :class="`bg-${SET_STATUS(row.item.status)}`"></i>
-							<span class="status">{{ row.item.status }}</span>
+							<i :class="`bg-${SET_STATUS(row.item?.status)}`"></i>
+							<span class="status">{{ row.item?.status }}</span>
 						</badge>
 					</td>
 					<td v-if="!dash">
-						<a href="#" v-if="row.item.status == 'PENDIENTE' && ROLE == 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
-						<a href="#" v-if="row.item.status == 'POR REVISAR' && ROLE != 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
+						<a href="#" v-if="row.item?.status == 'PENDIENTE' && ROLE == 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
+						<a href="#" v-if="row.item?.status == 'POR REVISAR' && ROLE != 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
 					</td>
 				</template>
 			</base-table>
@@ -120,6 +120,10 @@
                 if (this.ROLE != 'business' && !this.dash) {
                     params += '&includes[]=action.responsible'
                 }
+
+				if (this.dash) {
+					params += "&status=false";
+				}
 
 				const resp = await service.getIndex(
 					"non",

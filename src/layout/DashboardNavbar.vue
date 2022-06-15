@@ -9,6 +9,7 @@
 			</div>
 		</form>
 		<ul class="navbar-nav align-items-center d-none d-lg-flex">
+			<notifications :dark="false"></notifications>
 			<li class="nav-item dropdown">
 				<base-dropdown class="nav-link pr-0">
 					<template v-slot:title>
@@ -39,7 +40,9 @@
 	</base-nav>
 </template>
 <script>
+import Notifications from '../components/Notifications.vue';
 export default {
+	components: { Notifications },
 	data() {
 		return {
 			activeNotifications: false,

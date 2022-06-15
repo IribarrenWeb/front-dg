@@ -27,7 +27,7 @@
                 </div>
                 <div class=" col-lg-6">
                     <base-field name="auditor_id" label="Responsable">
-                        <field-validate name="auditor_id" label="Responsable" rules="required" v-model="model.auditable">
+                        <field-validate name="auditor_id" label="Responsable" rules="required" v-model="auditable">
                             <async-select :roles="[3]" @selected="auditable = $event" params="&includes[]=auditor">
                             </async-select>
                         </field-validate>

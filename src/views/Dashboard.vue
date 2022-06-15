@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<div>
-				<visits-table></visits-table>
+				<visit-tablet title="Visitas"></visit-tablet>
 			</div>
 			<div class="my-md-4">
 				<informs-table :dash="true"></informs-table>
@@ -57,10 +57,11 @@
 	import { mapGetters } from "vuex";
 	import InformsTable from "./Tables/InformsTable.vue";
 	import NonTable from "./Tables/NonTable.vue";
-	import VisitsTable from "./Tables/VisitsTable.vue";
 	import service from "@/store/services/model-service";
+	import VisitTablet from './Tables/VisitTablet.vue';
+
 	export default {
-		components: { VisitsTable, InformsTable, NonTable },
+		components: { InformsTable, NonTable, VisitTablet },
 		data() {
 			return {
 				counter: {

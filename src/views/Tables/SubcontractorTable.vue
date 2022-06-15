@@ -44,22 +44,22 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.service }}
+						{{ row.item?.service }}
 					</th>
 					<th scope="row">
-						{{ row.item.business }}
+						{{ row.item?.business }}
 					</th>
-					<td class="budget">{{ row.item.name }}</td>
+					<td class="budget">{{ row.item?.name }}</td>
                     <td class="budget">
-                        {{ row.item.last_name }}
+                        {{ row.item?.last_name }}
                     </td>
-					<td>{{ row.item.email }}</td>
+					<td>{{ row.item?.email }}</td>
 					<td>
-						{{ row.item.phone_number }}
+						{{ row.item?.phone_number }}
 					</td>
-					<td>{{ row.item.documents[0].document_date }}</td>
+					<td>{{ row.item?.documents[0].document_date }}</td>
 					<td>
-						<a href="#" @click.prevent="getDocument(row.item.documents[0].id)">
+						<a href="#" @click.prevent="getDocument(row.item?.documents[0].id)">
 							DOCUMENTACION
 						</a>
 					</td>
@@ -67,7 +67,7 @@
 						<a
 							class="btn btn-danger btn-sm"
 							href="#"
-							@click.prevent="destroy(row.item.id)"
+							@click.prevent="destroy(row.item?.id)"
 							><i class="fa-regular fa-trash-can"></i></a
 						>
 					</td>

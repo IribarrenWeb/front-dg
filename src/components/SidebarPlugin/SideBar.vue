@@ -14,19 +14,8 @@
 
 				<ul class="nav align-items-center d-lg-none">
 					<!-- Notifications -->
-					<!-- <base-dropdown class="nav-item" position="right">
-						<template v-slot:title>
-							<a class="nav-link nav-link-icon" href="#" role="button" data-toggle="dropdown"
-								aria-haspopup="true" aria-expanded="false">
-								<i class="ni ni-bell-55"></i>
-							</a>
-						</template>
+					<notifications :dark="true"></notifications>
 
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#">Another action</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="#">Something else here</a>
-					</base-dropdown> -->
 					<!-- End notifications -->
 
 
@@ -114,11 +103,13 @@
 </template>
 <script>
 import NavbarToggleButton from "@/components/NavbarToggleButton";
+import Notifications from '../Notifications.vue';
 
 export default {
 	name: "sidebar",
 	components: {
 		NavbarToggleButton,
+		Notifications,
 	},
 	props: {
 		logo: {

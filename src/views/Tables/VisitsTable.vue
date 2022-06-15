@@ -26,22 +26,22 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.type }}
+						{{ row.item?.type }}
 					</th>
 					<th scope="row">
-						{{ row.item.inst }}
+						{{ row.item?.inst }}
 					</th>
 					<td>
-						{{ row.item.province }}
+						{{ row.item?.province }}
 					</td>
 					<td>
-						{{ row.item.cons }}
+						{{ row.item?.cons }}
 					</td>
 					<td>
-						{{ row.item.date }}
+						{{ row.item?.date }}
 					</td>
 					<td>
-						{{ row.item.hour }}
+						{{ row.item?.hour }}
 					</td>
                     
 					<td>

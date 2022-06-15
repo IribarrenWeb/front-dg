@@ -26,10 +26,10 @@
 					<tbody>
 						<tr>
 							<td>{{ business?.user.full_name }}</td>
-							<td>{{ business?.business_nif }}</td>
-							<td>{{ business?.province.city.name }}</td>
-							<td>{{ business?.province.name }}</td>
-							<td>{{ business?.postal_code }}</td>
+							<td>{{ business?.business_nif ?? 'N/A' }}</td>
+							<td>{{ business?.province?.city?.name ?? 'N/A' }}</td>
+							<td>{{ business?.province?.name ?? 'N/A' }}</td>
+							<td>{{ business?.postal_code ?? 'N/A' }}</td>
 							<td>ESPANA</td>
 							<td>{{ business?.installations_count }}</td>
 						</tr>
@@ -40,10 +40,10 @@
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
 						<tr>
-							<td>{{ business?.property_name }} {{ business?.last_name }}</td>
-							<td>{{ business?.property_dni }}</td>
-							<td>{{ business?.property_email }}</td>
-							<td colspan="4">{{ business?.property_phone }}</td>
+							<td>{{ business?.property_name ?? 'N/A' }} {{ business?.last_name }}</td>
+							<td>{{ business?.property_dni ?? 'N/A' }}</td>
+							<td>{{ business?.property_email ?? 'N/A' }}</td>
+							<td colspan="4">{{ business?.property_phone ?? 'N/A' }}</td>
 						</tr>
 						<tr class="text-uppercase">
 							<th scope="row">Fecha de ALTA</th>
@@ -89,10 +89,10 @@
 					</thead>
 					<tbody>
 						<tr>
-							<th>{{ business?.administrable.user.full_name }}</th>
-							<th>{{ business?.administrable.dni }}</th>
-							<th>{{ business?.administrable.phone_number }}</th>
-							<th>{{ business?.administrable.user.email }}</th>
+							<th>{{ business?.administrable.user.full_name ?? 'N/A' }}</th>
+							<th>{{ business?.administrable.dni ?? '' }}</th>
+							<th>{{ business?.administrable.phone_number ?? 'N/A' }}</th>
+							<th>{{ business?.administrable.user.email ?? 'N/A' }}</th>
 						</tr>
 					</tbody>
 				</table>

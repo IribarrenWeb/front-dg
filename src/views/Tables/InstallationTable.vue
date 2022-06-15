@@ -31,38 +31,37 @@
 				<template v-slot:default="row">
                     <th>{{row.idx + 1}}</th>
 					<th scope="row" class="text-capitalize">
-						{{ row.item.name }}
+						{{ row.item?.name ?? 'N/A' }}
 					</th>
 					<td class="text-uppercase">
-						{{ row.item.address }}
+						{{ row.item?.address ?? 'N/A' }}
 					</td>
 					<td class="text-uppercase">
-						{{ row.item.province.name }}
+						{{ row.item?.province?.name ?? 'N/A' }}
 					</td>
 					<td>
-						{{ row.item.employees.length }}
+						{{ row.item?.employees.length }}
 					</td>
 					<td class="text-uppercase">
-						<a v-if="row.item.auditable != null" href="#" @click="showAuditor()"
-							>{{ row.item.auditable.user.name }}
-							{{ row.item.auditable.user.last_name }}</a
+						<a v-if="row.item?.auditable != null" href="#" @click="showAuditor()"
+							>{{ row.item?.auditable.user.full_name }}</a
 						>
 						<span v-else>SIN AUDITOR</span>
 					</td>
 					<td>
-                        <router-link v-if="client" class="btn btn-sm btn-default" :to="`/installations/${row.item.id}`">
+                        <router-link v-if="client" class="btn btn-sm btn-default" :to="`/installations/${row.item?.id}`">
                             <i class="fa-regular fa-eye"></i>
                         </router-link>
 						<a
                             v-else
 							href="#"
-							@click.prevent="view(row.item.id)"
+							@click.prevent="view(row.item?.id)"
 							class="btn btn-sm btn-default"
 							><i class="fa-regular fa-eye"></i
 						></a>
 						<a
 							href="#"
-							@click.prevent="destroy(row.item.id)"
+							@click.prevent="destroy(row.item?.id)"
 							class="btn btn-sm btn-outline-default"
 							><i class="fa-regular fa-trash-can"></i
 						></a>

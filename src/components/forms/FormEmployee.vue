@@ -6,6 +6,7 @@
 			v-slot="{ resetForm, meta }"
 			v-if="canShow"
 		>
+			<installation-select v-model="model.installation_id"></installation-select>
 			<div class="row border rounded border-light px-4 py-2">
 				<div class="col-12 border-bottom border-light mb-md-3">
 					<h4>Datos principales</h4>
@@ -222,6 +223,7 @@
 							<base-switch
 								v-model="model.driver"
 								label="Conductor"
+								:disabled="driver"
 								:value="model.driver != 0 ? true : false"
 							></base-switch>
 						</div>
@@ -341,8 +343,10 @@
 	import service from "@/store/services/model-service";
 	import { mapGetters } from "vuex";
 	import {isEqual} from "lodash";
+import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 	export default {
+	components: { InstallationSelect },
 		name: "form-employee",
 		mixins: [utils],
 		props: {
@@ -351,6 +355,10 @@
 			},
 			employee_id: {
 				default: null,
+			},
+			driver: {
+				type: Boolean,
+				default: false,
 			},
 		},
 		data() {
@@ -366,6 +374,8 @@
 		mounted() {
 			if (this.employee_id == null) {
 				this.model = this.$store.getters.EMPLOYEE_SCHEMA;
+				this.model.driver = this.driver ? 1 : 0;
+				this.model.installation_id = this.installation_id ?? null;
 			} else {
 				this.show();
 			}
@@ -401,7 +411,6 @@
 							values.file_cer[0]
 						);
 					}
-					this.model.installation_id = this.installation_id;
 				}
 
 				try {

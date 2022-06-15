@@ -23,19 +23,19 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</th>
 					<td>
-						{{ row.item.type.name }}
+						{{ row.item?.type.name }}
 					</td>
                     <td>
-						{{ row.item.duration }}
+						{{ row.item?.duration }}
 					</td>
 					<td>
-						{{ row.item.responsible.user.name }} {{ row.item.responsible.user.last_name }}
+						{{ row.item?.responsible.user.name }} {{ row.item?.responsible.user.last_name }}
 					</td>
 					<td>
-						<a v-if="!this.$store.state.is_auditor" href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item.id)">Asignar</a>
+						<a v-if="!this.$store.state.is_auditor" href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item?.id)">Asignar</a>
 					</td>
 				</template>
 			</base-table>

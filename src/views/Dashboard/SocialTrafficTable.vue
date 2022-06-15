@@ -21,19 +21,19 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</th>
 					<td>
-						{{ row.item.visitors }}
+						{{ row.item?.visitors }}
 					</td>
 					<td>
 						<div class="d-flex align-items-center">
-							<span class="mr-2">{{ row.item.progress }}%</span>
+							<span class="mr-2">{{ row.item?.progress }}%</span>
 							<base-progress
-								:type="row.item.progressType"
+								:type="row.item?.progressType"
 								class="pt-0"
 								:show-percentage="false"
-								:value="row.item.progress"
+								:value="row.item?.progress"
 							/>
 						</div>
 					</td>

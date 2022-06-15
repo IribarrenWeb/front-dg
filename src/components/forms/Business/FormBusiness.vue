@@ -11,32 +11,32 @@
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_name" label="Nombre representante">
-								<field-validate type="text" class="form-control" name="property_name" rules="required"
+								<field-validate type="text" class="form-control" name="property_name" rules=""
 									label="nombre" v-model="model.property_name" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_last_name" label="Apellido representante">
 								<field-validate type="text" class="form-control" name="property_last_name"
-									rules="required" label="apellido" v-model="model.property_last_name" />
+									rules="" label="apellido" v-model="model.property_last_name" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_dni" label="DNI">
 								<field-validate type="text" class="form-control text-uppercase" name="property_dni"
-									rules="required|min:9|max:9" label="dni" v-model.trim="model.property_dni" />
+									rules="min:9|max:9" label="dni" v-model.trim="model.property_dni" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_phone" label="Móvil">
 								<field-validate type="number" class="form-control" name="property_phone"
-									rules="required|min:5|max:15" label="móvil" v-model.number="model.property_phone" />
+									rules="min:5|max:15" label="móvil" v-model.number="model.property_phone" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_email" label="Email">
 								<field-validate type="email" class="form-control" name="property_email"
-									rules="required|email" label="email de la empresa" v-model="model.property_email" />
+									rules="email" label="email de la empresa" v-model="model.property_email" />
 							</base-field>
 						</div>
 					</div>
@@ -45,13 +45,13 @@
 							<h4>Datos de empresa</h4>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="name" label="Nombre">
+							<base-field name="name" label="Nombre" :required="true">
 								<field-validate type="text" class="form-control" name="name" rules="required"
 									label="nombre empresa" v-model="model.name" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="email" label="Email">
+							<base-field name="email" label="Email" :required="true">
 								<field-validate type="text" class="form-control" name="email" rules="required|email"
 									label="email" v-model.trim="model.email" />
 							</base-field>
@@ -59,24 +59,24 @@
 						<div class="col-lg-4">
 							<base-field name="business_nif" label="CIF/NIF">
 								<field-validate type="text" class="form-control text-uppercase" name="business_nif"
-									rules="required|alpha_num" label="nombre" v-model.trim="model.business_nif" />
+									rules="alpha_num" label="nombre" v-model.trim="model.business_nif" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="business_phone" label="Fijo">
 								<field-validate type="number" class="form-control" name="business_phone"
-									rules="required|min:5|max:15" label="fijó" v-model.number="model.business_phone" />
+									rules="min:5|max:15" label="fijó" v-model.number="model.business_phone" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="address" label="Dirección">
-								<field-validate type="text" class="form-control" name="address" rules="required"
+								<field-validate type="text" class="form-control" name="address" rules=""
 									label="dirección" v-model.number="model.address" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
 							<base-field name="province_id" label="Provincia">
-								<field-validate class="form-control" as="select" name="province_id" rules="required"
+								<field-validate class="form-control" as="select" name="province_id" rules=""
 									label="Provincia" v-model="model.province_id">
 									<option value="" selected>Selecciona una provincia</option>
 									<option v-for="province in provinces" :key="province.id" :value="province.id">
@@ -88,12 +88,12 @@
 						<div class="col-lg-4">
 							<base-field name="postal_code" label="Código postal">
 								<field-validate type="number" class="form-control" name="postal_code"
-									rules="required|numeric|min:5|max:5" label="postal_code"
+									rules="numeric|min:5|max:5" label="postal_code"
 									v-model="model.postal_code" />
 							</base-field>
 						</div>
 						<div class="col-lg-8" v-if="ROLE == 'admin'">
-							<base-field name="delegate_id" label="Delegado">
+							<base-field name="delegate_id" label="Delegado" :required="true">
 								<div v-if="delegate != null">
 									<span class="mr-md-4 text-uppercase">{{ delegate.full_name }}</span>
 									<base-button @click="delegate = null" size="sm" type="default" :outline="true"><i
@@ -118,19 +118,19 @@
 					<div class="col-lg-4">
 						<base-field name="holder_name" label="Nombre del titular">
 							<field-validate type="text" class="form-control" name="holder_name"
-								rules="required|alpha_spaces" label="nombre" v-model="model.holder_name" />
+								rules="alpha_spaces" label="nombre" v-model="model.holder_name" />
 						</base-field>
 					</div>
 					<div class="col-lg-4">
 						<base-field name="bank_code" label="BIC/SWIFT">
 							<field-validate type="text" class="form-control text-uppercase" name="bank_code"
-								rules="required|min:11|max:11|alpha_num" label="BIC/SWIFT" v-model="model.bank_code" />
+								rules="min:11|max:11|alpha_num" label="BIC/SWIFT" v-model="model.bank_code" />
 						</base-field>
 					</div>
 					<div class="col-lg-4">
 						<base-field name="iban_number" label="IBAN">
 							<field-validate type="text" class="form-control" name="iban_number"
-								rules="required|min:24|max:24|alpha_num" label="numero iban"
+								rules="min:24|max:24|alpha_num" label="numero iban"
 								v-model="model.iban_number" />
 						</base-field>
 					</div>
@@ -140,13 +140,13 @@
 						<h4>Documentación de la empresa</h4>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_date.date" label="Fecha de documentación">
+						<base-field name="file_date.date" label="Fecha de documentación" :required="true">
 							<field-validate type="date" class="form-control" name="file_date.date" rules="required"
 								label="fecha documentación" v-model="model.file_date" />
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_document.base64" label="Documentación">
+						<base-field name="file_document.base64" label="Documentación" :required="true">
 							<div v-if="model.file_document.file != null">
 								<span class="mr-md-4">{{
 										model.file_document.file[0].name
@@ -165,7 +165,7 @@
 				<fieldset class="border border-light rounded p-2 row mt-3" v-for="(installation, id) in installations"
 					:key="installation.key">
 					<div class="col-lg-4">
-						<base-field :name="`installations[${id}].name`" label="Nombre de instalación">
+						<base-field :name="`installations[${id}].name`" label="Nombre de instalación" :required="true">
 							<field-validate type="text" class="form-control" :name="`installations[${id}].name`"
 								rules="required" label="Nombre" v-model="installations[id].name" />
 						</base-field>
@@ -173,7 +173,7 @@
 					<div class="col-lg-4">
 						<base-field :name="`installations[${id}].address`" label="Dirección">
 							<field-validate type="text" class="form-control" :name="`installations[${id}].address`"
-								rules="required" label="direccion" v-model="installations[id].address" />
+								label="direccion" v-model="installations[id].address" />
 						</base-field>
 					</div>
 					<div class="col-lg-4">
@@ -184,7 +184,7 @@
 									:outline="true"><i class="fa-solid fa-pencil"></i></base-button>
 							</div>
 							<div v-else>
-								<field-validate :name="`auditable[${id}]`" label="Auditor" rules="required">
+								<field-validate :name="`auditable[${id}]`" label="Auditor" rules="">
 									<async-select @selected="installations[id].auditable = $event" :roles="[3]" :params="queryParams">
 									</async-select>
 								</field-validate>
@@ -194,7 +194,7 @@
 					<div class="col-lg-6">
 						<base-field :name="`installations[${id}].province_id`" label="Provincia">
 							<field-validate class="form-control" as="select" :name="`installations[${id}].province_id`"
-								rules="required" label="Provincia" v-model="installations[id].province_id">
+								 label="Provincia" v-model="installations[id].province_id">
 								<option value="" selected>Selecciona una provincia</option>
 								<option v-for="province in provinces" :key="province.id" :value="province.id">
 									{{ province.name }}
@@ -203,7 +203,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field :name="`installations[${id}].file_document.base64`" label="Documentación">
+						<base-field :name="`installations[${id}].file_document.base64`" label="Documentación" :required="true">
 							<div v-if="installations[id].file_document.file.length >= 1">
 								<span class="mr-md-4">{{
 										installations[id].file_document.file[0].name

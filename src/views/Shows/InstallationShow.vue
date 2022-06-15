@@ -2,7 +2,7 @@
 	<div>
 		<base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :edit="true"
 			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
-		<template v-if="currentStep == number('Instalacion')">
+		<template v-if="currentStep == number('Instalacion') && show">
 			<div class="row border rounded border-light bg-white px-4 py-2">
 				<div class="col-lg-4">
 					<base-field name="name" label="Nombre de instalacion">
@@ -19,49 +19,27 @@
 				<div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
 					<base-field name="auditable" label="Auditor">
 						<div v-if="!new_auditable.new && model.auditable != null">
-							<span class="mr-md-4 text-uppercase">{{ model.auditable.user.name }}
-								{{ model.auditable.user.last_name }}</span>
+							<span class="mr-md-4 text-uppercase">{{ model.auditable.user.full_name }}</span>
 							<base-button v-if="!this.$store.state.is_auditor" @click="new_auditable.new = true"
 								size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i>
 							</base-button>
 						</div>
 						<div v-show="new_auditable.new || model.auditable == null">
 							<field-validate name="auditable" label="Auditor" rules="required">
-								<async-select @selected="new_auditable.value = $event" :roles="[2,3]"
+								<async-select @selected="new_auditable.value = $event" :roles="[2, 3]" :list="true"
 									:params="queryParams">
 								</async-select>
 							</field-validate>
 							<div class="mt-md-2" @click="handleForm" v-if="new_auditable.new">
 								<base-button @click="handleCancel('auditable')" size="sm" type="danger" :outline="true">
-									<i class="fa-solid fa-rotate-left"></i></base-button>
+									<i class="fa-solid fa-rotate-left"></i>
+								</base-button>
 							</div>
 						</div>
 					</base-field>
 				</div>
-				<div class="col-lg-3">
-					<base-field name="province_id" label="Provincia">
-						<div v-if="!new_province.new">
-							<base-input :view="true" lable="Provincia">
-								{{ model.province?.name }}
-
-								<base-button @click="new_province.new = true" size="sm" type="default" :outline="true">
-									<i class="fa-solid fa-pencil"></i></base-button>
-							</base-input>
-						</div>
-						<field-validate v-show="new_province.new" class="form-control" as="select" name="province_id"
-							label="Provincia" v-model="model.province_id">
-							<option value="" selected>Selecciona una provincia</option>
-							<option v-for="province in provinces" :key="province.id" :value="province.id">
-								{{ province?.name }}
-							</option>
-						</field-validate>
-						<div class="mt-md-2">
-							<base-button v-if="new_province.new" @click="
-								(new_province.new = false),
-								(model.province_id = original_model.province_id)
-							" size="sm" type="danger" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
-						</div>
-					</base-field>
+				<div :class="ROLE != 'auditor' && ROLE != 'business' ? 'col-lg-3' : 'col-lg-4'">
+					<provinces-select v-model="model.province_id"></provinces-select>
 				</div>
 				<div class="col-lg-3">
 					<base-field name="periodicy" label="Periodicidad de visitas">
@@ -99,7 +77,7 @@
 					<div class="d-flex justify-content-between">
 						<h4>Responsable de la instalación</h4>
 						<div class="">
-							<base-button size="sm" @click="modal = true">Editar</base-button>
+							<base-button v-if="responsible?.id" size="sm" @click="modal = true">Editar</base-button>
 						</div>
 					</div>
 				</div>
@@ -115,7 +93,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr v-if="responsible?.id">
 								<td>{{ responsible?.name }} {{ responsible?.last_name }}</td>
 								<td>{{ responsible?.dni }}</td>
 								<td>{{ responsible?.phone_number }}</td>
@@ -129,13 +107,16 @@
 												)
 										}}</span>
 										<a href="#" class="text-uppercase d-block" @click.prevent="
-											getDocument(responsible.firm_document.id)
+											getDocument(responsible?.firm_document?.id)
 										">
 											<i class="fa fa-file-pdf" aria-hidden="true"></i>
 											ALTA
 										</a>
 									</div>
 								</td>
+							</tr>
+							<tr v-else>
+								<td colspan="5">Sin responsable</td>
 							</tr>
 						</tbody>
 					</table>
@@ -198,10 +179,10 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<template v-if="currentStep == number('Empleados') && ROLE != 'business'">
-			<dashboard-employee :reload="reload_dash_employee" @reloaded="reload_dash_employee = false"
+		<template v-if="currentStep == number('Empleados')">
+			<dashboard-employee v-if="ROLE != 'business'" :reload="reload_dash_employee" @reloaded="reload_dash_employee = false"
 				:id="installation_id"></dashboard-employee>
-			<employees-table :installation_id="installation_id" :adr="true" @reload_dash="reload_dash_employee = true">
+			<employees-table :installation_id="installation_id" :adr="false" @reload_dash="reload_dash_employee = true">
 			</employees-table>
 		</template>
 		<!-- ------------------------------------------------------- -->
@@ -245,10 +226,11 @@ import EmployeesTable from "../Tables/EmployeesTable.vue";
 import utils from "@/mixins/utils-mixin";
 
 import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import { mapGetters } from "vuex";
 import FormEmployee from "../../components/forms/FormEmployee.vue";
 import AsyncSelect from '../../components/AsyncSelect.vue';
+import ProvincesSelect from '../../components/Utils/ProvincesSelect.vue';
 
 export default {
 	name: "installation-show",
@@ -259,7 +241,8 @@ export default {
 		EmployeesTable,
 		DashboardEmployee,
 		FormEmployee,
-AsyncSelect,
+		AsyncSelect,
+		ProvincesSelect,
 	},
 	mixins: [utils],
 	props: {
@@ -291,21 +274,18 @@ AsyncSelect,
 				new: false,
 				value: null,
 			},
-			new_province: {
-				new: false,
-			},
 			currentStep: 1,
 			provinces: [],
 			operations: [],
 			deposits: [],
 			equipments: [],
 			responsible: null,
+			show: false
 		};
 	},
 	async beforeCreate() { },
 	created() {
 		this.getInst();
-		this.loadProvinces();
 		this.formatSteps();
 	},
 	methods: {
@@ -321,22 +301,25 @@ AsyncSelect,
 					"&includes[]=company"
 				);
 				this.model = this.COPY(res.data.data);
-				this.responsible = this.COPY(res.data.data.responsible);
+				this.responsible = this.COPY(res.data.data?.responsible);
 				this.model.file_document = null;
 				this.model.auditable_id = null;
 
 				let f_doc = null;
-				_.forEach(this.responsible.documents, (doc) => {
+				_.forEach(this.responsible?.documents, (doc) => {
 					if (doc.type.name == "CERTIFICADO") {
 						f_doc = doc;
 					}
 				});
-				this.responsible.formation_document = f_doc;
+				if (!isEmpty(this.responsible)) {
+					this.responsible.formation_document = f_doc;
+				}
 
 				this.model.responsible = null;
 
 				this.original_model = this.COPY(this.model);
 
+				this.show = true
 				this.$emit("installation", this.model);
 			} catch (err) {
 				console.log(err);
@@ -348,6 +331,7 @@ AsyncSelect,
 					name: this.model.name,
 					address: this.model.address,
 					periodicity: this.model.periodicity,
+					province_id: this.model.province_id
 				};
 				if (
 					this.new_document.new ||
@@ -360,9 +344,7 @@ AsyncSelect,
 				if (this.new_auditable.new || this.model.auditable == null) {
 					data.auditable_id = this.model.auditable_id;
 				}
-				if (this.new_province.new) {
-					data.province_id = this.model.province_id;
-				}
+
 				if (!_.isEqual(this.model, this.original_model)) {
 					try {
 						data = this.CLEAN_DATA(data)
@@ -429,17 +411,6 @@ AsyncSelect,
 		handleClose() {
 			this.$emit("close");
 		},
-		async loadProvinces() {
-			const res = await dataService.getProvinces();
-			this.provinces = res.data.data;
-		},
-		getUsers(query) {
-			let params = null
-			if (this.ROLE == 'admin') {
-				params = '&delegate_id=' + this.model.company.administrable_id;
-			}
-			return this.$store.dispatch('users', { query: query, roles: [2, 3], params: params })
-		},
 		async loadOperations() {
 			const res = await dataService.getOperations();
 			const data = res.data.data;
@@ -505,9 +476,6 @@ AsyncSelect,
 		},
 		resetNews() {
 			this.new_auditable = {
-				new: false,
-			};
-			this.new_province = {
 				new: false,
 			};
 			this.new_document = {
@@ -584,7 +552,7 @@ AsyncSelect,
 			});
 			return has;
 		},
-		queryParams(){
+		queryParams() {
 			return this.ROLE == 'admin' ? '&delegate_id=' + this.model?.company?.administrable_id : null
 		}
 	},

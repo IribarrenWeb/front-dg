@@ -26,48 +26,48 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.business.user.full_name }}
+						{{ row.item?.business?.user.full_name }}
 					</th>
 					<th scope="row" v-if="this.$store.state.is_admin">
-						{{ row.item.business.administrable.user.full_name }}
+						{{ row.item?.business?.administrable?.user.full_name }}
 					</th>
 					<td>
-						{{ row.item.business.province.name }}
+						{{ row.item?.business?.province?.name }}
 					</td>
 					<td>
-						{{ row.item.business.address }}
+						{{ row.item?.business?.address }}
 					</td>
 					<td>
-						{{ row.item.installations_count }}
+						{{ row.item?.installations_count }}
 					</td>
 					<th>
-						{{ row.item.period }}
+						{{ row.item?.period }}
 					</th>
 					<td>
 						<badge
 							class="badge-dot mr-4"
-							:type="setStatusType(row.item.status)"
+							:type="setStatusType(row.item?.status)"
 						>
-							<i :class="`bg-${setStatusType(row.item.status)}`"></i>
-							<span class="status">{{ row.item.status }}</span>
+							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
+							<span class="status">{{ row.item?.status }}</span>
 						</badge>
 					</td>
 					<td>
 						<a
 							href="#"
 							class="btn btn-sm btn-default"
-							v-if="row.item.status == 'COMPLETADO'"
+							v-if="row.item?.status == 'COMPLETADO'"
 							@click.prevent="generate(row.item)"
 							><i class="fa-solid fa-file-pdf"></i> INFORME{{
-								row.item.period
+								row.item?.period
 							}}</a
 						>
 						<a
 							href="#"
 							class="btn btn-sm btn-default"
 							v-if="
-								row.item.status == 'PENDIENTE' ||
-								(ROLE != 'business' && row.item.status != 'COMPLETADO')
+								row.item?.status == 'PENDIENTE' ||
+								(ROLE != 'business' && row.item?.status != 'COMPLETADO')
 							"
 							@click="handleView(row.item)"
 							><i class="fa-regular fa-eye"></i
@@ -143,6 +143,10 @@
 
 				if (this.$store.state.is_admin) {
 					params += "&includes[]=business.administrable.user";
+				}
+
+				if (this.dash) {
+					params += "&status=PENDIENTE";
 				}
 
 				const resp = await service.getIndex("report", page, params);

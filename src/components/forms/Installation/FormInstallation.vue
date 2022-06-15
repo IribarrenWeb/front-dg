@@ -14,7 +14,7 @@
                     <div class="col-lg-4">
                         <base-field name="address" label="Dirección">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="address"
-                                rules="required" label="dirección" v-model="model.address" />
+                                rules="" label="dirección" v-model="model.address" />
                         </base-field>
                     </div>
                     <div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
@@ -26,7 +26,7 @@
                                     :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                             </div>
                             <div v-else>
-                                <field-validate name="auditable" label="Auditor" rules="required" v-model="model.auditable">
+                                <field-validate name="auditable" label="Auditor" rules="" v-model="model.auditable">
                                     <async-select @selected="model.auditable = $event" :roles="[2,3]" :disabled="isSaved" :params="`&delegate_id=${delegate_id}`">
                                     </async-select>
                                 </field-validate>
@@ -36,17 +36,17 @@
                     <div class="col-lg-3">
                         <base-field name="province_id" label="Provincia">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id"
-                                rules="required" label="Provincia" v-model="model.province_id">
+                                rules="" label="Provincia" v-model="model.province_id">
                                 <option value="" selected>Selecciona una provincia</option>
                                 <option v-for="province in provinces" :key="province.id" :value="province.id">
                                     {{ province.name }}</option>
                             </field-validate>
                         </base-field>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" v-if="ROLE != 'business'">
                         <base-field name="periodicy" label="Periodicidad de visitas">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="periodicy"
-                                rules="required" label="periodicidad" v-model="model.periodicity">
+                                rules="" label="periodicidad" v-model="model.periodicity">
                                 <option value="" selected>Selecciona una periodicidad</option>
                                 <option value="ANUAL">ANUAL</option>
                                 <option value="BIANUAL">BIANUAL</option>
@@ -372,7 +372,7 @@ export default {
 
             if (this.currentStep == 1 && !this.isSaved) {
                 this.model.file_document.base64 = await this.toBase64(inst.file_document[0])
-                this.model.auditable_id = this.model.auditable.id;
+                this.model.auditable_id = this.model?.auditable?.id;
                 if (this.isSaved) {
                     return
                 }

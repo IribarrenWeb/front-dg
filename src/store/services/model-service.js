@@ -1,7 +1,7 @@
 import { axios } from '@/axios';
 import { store as storage } from '@/store';
 import $Swal from 'sweetalert2';
-import { toUpper } from "lodash";
+import { toUpper, isEmpty } from "lodash";
 
 const $swal = $Swal.mixin({
     customClass: {
@@ -36,6 +36,27 @@ const apis = {
     report: "reports",
     non_actions: "nonconformities-action",
 }
+async function api(model, method = 'GET', params = null, page = null) {
+    storage.commit('loading');
+    let url_model = `${url}/${model}?_method=${method}`;
+
+    if (page != null) {
+        url_model += `&page=${page}&`
+    }
+
+    if (params != null) {
+        url_model += params
+    }
+
+    return await axios.request(url_model).then((response) => {
+        storage.commit('loading');
+        return response
+    }).catch(err => {
+        storage.commit('loading');
+        errors(err)
+        throw Error('Error')
+    });
+}
 
 async function getIndex(model, page = 1, params = null) {
     storage.commit('loading');
@@ -66,14 +87,20 @@ async function getIndex(model, page = 1, params = null) {
  * @param {Array} roles Users roles ids
  * @returns Object|Any
  */
-function users_select(query, roles = [], ext_params = null) {
+function users_select(query = null, roles = [], ext_params = null) {
     storage.commit('loading');
-    let params = `users?name=${query}`;
+    let params = 'users?';
+    if (!isEmpty(query)) {
+        params += `name=${query}&`;
+    }
 
     if (roles) {
         for (let i = 0; i < roles.length; i++) {
             const role = roles[i];
-            params += '&roles[]=' + role
+            if (i > 0) {
+                params += '&'
+            }
+            params += 'roles[]=' + role
         }
     }
     if (ext_params != null) {
@@ -85,7 +112,7 @@ function users_select(query, roles = [], ext_params = null) {
         const data = response.data.data;
         let options = map(data, (user) => {
             let label = user.full_name;
-            if (user.role_id == 2) {
+            if (user.role_id == 2 && !isEmpty(query)) {
                 const compare = toUpper(query)
                 const name = toUpper(user?.name),
                     last_name = toUpper(user?.last_name),
@@ -366,5 +393,6 @@ export default {
     dashEmployee,
     instOperations,
     getReport,
-    users_select
+    users_select,
+    api
 }

@@ -36,36 +36,36 @@
 
 				<template v-slot:default="row">
 					<td class="budget">
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</td>
 					<th scope="row">
 						<div class="media align-items-center">
 							<div class="media-body">
 								<span class="name mb-0 text-sm">{{
-									row.item.visitable.installation.name
+									row.item?.visitable.installation.name
 								}}</span>
 							</div>
 						</div>
 					</th>
                     <td class="budget">
-						{{ row.item.visitable.installation.auditable != null ? row.item.visitable.installation.auditable.user.full_name : 'SIN RESPONSABLE'}}
+						{{ row.item?.visitable.installation.auditable != null ? row.item?.visitable.installation.auditable.user.full_name : 'SIN RESPONSABLE'}}
 					</td>
 					<td class="text-uppercase">
-						{{ row.item.type }}
+						{{ row.item?.type }}
 					</td>
 					<td>
-						{{ FORMAT_DATE(row.item.date_scheduled) }}
+						{{ FORMAT_DATE(row.item?.date_scheduled) }}
 					</td>
                     <td>
-						{{ row.item.time }}
+						{{ row.item?.time }}
 					</td>
                     <td>
 						<badge
 							class="badge-dot mr-4"
-							:type="setStatusType(row.item.status)"
+							:type="setStatusType(row.item?.status)"
 						>
-							<i :class="`bg-${setStatusType(row.item.status)}`"></i>
-							<span class="status">{{ row.item.status == 0 ? 'PENDIENTE' : 'COMPLETADO' }}</span>
+							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
+							<span class="status">{{ row.item?.status == 0 ? 'PENDIENTE' : 'COMPLETADO' }}</span>
 						</badge>
 					</td>
 				</template>

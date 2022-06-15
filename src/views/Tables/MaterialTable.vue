@@ -39,21 +39,21 @@
 				</template>
 
 				<template v-slot:default="row">
-					<td v-if="ROLE == 'business'">{{ row.item.installation.name }}</td>
+					<td v-if="ROLE == 'business'">{{ row.item?.installation.name }}</td>
 					<td>
-						{{ row.item.material.un_code }}
+						{{ row.item?.material.un_code }}
 					</td>
-					<td>{{ row.item.name }}</td>
-					<td>{{ row.item.material.denomination_name }}</td>
-					<td>{{ row.item.material.class.code }}</td>
-					<td>{{ row.item.material.packing.code }}</td>
-					<td>{{ row.item.equipment.name }}</td>
-					<td>{{ row.item.quantity }}</td>
+					<td>{{ row.item?.name }}</td>
+					<td>{{ row.item?.material.denomination_name }}</td>
+					<td>{{ row.item?.material.class.code }}</td>
+					<td>{{ row.item?.material.packing.code }}</td>
+					<td>{{ row.item?.equipment.name }}</td>
+					<td>{{ row.item?.quantity }}</td>
 					<td class="text-right">
 						<a
 							class="btn btn-primary btn-sm"
 							href="#"
-							@click.prevent="handleView(row.item.id)"
+							@click.prevent="handleView(row.item?.id)"
 							><i class="fa-regular fa-eye"></i
 						></a>
                         <a
@@ -65,7 +65,7 @@
 						<a
 							class="btn btn-outline-primary btn-sm"
 							href="#"
-							@click.prevent="destroy(row.item.id)"
+							@click.prevent="destroy(row.item?.id)"
 							><i class="fa-regular fa-trash-can"></i
 						></a>
 					</td>
@@ -90,7 +90,6 @@
 			></material-show>
 			<form-material
 				v-else
-                :installations="installations"
                 :material="material"
 				@close="handleClose"
 				@reload="getMaterials(page, installation_id)"

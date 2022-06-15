@@ -26,34 +26,34 @@
 
 				<template v-slot:default="row">
 					<th scope="row" class="text-uppercase">
-						{{ row.item.formation.name }}
+						{{ row.item?.formation.name }}
 					</th>
                     <th scope="row" class="text-uppercase">
-						{{ row.item.formation.responsible.user.full_name }}
+						{{ row.item?.formation.responsible.user.full_name }}
 					</th>
 					<td class="text-uppercase">
-						{{ row.item.installation.company.name }}
+						{{ row.item?.installation.company.name }}
 					</td>
                     <td class="text-uppercase">
-						{{ row.item.installation.name }}
+						{{ row.item?.installation.name }}
 					</td>
                     <td>
-                        {{ row.item.employees_count }}
+                        {{ row.item?.employees_count }}
                     </td>
                     <td>
-                        {{ row.item.date }}
+                        {{ row.item?.date }}
                     </td>
 					<td>
                         <badge
 							class="badge-dot mr-4"
-							:type="row.item.status ? 'success' : 'danger'"
+							:type="row.item?.status ? 'success' : 'danger'"
 						>
 							<i :class="`bg-danger`"></i>
-							<span class="status">{{ row.item.status ? 'COMPLETADO' : 'PENDIENTE' }}</span>
+							<span class="status">{{ row.item?.status ? 'COMPLETADO' : 'PENDIENTE' }}</span>
 						</badge>
 					</td>
                     <td>
-                        <base-button type="primary" @click="toSchedule(row.item.id)" size="sm">Re-agendar</base-button>
+                        <base-button type="primary" @click="toSchedule(row.item?.id)" size="sm">Re-agendar</base-button>
                     </td>
 				</template>
 			</base-table>

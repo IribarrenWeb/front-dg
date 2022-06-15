@@ -23,16 +23,16 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</th>
 					<td>
-						{{ row.item.last_name }}
+						{{ row.item?.last_name }}
 					</td>
 					<td>
-						{{ row.item.email }}
+						{{ row.item?.email }}
 					</td>
 					<td>
-						{{ row.item.phone_number }}
+						{{ row.item?.phone_number }}
 					</td>
 					<td>
 						<a href="#" class="btn btn-sm btn-default"><i class="fa-regular fa-eye"></i></a>

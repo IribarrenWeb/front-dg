@@ -9,13 +9,13 @@
             </template>
             <template v-slot:default="row">
                 <th scope="row">
-                    {{ row.item.total }}
+                    {{ row.item?.total }}
                 </th>
                 <td scope="row" class="text-uppercase">
-                    {{ row.item.adr }}
+                    {{ row.item?.adr }}
                 </td>
                 <td colspan="2">
-                    {{ row.item.security }}
+                    {{ row.item?.security }}
                 </td>
             </template>
         </base-table>

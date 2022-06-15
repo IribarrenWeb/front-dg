@@ -3,7 +3,7 @@
 		<div class="card-header border-0">
 			<div class="row align-items-center">
 				<div class="col">
-					<h3 class="mb-0">Empleados {{ adr != null ? "ADR" : "" }}</h3>
+					<h3 class="mb-0">Empleados {{ ROLE != 'business' ? "ADR" : "" }}</h3>
 				</div>
 				<div class="col text-right">
 					<a href="#" class="btn btn-sm btn-default" @click="handleAdd"
@@ -29,44 +29,45 @@
 
 				<template v-slot:default="row">
                     <th v-if="isClient" scope="row">
-						{{ row.item.installation.name }}
+						{{ row.item?.installation.name }}
 					</th>
 					<th scope="row">
-						{{ row.item.name }}
+						{{ row.item?.name }}
 					</th>
 					<td>
-						{{ row.item.last_name }}
+						{{ row.item?.last_name }}
 					</td>
 					<td>
-						{{ row.item.email }}
+						{{ row.item?.email }}
 					</td>
 					<td v-if="!isClient">
-						{{ row.item.phone_number }}
+						{{ row.item?.phone_number }}
 					</td>
                     <td v-if="isClient">
-						{{ row.item.position }}
+						{{ row.item?.position }}
 					</td>
                     <td v-if="isClient">
-						{{ row.item.is_dangerous_goods ? 'SI' : 'NO' }}
+						{{ row.item?.is_dangerous_goods ? 'SI' : 'NO' }}
 					</td>
 					<td>
-						<div v-if="row.item.formation_document != null">
+						<div v-if="row.item?.formation_document != null">
 							<span class="d-block">{{
-								this.formatDate(row.item.formation_document.document_date, "GB")
+								this.formatDate(row.item?.formation_document.document_date, "GB")
 							}}</span>
 							<a
 								href="#"
 								class="text-uppercase d-block"
-								@click.prevent="getDocument(row.item.formation_document.id)"
+								@click.prevent="getDocument(row.item?.formation_document.id)"
 							>
 								<i class="fa fa-file-pdf" aria-hidden="true"></i>
-								{{ row.item.formation_document.type.name }}
+								{{ row.item?.formation_document.type.name }}
 							</a>
 						</div>
+						<div v-else>No procede</div>
 					</td>
-					<td>
-						<a href="#" class="btn btn-sm btn-default" @click="employee_id = row.item.id, modal = true"><i class="fa-regular fa-eye"></i></a>
-						<a href="#" class="btn btn-outline-primary btn-sm btn-default" @click="deleteEmployee(row.item.id)"><i class="fa-solid fa-trash-can"></i></a>
+					<td class="d-flex">
+						<a href="#" class="btn btn-sm btn-default" @click="employee_id = row.item?.id, modal = true"><i class="fa-regular fa-eye"></i></a>
+						<delete-button model="employee" :id="row.item?.id" @deleted="index"></delete-button>
 					</td>
 				</template>
 			</base-table>
@@ -92,6 +93,7 @@
 				@close="this.modal = false, employee_id = null"
 				@reload="index(), this.$emit('reload_dash')"
                 :employee_id="employee_id"
+				:driver="driver"
 				:installation_id="installation_id"
 			></form-employee>
 		</modal>
@@ -103,9 +105,10 @@
 	import _ from "lodash";
 	import FormEmployee from "../../components/forms/FormEmployee.vue";
     import { mapGetters } from 'vuex';
+import DeleteButton from '../../components/Utils/DeleteButton.vue';
 
 	export default {
-		components: { FormEmployee },
+		components: { FormEmployee, DeleteButton },
 		mixins: [utils],
 		name: "employees-table",
 		props: {
@@ -114,7 +117,8 @@
 				required: false,
 			},
 			adr: {
-				default: null,
+				type: Boolean,
+				default: false,
 			},
 			driver: {
 				type: Boolean,
@@ -146,7 +150,7 @@
 					if (this.installation_id != null) {
 						params += "&installation_id=" + this.installation_id;
 					}
-					if (this.adr != null) {
+					if (this.ROLE != 'business') {
 						params += "&adr=true";
 					}
 					if (this.driver != null) {

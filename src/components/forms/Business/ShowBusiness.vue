@@ -20,7 +20,6 @@
 									type="text"
 									class="form-control"
 									name="property_name"
-									rules="required"
 									label="nombre"
 									v-model="model.property_name"
 								/>
@@ -32,7 +31,6 @@
 									type="text"
 									class="form-control"
 									name="property_last_name"
-									rules="required|"
 									label="apellido"
 									v-model="model.property_last_name"
 								/>
@@ -44,7 +42,7 @@
 									type="text"
 									class="form-control text-uppercase"
 									name="property_dni"
-									rules="required|alpha_num|min:9|max:9"
+									rules="alpha_num|min:9|max:9"
 									label="dni"
 									v-model.trim="model.property_dni"
 								/>
@@ -56,7 +54,7 @@
 									type="text"
 									class="form-control"
 									name="property_phone"
-									rules="required|min:5|max:15|numeric"
+									rules="min:5|max:15|numeric"
 									label="móvil"
 									v-model.number="model.property_phone"
 								/>
@@ -68,7 +66,7 @@
 									type="text"
 									class="form-control"
 									name="property_email"
-									rules="required|email"
+									rules="email"
 									label="email"
 									v-model.trim="model.property_email"
 								/>
@@ -80,7 +78,7 @@
 							<h4>Datos de empresa</h4>
 						</div>
 						<div class="col-lg-4">
-							<base-field name="name" label="Nombre">
+							<base-field name="name" :required="true" label="Nombre">
 								<field-validate
 									type="text"
 									class="form-control"
@@ -92,7 +90,7 @@
 							</base-field>
 						</div>
                         <div class="col-lg-4">
-							<base-field name="email" label="Email">
+							<base-field name="email" :required="true" label="Email">
 								<field-validate
 									type="text"
 									class="form-control"
@@ -109,7 +107,7 @@
 									type="text"
 									class="form-control"
 									name="business_nif"
-									rules="required|"
+									rules=""
 									label="nombre"
 									v-model.trim="model.business_nif"
 								/>
@@ -121,7 +119,7 @@
 									type="text"
 									class="form-control"
 									name="business_phone"
-									rules="required|min:5|max:15|numeric"
+									rules="min:5|max:15|numeric"
 									label="fijó"
 									v-model.number="model.business_phone"
 								/>
@@ -133,7 +131,7 @@
 									type="text"
 									class="form-control"
 									name="address"
-									rules="required"
+									rules=""
 									label="dirección"
 									v-model.number="model.address"
 								/>
@@ -145,7 +143,7 @@
 									class="form-control"
 									as="select"
 									name="province_id"
-									rules="required"
+									rules=""
 									label="Provincia"
 									v-model="model.province_id"
 								>
@@ -166,7 +164,7 @@
 									type="number"
 									class="form-control"
 									name="postal_code"
-									rules="required|numeric|min:5|max:5"
+									rules="numeric|min:5|max:5"
 									label="postal_code"
 									v-model="model.postal_code"
 								/>
@@ -186,7 +184,7 @@
 								type="text"
 								class="form-control"
 								name="holder_name"
-								rules="required|alpha_spaces"
+								rules="alpha_spaces"
 								label="nombre"
 								v-model="model.holder_name"
 							/>
@@ -198,7 +196,7 @@
 								type="text"
 								class="form-control"
 								name="bank_code"
-								rules="required|min:11|max:11|alpha_num"
+								rules="min:11|max:11|alpha_num"
 								label="BIC/SWIFT"
 								v-model="model.bank_code"
 							/>
@@ -210,7 +208,7 @@
 								type="text"
 								class="form-control"
 								name="iban_number"
-								rules="required|min:24|max:24|alpha_num"
+								rules="min:24|max:24|alpha_num"
 								label="numero iban"
 								v-model="model.iban_number"
 							/>

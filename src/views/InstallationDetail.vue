@@ -1,19 +1,17 @@
 <template>
 	<div>
-		
-
 		<div class="container-fluid mt--7">
 			<div class="row px-1 px-lg-4">
 				<div class="col card p-md-5">
-                    <div class="mb-lg-4 mb-2 d-flex align-items-center" v-if="installation != null">
+                    <div class="mb-lg-4 mt-lg-0 my-2 d-flex align-items-center" v-if="installation != null">
                         <div class="row">
                             <div class="col-md-5 d-flex">
                                 <a href="#" @click.prevent="this.$router.back()" class="h2"><i class="fa-solid fa-angle-left text-muted mr-2"></i></a>
                                 <h3>{{installation.name}}</h3>
                             </div>
                             <div class="col-md-7 d-flex">
-                                <span class="h5 text-muted text-uppercase">{{installation.address}}</span>
-                                <span class="h5 text-muted text-uppercase">{{installation.province.name}}</span>
+                                <!-- <span class="h5 text-muted text-uppercase">{{installation?.address}}</span>
+                                <span class="h5 text-muted text-uppercase">{{installation?.province?.name}}</span> -->
                             </div>
                         </div>
                     </div>

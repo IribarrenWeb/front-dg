@@ -10,7 +10,8 @@
 		</div>
 		<div v-show="canTake" class="position-relative py-4">
 			<Transition name="fade">
-				<modal v-if="!isMobile" v-model:show="canTake" model="imagen" action="Capturar" @close="stop" modalClasses="modal-xl">
+				<modal v-if="!isMobile" v-model:show="canTake" model="imagen" action="Capturar" @close="stop"
+					modalClasses="modal-xl">
 					<div class="container my-2">
 						<base-field label="Dispositivos (camaras)">
 							<select v-model="selectedDevice" class="form-control" v-on:change="deviceChange()">
@@ -29,7 +30,7 @@
 								@started="isLoading = false">
 							</camera-component>
 						</div>
-						<div class="col-12">
+						<div class="col-12 my-3">
 							<div class="row">
 								<div class="col-md-4">
 									<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true"
@@ -45,7 +46,8 @@
 								</div>
 								<div class="col-md-4">
 									<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true"
-										:outline="true" @click="stop" v-if="isPhotoTaken && cameraRef != null" size="sm">
+										:outline="true" @click="stop"
+										size="sm">
 										Cancelar</base-button>
 								</div>
 							</div>
@@ -62,7 +64,7 @@
 					<div class="col-12" style="min-height: 500px;">
 						<img :src="mobileImageInput" alt="mobile-photo" id="image-element" class="mobile-photo">
 					</div>
-					<div class="col-12">
+					<div class="col-12 my-3">
 						<div class="row">
 							<div class="col-md-4">
 								<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true"
@@ -78,7 +80,7 @@
 							</div>
 							<div class="col-md-4">
 								<base-button type="primary" class="my-2 my-md-0" tag="div" :block="true" :outline="true"
-									@click="stop" v-if="isPhotoTaken" size="sm">
+									@click="stop" size="sm">
 									Cancelar</base-button>
 							</div>
 						</div>
@@ -173,7 +175,7 @@ export default {
 				}
 
 				let data = {};
-				
+
 				data[this.dataName] = this.image
 				await service.update(this.apiModel, this.apiId, data);
 				this.saved();
@@ -187,6 +189,13 @@ export default {
 		},
 		startCam() {
 			this.cameraRef.start()
+			setTimeout(() => {
+				if (this.isLoading != false) {
+					this.isLoading = false
+					this.$swal('No se pudo abrir la camara', 'Ocurrio un problema al intentar abrir la camara', 'error');
+					this.stop()
+				}
+			}, 5000)
 			console.log(this.cameraRef);
 		},
 		async takePic() {
@@ -249,7 +258,7 @@ export default {
 			}
 			return img
 		},
-		isMobile(){
+		isMobile() {
 			return this.$store.state.is_mobile
 		},
 		...mapGetters(['COMPRESS_IMAGE'])
@@ -270,8 +279,8 @@ export default {
 };
 </script>
 <style lang="scss">
-	.mobile-photo{
-		width: inherit;
-		height: auto;
-	}
+.mobile-photo {
+	width: inherit;
+	height: auto;
+}
 </style>

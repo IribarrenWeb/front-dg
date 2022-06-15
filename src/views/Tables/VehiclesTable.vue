@@ -40,26 +40,26 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item.registration_number }}
+						{{ row.item?.registration_number }}
 					</th>
 					<td class="budget">
-						{{ row.item.fleet }}
+						{{ row.item?.fleet }}
 					</td>
 					<td>
-						{{ row.item.tara }}
+						{{ row.item?.tara }}
 					</td>
-					<td>{{ row.item.mma }}</td>
-					<td>{{ row.item.type.name }}</td>
-					<td>{{ row.item.adr.code }}</td>
-					<td>{{ row.item.adr_kit_date }}</td>
+					<td>{{ row.item?.mma }}</td>
+					<td>{{ row.item?.type.name }}</td>
+					<td>{{ row.item?.adr.code }}</td>
+					<td>{{ row.item?.adr_kit_date }}</td>
 					<td>
 						<badge
 							class="badge-dot mr-4"
-							:type="setStatusType(row.item.status)"
+							:type="setStatusType(row.item?.status)"
 						>
-							<i :class="`bg-${setStatusType(row.item.status)}`"></i>
+							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
 							<span class="status">{{
-								row.item.status ? "VIGENTE" : "CADUCADO"
+								row.item?.status ? "VIGENTE" : "CADUCADO"
 							}}</span>
 						</badge>
 					</td>
@@ -70,7 +70,7 @@
 						<a
 							class="btn btn-danger btn-sm"
 							href="#"
-							@click.prevent="destroy(row.item.id)"
+							@click.prevent="destroy(row.item?.id)"
 							><i class="fa-regular fa-trash-can"></i
 						></a>
 					</td>

@@ -13,19 +13,7 @@
 				</li>
 			</ul>
 			<template v-if="currentStep == 1">
-				<div v-if="ROLE == 'business'" class="row border rounded border-light px-4 py-2 mb-2">
-					<div class="col">
-						<base-field name="installation_id" label="Instalación">
-							<field-validate as="select" class="form-control" name="installation_id" rules="required"
-								label="instalación" v-model="model.installation_id">
-								<option v-for="installation in installations" :key="installation.key"
-									:value="installation.id" class="text-uppercase">
-									#{{ installation.id }} - {{ installation.name }}
-								</option>
-							</field-validate>
-						</base-field>
-					</div>
-				</div>
+				<installation-select v-model="model.installation_id"></installation-select>
 				<div class="row border rounded border-light px-4 py-2">
 					<div class="col-lg-3">
 						<base-field name="is_residue" label="Tipo">
@@ -145,9 +133,9 @@
 						</base-field>
 					</div>
 					<div class="col-lg-3">
-						<base-field name="quantity" label="Volumen Depósito">
+						<base-field name="quantity" label="Volumen Almacenamiento">
 							<field-validate type="text" class="form-control" name="quantity"
-								label="volumen del depósito" v-model="model.quantity" />
+								label="volumen del Almacenamiento" v-model="model.quantity" />
 						</base-field>
 					</div>
 				</div>
@@ -174,6 +162,7 @@ import service from "@/store/services/model-service";
 import { isEmpty, isEqual } from "lodash";
 import { mapGetters } from "vuex";
 import AsyncSelect from '../AsyncSelect.vue';
+import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 export default {
 	mixins: [utils],
@@ -198,7 +187,7 @@ export default {
 			default: null
 		}
 	},
-	components: { AsyncSelect },
+	components: { AsyncSelect, InstallationSelect },
 	data() {
 		return {
 			steps: [
@@ -216,7 +205,7 @@ export default {
 			is_res: null,
 			currentStep: 1,
 			model: {
-				installation_id: this.installation_id,
+				installation_id: this.installation_id ?? null,
 				adr_material_id: null,
 				name: "",
 				equipment_type_id: "",
