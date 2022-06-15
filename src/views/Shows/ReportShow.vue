@@ -25,10 +25,10 @@
 							</tr>
 							<tr>
 								<th>{{ report.business.user.full_name }}</th>
-								<th>{{ report.business.address }}</th>
-								<th>{{ report.business.postal_code }}</th>
-								<th>{{ report.business.province.city.name }}</th>
-								<th>{{ report.business.province.name }}</th>
+								<th>{{ report.business?.address }}</th>
+								<th>{{ report.business?.postal_code }}</th>
+								<th>{{ report.business?.province?.city?.name }}</th>
+								<th>{{ report.business?.province?.name }}</th>
 							</tr>
 							<tr>
 								<td>CIF</td>
@@ -38,11 +38,11 @@
 								<td>Email</td>
 							</tr>
 							<tr>
-								<th>{{ report.business.business_nif }}</th>
-								<th>{{ report.business.employees_count }}</th>
-								<th>{{ report.business.security }}</th>
-								<th>{{ report.business.business_phone }}</th>
-								<th>{{ report.business.user.email }}</th>
+								<th>{{ report.business?.business_nif }}</th>
+								<th>{{ report.business?.employees_count }}</th>
+								<th>{{ report.business?.security }}</th>
+								<th>{{ report.business?.business_phone }}</th>
+								<th>{{ report.business?.user.email }}</th>
 							</tr>
 						</tbody>
 					</table>
@@ -67,10 +67,10 @@
 						</thead>
 						<tbody>
 							<tr v-for="auditor in report.auditables" :key="auditor.id">
-								<th>{{ auditor.user.full_name }}</th>
-								<th>{{ auditor.dni }}</th>
-								<th>{{ auditor.phone_number }}</th>
-								<th>{{ auditor.user.email }}</th>
+								<th>{{ auditor?.user.full_name }}</th>
+								<th>{{ auditor?.dni }}</th>
+								<th>{{ auditor?.phone_number }}</th>
+								<th>{{ auditor?.user.email }}</th>
 							</tr>
 						</tbody>
 					</table>
