@@ -188,7 +188,7 @@
 					const res = await service.show(
 						"material",
 						id,
-						"includes[]=installation.operations&includes[]=installation?.province?.city&includes[]=equipment&includes[]=documents"
+						"includes[]=installation.operations&includes[]=installation.province.city&includes[]=equipment&includes[]=documents"
 					);
 					this.material = this.$functions.copy(res.data.data);
 				} catch (err) {
