@@ -198,7 +198,7 @@ export default {
 		return {
 			errors: {},
 			api: "delegate",
-			model: this.$store.getters.DELEGATE_SCHEMA,
+			model: this.$functions.schemas('delegate'),
 			delegate: null,
 			provinces: null,
 			cer_update: false,
@@ -212,7 +212,7 @@ export default {
 	},
 	methods: {
 		async onSubmit(values, { resetForm }) {
-			const data = this.CLEAN_DATA(this.model, ['user', 'province', 'documents', 'created_at', 'id'], ['file_certification', 'file_firm'], true);
+			const data = this.$functions.cleanData(this.model, ['user', 'province', 'documents', 'created_at', 'id'], ['file_certification', 'file_firm'], true);
 
 			if (!isEmpty(this.model.file_certification)) {
 				data.append('file_certification', this.model.file_certification[0]);
@@ -260,8 +260,8 @@ export default {
 				);
 				const data = response.data.data;
 				this.setCurrent(data);
-				this.delegate = this.COPY(data);
-				this.model = this.COPY(data);
+				this.delegate = this.$functions.copy(data);
+				this.model = this.$functions.copy(data);
 				this.model.name = this.model.user.name;
 				this.model.last_name = this.model.user.last_name;
 				this.model.email = this.model.user.email;
@@ -303,7 +303,7 @@ export default {
 		reset(op) {
 			switch (op) {
 				case "delegate":
-					this.model.delegate = this.COPY(this.delegate.delegate);
+					this.model.delegate = this.$functions.copy(this.delegate.delegate);
 					break;
 				case "file_cer":
 					this.model.file_certification = undefined;
@@ -353,7 +353,7 @@ export default {
 		update() {
 			return this.id != null;
 		},
-		...mapGetters(["COPY", "CLEAN_DATA"]),
+		...mapGetters(["CLEAN_DATA"]),
 	},
 	watch: {
 		id: {

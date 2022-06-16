@@ -97,7 +97,7 @@
                                     {{employee.position}}
                                 </td>
                                 <td>
-                                    {{employee.last_formation == null ? 'SIN FORMACIÓN' : FORMAT_DATE(employee.last_formation.document_date)}}
+                                    {{employee.last_formation == null ? 'SIN FORMACIÓN' : this.$functions.formatDate(employee.last_formation.document_date)}}
                                 </td>
                             </tr>
                         </tbody>
@@ -130,7 +130,6 @@
 
 <script>
 import service from "@/store/services/model-service";
-import { mapGetters } from 'vuex';
 
 export default {
     props: ['formation_id'],
@@ -217,7 +216,6 @@ export default {
         },
     },
     computed: {
-        ...mapGetters(['FORMAT_DATE'])
     }
 }
 </script>

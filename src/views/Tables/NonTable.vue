@@ -51,9 +51,9 @@
 					<td>
 						<badge
 							class="badge-dot mr-4"
-							:type="SET_STATUS(row.item?.status)"
+							:type="this.$functions.setStatus(row.item?.status)"
 						>
-							<i :class="`bg-${SET_STATUS(row.item?.status)}`"></i>
+							<i :class="`bg-${this.$functions.setStatus(row.item?.status)}`"></i>
 							<span class="status">{{ row.item?.status }}</span>
 						</badge>
 					</td>
@@ -144,7 +144,7 @@
 			},
 		},
         computed: {
-            ...mapGetters(['SET_STATUS', 'ROLE']),
+            ...mapGetters(['ROLE']),
         }
 	};
 </script>

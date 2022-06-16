@@ -43,7 +43,7 @@
 							type="text"
 							class="form-control"
 							name="dni"
-							rules="required|alpha_num|min:9|max:9"
+							rules="alpha_num|min:9|max:9"
 							label="dni"
 							v-model.trim="model.dni"
 						/>
@@ -68,7 +68,7 @@
 							type="text"
 							class="form-control"
 							name="position"
-							rules="required|alpha_spaces"
+							rules="alpha_spaces"
 							label="cargo"
 							v-model="model.position"
 						/>
@@ -81,7 +81,7 @@
 							type="number"
 							class="form-control"
 							name="phone_number"
-							rules="required|min:5|max:15"
+							rules="min:5|max:15"
 							label="movil"
 							v-model="model.phone_number"
 						/>
@@ -102,7 +102,7 @@
 							type="date"
 							class="form-control"
 							name="date_firm"
-							rules="required"
+							:rules="{'required':!$functions.empty(model.file_firm.file)}"
 							label="fecha"
 							v-model="model.date_firm"
 						/>
@@ -114,7 +114,7 @@
 						name="file_firm"
 						label="Documento de Alta"
 					>
-						<div v-if="!EMPTY(model.file_firm.file) && !update">
+						<div v-if="!$functions.empty(model.file_firm.file) && !update">
 							<span class="mr-md-4">{{ model.file_firm.file[0].name }}</span>
 							<base-button
 								@click="model.file_firm.file = []"
@@ -141,7 +141,7 @@
 							type="file"
 							class="form-control"
 							name="file_firm"
-							rules="required"
+							:rules="{'required':!$functions.empty(model.date_firm)}"
 							label="documento"
 							v-model="model.file_firm.file"
 						/>
@@ -180,7 +180,7 @@
 								name="file_cer"
 								label="Documento de formación"
 							>
-								<div v-if="!EMPTY(model.file_certification.file) && !update">
+								<div v-if="!$functions.empty(model.file_certification.file) && !update">
 									<span class="mr-md-4">{{
 										model.file_certification.file[0].name
 									}}</span>
@@ -273,7 +273,7 @@
 								name="file_driver"
 								label="Documentacion ADR"
 							>
-								<div v-if="!EMPTY(model.driver_document.file) && !update">
+								<div v-if="!$functions.empty(model.driver_document.file) && !update">
 									<span class="mr-md-4">{{
 										model.driver_document.file[0].name
 									}}</span>
@@ -341,7 +341,6 @@
 <script>
 	import utils from "@/mixins/utils-mixin";
 	import service from "@/store/services/model-service";
-	import { mapGetters } from "vuex";
 	import {isEqual} from "lodash";
 import InstallationSelect from '../Utils/InstallationSelect.vue';
 
@@ -373,7 +372,7 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 		},
 		mounted() {
 			if (this.employee_id == null) {
-				this.model = this.$store.getters.EMPLOYEE_SCHEMA;
+				this.model = this.$functions.schemas('employee');
 				this.model.driver = this.driver ? 1 : 0;
 				this.model.installation_id = this.installation_id ?? null;
 			} else {
@@ -384,7 +383,7 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 		methods: {
 			async onSubmit(values, { resetForm }) {
 				if (this.update && this.canUpdate) {
-					if (this.new_firm_doc || !this.EMPTY(this.model.file_firm.file)) {
+					if (!this.$functions.empty(values.file_firm)) {
 						this.model.file_firm.base64 = await this.toBase64(
 							values.file_firm[0]
 						);
@@ -401,12 +400,12 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 					}
 				} else {
 					this.model.file_firm.base64 = await this.toBase64(values.file_firm[0]);
-					if (this.model.driver && !this.EMPTY(values.file_driver)) {
+					if (this.model.driver && !this.$functions.empty(values.file_driver)) {
 						this.model.driver_document.base64 = await this.toBase64(
 							values.file_driver[0]
 						);
 					}
-					if (this.model.dangerous_goods && !this.EMPTY(values.file_cer)) {
+					if (this.model.dangerous_goods && !this.$functions.empty(values.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
@@ -415,9 +414,8 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 				try {
 					if (this.update) {
-                        
-                        let data = this.DIFFERENCE(this.original_model, this.model);
-
+                        console.log(this.model);
+                        let data = this.$functions.difference(this.original_model,this.model);
 						await service.update("employee", this.model.id, data);
 						this.show();
 					} else {
@@ -442,7 +440,7 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 						this.employee_id,
 						"includes[]=documents.type"
 					);
-					this.model = this.COPY(res.data.data);
+					this.model = this.$functions.copy(res.data.data);
 					this.model.representative = this.model.is_representative ? true : false;
 					this.model.driver = this.model.is_driver ? true : false;
 					this.model.dangerous_goods = this.model.is_dangerous_goods ? true : false;
@@ -459,7 +457,7 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
                         this.model.date_certification = this.file_cer.document_date
                     }
 
-					this.original_model = this.COPY(this.model);
+					this.original_model = this.$functions.copy(this.model);
 				} catch (error) {
 					console.log(error);
 					return;
@@ -493,18 +491,17 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 				}
 				return show;
 			},
-			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "DIFFERENCE", "EMPTY"]),
 			update() {
 				return this.employee_id != null;
 			},
 			file_firm() {
-				return this.FILTER_DOC(this.model.documents, "ALTA");
+				return this.$functions.filterDoc(this.model.documents, "ALTA");
 			},
             file_cer() {
-				return this.FILTER_DOC(this.model.documents, "CERTIFICADO");
+				return this.$functions.filterDoc(this.model.documents, "CERTIFICADO");
 			},
             file_driver() {
-				return this.FILTER_DOC(this.model.documents, "DOCUMENTACION CHOFER");
+				return this.$functions.filterDoc(this.model.documents, "DOCUMENTACION CHOFER");
 			},
             canUpdate(){
                 return !isEqual(this.model,this.original_model)

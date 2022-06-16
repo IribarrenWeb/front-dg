@@ -35,6 +35,8 @@ import AllRules from "@vee-validate/rules";
 // import this component
 import flatPickr from 'vue-flatpickr-component';
 import '../node_modules/flatpickr/dist/flatpickr.css';
+import functions from './utils/functions';
+import schemas from './schemas';
 
 Object.keys(AllRules).forEach((rule) => {
     defineRule(rule, AllRules[rule]);
@@ -57,6 +59,8 @@ appInstance.use(Toaster, {
     queue: true,
 });
 
+appInstance.config.globalProperties.$functions = functions;
+appInstance.config.globalProperties.$schemas = schemas;
 
 appInstance.component('date-picker', flatPickr);
 appInstance.use(store);

@@ -281,7 +281,6 @@
 </template>
 <script>
 import utils from "@/mixins/utils-mixin";
-import {mapGetters} from 'vuex';
 import service from '../../../store/services/model-service';
 import {isEmpty, isEqual} from 'lodash';
 
@@ -327,7 +326,7 @@ export default {
                     }
                 }
                 try {
-                    let data = this.DIFFERENCE(this.original_model, this.model);
+                    let data = this.$functions.difference(this.original_model,this.model);
                     await service.update("business", this.business.id, data);
                     this.$emit("reload");
                 } catch (err) {
@@ -336,7 +335,7 @@ export default {
             }
         },
         async show(){
-            this.model = this.COPY(this.business);
+            this.model = this.$functions.copy(this.business);
             this.model.name = this.model.user.name;
             this.model.email = this.model.user.email;
             this.model.holder_name = this.model.bank.holder_name;
@@ -345,16 +344,15 @@ export default {
             this.model.file_document = { file: null };
             this.model.file_date = this.file_doc ? this.file_doc.document_date : null;
 
-            this.original_model = this.COPY(this.model);
+            this.original_model = this.$functions.copy(this.model);
         }
     },
     computed: {
-        ...mapGetters(['COPY', 'DIFFERENCE', 'FILTER_DOC']),
         canUpdate(){
             return !isEqual(this.model,this.original_model)
         },
         file_doc(){
-            return this.FILTER_DOC(this.model.documents, "DOCUMENTACION");
+            return this.$functions.filterDoc(this.model.documents, "DOCUMENTACION");
         },
         canShow() {
             let show = false;

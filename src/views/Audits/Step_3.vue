@@ -373,7 +373,6 @@ import service from "@/store/services/model-service";
 import data_service from "@/store/services/data-service";
 import _, { random } from "lodash";
 import UploadImages from "vue-upload-drop-images";
-import { mapGetters } from 'vuex';
 
 export default {
 	props: ["audit", "currentStep"],
@@ -689,7 +688,6 @@ export default {
 				return op;
 			});
 		},
-		...mapGetters(['COPY'])
 	},
 	watch: {
 		"residue.index": function (newVal) {
@@ -702,7 +700,7 @@ export default {
 			this.residue.buy = this.audit.installation.residues[newVal].buy;
 			this.residue.is_residue =
 				this.audit.installation.residues[newVal].is_residue;
-			this.selected_quantity = this.COPY(this.residue.quantity)
+			this.selected_quantity = this.$functions.copy(this.residue.quantity)
 		},
 		"deposit.index": function (newVal) {
 			this.deposit.name = this.audit.installation.deposits[newVal].name;
@@ -714,7 +712,7 @@ export default {
 			this.deposit.buy = this.audit.installation.deposits[newVal].buy;
 			this.deposit.is_residue =
 				this.audit.installation.deposits[newVal].is_residue;
-			this.selected_quantity = this.COPY(this.deposit.quantity)
+			this.selected_quantity = this.$functions.copy(this.deposit.quantity)
 		},
 	},
 };

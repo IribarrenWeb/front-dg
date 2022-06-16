@@ -93,7 +93,6 @@
 <script>
 import service from "../store/services/model-service";
 import utils from "../mixins/utils-mixin.js";
-import { mapGetters } from 'vuex';
 
 export default {
 	name: "camera",
@@ -169,7 +168,7 @@ export default {
 				if (this.isMobile) {
 					let img_tag = document.getElementById('image-element')
 					if (this.mobile_image != null) {
-						const res = await this.COMPRESS_IMAGE(img_tag);
+						const res = await this.this.$functions.compressImage(img_tag);
 						this.image = await this.toBase64(res)
 					}
 				}
@@ -261,7 +260,6 @@ export default {
 		isMobile() {
 			return this.$store.state.is_mobile
 		},
-		...mapGetters(['COMPRESS_IMAGE'])
 	},
 	watch: {
 		canTake(val) {

@@ -77,7 +77,6 @@ import service from "@/store/services/model-service";
  
 import utils from "@/mixins/utils-mixin";
 import {isEqual} from "lodash";
-import { mapGetters } from 'vuex';
 import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 export default {
@@ -114,8 +113,8 @@ export default {
     },
     created() {
         if (this.vehicle != null) {
-            this.original_vehicle = this.COPY(this.vehicle)
-            this.model = this.COPY(this.vehicle);
+            this.original_vehicle = this.$functions.copy(this.vehicle)
+            this.model = this.$functions.copy(this.vehicle);
         }
     },
     mounted() {
@@ -123,7 +122,6 @@ export default {
         this.loadDesignations();
     },
     computed: {
-        ...mapGetters(['COPY', 'DIFFERENCE']),
         update(){
             return this.vehicle != null && typeof this.vehicle.id != undefined
         },
@@ -135,12 +133,12 @@ export default {
         async onSubmit(values, { resetForm }){
             try {
                 if (this.update) {
-                    const data = this.DIFFERENCE(this.vehicle,this.model)
+                    const data = this.$functions.difference(this.vehicle,this.model)
 
                     const res = await service.update('vehicle', this.vehicle.id, data)
                     this.$toast.success('Vehiculo registrado')
-                    this.model = this.COPY(res.data.data) 
-                    this.original_vehicle = this.COPY(this.model)
+                    this.model = this.$functions.copy(res.data.data) 
+                    this.original_vehicle = this.$functions.copy(this.model)
                 }else{
                     await service.store('vehicle',this.model)
                     this.$toast.success('Vehiculo registrado')

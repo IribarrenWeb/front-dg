@@ -168,7 +168,6 @@
 	</div>
 </template>
 <script>
-	import { mapGetters } from "vuex";
 	import _ from "lodash";
 	import service from "../../store/services/model-service";
 	import utils from "@/mixins/utils-mixin";
@@ -191,14 +190,13 @@
 						id,
 						"includes[]=installation.operations&includes[]=installation?.province?.city&includes[]=equipment&includes[]=documents"
 					);
-					this.material = this.COPY(res.data.data);
+					this.material = this.$functions.copy(res.data.data);
 				} catch (err) {
 					console.log(err);
 				}
 			},
 		},
 		computed: {
-			...mapGetters(["COPY"]),
 			denomination() {
 				return _.truncate(this.material.material.denomination_name, {
 					length: 25,

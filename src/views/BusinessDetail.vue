@@ -82,7 +82,7 @@
 					<thead>
 						<tr>
 							<td>Nombre</td>
-							<td>NIF</td>
+							<td>CIF/NIF</td>
 							<td>Móvil</td>
 							<td>Email</td>
 						</tr>
@@ -90,7 +90,7 @@
 					<tbody>
 						<tr>
 							<th>{{ business?.administrable.user.full_name ?? 'N/A' }}</th>
-							<th>{{ business?.administrable.dni ?? '' }}</th>
+							<th>{{ business?.administrable.cif_nif ? business?.administrable.cif_nif : dni ?? null }}</th>
 							<th>{{ business?.administrable.phone_number ?? 'N/A' }}</th>
 							<th>{{ business?.administrable.user.email ?? 'N/A' }}</th>
 						</tr>
@@ -124,7 +124,6 @@
 	import utils from "@/mixins/utils-mixin";
 	import InstallationTable from "./Tables/InstallationTable.vue";
     import ShowBusiness from '../components/forms/Business/ShowBusiness.vue';
-    import { mapGetters } from 'vuex';
 
 	export default {
 		components: { InstallationTable, ShowBusiness },
@@ -160,9 +159,8 @@
 			},
 		},
         computed: {
-            ...mapGetters(['FILTER_DOC']),
             file_doc(){
-                return this.FILTER_DOC(this.business?.documents, 'DOCUMENTACION')
+                return this.$functions.filterDoc(this.business?.documents, 'DOCUMENTACION')
             }
         }
 	};

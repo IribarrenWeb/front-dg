@@ -373,7 +373,7 @@
 							"&includes[]=business.delegates.user" +
 							"&includes[]=business.operations"
 					);
-					this.report = this.COPY(res.data.data);
+					this.report = this.$functions.copy(res.data.data);
 
 					this.model.has_formations =
 						this.report.has_formations == 0 ? false : true;
@@ -431,7 +431,7 @@
 				});
 				if (result) {
 					try {
-						const data = this.CLEAN_DATA(this.model);
+						const data = this.$functions.cleanData(this.model);
 						await service.update("report", this.report_id, data);
 						this.$emit("close");
 						this.$emit("reload");
@@ -455,7 +455,7 @@
 							"&business_id=" +
 							this.business_id
 					);
-					this.materials = this.COPY(res.data.data);
+					this.materials = this.$functions.copy(res.data.data);
 				} catch (err) {
 					console.log(err);
 				}
@@ -467,7 +467,7 @@
 						null,
 						"includes[]=installation" + "&business_id=" + this.business_id
 					);
-					this.visits = this.COPY(res.data.data);
+					this.visits = this.$functions.copy(res.data.data);
 				} catch (err) {
 					console.log(err);
 				}
@@ -540,11 +540,11 @@
 			},
 		},
 		computed: {
-			...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE", "CLEAN_DATA"]),
+			...mapGetters(["ROLE", "CLEAN_DATA"]),
 		},
 		watch: {
 			oper() {
-				let oper_ids = this.PLUK(this.model.operations, "id");
+				let oper_ids = this.$functions.pluck(this.model.operations, "id");
 				this.update.op = !_.isEqual(this.oper, oper_ids);
 			},
 			currentStep(newVal) {

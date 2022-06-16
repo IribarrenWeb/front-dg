@@ -33,7 +33,7 @@
                             </div>
                         </base-field>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" :class="{'col-lg-4': ROLE == 'auditor' }">
                         <base-field name="province_id" label="Provincia">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id"
                                 rules="" label="Provincia" v-model="model.province_id">
@@ -61,7 +61,7 @@
                                     :outline="true" :disabled="isSaved"><i class="fa-solid fa-pencil"></i></base-button>
                             </div>
                             <field-validate :disabled="isSaved" v-show="!model.file_document.file.length >= 1"
-                                class="form-control" type="file" name="file_document" rules="required|ext:pdf"
+                                class="form-control" type="file" name="file_document" rules="ext:pdf"
                                 :validateOnInput="true" label="documentacion" v-model="model.file_document.file" />
                         </base-field>
                     </div>
@@ -139,7 +139,7 @@
                         <div class="col-lg-6 col-lg-4">
                             <base-field apiName="responsible.dni" name="dni" label="DNI">
                                 <field-validate :disabled="isSaved" type="number" class="form-control" name="dni"
-                                    rules="required|alpha_num|min:9|max:9" label="dni"
+                                    rules="alpha_num|min:9|max:9" label="dni"
                                     v-model="model.responsible.dni" />
                             </base-field>
                         </div>
@@ -153,14 +153,14 @@
                         <div class="col-lg-6 col-lg-4">
                             <base-field apiName="responsible.position" name="position" label="Cargo">
                                 <field-validate :disabled="isSaved" type="text" class="form-control" name="position"
-                                    rules="required|alpha_spaces" label="cargo" v-model="model.responsible.position" />
+                                    rules="alpha_spaces" label="cargo" v-model="model.responsible.position" />
                             </base-field>
                         </div>
 
                         <div class="col-lg-6 col-lg-4">
                             <base-field apiName="responsible.phone_number" label="Movil" name="phone_number">
                                 <field-validate :disabled="isSaved" type="number" class="form-control"
-                                    name="phone_number" rules="required|min:5|max:15" label="movil"
+                                    name="phone_number" rules="min:5|max:15" label="movil"
                                     v-model="model.responsible.phone_number" />
                             </base-field>
                         </div>
@@ -172,7 +172,7 @@
                         <div class="col-lg-6">
                             <base-field apiName="responsible.date_firm" name="date_firm" label="Fecha de Alta">
                                 <field-validate :disabled="isSaved" type="date" class="form-control" name="date_firm"
-                                    rules="required" label="fecha" v-model="model.responsible.date_firm" />
+                                    :rules="{'required':!$functions.empty(model.responsible.file_firm.file)}" label="fecha" v-model="model.responsible.date_firm" />
                             </base-field>
                         </div>
                         <div class="col-lg-6">
@@ -184,7 +184,7 @@
                                     </base-button>
                                 </div>
                                 <field-validate :disabled="isSaved" v-else type="file" class="form-control"
-                                    name="file_firm" rules="required" label="documento"
+                                    name="file_firm" :rules="{'required':!$functions.empty(model.responsible.date_firm)}" label="documento"
                                     v-model="model.responsible.file_firm.file" />
                             </base-field>
                         </div>
@@ -343,7 +343,7 @@ export default {
             installation_id: null,
             currentStep: 1,
             auditable: null,
-            model: this.$store.getters.INSTALLATION_SCHEMA,
+            model: this.$functions.schemas('installation'),
             provinces: [{
                 value: "",
                 label: ""
@@ -371,7 +371,9 @@ export default {
             const inst = values
 
             if (this.currentStep == 1 && !this.isSaved) {
-                this.model.file_document.base64 = await this.toBase64(inst.file_document[0])
+                if (!this.$functions.empty(values.file_document)){
+                    this.model.file_document.base64 = await this.toBase64(inst.file_document[0])
+                }
                 this.model.auditable_id = this.model?.auditable?.id;
                 if (this.isSaved) {
                     return
@@ -389,7 +391,9 @@ export default {
             }
 
             if (this.currentStep == 3 && !this.isSaved) {
-                this.model.responsible.file_firm.base64 = await this.toBase64(inst.file_firm[0])
+                if (!this.$functions.empty(inst.file_firm)) {
+                    this.model.responsible.file_firm.base64 = await this.toBase64(inst.file_firm[0])
+                }
                 if (this.model.responsible.driver) {
                     this.model.responsible.driver_document.base64 = await this.toBase64(inst.file_driver[0])
                 }
@@ -401,7 +405,8 @@ export default {
             if (this.currentStep === 3 && !this.isSaved) {
                 this.model.business_id = this.business_id
                 try {
-                    const res = await service.store('installation', this.model);
+                    const data = this.$functions.cleanData(this.model)
+                    const res = await service.store('installation', data);
                     this.installation_id = res.data.data.id
                     this.isSaved = true
                     this.toAgend(res.data.data.audit_id)
@@ -496,9 +501,7 @@ export default {
                     valid: false
                 }
             ];
-
-            this.model = this.$store.getters.INSTALLATION_SCHEMA
-        },
+          },
     },
     computed: {
         ...mapGetters(['CURRENT_DATE', 'ROLE']),

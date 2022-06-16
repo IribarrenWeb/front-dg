@@ -17,8 +17,8 @@
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_last_name" label="Apellido representante">
-								<field-validate type="text" class="form-control" name="property_last_name"
-									rules="" label="apellido" v-model="model.property_last_name" />
+								<field-validate type="text" class="form-control" name="property_last_name" rules=""
+									label="apellido" v-model="model.property_last_name" />
 							</base-field>
 						</div>
 						<div class="col-lg-4">
@@ -35,8 +35,8 @@
 						</div>
 						<div class="col-lg-4">
 							<base-field name="property_email" label="Email">
-								<field-validate type="email" class="form-control" name="property_email"
-									rules="email" label="email de la empresa" v-model="model.property_email" />
+								<field-validate type="email" class="form-control" name="property_email" rules="email"
+									label="email de la empresa" v-model="model.property_email" />
 							</base-field>
 						</div>
 					</div>
@@ -88,8 +88,7 @@
 						<div class="col-lg-4">
 							<base-field name="postal_code" label="Código postal">
 								<field-validate type="number" class="form-control" name="postal_code"
-									rules="numeric|min:5|max:5" label="postal_code"
-									v-model="model.postal_code" />
+									rules="numeric|min:5|max:5" label="postal_code" v-model="model.postal_code" />
 							</base-field>
 						</div>
 						<div class="col-lg-8" v-if="ROLE == 'admin'">
@@ -117,8 +116,8 @@
 					</div>
 					<div class="col-lg-4">
 						<base-field name="holder_name" label="Nombre del titular">
-							<field-validate type="text" class="form-control" name="holder_name"
-								rules="alpha_spaces" label="nombre" v-model="model.holder_name" />
+							<field-validate type="text" class="form-control" name="holder_name" rules="alpha_spaces"
+								label="nombre" v-model="model.holder_name" />
 						</base-field>
 					</div>
 					<div class="col-lg-4">
@@ -130,8 +129,7 @@
 					<div class="col-lg-4">
 						<base-field name="iban_number" label="IBAN">
 							<field-validate type="text" class="form-control" name="iban_number"
-								rules="min:24|max:24|alpha_num" label="numero iban"
-								v-model="model.iban_number" />
+								rules="min:24|max:24|alpha_num" label="numero iban" v-model="model.iban_number" />
 						</base-field>
 					</div>
 				</div>
@@ -140,13 +138,13 @@
 						<h4>Documentación de la empresa</h4>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_date.date" label="Fecha de documentación" :required="true">
-							<field-validate type="date" class="form-control" name="file_date.date" rules="required"
+						<base-field name="file_date.date" label="Fecha de documentación">
+							<field-validate type="date" class="form-control" name="file_date.date"
 								label="fecha documentación" v-model="model.file_date" />
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_document.base64" label="Documentación" :required="true">
+						<base-field name="file_document.base64" label="Documentación">
 							<div v-if="model.file_document.file != null">
 								<span class="mr-md-4">{{
 										model.file_document.file[0].name
@@ -155,7 +153,7 @@
 									:outline="true"><i class="fa-solid fa-pencil"></i></base-button>
 							</div>
 							<field-validate v-show="model.file_document.file == null" type="file" class="form-control"
-								name="file_document.base64" rules="required|ext:pdf" label="documento"
+								name="file_document.base64" rules="ext:pdf" label="documento"
 								v-model="model.file_document.file" />
 						</base-field>
 					</div>
@@ -164,19 +162,19 @@
 			<template v-if="currentStep === 3">
 				<fieldset class="border border-light rounded p-2 row mt-3" v-for="(installation, id) in installations"
 					:key="installation.key">
-					<div class="col-lg-4">
+					<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
 						<base-field :name="`installations[${id}].name`" label="Nombre de instalación" :required="true">
 							<field-validate type="text" class="form-control" :name="`installations[${id}].name`"
 								rules="required" label="Nombre" v-model="installations[id].name" />
 						</base-field>
 					</div>
-					<div class="col-lg-4">
+					<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
 						<base-field :name="`installations[${id}].address`" label="Dirección">
 							<field-validate type="text" class="form-control" :name="`installations[${id}].address`"
 								label="direccion" v-model="installations[id].address" />
 						</base-field>
 					</div>
-					<div class="col-lg-4">
+					<div class="col-lg-4" v-if="ROLE !== 'auditor'">
 						<base-field :name="`auditable[${id}]`" label="Auditor">
 							<div v-if="installations[id].auditable != null">
 								<span class="mr-md-4 text-uppercase">{{ installations[id].auditable.full_name }}</span>
@@ -185,7 +183,8 @@
 							</div>
 							<div v-else>
 								<field-validate :name="`auditable[${id}]`" label="Auditor" rules="">
-									<async-select @selected="installations[id].auditable = $event" :roles="[3]" :params="queryParams">
+									<async-select @selected="installations[id].auditable = $event" :roles="[3]"
+										:params="queryParams">
 									</async-select>
 								</field-validate>
 							</div>
@@ -194,7 +193,7 @@
 					<div class="col-lg-6">
 						<base-field :name="`installations[${id}].province_id`" label="Provincia">
 							<field-validate class="form-control" as="select" :name="`installations[${id}].province_id`"
-								 label="Provincia" v-model="installations[id].province_id">
+								label="Provincia" v-model="installations[id].province_id">
 								<option value="" selected>Selecciona una provincia</option>
 								<option v-for="province in provinces" :key="province.id" :value="province.id">
 									{{ province.name }}
@@ -203,7 +202,8 @@
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field :name="`installations[${id}].file_document.base64`" label="Documentación" :required="true">
+						<base-field :name="`installations[${id}].file_document.base64`" label="Documentación"
+							>
 							<div v-if="installations[id].file_document.file.length >= 1">
 								<span class="mr-md-4">{{
 										installations[id].file_document.file[0].name
@@ -213,7 +213,7 @@
 							</div>
 							<field-validate v-show="!installations[id].file_document.file.length >= 1"
 								class="form-control" type="file" :name="`installations[${id}].file_document.base64`"
-								rules="required|ext:pdf" :validateOnInput="true" label="documentación"
+								rules="ext:pdf" :validateOnInput="true" label="documentación"
 								v-model="installations[id].file_document.file" />
 						</base-field>
 					</div>
@@ -230,6 +230,8 @@
 					</base-button>
 				</div>
 			</template>
+
+
 			<template v-if="currentStep === 4">
 				<fieldset class="border border-light rounded p-2 row mt-3" v-for="(installation, id) in installations"
 					:key="installation.key">
@@ -260,7 +262,7 @@
 						<div class="col-lg-6 col-lg-4">
 							<base-field :apiName="`installations.${id}.responsible.dni`" name="dni" label="DNI">
 								<field-validate type="text" class="form-control" name="dni"
-									rules="required|min:9|max:9|alpha_num" label="dni"
+									rules="min:9|max:9|alpha_num" label="dni"
 									v-model="installations[id].responsible.dni" />
 							</base-field>
 						</div>
@@ -275,7 +277,7 @@
 							<base-field :apiName="`installation[${id}].responsible.position`" name="position"
 								label="Cargo">
 								<field-validate type="text" class="form-control" name="position"
-									rules="required|alpha_spaces" label="cargo"
+									rules="alpha_spaces" label="cargo"
 									v-model="installations[id].responsible.position" />
 							</base-field>
 						</div>
@@ -283,7 +285,7 @@
 						<div class="col-lg-6 col-lg-4">
 							<base-field :apiName="`installations.${id}.responsible.phone_number`" label="Movil"
 								name="phone_number">
-								<field-validate type="number" class="form-control" name="phone_number" rules="required"
+								<field-validate type="number" class="form-control" name="phone_number" rules=""
 									label="movil" v-model="installations[id].responsible.phone_number" />
 							</base-field>
 						</div>
@@ -295,7 +297,7 @@
 						<div class="col-lg-6">
 							<base-field :name="`installations.${id}.responsible.date_firm.date`" label="Fecha de alta">
 								<field-validate type="date" class="form-control"
-									:name="`installations.${id}.responsible.date_firm.date`" rules="required"
+									:name="`installations.${id}.responsible.date_firm.date`" rules=""
 									label="fecha de firma" v-model="installations[id].responsible.date_firm" />
 							</base-field>
 						</div>
@@ -312,7 +314,7 @@
 										type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
 								</div>
 								<field-validate v-else type="file" class="form-control"
-									:name="`installations.${id}.responsible.file_firm.base64`" rules="required"
+									:name="`installations.${id}.responsible.file_firm.base64`" rules=""
 									label="documento" v-model="installations[id].responsible.file_firm.file" />
 							</base-field>
 						</div>
@@ -431,17 +433,17 @@
 <script>
 import utils from "@/mixins/utils-mixin";
 import service from "../../../store/services/model-service";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import { mapGetters } from 'vuex';
 import AsyncSelect from '../../AsyncSelect.vue';
 
 export default {
-	components: {AsyncSelect  },
+	components: { AsyncSelect },
 	mixins: [utils],
 	data() {
 		return {
 			steps: [],
-			model: this.$store.getters.BUSINESS_SCHEMA,
+			model: this.$functions.schemas('business'),
 			currentStep: 1,
 			installations: [],
 			delegate: null
@@ -489,31 +491,36 @@ export default {
 				}
 			}
 			if (this.currentStep === 2) {
-				console.log(values);
-				this.model.file_document.base64 = await this.toBase64(
-					values.file_document.base64[0]
-				);
+				if (!isEmpty(values.file_document.base64)) {
+					this.model.file_document.base64 = await this.toBase64(
+						values.file_document.base64[0]
+					);
+				}
 			}
 
 			if (this.currentStep == 3) {
 				for (let i = 0; i < this.installations.length; i++) {
 					const installation = this.installations[i];
-					installation.file_document.base64 = await this.toBase64(
-						installation.file_document.file[0]
-					);
+					if (!isEmpty(installation.file_document.file[0])) {
+						this.model.file_document.base64 = await this.toBase64(
+							values.file_document.base64[0]
+						);
+					}
 					if (!_.isEmpty(installation.auditable)) {
 						installation.auditable_id = installation.auditable.id;
 					}
+					// this.installations[i] = this.$functions.cleanData(installation);
 				}
 			}
 			if (this.currentStep == 4) {
 				for (let i = 0; i < this.installations.length; i++) {
 					// Format firm
-					this.installations[i].responsible.file_firm.base64 =
-						await this.toBase64(
-							this.installations[i].responsible.file_firm.file[0]
-						);
-
+					if (!isEmpty(this.installations[i].responsible.file_firm.file[0])) {
+						this.installations[i].responsible.file_firm.base64 =
+							await this.toBase64(
+								this.installations[i].responsible.file_firm.file[0]
+							);
+					}
 					// Format driver documents
 					if (this.installations[i].responsible.driver) {
 						this.installations[i].responsible.driver_document.base64 =
@@ -532,7 +539,7 @@ export default {
 				this.model.installations = this.installations;
 
 				try {
-					const data = this.$store.getters.CLEAN_DATA(this.model)
+					const data = this.$functions.cleanData(this.model)
 					await service.store("business", data);
 					resetForm();
 					this.$emit("close");
@@ -571,7 +578,7 @@ export default {
 			this.installations.splice(position_item, 1);
 		},
 		handlePush() {
-			this.installations.push(this.$store.getters.INSTALLATION_SCHEMA);
+			this.installations.push(this.$functions.schemas('installation'));
 		},
 		handleClose(reset) {
 			reset();

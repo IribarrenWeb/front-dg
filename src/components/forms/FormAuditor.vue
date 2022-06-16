@@ -181,7 +181,7 @@
       return {
         errors: {},
         api: "auditor",
-        model: this.$store.getters.AUDITOR_SCHEMA,
+        model: this.$functions.schemas('auditor'),
         auditor: null,
         provinces: null,
         cer_update: false,
@@ -256,8 +256,8 @@
           );
           const data = response.data.data
           this.setCurrent(data)
-          this.auditor = this.COPY(data)
-          this.model = this.COPY(data);
+          this.auditor = this.$functions.copy(data)
+          this.model = this.$functions.copy(data);
           this.model.name = this.model.user.name;
           this.model.last_name = this.model.user.last_name;
           this.model.email = this.model.user.email;
@@ -364,7 +364,6 @@
         return this.id != null 
       },
       ...mapGetters([
-        'COPY',
         'ROLE'
       ]),
       canShow() {

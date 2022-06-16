@@ -74,7 +74,7 @@ export default {
     },
     data() {
         return {
-            model: this.$store.getters.FORMATION_SCHEMA,
+            model: this.$functions.schemas('formation'),
             types: {},
             auditable: null
         }

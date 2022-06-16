@@ -300,8 +300,8 @@ export default {
 					"&includes[]=responsible.firm_document" +
 					"&includes[]=company"
 				);
-				this.model = this.COPY(res.data.data);
-				this.responsible = this.COPY(res.data.data?.responsible);
+				this.model = this.$functions.copy(res.data.data);
+				this.responsible = this.$functions.copy(res.data.data?.responsible);
 				this.model.file_document = null;
 				this.model.auditable_id = null;
 
@@ -317,7 +317,7 @@ export default {
 
 				this.model.responsible = null;
 
-				this.original_model = this.COPY(this.model);
+				this.original_model = this.$functions.copy(this.model);
 
 				this.show = true
 				this.$emit("installation", this.model);
@@ -347,7 +347,7 @@ export default {
 
 				if (!_.isEqual(this.model, this.original_model)) {
 					try {
-						data = this.CLEAN_DATA(data)
+						data = this.$functions.cleanData(data)
 						await service.update("installation", this.installation_id, data);
 						this.$emit("reload");
 						await this.getInst();
@@ -521,7 +521,7 @@ export default {
 			this.steps = format_steps;
 		},
 		number(query) {
-			let steps = this.COPY(this.steps);
+			let steps = this.$functions.copy(this.steps);
 			const step = _.filter(steps, function (s) {
 				return s.title == query;
 			});
@@ -529,9 +529,9 @@ export default {
 		},
 	},
 	computed: {
-		...mapGetters(["COPY", "PLUK", "FILTER_DOC", "ROLE", "CLEAN_DATA"]),
+		...mapGetters(["ROLE", "CLEAN_DATA"]),
 		formation_doc() {
-			return this.FILTER_DOC(this.responsible.documents, "CERTIFICADO");
+			return this.$functions.filterDoc(this.responsible.documents, "CERTIFICADO");
 		},
 		isTransported() {
 			let check = false;
@@ -558,15 +558,15 @@ export default {
 	},
 	watch: {
 		oper() {
-			let oper_ids = this.PLUK(this.model.operations, "id");
+			let oper_ids = this.$functions.pluck(this.model.operations, "id");
 			this.update.op = !_.isEqual(this.oper, oper_ids);
 		},
 		equips() {
-			let equip_ids = this.PLUK(this.model.equipments, "id");
+			let equip_ids = this.$functions.pluck(this.model.equipments, "id");
 			this.update.eqp = !_.isEqual(this.equips, equip_ids);
 		},
 		deps() {
-			let deps_ids = this.PLUK(this.model.deposit_types, "id");
+			let deps_ids = this.$functions.pluck(this.model.deposit_types, "id");
 			this.update.dep = !_.isEqual(this.deps, deps_ids);
 		},
 		"new_auditable.value": {

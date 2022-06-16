@@ -129,7 +129,7 @@
 			hasRole() {
 				return this.$store.state.role != 0;
 			},
-			...mapGetters(["ROLE", "FORMAT_DOC_B64"]),
+			...mapGetters(["ROLE"]),
 		},
 		methods: {
 			async index(page = 1) {
@@ -200,7 +200,7 @@
 					try {
 						const rep = await service.getReport(report.id);
 						const b64 = rep.data.data;
-						const fileUrl = await this.FORMAT_DOC_B64(b64);
+						const fileUrl = await this.this.$functions.formatDoc(b64);
 						window.open(fileUrl);
 					} catch (err) {
 						console.log(err);

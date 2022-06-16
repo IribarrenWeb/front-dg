@@ -233,14 +233,14 @@ export default {
 	},
 	created() {
 		if (this.update) {
-			this.original_material = this.COPY(this.material)
+			this.original_material = this.$functions.copy(this.material)
 			this.original_material.file_document = {
 				file: [],
 				base64: null,
 			};
 			this.original_material.adr_material_id = this.original_material.material.id
 
-			this.model = this.COPY(this.original_material)
+			this.model = this.$functions.copy(this.original_material)
 		}
 	},
 	mounted() {
@@ -253,7 +253,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(["CLEAN_DATA", "ROLE", "COPY", "DIFFERENCE"]),
+		...mapGetters(["CLEAN_DATA", "ROLE"]),
 		update() {
 			return this.material != null && typeof this.material.id != undefined
 		},
@@ -341,7 +341,7 @@ export default {
 				if (this.update) {
 					await this.toUpdate()
 				} else if (this.currentStep === 2) {
-					const data = this.CLEAN_DATA(this.model, ["material"], ["is_residue"]);
+					const data = this.$functions.cleanData(this.model, ["material"], ["is_residue"]);
 					await service.store("material", data);
 					resetForm();
 					this.$emit("close");
@@ -375,15 +375,15 @@ export default {
 		async toUpdate() {
 			if (!isEqual(this.model, this.original_material)) {
 				try {
-					const data = this.DIFFERENCE(this.original_material, this.model)
+					const data = this.$functions.difference(this.original_material,this.model)
 
 					const res = await service.update('material', this.material.id, data)
-					this.original_material = this.COPY(res.data.data)
+					this.original_material = this.$functions.copy(res.data.data)
 					this.original_material.file_document = {
 						file: [],
 						base64: null,
 					};
-					this.model = this.COPY(this.original_material)
+					this.model = this.$functions.copy(this.original_material)
 					this.new_document = false
 					this.new_material = false
 					this.$emit("reload");

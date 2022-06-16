@@ -54,7 +54,7 @@
 						{{ row.item?.type }}
 					</td>
 					<td>
-						{{ FORMAT_DATE(row.item?.date_scheduled) }}
+						{{ this.$functions.formatDate(row.item?.date_scheduled) }}
 					</td>
                     <td>
 						{{ row.item?.time }}
@@ -106,7 +106,7 @@
 			this.getVisits(this.page);
 		},
         computed: {
-            ...mapGetters(['CURRENT_DATE', 'FORMAT_DATE'])
+            ...mapGetters(['CURRENT_DATE'])
         },
 		methods: {
 			async getVisits(page = 1) {

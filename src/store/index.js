@@ -4,8 +4,11 @@ import reset from "./modules/reset";
 import profile from "./modules/profile-module";
 import { axios } from '@/axios';
 import $Swal from 'sweetalert2';
-import _ from 'lodash';
+import _, { isObject } from 'lodash';
 import service from './services/model-service';
+import { each } from 'lodash';
+import functions from '../utils/functions';
+import schemas from '../schemas';
 
 const $swal = $Swal.mixin({
     customClass: {
@@ -29,144 +32,12 @@ export const store = createStore({
             apiErrors: {},
             stopCamera: false,
             tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
-            business_schema: {
-                name: null,
-                property_phone: null,
-                property_email: null,
-                property_dni: null,
-                business_phone: null,
-                delegate_id: null,
-                address: null,
-                business_nif: null,
-                property_name: null,
-                property_last_name: null,
-                province_id: null,
-                email: null,
-                bank_code: null,
-                iban_number: null,
-                holder_name: null,
-                file_document: {
-                    base64: null,
-                    file: null
-                },
-                file_date: "",
-                postal_code: ""
-            },
-            installation_schema: {
-                name: "",
-                address: "",
-                business_id: null,
-                auditable_id: null,
-                province_id: null,
-                periodicity: null,
-                file_document: {
-                    base64: "",
-                    file: []
-                },
-                auditable: null,
-                operation_types_ids: [],
-                deposit_types_ids: [],
-                equipments_ids: [],
-                responsible: {
-                    name: "",
-                    last_name: "",
-                    email: "",
-                    dni: "",
-                    phone_number: "",
-                    position: "",
-                    driver: false,
-                    dangerous_goods: false,
-                    driver_document: {
-                        base64: "",
-                        file: []
-                    },
-                    driver_document_date: "",
-                    adr_permit_id: null,
-                    file_firm: {
-                        base64: "",
-                        file: []
-                    },
-                    date_firm: "",
-                    file_certification: {
-                        base64: "",
-                        file: []
-                    },
-                    date_certification: "",
-                },
-            },
-            auditor_schema: {
-                dni: "",
-                phone_number: "",
-                email: "",
-                province_id: null,
-                name: "",
-                address: "",
-                last_name: "",
-                documents: null,
-                file_certification: "",
-                certification_date: "",
-                file_firm: "",
-                firm_date: "",
-                delegate_id: "",
-                delegate: null
-            },
-            delegate_schema: {
-                dni: "",
-                phone_number: "",
-                email: "",
-                delegation_email: "",
-                province_id: null,
-                name: "",
-                delegation_name: "",
-                delegation_phone: "",
-                cif_nif: "",
-                address: "",
-                province: {
-                    name: null
-                },
-                last_name: "",
-                documents: null,
-                file_certification: "",
-                certification_date: "",
-                file_firm: "",
-                firm_date: "",
-            },
-            formation_schema: {
-                name: "",
-                formation_type_id: null,
-                auditor_id: null,
-                duration: "",
-                content: "",
-                document: "",
-            },
-            employee_schema: {
-                name: "",
-                last_name: "",
-                email: "",
-                dni: "",
-                phone_number: "",
-                position: "",
-                driver: false,
-                dangerous_goods: false,
-                representative: false,
-                installation_id: null,
-                driver_document: {
-                    base64: "",
-                    file: []
-                },
-                driver_document_date: "",
-                adr_permit_id: null,
-                file_firm: {
-                    base64: "",
-                    file: []
-                },
-                date_firm: "",
-                file_certification: {
-                    base64: "",
-                    file: []
-                },
-                date_certification: "",
-            },
+            business_schema: schemas.business,
+            installation_schema: schemas.installation,
+            auditor_schema: schemas.auditor,
+            delegate_schema: schemas.delegate,
+            formation_schema: schemas.formation,
+            employee_schema: schemas.employee,
             provinces: null,
             current: new Date().toISOString().split('T')[0],
             api_url: process.env.VUE_APP_API_BASE_URL,
@@ -174,92 +45,12 @@ export const store = createStore({
         }
     },
     getters: {
-        BUSINESS_SCHEMA(state) {
-            return JSON.parse(JSON.stringify(state.business_schema))
-        },
-        INSTALLATION_SCHEMA(state) {
-            return JSON.parse(JSON.stringify(state.installation_schema))
-        },
-        AUDITOR_SCHEMA(state) {
-            return JSON.parse(JSON.stringify(state.auditor_schema))
-        },
-        FORMATION_SCHEMA(state) {
-            return JSON.parse(JSON.stringify(state.formation_schema))
-        },
-        DELEGATE_SCHEMA(state) {
-            return JSON.parse(JSON.stringify(state.delegate_schema))
-        },
-        EMPLOYEE_SCHEMA(state) {
-            return JSON.parse(JSON.stringify(state.employee_schema))
-        },
         ROLE(state) {
             let role = state.role
-            switch (role) {
-                case 1:
-                    role = 'admin';
-                    break;
-                case 2:
-                    role = 'delegate';
-                    break;
-                case 3:
-                    role = 'auditor';
-                    break;
-                case 4:
-                    role = 'business';
-                    break;
-
-                default:
-                    role = false
-                    break;
-            }
-
-            return role
-        },
-        COPY: () => (data) => {
-            return JSON.parse(JSON.stringify(data))
+            return functions.rolename(role)
         },
         CURRENT_DATE(state) {
-            console.log(state);
             return state.current
-        },
-        PLUK: () => (arr, key) => {
-            return arr.map(i => i[key]);
-        },
-        FILTER_DOC: () => (arr, doc_name) => {
-            return _.filter(arr, function (o) { return o.type.name == doc_name })[0];
-        },
-        DIFFERENCE: () => (origObj, newObj) => {
-            function changes(newObj, origObj) {
-                let arrayIndexCounter = 0
-                return _.transform(newObj, function (result, value, key) {
-                    if (!_.isEqual(value, origObj[key])) {
-                        let resultKey = _.isArray(origObj) ? arrayIndexCounter++ : key
-                        result[resultKey] = (_.isObject(value) && _.isObject(origObj[key])) ? changes(value, origObj[key]) : value
-                    }
-                })
-            }
-            return changes(newObj, origObj)
-        },
-        EMPTY: () => (val) => {
-            return _.isEmpty(val)
-        },
-        SET_STATUS: () => (status) => {
-            let type = "";
-            switch (status) {
-                case "PENDIENTE":
-                    type = "danger";
-                    break;
-                case "POR REVISAR":
-                    type = "warning";
-                    break;
-                case "COMPLETADO":
-                    type = "success";
-                    break;
-
-                default:
-                    break;
-            }
-            return type;
         },
         CLEAN_DATA: () => (model, excludes = [], includes = [], formData = false) => {
             let keys_pluck = _.keys(model);
@@ -268,32 +59,23 @@ export const store = createStore({
                 data = new FormData
             }
             _.forEach(keys_pluck, function (k) {
-                if (_.includes(includes, k) || (!_.isEmpty(model[k]) && !_.isNull(model[k]) || (_.isNumber(model[k]) && model[k] >= 1) || (_.isBoolean(model[k]))) && !_.includes(excludes, k)) {
+                if (isObject(model[k])) {
+                    let keys_obj = _.keys(model[k]);
+                    each(keys_obj, function (eo) {
+                        if (_.includes(includes, k) || (!_.isEmpty(model[k][eo]) && !_.isNull(model[k][eo]) || (_.isNumber(model[k][eo]) && model[k][eo] >= 1) || (_.isBoolean(model[k][eo]))) && !_.includes(excludes, k[eo])) {
+                            data[k][eo] = model[k][eo];
+                        }
+                    })
+                } else {
                     if (formData) {
-                        data.append(k,model[k])
-                    }else{
+                        data.append(k, model[k])
+                    } else {
                         data[k] = model[k]
                     }
                 }
+
             })
             return data;
-        },
-        FORMAT_DOC_B64: () => (b64) => {
-            console.log(b64);
-            var byteCharacters = atob(b64);
-            var byteNumbers = new Array(byteCharacters.length);
-            for (var i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-            }
-            var byteArray = new Uint8Array(byteNumbers);
-            var file = new Blob([byteArray], {
-                type: "application/pdf;base64",
-            });
-            var fileURL = URL.createObjectURL(file);
-            return fileURL;
-        },
-        FORMAT_DATE: () => (date, format = "en-US") => {
-            return new Date(date).toLocaleDateString(format);
         },
         isMobile() {
             if (screen.width <= 760) {
@@ -302,46 +84,6 @@ export const store = createStore({
                 return false
             }
         },
-       COMPRESS_IMAGE: () => async (imgToCompress, resizingFactor = 0.8, quality = 0.6) => {
-            return new Promise((resolve) => {
-                // showing the compressed image
-                const canvas = document.createElement("canvas");
-                const context = canvas.getContext("2d");
-
-                const originalWidth = imgToCompress.width;
-                const originalHeight = imgToCompress.height;
-                console.log(originalHeight, originalWidth);
-                if (originalWidth >= 700) {
-                    resizingFactor = 0.5
-                }
-                const canvasWidth = originalWidth * resizingFactor;
-                const canvasHeight = originalHeight * resizingFactor;
-
-                canvas.width = canvasWidth;
-                canvas.height = canvasHeight;
-
-                context.drawImage(
-                    imgToCompress,
-                    0,
-                    0,
-                    originalWidth * resizingFactor,
-                    originalHeight * resizingFactor
-                );
-
-                // reducing the quality of the image
-                canvas.toBlob(
-                    (blob) => {
-                        if (blob) {
-                            // let compressedImageBlob = blob;
-                            resolve(blob)
-                            // let src = URL.createObjectURL(compressedImageBlob);
-                        }
-                    },
-                    "image/jpeg",
-                    quality
-                )
-            })
-        }
     },
     mutations: {
         loading(state) {
@@ -442,9 +184,6 @@ export const store = createStore({
             });
         },
         async users(state, payload) {
-            // if (payload.query == null) {
-            //     return []
-            // }
             let params = typeof payload.params != undefined ? payload.params : null;
 
             try {
