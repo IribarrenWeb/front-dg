@@ -140,7 +140,7 @@ export default {
 				"&includes[]=installation.auditable" +
 				"&includes[]=installation.company.user" +
 				"&order_by=scheduled_date" +
-				"&order_direction=desc"
+				"&order_direction=asc"
 			);
 			if (typeof resp.data.data != "undefined") {
 				this.tableData = resp.data.data;
