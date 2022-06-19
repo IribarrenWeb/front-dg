@@ -53,19 +53,29 @@
                     <td class="budget">
                         {{ row.item?.last_name }}
                     </td>
-					<td>{{ row.item?.email }}</td>
+					<td>{{ row.item?.dni }}</td>
 					<td>
 						{{ row.item?.phone_number }}
 					</td>
-					<td>{{ row.item?.documents[0].document_date }}</td>
+					<td>{{ row.item?.email }}</td>
+					<td>{{ row.item?.documents[0]?.document_date }}</td>
 					<td>
-						<a href="#" @click.prevent="getDocument(row.item?.documents[0].id)">
+						<a v-if="!$functions.empty(row.item?.documents)" href="#" @click.prevent="getDocument(row.item?.documents[0].id)">
 							DOCUMENTACION
 						</a>
+						<span v-else>
+							SIN DOCUMENTACIÓN
+						</span>
 					</td>
 					<td class="text-right">
 						<a
-							class="btn btn-danger btn-sm"
+							class="btn btn-primary btn-sm"
+							href="#"
+							@click.prevent="modal = true, sub = row.item"
+							><i class="fa-regular fa-eye"></i></a
+						>
+						<a
+							class="btn btn-outline-primary btn-sm"
 							href="#"
 							@click.prevent="destroy(row.item?.id)"
 							><i class="fa-regular fa-trash-can"></i></a
@@ -92,7 +102,8 @@
 			model="subcontratistas"
 		>
 			<form-subcontractor
-				@close="this.modal = false"
+				@close="modal = false, sub = null"
+				:subcontractor="sub"
 				@reload="getSubcontractors(page)"
 				:installation_id="installation_id"
 			></form-subcontractor>
@@ -116,7 +127,7 @@
 			installation_id: {
 				required: true,
 				default: null,
-			},
+			}
 		},
 		data() {
 			return {
@@ -125,6 +136,7 @@
 				loader: false,
 				page: 1,
 				modal: false,
+				sub: null
 			};
 		},
 		mounted() {

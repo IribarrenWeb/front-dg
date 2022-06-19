@@ -4,7 +4,7 @@ import reset from "./modules/reset";
 import profile from "./modules/profile-module";
 import { axios } from '@/axios';
 import $Swal from 'sweetalert2';
-import _, { isObject } from 'lodash';
+import _, { isObject, map } from 'lodash';
 import service from './services/model-service';
 import { each } from 'lodash';
 import functions from '../utils/functions';
@@ -31,6 +31,7 @@ export const store = createStore({
             loader: false,
             apiErrors: {},
             stopCamera: false,
+            notifications: [],
             tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
             business_schema: schemas.business,
             installation_schema: schemas.installation,
@@ -84,6 +85,9 @@ export const store = createStore({
                 return false
             }
         },
+        getNotifications(state){
+            return state.notifications.reverse()
+        }
     },
     mutations: {
         loading(state) {
@@ -104,9 +108,29 @@ export const store = createStore({
         },
         stopedCamera(state, payload = null) {
             state.stopCamera = payload != null ? payload : !state.stopCamera
+        },
+        setNotifications(state, payload){
+            state.notifications = payload
+        },
+        markRead(state){
+            state.notifications = map(state.notifications, (n) => {
+                n.read_at = true
+                return n
+            })
+        },
+        pushNotification(state,payload) {
+            state.notifications.unshift(payload)
         }
     },
     actions: {
+        async getNotifications({commit}){
+            try {
+                const res = await service.api('notifications');
+                commit('setNotifications', res.data.data)
+            } catch (err) {
+                console.log(err);
+            }
+        },
         setApiValidation({ commit }, serverErrors) {
             let errors = {};
             Object.keys(serverErrors).forEach((element) => {

@@ -14,7 +14,7 @@
 
 				<ul class="nav align-items-center d-lg-none">
 					<!-- Notifications -->
-					<notifications :dark="true"></notifications>
+					<notifications v-if="isMovil" :dark="true"></notifications>
 
 					<!-- End notifications -->
 
@@ -133,6 +133,11 @@ export default {
 			autoClose: this.autoClose,
 		};
 	},
+	computed: {
+		isMovil(){
+			return this.$store.state.is_mobile
+		}
+	},	
 	methods: {
 		closeSidebar() {
 			this.$sidebar.displaySidebar(false);

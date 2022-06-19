@@ -32,10 +32,10 @@
 						{{ row.item?.installation.name }}
 					</th>
 					<th scope="row">
-						{{ row.item?.name }}
+						{{ row.item?.name }} {{ row.item?.last_name }}
 					</th>
 					<td>
-						{{ row.item?.last_name }}
+						{{ row.item?.dni }}
 					</td>
 					<td>
 						{{ row.item?.email }}

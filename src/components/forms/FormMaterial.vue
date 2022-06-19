@@ -132,7 +132,7 @@
 								label="Cantidad de venta" v-model="model.sell" />
 						</base-field>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-6">
 						<base-field name="quantity" label="Volumen Almacenamiento">
 							<field-validate type="text" class="form-control" name="quantity"
 								label="volumen del Almacenamiento" v-model="model.quantity" />

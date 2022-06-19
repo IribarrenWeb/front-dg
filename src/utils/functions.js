@@ -1,20 +1,13 @@
 import { filter, forEach, includes, isArray, isEmpty, isEqual, isObject, keys, transform } from "lodash";
 import schemasRepo from "../schemas";
-// function validateData(data, key, toIncludes = [], toExcludes = []) {
-//     if (!empty(toExcludes) && includes(toExcludes, key)) {
-//         return false
-//     }
-//     if ((!empty(toIncludes) && !includes(toIncludes, key))
-//         || (isNumber(data) && data >= 1)
-//         || isBoolean(data)
-//         || (!isEmpty(data) && !isNull(data))) {
-//         console.log('include', key, data);
-//         return true;
-//     } else {
-//         console.log('notinclude', key, data);
-//         return false;
-//     }
-// }
+// import TimeAgo from 'javascript-time-ago'
+
+// // English.
+// import esp from 'javascript-time-ago/locale/es'
+
+// TimeAgo.addDefaultLocale(esp)
+// const $timeAgo = new TimeAgo('en-US')
+
 function cleanData(model, excludes = [], includes = [], formData = false) {
     let data = pruneData(copy(model), excludes, includes);
     if (formData) {
@@ -98,7 +91,7 @@ function changes(obj, newObj) {
 function empty(data) {
     return isEmpty(data)
 }
-function setSatus(status) {
+function status(status) {
     let type = "";
     switch (status) {
         case "PENDIENTE":
@@ -162,6 +155,14 @@ async function compressImage(imgToCompress, resizingFactor = 0.8, quality = 0.6)
 function formatDate(date, format = "en-US") {
     return new Date(date).toLocaleDateString(format);
 }
+function timeAgo(time){
+    const date = new Date(time)
+    return date;
+    // console.log(date);
+    // const today = new Date();
+
+    // $timeAgo.format(today - date)
+}
 function formatDoc(b64) {
     var byteCharacters = atob(b64);
     var byteNumbers = new Array(byteCharacters.length);
@@ -182,11 +183,12 @@ export default {
     filterDoc,
     difference,
     empty,
-    setSatus,
+    status,
     schemas,
     compressImage,
     formatDate,
     formatDoc,
     cleanData,
-    toFormData
+    toFormData,
+    timeAgo
 }

@@ -183,7 +183,7 @@
 							</div>
 							<div v-else>
 								<field-validate :name="`auditable[${id}]`" label="Auditor" rules="">
-									<async-select @selected="installations[id].auditable = $event" :roles="[3]"
+									<async-select @selected="installations[id].auditable = $event" :roles="[2,3]"
 										:params="queryParams">
 									</async-select>
 								</field-validate>
@@ -588,7 +588,11 @@ export default {
 	computed: {
 		...mapGetters(['ROLE']),
 		queryParams() {
-			return this.ROLE == 'admin' ? '&delegate_id=' + this.delegate.delegate.id : null
+			let delegate = null;
+			if (this.ROLE == 'admin' || this.ROLE == 'delegate') {
+				delegate = this.ROLE == 'admin' ? this.delegate.delegate.id : (this.$store.state('profile.me')).delegate.id
+			}
+			return delegate != null ? '&delegate_id=' + delegate : null
 		}
 	},
 };

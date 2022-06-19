@@ -8,7 +8,7 @@
                 <div class=" col-lg-3">
                     <base-input
                         :view="true"
-                        :modelValue="nonconformity.installation.name"
+                        :modelValue="nonconformity?.installation?.name"
                         label="Instalación"
                         disabled
                     />
@@ -24,7 +24,7 @@
                 <div class=" col-lg-3">
                     <base-input
                         :view="true"
-                        :modelValue="nonconformity.priority.name"
+                        :modelValue="nonconformity?.priority?.name"
                         label="Tipo"
                         disabled
                     />
@@ -32,7 +32,7 @@
                 <div class=" col-lg-3">
                     <base-input
                         :view="true"
-                        :modelValue="'<'+nonconformity.priority.term + 'MES'"
+                        :modelValue="'<'+nonconformity?.priority?.term + 'MES'"
                         label="Plazo"
                         disabled
                     />
@@ -40,7 +40,7 @@
                 <div class=" col-lg-4">
                     <base-input
                         :view="true"
-                        :modelValue="nonconformity.description"
+                        :modelValue="nonconformity?.description"
                         label="Razón y medidas"
                         disabled
                     />
@@ -48,7 +48,7 @@
                 <div class=" col-lg-8">
                     <base-input
                         :view="true"
-                        :modelValue="nonconformity.audit.general_observations"
+                        :modelValue="nonconformity?.audit?.general_observations"
                         label="Observaciones generales"
                         disabled
                     />
@@ -65,8 +65,8 @@
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="file" :label="!show ? 'Adjuntar' : 'Archivo'">
-                        <div v-if="show" class="d-flex align-content-center">
-                            <a :href="nonconformity.action.url" target="_blank"><i class="fa-regular fa-file-pdf"></i> Archivo</a>
+                        <div v-if="show && !$empty(nonconformity?.action?.url)" class="d-flex align-content-center">
+                            <a :href="nonconformity?.action?.url" target="_blank"><i class="fa-regular fa-file-pdf"></i> Archivo</a>
                         </div>
                         <field-validate v-else :disabled="show" type="file" class="form-control" name="file" rules="ext:pdf" label="archivo" v-model="model.file"/>
                     </base-field>
@@ -75,7 +75,7 @@
                     <base-input
                         v-if="show"
                         :view="true"
-                        :modelValue="action.date_end"
+                        :modelValue="action?.date_end"
                         label="Fecha de cierre"
                         disabled
                     />
@@ -87,21 +87,21 @@
                     <base-input
                         v-if="show"
                         :view="true"
-                        :modelValue="employee_selected.name + ' ' + employee_selected.last_name"
+                        :modelValue="responsibleName"
                         label="Responsable"
                         disabled
                     />
                     <base-field v-else name="employee_id" label="Responsable">
                         <field-validate :disabled="show" as="select" class="form-control" name="employee_id" rules="required" label="responsable" v-model="model.employee_id">
                             <option selected>Selecciona un responsable</option>
-                            <option :value="employee.id" @input="handle" v-for="employee in employees" :key="employee.id">{{employee.name}} {{employee.last_name}}</option>
+                            <option :value="employee.id" @input="handle" v-for="employee in employees" :key="employee.id">{{employee?.name}} {{employee?.last_name}}</option>
                         </field-validate>
                     </base-field>
                 </div>
                 <div class="col-lg-3">
                     <base-input
                         :view="true"
-                        :modelValue="employee_selected != null ? employee_selected.phone_number : ''"
+                        :modelValue="employee_selected != null ? employee_selected?.phone_number : ''"
                         label="Fíjo"
                         disabled
                     />
@@ -109,7 +109,7 @@
                 <div class="col-lg-3">
                     <base-input
                         :view="true"
-                        :modelValue="employee_selected != null ? employee_selected.email : ''"
+                        :modelValue="employee_selected != null ? employee_selected?.email : ''"
                         label="Email"
                         disabled
                     />
@@ -120,7 +120,7 @@
                 <base-button v-if="role == 'business'" type="default" nativeType="submit" :disabled="!meta.valid"
                 >Enviar</base-button
                 >
-                <base-button v-else type="default" @click="accept"
+                <base-button v-else-if="canAccept && role != 'business'" type="default" @click="accept"
                 ><i class="fa-solid fa-check"></i> Aceptar</base-button
                 >
                 <base-button
@@ -168,7 +168,7 @@ export default {
                 date_end: "",
                 file: null,
                 comment: "",
-                employee_id: "",
+                employee_id: null,
             },
             employees: {},
             employee_selected: null,
@@ -177,10 +177,10 @@ export default {
     },
     created() {
         if (this.show) {
-            this.action = this.nonconformity.action
-            this.model.date_end = this.action.date_end
-            this.model.comment = this.action.comment
-            this.employee_selected = this.action.responsible
+            this.action = this.nonconformity?.action
+            this.model.date_end = this.action?.date_end
+            this.model.comment = this.action?.comment
+            this.employee_selected = this.action?.responsible
         }else{
             this.employess()
         }
@@ -239,6 +239,16 @@ export default {
         }
     },
     computed: {
+        responsibleName(){
+            let result = ''
+            if (!this.$empty(this.employee_selected)) {
+                result = this.employee_selected?.name + ' ' + this.employee_selected?.last_name
+            }
+            return result;
+        },
+        canAccept(){
+            return !this.$empty(this.action);
+        }
     },
     watch: {
         'model.employee_id': function (newVal) {

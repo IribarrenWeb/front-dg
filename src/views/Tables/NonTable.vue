@@ -40,25 +40,25 @@
 						{{ row.item?.description }}
 					</td>
 					<td v-if="!dash">
-						{{ row.item?.action ? row.item?.action.date_end : 'SIN ACTUACIÓN' }}
+						{{ row.item?.action ? row.item?.action?.date_end : 'SIN ACTUACIÓN' }}
 					</td>
-					<td :class="`text-${row.item?.priority.colour}`">
-						{{ row.item?.priority.name }}
+					<td :class="`text-${row.item?.priority?.colour}`">
+						{{ row.item?.priority?.name }}
 					</td>
 					<td>
-						{{ row.item?.priority.term }}MESES
+						{{ row.item?.priority?.term }}MESES
 					</td>
 					<td>
 						<badge
 							class="badge-dot mr-4"
-							:type="this.$functions.setStatus(row.item?.status)"
+							:type="$functions.status(row.item?.status)"
 						>
-							<i :class="`bg-${this.$functions.setStatus(row.item?.status)}`"></i>
+							<i :class="`bg-${$functions.status(row.item?.status)}`"></i>
 							<span class="status">{{ row.item?.status }}</span>
 						</badge>
 					</td>
 					<td v-if="!dash">
-						<a href="#" v-if="row.item?.status == 'PENDIENTE' && ROLE == 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
+						<a href="#" v-if="(row.item?.status == 'PENDIENTE' && ROLE == 'business') ||( row.item?.status == 'PENDIENTE' && ROLE != 'business')" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
 						<a href="#" v-if="row.item?.status == 'POR REVISAR' && ROLE != 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
 					</td>
 				</template>

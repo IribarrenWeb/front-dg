@@ -8,7 +8,7 @@
 					</h3>
 				</div>
 				<div class="col text-right">
-					<base-button type="default" size="sm">Iniciar auditoria</base-button>
+					<base-button v-if="!$store.state.is_business" type="default" size="sm">Iniciar auditoria</base-button>
 				</div>
 			</div>
 		</div>
@@ -137,7 +137,7 @@ export default {
 				"audit",
 				page,
 				"includes[]=installation.province" +
-				"&includes[]=installation.auditable" +
+				"&includes[]=auditable" +
 				"&includes[]=installation.company.user" +
 				"&order_by=scheduled_date" +
 				"&order_direction=asc"
@@ -156,7 +156,7 @@ export default {
 					msg = 'Esta auditoria esta programada para la fecha: <b>' + item.scheduled_date + '</b>';
 				}
 				this.$swal('Auditoria no programada', msg, 'warning')
-			} else if (item.installation.auditable == null) {
+			} else if (item.auditable == null) {
 				this.$swal('Instalación sin responsable', `La instalación <b>${item.installation.name}</b> no cuenta con un responsable.`, 'warning')
 			} else {
 				this.$router.push(link)

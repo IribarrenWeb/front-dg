@@ -1,42 +1,32 @@
 <template>
-  <component
-    class="dropdown"
-    :is="tag"
-    :class="[
+  <div>
+    <click-outside-detection :is-open="isOpen" @clicked="closeDropDown()"></click-outside-detection>
+    <div class="dropdown" :class="[
       { show: isOpen },
       { dropdown: direction === 'down' },
       { dropup: direction === 'up' },
-    ]"
-    aria-haspopup="true"
-    :aria-expanded="isOpen"
-    @click="toggleDropDown"
-    v-click-outside="closeDropDown"
-  >
-    <slot name="title">
-      <a
-        class="dropdown-toggle nav-link"
-        :class="{ 'no-caret': hideArrow }"
-        data-toggle="dropdown"
-      >
-        <i :class="icon"></i>
-        <span class="no-icon">{{ title }}</span>
-      </a>
-    </slot>
-    <ul
-      class="dropdown-menu drop-custom"
-      ref="menu"
-      :class="[
+      dropClasses
+    ]" aria-haspopup="true" :aria-expanded="isOpen" @click="toggleDropDown" v-click-outside="closeDropDown">
+      <slot name="title">
+        <a class="dropdown-toggle nav-link" :class="{ 'no-caret': hideArrow }" data-toggle="dropdown">
+          <i :class="icon"></i>
+          <span class="no-icon">{{ title }}</span>
+        </a>
+      </slot>
+      <ul class="dropdown-menu drop-custom" ref="menu" :class="[
         { 'dropdown-menu-right': position === 'right' },
         { show: isOpen },
         menuClasses,
-      ]"
-    >
-      <slot></slot>
-    </ul>
-  </component>
+      ]">
+        <slot></slot>
+      </ul>
+    </div>
+  </div>
 </template>
 <script>
+import ClickOutsideDetection from './ClickOutsideDetection.vue';
 export default {
+	components: { ClickOutsideDetection },
   name: "base-dropdown",
   props: {
     direction: {
@@ -56,6 +46,10 @@ export default {
       description: "Position of dropdown menu (e.g right|left)",
     },
     menuClasses: {
+      type: [String, Object],
+      description: "Dropdown menu classes",
+    },
+    dropClasses: {
       type: [String, Object],
       description: "Dropdown menu classes",
     },
@@ -89,6 +83,13 @@ export default {
       this.$emit("change", this.isOpen);
     },
   },
+  watch: {
+    isOpen(val) {
+      if (val) {
+        this.$emit('open', val);
+      }
+    }
+  }
 };
 </script>
 <style>

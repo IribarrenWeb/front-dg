@@ -6,7 +6,7 @@
           <h5 class="card-title text-uppercase text-muted mb-0" v-if="title">
             {{ title }}
           </h5>
-          <span class="h2 font-weight-bold mb-0" v-if="subTitle">{{
+          <span class="h2 font-weight-bold mb-0">{{
             subTitle
           }}</span>
         </slot>
@@ -44,7 +44,7 @@ export default {
     },
     icon: String,
     title: String,
-    subTitle: Number,
+    subTitle: [String,Number],
     iconClasses: [String, Array],
   },
 };

@@ -160,6 +160,7 @@
 		async mounted() {
 			console.log(this.$route.meta);
 			await this.$store.dispatch("profile/me");
+			await this.$store.dispatch("getNotifications");
 			this.me = await this.$store.getters["profile/me"];
 		},
 		computed: {

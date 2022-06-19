@@ -32,7 +32,7 @@
 						{{ row.item?.duration }}
 					</td>
 					<td>
-						{{ row.item?.responsible.user.name }} {{ row.item?.responsible.user.last_name }}
+						{{ row.item?.responsible.user.full_name }}
 					</td>
 					<td>
 						<a v-if="!this.$store.state.is_auditor" href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item?.id)">Asignar</a>
@@ -117,7 +117,6 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
                 this.assign = false;
             },
             handleReload(){
-                console.log('hola recargandoooooo');
                 this.$emit('reloadTraining')
             },
             

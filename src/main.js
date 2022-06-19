@@ -37,6 +37,9 @@ import flatPickr from 'vue-flatpickr-component';
 import '../node_modules/flatpickr/dist/flatpickr.css';
 import functions from './utils/functions';
 import schemas from './schemas';
+import { isEmpty, isNil } from "lodash";
+import timeago from 'vue-timeago3' // import timeago
+import { es as esp } from 'date-fns/locale' // import custom locale
 
 Object.keys(AllRules).forEach((rule) => {
     defineRule(rule, AllRules[rule]);
@@ -52,6 +55,15 @@ setLocale("es");
 
 const appInstance = createApp(App);
 
+// define options
+const timeagoOptions = {
+  converterOptions: {
+      includeSeconds: true,
+  },
+  locale: esp,
+}
+
+appInstance.use(timeago,  timeagoOptions)
 // appInstance.use(VeeValidate);
 appInstance.use(Toaster, {
     // One of the options
@@ -60,6 +72,9 @@ appInstance.use(Toaster, {
 });
 
 appInstance.config.globalProperties.$functions = functions;
+appInstance.config.globalProperties.$empty = (val) => {
+    return isEmpty(val) || isNil(val)
+};
 appInstance.config.globalProperties.$schemas = schemas;
 
 appInstance.component('date-picker', flatPickr);

@@ -22,6 +22,7 @@
 					<th>Nombre</th>
 					<th>Email</th>
 					<th>Móvil</th>
+					<th>Provincia</th>
 					<th>Delegado</th>
 					<th>Acciones</th>
 				</template>
@@ -35,6 +36,9 @@
 					</td>
 					<td>
 						{{ row.item?.phone_number }}
+					</td>
+					<td>
+						{{ row.item?.province?.name }}
 					</td>
 					<td>
 						{{ row.item?.delegate.user.full_name }}
@@ -108,7 +112,7 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 					const response = await service.getIndex(
 						"auditor",
 						page,
-						`&includes[]=user&includes[]=delegate.user`
+						`&includes[]=user&includes[]=delegate.user&includes[]=province`
 					);
 					this.tableData = response.data.data;
 					this.metaData = response.data.meta.page;
