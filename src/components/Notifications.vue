@@ -170,6 +170,6 @@ export default {
     z-index: auto !important;
 }
 .noty-container{
-    min-width: 500px;
+    min-width: 200px;
 }
 </style>
