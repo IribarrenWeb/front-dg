@@ -151,7 +151,7 @@
 			async getInstallations(page = 1) {
 				let response = null;
 				if (isNull(this.business_id)) {
-					response = await service.getIndex("installation", page, 'includes[]=auditable.user&includes[]=employees&includes[]=province');
+					response = await service.getIndex("installation", page, 'includes[]=auditable.user&includes[]=employees&includes[]=province&order_by=id&order_direction=asc');
 				} else {
 					response = await service.instByBusiness(this.business_id, page);
 				}

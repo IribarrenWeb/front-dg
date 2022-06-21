@@ -138,7 +138,7 @@
 
                         <div class="col-lg-6 col-lg-4">
                             <base-field apiName="responsible.dni" name="dni" label="DNI">
-                                <field-validate :disabled="isSaved" type="number" class="form-control" name="dni"
+                                <field-validate :disabled="isSaved" type="text" class="form-control text-uppercase" name="dni"
                                     rules="alpha_num|min:9|max:9" label="dni"
                                     v-model="model.responsible.dni" />
                             </base-field>
@@ -409,7 +409,11 @@ export default {
                     const res = await service.store('installation', data);
                     this.installation_id = res.data.data.id
                     this.isSaved = true
-                    this.toAgend(res.data.data.audit_id)
+
+                    if(this.ROLE != 'business'){
+                        this.toAgend(res.data.data.audit_id)
+                    }
+
                     this.$emit('reload')
                 } catch (error) {
                     console.log(error);

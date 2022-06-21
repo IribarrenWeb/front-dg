@@ -122,7 +122,7 @@
                 }
 
 				if (this.dash) {
-					params += "&status=false";
+					params += "&status_dash=true";
 				}
 
 				const resp = await service.getIndex(

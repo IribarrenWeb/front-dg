@@ -29,7 +29,7 @@
 						{{ row.item?.formation.name }}
 					</th>
                     <th scope="row" class="text-uppercase">
-						{{ row.item?.formation.responsible.user.full_name }}
+						{{ row.item?.formation.facilitable.user.full_name }}
 					</th>
 					<td class="text-uppercase">
 						{{ row.item?.installation.company.name }}
@@ -97,7 +97,7 @@
 				const resp = await service.getIndex(
 					"training",
 					page,
-					"includes[]=installation.company&counts[]=employees&includes[]=formation.responsible.user"
+					"includes[]=installation.company&counts[]=employees&includes[]=formation.facilitable.user"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;

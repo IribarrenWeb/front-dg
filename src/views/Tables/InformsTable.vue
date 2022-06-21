@@ -200,7 +200,7 @@
 					try {
 						const rep = await service.getReport(report.id);
 						const b64 = rep.data.data;
-						const fileUrl = await this.this.$functions.formatDoc(b64);
+						const fileUrl = await this.$functions.formatDoc(b64);
 						window.open(fileUrl);
 					} catch (err) {
 						console.log(err);

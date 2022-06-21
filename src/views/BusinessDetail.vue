@@ -89,10 +89,10 @@
 					</thead>
 					<tbody>
 						<tr>
-							<th>{{ business?.administrable.user.full_name ?? 'N/A' }}</th>
-							<th>{{ business?.administrable.cif_nif ? business?.administrable.cif_nif : dni ?? null }}</th>
-							<th>{{ business?.administrable.phone_number ?? 'N/A' }}</th>
-							<th>{{ business?.administrable.user.email ?? 'N/A' }}</th>
+							<th>{{ business?.administrable?.user?.full_name ?? 'N/A' }}</th>
+							<th>{{ business?.administrable?.cif_nif ? business?.administrable?.cif_nif : dni ?? null }}</th>
+							<th>{{ business?.administrable?.phone_number ?? 'N/A' }}</th>
+							<th>{{ business?.administrable?.user?.email ?? 'N/A' }}</th>
 						</tr>
 					</tbody>
 				</table>

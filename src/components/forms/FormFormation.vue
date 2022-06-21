@@ -21,14 +21,14 @@
                 </div>
                 <div class=" col-lg-4">
                     <base-field name="duration" label="Duración">
-                        <field-validate type="number" class="form-control" name="duration" rules="required|min:1|max:2"
+                        <field-validate type="text" class="form-control text-uppercase" name="duration" rules="required"
                             label="Duración" v-model="model.duration" />
                     </base-field>
                 </div>
                 <div class=" col-lg-6">
                     <base-field name="auditor_id" label="Responsable">
-                        <field-validate name="auditor_id" label="Responsable" rules="required" v-model="auditable">
-                            <async-select :roles="[3]" @selected="auditable = $event" params="&includes[]=auditor">
+                        <field-validate name="auditor_id" label="Responsable" rules="required" v-model="model.facilitable_id">
+                            <async-select :roles="[2,3]" @selected="auditable = $event" :list="true">
                             </async-select>
                         </field-validate>
                     </base-field>
@@ -89,7 +89,7 @@ export default {
                 data.append('document', this.model.document[0])
                 data.append('name', this.model.name)
                 data.append('content', this.model.content)
-                data.append('auditor_id', this.auditable.id)
+                data.append('facilitable_id', this.auditable.id)
                 data.append('duration', this.model.duration)
                 data.append('formation_type_id', this.model.formation_type_id)
 
@@ -118,5 +118,10 @@ export default {
             this.$emit('close')
         }
     },
+    watch: {
+        auditable(val){
+            this.model.facilitable_id = val ?? null
+        }
+    }
 }
 </script>

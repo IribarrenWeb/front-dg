@@ -32,7 +32,7 @@
 						{{ row.item?.duration }}
 					</td>
 					<td>
-						{{ row.item?.responsible.user.full_name }}
+						{{ row.item?.facilitable.user.full_name }}
 					</td>
 					<td>
 						<a v-if="!this.$store.state.is_auditor" href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item?.id)">Asignar</a>
@@ -88,7 +88,7 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
 				const resp = await service.getIndex(
 					"formation",
 					page,
-					"includes[]=type&includes[]=responsible.user"
+					"includes[]=type&includes[]=facilitable.user"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;
