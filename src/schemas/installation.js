@@ -1,8 +1,8 @@
 import employee from "./employee"
-
+import address from "./address"
 export default {
     name: "",
-    address: "",
+    address: { ...address },
     business_id: null,
     auditable_id: null,
     province_id: null,
@@ -15,5 +15,5 @@ export default {
     operation_types_ids: [],
     deposit_types_ids: [],
     equipments_ids: [],
-    responsible: employee,
+    responsible: {...employee},
 }

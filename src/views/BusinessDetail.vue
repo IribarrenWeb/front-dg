@@ -17,7 +17,6 @@
 							<th scope="row">Nombre empresa</th>
 							<th scope="col">CIF/NIF</th>
 							<th scope="row">Ciudad</th>
-							<th scope="row">Provincia</th>
 							<th scope="row">Codigo postal</th>
 							<th scope="row">Pais</th>
 							<th scope="row">Instalaciones</th>
@@ -27,10 +26,9 @@
 						<tr>
 							<td>{{ business?.user.full_name }}</td>
 							<td>{{ business?.business_nif ?? 'N/A' }}</td>
-							<td>{{ business?.province?.city?.name ?? 'N/A' }}</td>
-							<td>{{ business?.province?.name ?? 'N/A' }}</td>
-							<td>{{ business?.postal_code ?? 'N/A' }}</td>
-							<td>ESPANA</td>
+							<td>{{ business?.address?.city ?? 'N/A' }}</td>
+							<td>{{ business?.address?.code ?? 'N/A' }}</td>
+							<td>{{ business?.address?.country ?? 'N/A' }}</td>
 							<td>{{ business?.installations_count }}</td>
 						</tr>
 						<tr class="text-uppercase">

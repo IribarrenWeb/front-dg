@@ -23,42 +23,27 @@
 							</h6>
 							<div class="row">
 								<div class="col-lg-4 col-md-6">
-									<base-input :view="true" name="email" label="Correo" :modelValue="u_data.email" />
-								</div>
-								<div class="col-lg-4 col-md-6">
 									<base-input :view="true" name="first_name" label="Nombre"
-										:modelValue="u_data.name" />
+										:modelValue="model.name" />
 								</div>
 								<div class="col-lg-4 col-md-6">
-									<base-input :view="true" label="Apellido" :modelValue="u_data.last_name" />
+									<base-input :view="true" label="Apellido" :modelValue="model.last_name" />
+								</div>
+								<div class="col-lg-4 col-md-6">
+									<base-input :view="true" name="email" label="Correo" :modelValue="model.email" />
 								</div>
 							</div>
 							<hr class="my-4" />
 							<!-- Address -->
-							<div v-if="u_data.role_id >= 2">
+							<div v-if="model.role_id >= 2">
 								<h6 class="heading-small text-muted mb-4">Informacion de perfil</h6>
 								<div class="pl-lg-4">
-									<div class="row">
-										<div class="col-md-12">
-											<base-input name="" label="Direccion" placeholder="Dirección"
-												input-classes="form-control-alternative" :modelValue="model.address" />
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-lg-4">
-											<base-input name="" :view="true" label="Ciudad" placeholder="Ciudad"
-												input-classes="form-control-alternative" :modelValue="model.city" />
-										</div>
-										<div class="col-lg-4">
-											<base-input name="" :view="true" label="Pais" placeholder="País"
-												input-classes="form-control-alternative" :modelValue="model.country" />
-										</div>
-										<div class="col-lg-4">
-											<base-input name="" :view="true" label="Codigo postal"
-												placeholder="Codigo postal" input-classes="form-control-alternative"
-												:modelValue="model.zipCode" />
-										</div>
-									</div>
+									<AddressSelect
+										v-model:address="roleModel.address.address" 
+										v-model:city="roleModel.address.city" 
+										v-model:code="roleModel.address.code" 
+										v-model:country="roleModel.address.country"
+									/>
 								</div>
 							</div>
 						</form>
@@ -70,26 +55,39 @@
 </template>
 <script>
 import service from "../store/services/profile-service.js";
-export default {
-	name: "user-profile",
-	data() {
-		return {
-			model: {
-				address: "Av samaniego",
-				city: "Barcelona",
-				country: "España",
-				zipCode: "80151",
-			},
-			u_data: {}
-		};
-	},
-	async beforeMount() {
-		const u_data = await service.get()
-		this.u_data = u_data.list.user
-	},
-	computed: {
+import AddressSelect from "../components/AddressSelect.vue";
+import { computed, onMounted, ref } from "vue";
+import functions from "../utils/functions";
 
-	}
+export default {
+    name: "user-profile",
+    components: { AddressSelect },
+	setup() {
+		const model = ref(null)
+		const role = computed(() => {
+			return model.value?.role?.name
+		})
+		const roleModel = computed(() => {
+			console.log(model.value,role.value);
+			return functions.assignSchema(role.value, model.value, ['address'])
+		})
+		
+		async function getUser(){
+			const data = await service.get();
+			model.value = data.list.user;
+			roleModel.value = data.list[role.value]
+		}
+
+		onMounted(() => {
+			getUser()
+		})
+		
+		return {
+			model,
+			role,
+			roleModel
+		}
+	},
 };
 </script>
 <style>

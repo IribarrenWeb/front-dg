@@ -5,16 +5,13 @@
                 @step="currentStep = $event"></base-steps>
             <template v-if="currentStep == 1">
                 <div class="row border rounded border-light px-4 py-2">
+                    <div class="col-12">
+                        <h4>Datos principales</h4>
+                    </div>
                     <div class="col-lg-4">
                         <base-field name="name" label="Nombre de instalación">
                             <field-validate :disabled="isSaved" type="text" class="form-control" name="name"
                                 rules="required" label="Nombre" v-model="model.name" />
-                        </base-field>
-                    </div>
-                    <div class="col-lg-4">
-                        <base-field name="address" label="Dirección">
-                            <field-validate :disabled="isSaved" type="text" class="form-control" name="address"
-                                rules="" label="dirección" v-model="model.address" />
                         </base-field>
                     </div>
                     <div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
@@ -33,17 +30,7 @@
                             </div>
                         </base-field>
                     </div>
-                    <div class="col-lg-3" :class="{'col-lg-4': ROLE == 'auditor' }">
-                        <base-field name="province_id" label="Provincia">
-                            <field-validate :disabled="isSaved" class="form-control" as="select" name="province_id"
-                                rules="" label="Provincia" v-model="model.province_id">
-                                <option value="" selected>Selecciona una provincia</option>
-                                <option v-for="province in provinces" :key="province.id" :value="province.id">
-                                    {{ province.name }}</option>
-                            </field-validate>
-                        </base-field>
-                    </div>
-                    <div class="col-lg-3" v-if="ROLE != 'business'">
+                    <div class="col-lg-4" v-if="ROLE != 'business'">
                         <base-field name="periodicy" label="Periodicidad de visitas">
                             <field-validate :disabled="isSaved" class="form-control" as="select" name="periodicy"
                                 rules="" label="periodicidad" v-model="model.periodicity">
@@ -66,6 +53,13 @@
                         </base-field>
                     </div>
                 </div>
+
+                <address-select
+                    v-model:address="model.address.address" 
+                    v-model:city="model.address.city" 
+                    v-model:code="model.address.code" 
+                    v-model:country="model.address.country"
+                />
             </template>
             <!-- ------------------------------------------------------ -->
             <template v-if="currentStep == 2">
@@ -322,10 +316,11 @@ import SubcontractorTable from '@/views/Tables/SubcontractorTable.vue';
 import EmployeesTable from '../../../views/Tables/EmployeesTable.vue';
 import { mapGetters } from 'vuex';
 import AsyncSelect from '../../AsyncSelect.vue';
+import AddressSelect from "../../AddressSelect.vue";
 
 export default {
     mixins: [utils],
-    components: { MaterialTable, VehiclesTable, SubcontractorTable, EmployeesTable, AsyncSelect },
+    components: { MaterialTable, VehiclesTable, SubcontractorTable, EmployeesTable, AsyncSelect, AddressSelect },
     props: {
         business_id: {
             type:Number,

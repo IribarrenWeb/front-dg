@@ -67,34 +67,27 @@
 					<base-input
 						:view="true"
 						formClasses="col-md-6"
-						:modelValue="installation?.address"
+						:modelValue="installation?.address?.address"
 						label="Dirección de la instalación"
 						disabled
 					/>
 					<base-input
 						:view="true"
 						formClasses="col-md-6"
-						:modelValue="installation?.province?.name"
-						label="Provincia"
-						disabled
-					/>
-					<base-input
-						:view="true"
-						formClasses="col-md-4"
-						:modelValue="installation?.province?.city.name"
+						:modelValue="installation?.address?.city"
 						label="Ciudad"
 						disabled
 					/>
 					<base-input
 						:view="true"
-						formClasses="col-md-4"
-						modelValue="542121"
+						formClasses="col-md-6"
+						:modelValue="installation?.address?.code"
 						label="Codigo postal"
 						disabled
 					/>
 					<base-input
 						:view="true"
-						formClasses="col-md-4"
+						formClasses="col-md-6"
 						modelValue="ESPAÑA"
 						label="País"
 						disabled

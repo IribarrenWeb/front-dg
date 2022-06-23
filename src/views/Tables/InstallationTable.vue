@@ -22,7 +22,6 @@
                     <th>#</th>
 					<th>Nombre</th>
 					<th>Direccion</th>
-					<th>Provincia</th>
 					<th>Empleados</th>
 					<th>Auditor</th>
 					<th>Acciones</th>
@@ -34,10 +33,7 @@
 						{{ row.item?.name ?? 'N/A' }}
 					</th>
 					<td class="text-uppercase">
-						{{ row.item?.address ?? 'N/A' }}
-					</td>
-					<td class="text-uppercase">
-						{{ row.item?.province?.name ?? 'N/A' }}
+						{{ row.item?.full_address ?? 'N/A' }}
 					</td>
 					<td>
 						{{ row.item?.employees.length }}

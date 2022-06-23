@@ -32,13 +32,13 @@
 							rules="max:15" v-model="model.delegation_phone" />
 					</base-field>
 				</div>
-				<div class="col-lg-6">
-					<base-field name="address" label="Dirección">
-						<field-validate class="form-control" name="address" type="text" label="Dirección" rules="max:50"
-							v-model="model.address" />
-					</base-field>
-				</div>
 			</div>
+			<address-select
+				v-model:address="model.address.address" 
+				v-model:city="model.address.city" 
+				v-model:code="model.address.code" 
+				v-model:country="model.address.country" 
+			/>
 			<div class="row border rounded border-light px-md-3 py-md-2">
 				<div class="col-12">
 					<h4>Datos generales</h4>
@@ -76,28 +76,6 @@
 					<base-field name="email" label="Email">
 						<field-validate class="form-control" name="email" label="email" rules="required|email"
 							v-model="model.email" />
-					</base-field>
-				</div>
-
-				<div class="col-lg-4">
-					<base-field name="province_id" label="Provincia">
-						<div v-if="update && (!prov_update && typeof model.province != null)" class="d-flex">
-							<input type="text" class="form-control mr-md-3" disabled :value="model.province.name" />
-							<base-button @click="prov_update = true" size="sm" type="default" :outline="true"><i
-									class="fa-solid fa-pencil"></i></base-button>
-						</div>
-						<div v-show="!update || prov_update">
-							<field-validate class="form-control" as="select" name="province_id"
-								:rules="{ required: !update || prov_update }" label="Provincia"
-								v-model="model.province_id">
-								<option value="" selected>Selecciona una provincia</option>
-								<option v-for="province in provinces" :key="province.id" :value="province.id">
-									{{ province.name }}
-								</option>
-							</field-validate>
-							<base-button v-if="update" @click="reset('province')" size="sm" type="default"
-								:outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
-						</div>
 					</base-field>
 				</div>
 			</div>
@@ -180,8 +158,8 @@
 </template>
 <script>
 import service from "@/store/services/model-service";
-import dataService from "@/store/services/data-service";
 import _, { isEmpty } from "lodash";
+import AddressSelect from "../AddressSelect.vue";
 
 import utils from "@/mixins/utils-mixin";
 import { mapGetters } from "vuex";
@@ -193,12 +171,20 @@ export default {
 			default: null,
 			required: false,
 		},
+		modelData: {
+			type: Object,
+			required: false
+		}
+	},
+	components: {
+		AddressSelect
 	},
 	data() {
 		return {
 			errors: {},
 			api: "delegate",
 			model: this.$functions.schemas('delegate'),
+			address: this.$functions.schemas('address'),
 			delegate: null,
 			provinces: null,
 			cer_update: false,
@@ -207,12 +193,9 @@ export default {
 			prov_update: null,
 		};
 	},
-	mounted() {
-		this.loadProvinces();
-	},
 	methods: {
 		async onSubmit(values, { resetForm }) {
-			const data = this.$functions.cleanData(this.model, ['user', 'province', 'documents', 'created_at', 'id'], ['file_certification', 'file_firm'], true);
+			const data = this.$functions.cleanData(this.model, ['user','documents', 'created_at', 'id'], ['file_certification', 'file_firm'], true);
 
 			if (!isEmpty(this.model.file_certification)) {
 				data.append('file_certification', this.model.file_certification[0]);
@@ -246,19 +229,19 @@ export default {
 				console.log(err);
 			}
 		},
-		async loadProvinces() {
-			const res = await dataService.getProvinces();
-			this.provinces = res.data.data;
-		},
-		async show(id) {
-			console.log(this.$refs);
+		async show(d, model = false) {
+			let data = null;
 			try {
-				const response = await service.show(
-					"delegate",
-					id,
-					"includes[]=province&includes[]=documents.type"
-				);
-				const data = response.data.data;
+				if (!model) {
+					const response = await service.show(
+						"delegate",
+						d,
+						"includes[]=province&includes[]=documents.type"
+					);
+					data = response.data.data;
+				}else{
+					data = model
+				}
 				this.setCurrent(data);
 				this.delegate = this.$functions.copy(data);
 				this.model = this.$functions.copy(data);
@@ -283,7 +266,6 @@ export default {
 					delegation_email: data.delegation_email != null ? data.delegation_email : '',
 					address: data.address != null ? data.address : '',
 					cif_nif: data.cif_nif != null ? data.cif_nif : '',
-					province_id: data.province_id,
 					email: data.user.email,
 				};
 
@@ -361,6 +343,15 @@ export default {
 			handler(val) {
 				if (val >= 1 && val != null) {
 					this.show(val);
+				}
+			},
+			immediate: true,
+		},
+		modelData: {
+			// the callback will be called immediately after the start of the observation
+			handler(val) {
+				if (val) {
+					this.show(val, true);
 				}
 			},
 			immediate: true,

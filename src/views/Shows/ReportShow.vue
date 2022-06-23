@@ -21,28 +21,26 @@
 								<td>Dirección</td>
 								<td>Código Postal</td>
 								<td>Ciudad</td>
-								<td>Provincia</td>
+								<td>CIF</td>
 							</tr>
 							<tr>
 								<th>{{ report.business.user.full_name }}</th>
-								<th>{{ report.business?.address }}</th>
-								<th>{{ report.business?.postal_code }}</th>
-								<th>{{ report.business?.province?.city?.name }}</th>
-								<th>{{ report.business?.province?.name }}</th>
+								<th>{{ report.business?.address?.address }}</th>
+								<th>{{ report.business?.address?.code }}</th>
+								<th>{{ report.business?.address?.city }}</th>
+								<th>{{ report.business?.business_nif }}</th>
 							</tr>
 							<tr>
-								<td>CIF</td>
 								<td>Empleados</td>
 								<td>VS</td>
 								<td>Fijo</td>
-								<td>Email</td>
+								<td colspan="2">Email</td>
 							</tr>
 							<tr>
-								<th>{{ report.business?.business_nif }}</th>
 								<th>{{ report.business?.employees_count }}</th>
 								<th>{{ report.business?.security }}</th>
 								<th>{{ report.business?.business_phone }}</th>
-								<th>{{ report.business?.user.email }}</th>
+								<th colspan="2">{{ report.business?.user.email }}</th>
 							</tr>
 						</tbody>
 					</table>
@@ -135,7 +133,7 @@
 							<th>{{ material.material.packing.code }}</th>
 							<th>{{ material.material.class.code }}</th>
 							<th>{{ material.quantity_operation }} {{ material.unit }}</th>
-							<th>{{ material.installation.address }}</th>
+							<th>{{ material.installation.full_address }}</th>
 						</tr>
 					</tbody>
 					<tbody v-else>
@@ -176,7 +174,7 @@
 							<tr v-for="visit in visits" :key="visit.id">
 								<th>{{ visit.date }}</th>
 								<th>{{ visit.installation.periodicity }}</th>
-								<th>{{ visit.installation.address }}</th>
+								<th>{{ visit.installation.full_address }}</th>
 							</tr>
 						</tbody>
 						<tbody v-else>

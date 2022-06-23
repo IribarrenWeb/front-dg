@@ -4,16 +4,13 @@
 			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
 		<template v-if="currentStep == number('Instalacion') && show">
 			<div class="row border rounded border-light bg-white px-4 py-2">
-				<div class="col-lg-4">
+				<div class="col-12">
+					<h4>Datos principales</h4>
+				</div>
+				<div :class="ROLE != 'auditor' && ROLE != 'business' ? 'col-lg-4' : 'col-lg-6'">
 					<base-field name="name" label="Nombre de instalacion">
 						<field-validate type="text" class="form-control" name="name" rules="required" label="Nombre"
 							v-model="model.name" />
-					</base-field>
-				</div>
-				<div class="col-lg-4">
-					<base-field name="address" label="Direccion">
-						<field-validate type="text" class="form-control" name="address" rules="required"
-							label="direccion" v-model="model.address" />
 					</base-field>
 				</div>
 				<div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
@@ -24,7 +21,7 @@
 								size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i>
 							</base-button>
 						</div>
-						<div v-show="new_auditable.new || model.auditable == null">
+						<div v-else-if="new_auditable.new || model.auditable == null">
 							<field-validate name="auditable" label="Auditor" rules="required">
 								<async-select @selected="new_auditable.value = $event" :roles="[2, 3]" :list="true"
 									:params="queryParams">
@@ -38,10 +35,7 @@
 						</div>
 					</base-field>
 				</div>
-				<div :class="ROLE != 'auditor' && ROLE != 'business' ? 'col-lg-3' : 'col-lg-4'">
-					<provinces-select v-model="model.province_id"></provinces-select>
-				</div>
-				<div class="col-lg-3">
+				<div class="col-lg-6">
 					<base-field name="periodicy" label="Periodicidad de visitas">
 						<field-validate class="form-control" as="select" name="periodicy" rules="required"
 							label="periodicidad" v-model="model.periodicity">
@@ -69,7 +63,15 @@
 						</div>
 					</base-field>
 				</div>
+
 			</div>
+
+			<address-select
+				v-model:address="model.address.address" 
+				v-model:city="model.address.city" 
+				v-model:code="model.address.code" 
+				v-model:country="model.address.country" 
+			/>
 			<!-- </form-validate> -->
 
 			<div class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2">
@@ -226,24 +228,24 @@ import EmployeesTable from "../Tables/EmployeesTable.vue";
 import utils from "@/mixins/utils-mixin";
 
 import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
-import _, { isEmpty } from "lodash";
+import { filter, forEach, isArray, isEmpty, isEqual, isUndefined, map } from "lodash";
 import { mapGetters } from "vuex";
 import FormEmployee from "../../components/forms/FormEmployee.vue";
 import AsyncSelect from '../../components/AsyncSelect.vue';
-import ProvincesSelect from '../../components/Utils/ProvincesSelect.vue';
+import AddressSelect from "../../components/AddressSelect.vue";
 
 export default {
 	name: "installation-show",
 	components: {
-		MaterialTable,
-		VehiclesTable,
-		SubcontractorTable,
-		EmployeesTable,
-		DashboardEmployee,
-		FormEmployee,
-		AsyncSelect,
-		ProvincesSelect,
-	},
+    MaterialTable,
+    VehiclesTable,
+    SubcontractorTable,
+    EmployeesTable,
+    DashboardEmployee,
+    FormEmployee,
+    AsyncSelect,
+    AddressSelect
+},
 	mixins: [utils],
 	props: {
 		installation_id: {
@@ -275,7 +277,6 @@ export default {
 				value: null,
 			},
 			currentStep: 1,
-			provinces: [],
 			operations: [],
 			deposits: [],
 			equipments: [],
@@ -300,13 +301,15 @@ export default {
 					"&includes[]=responsible.firm_document" +
 					"&includes[]=company"
 				);
-				this.model = this.$functions.copy(res.data.data);
-				this.responsible = this.$functions.copy(res.data.data?.responsible);
+
+				this.model = this.$functions.assignSchema('installation', res.data.data, ['address']);
+				console.log('keinher', this.model);
+				this.responsible = this.$functions.assignSchema('employee', res.data.data?.responsible);
 				this.model.file_document = null;
 				this.model.auditable_id = null;
 
 				let f_doc = null;
-				_.forEach(this.responsible?.documents, (doc) => {
+				forEach(this.responsible?.documents, (doc) => {
 					if (doc.type.name == "CERTIFICADO") {
 						f_doc = doc;
 					}
@@ -335,7 +338,7 @@ export default {
 				};
 				if (
 					this.new_document.new ||
-					(this.model.documents < 1 && _.isArray(this.model.file_document))
+					(this.model.documents < 1 && isArray(this.model.file_document))
 				) {
 					data.file_document = {
 						base64: await this.toBase64(this.model.file_document[0]),
@@ -345,7 +348,7 @@ export default {
 					data.auditable_id = this.model.auditable_id;
 				}
 
-				if (!_.isEqual(this.model, this.original_model)) {
+				if (!isEqual(this.model, this.original_model)) {
 					try {
 						data = this.$functions.cleanData(data)
 						await service.update("installation", this.installation_id, data);
@@ -415,7 +418,7 @@ export default {
 			const res = await dataService.getOperations();
 			const data = res.data.data;
 			let ids = [];
-			let operations = _.map(data, (operation) => {
+			let operations = map(data, (operation) => {
 				let checked = false;
 				return { value: operation.id, label: operation.name, checked: checked };
 			});
@@ -431,7 +434,7 @@ export default {
 			const res = await dataService.getDeposits();
 			const data = res.data.data;
 			let ids = [];
-			let deposits = _.map(data, (deposit) => {
+			let deposits = map(data, (deposit) => {
 				let checked = false;
 				return { value: deposit.id, label: deposit.name, checked: checked };
 			});
@@ -447,7 +450,7 @@ export default {
 			const res = await dataService.getEquipments();
 			const data = res.data.data;
 			let ids = [];
-			let equipments = _.map(data, (equipment) => {
+			let equipments = map(data, (equipment) => {
 				return { value: equipment.id, label: equipment.name, checked: false };
 			});
 			for (let i = 0; i < this.model.equipments.length; i++) {
@@ -495,7 +498,7 @@ export default {
 			let format_steps = [];
 			let count = 1;
 			const $this = this;
-			_.forEach(steps, function (s) {
+			forEach(steps, function (s) {
 				if (
 					$this.ROLE == "business"
 					// &&
@@ -521,11 +524,10 @@ export default {
 			this.steps = format_steps;
 		},
 		number(query) {
-			let steps = this.$functions.copy(this.steps);
-			const step = _.filter(steps, function (s) {
+			const step = filter(this.steps, function (s) {
 				return s.title == query;
 			});
-			return _.isUndefined(step[0]) ? 0 : step[0].number;
+			return isUndefined(step[0]) ? 0 : step[0].number;
 		},
 	},
 	computed: {
@@ -545,7 +547,7 @@ export default {
 		},
 		hasTransportedOper() {
 			let has = false
-			_.forEach(this.model.operations, function (op) {
+			forEach(this.model.operations, function (op) {
 				if (op.id == 5) {
 					has = true
 				}
@@ -559,19 +561,19 @@ export default {
 	watch: {
 		oper() {
 			let oper_ids = this.$functions.pluck(this.model.operations, "id");
-			this.update.op = !_.isEqual(this.oper, oper_ids);
+			this.update.op = !isEqual(this.oper, oper_ids);
 		},
 		equips() {
 			let equip_ids = this.$functions.pluck(this.model.equipments, "id");
-			this.update.eqp = !_.isEqual(this.equips, equip_ids);
+			this.update.eqp = !isEqual(this.equips, equip_ids);
 		},
 		deps() {
 			let deps_ids = this.$functions.pluck(this.model.deposit_types, "id");
-			this.update.dep = !_.isEqual(this.deps, deps_ids);
+			this.update.dep = !isEqual(this.deps, deps_ids);
 		},
 		"new_auditable.value": {
 			handler(newValue) {
-				if (!_.isUndefined(newValue.id)) {
+				if (!isUndefined(newValue.id)) {
 					this.model.auditable_id = newValue.id;
 				}
 			},

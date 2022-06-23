@@ -22,7 +22,7 @@ export default {
         },
         list: {
             type: Boolean,
-            required: false
+            default: true
         },
         minSearch: {
             type: Number,

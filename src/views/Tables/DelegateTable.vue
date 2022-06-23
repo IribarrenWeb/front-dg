@@ -22,7 +22,7 @@
 					<th>Nombre</th>
 					<th>Email</th>
 					<th>Móvil</th>
-					<th>Provincia</th>
+					<th>Dirección</th>
 					<th>Acciones</th>
 				</template>
 
@@ -37,7 +37,7 @@
 						{{ row.item?.phone_number }}
 					</td>
 					<td>
-						{{ row.item?.province.name }}
+						{{ row.item?.full_address }}
 					</td>
 					<td class="d-flex">
 						<a

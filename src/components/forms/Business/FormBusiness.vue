@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<form-validate @submit="submit" v-slot="{ meta, resetForm }">
+		<form-validate @submit="submit" @keypress.enter.prevent="" v-slot="{ meta, resetForm }">
 			<base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :meta="meta"
 				@step="currentStep = $event"></base-steps>
 			<template v-if="currentStep === 1">
@@ -68,29 +68,6 @@
 									rules="min:5|max:15" label="fijó" v-model.number="model.business_phone" />
 							</base-field>
 						</div>
-						<div class="col-lg-4">
-							<base-field name="address" label="Dirección">
-								<field-validate type="text" class="form-control" name="address" rules=""
-									label="dirección" v-model.number="model.address" />
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="province_id" label="Provincia">
-								<field-validate class="form-control" as="select" name="province_id" rules=""
-									label="Provincia" v-model="model.province_id">
-									<option value="" selected>Selecciona una provincia</option>
-									<option v-for="province in provinces" :key="province.id" :value="province.id">
-										{{ province.name }}
-									</option>
-								</field-validate>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="postal_code" label="Código postal">
-								<field-validate type="number" class="form-control" name="postal_code"
-									rules="numeric|min:5|max:5" label="postal_code" v-model="model.postal_code" />
-							</base-field>
-						</div>
 						<div class="col-lg-8" v-if="ROLE == 'admin'">
 							<base-field name="delegate_id" label="Delegado" :required="true">
 								<div v-if="delegate != null">
@@ -107,6 +84,12 @@
 							</base-field>
 						</div>
 					</div>
+					<address-select 
+						v-model:address="model.address.address"
+						v-model:city="model.address.city"
+						v-model:code="model.address.code"
+						v-model:country="model.address.country"
+					/>
 				</div>
 			</template>
 			<template v-if="currentStep === 2">
@@ -160,75 +143,66 @@
 				</div>
 			</template>
 			<template v-if="currentStep === 3">
-				<fieldset class="border border-light rounded p-2 row mt-3" v-for="(installation, id) in installations"
+				<fieldset  v-for="(installation, id) in installations"
 					:key="installation.key">
-					<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
-						<base-field :name="`installations[${id}].name`" label="Nombre de instalación" :required="true">
-							<field-validate type="text" class="form-control" :name="`installations[${id}].name`"
-								rules="required" label="Nombre" v-model="installations[id].name" />
-						</base-field>
-					</div>
-					<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
-						<base-field :name="`installations[${id}].address`" label="Dirección">
-							<field-validate type="text" class="form-control" :name="`installations[${id}].address`"
-								label="direccion" v-model="installations[id].address" />
-						</base-field>
-					</div>
-					<div class="col-lg-4" v-if="ROLE !== 'auditor'">
-						<base-field :name="`auditable[${id}]`" label="Auditor">
-							<div v-if="installations[id].auditable != null">
-								<span class="mr-md-4 text-uppercase">{{ installations[id].auditable.full_name }}</span>
-								<base-button @click="installations[id].auditable = null" size="sm" type="default"
-									:outline="true"><i class="fa-solid fa-pencil"></i></base-button>
-							</div>
-							<div v-else>
-								<field-validate :name="`auditable[${id}]`" label="Auditor" rules="">
-									<async-select @selected="installations[id].auditable = $event" :roles="[2,3]"
-										:params="queryParams">
-									</async-select>
-								</field-validate>
-							</div>
-						</base-field>
-					</div>
-					<div class="col-lg-6">
-						<base-field :name="`installations[${id}].province_id`" label="Provincia">
-							<field-validate class="form-control" as="select" :name="`installations[${id}].province_id`"
-								label="Provincia" v-model="installations[id].province_id">
-								<option value="" selected>Selecciona una provincia</option>
-								<option v-for="province in provinces" :key="province.id" :value="province.id">
-									{{ province.name }}
-								</option>
-							</field-validate>
-						</base-field>
-					</div>
-					<div class="col-lg-6">
-						<base-field :name="`installations[${id}].file_document.base64`" label="Documentación"
-							>
-							<div v-if="installations[id].file_document.file.length >= 1">
-								<span class="mr-md-4">{{
-										installations[id].file_document.file[0].name
-								}}</span>
-								<base-button @click="installations[id].file_document.file = []" size="sm" type="default"
-									:outline="true"><i class="fa-solid fa-pencil"></i></base-button>
-							</div>
-							<field-validate v-show="!installations[id].file_document.file.length >= 1"
-								class="form-control" type="file" :name="`installations[${id}].file_document.base64`"
-								rules="ext:pdf" :validateOnInput="true" label="documentación"
-								v-model="installations[id].file_document.file" />
-						</base-field>
-					</div>
 
-					<div class="col-12 mt-2">
-						<base-button type="primary" :outline="true" @click="remove(id)"
-							:disabled="installations.length == 1"><i class="fa-regular fa-trash-can"></i></base-button>
+					<div class="border border-light rounded p-2 row mt-3">
+						<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
+							<base-field :name="`installations[${id}].name`" label="Nombre de instalación" :required="true">
+								<field-validate type="text" class="form-control" :name="`installations[${id}].name`"
+									rules="required" label="Nombre" v-model="installations[id].name" />
+							</base-field>
+						</div>
+						<div class="col-lg-4" v-if="ROLE !== 'auditor'">
+							<base-field :name="`auditable[${id}]`" label="Auditor">
+								<div v-if="installations[id].auditable != null">
+									<span class="mr-md-4 text-uppercase">{{ installations[id].auditable.full_name }}</span>
+									<base-button @click="installations[id].auditable = null" size="sm" type="default"
+										:outline="true"><i class="fa-solid fa-pencil"></i></base-button>
+								</div>
+								<div v-else>
+									<field-validate :name="`auditable[${id}]`" label="Auditor" rules="">
+										<async-select @selected="installations[id].auditable = $event" :roles="[2, 3]"
+											:params="queryParams">
+										</async-select>
+									</field-validate>
+								</div>
+							</base-field>
+						</div>
+						<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
+							<base-field :name="`installations[${id}].file_document.base64`" label="Documentación">
+								<div v-if="installations[id].file_document.file.length >= 1">
+									<span class="mr-md-4">{{
+											installations[id].file_document.file[0].name
+									}}</span>
+									<base-button @click="installations[id].file_document.file = []" size="sm" type="default"
+										:outline="true"><i class="fa-solid fa-pencil"></i></base-button>
+								</div>
+								<field-validate v-show="!installations[id].file_document.file.length >= 1"
+									class="form-control" type="file" :name="`installations[${id}].file_document.base64`"
+									rules="ext:pdf" :validateOnInput="true" label="documentación"
+									v-model="installations[id].file_document.file" />
+							</base-field>
+						</div>
+						
+
+						<div class="col-12 mt-2">
+							<base-button type="primary" :outline="true" @click="remove(id)"
+								:disabled="installations.length == 1"><i class="fa-regular fa-trash-can"></i></base-button>
+						</div>
+					</div>
+					<address-select 
+						v-model:address="installations[id].address.address"
+						v-model:city="installations[id].address.city" 
+						v-model:code="installations[id].address.code"
+						v-model:country="installations[id].address.country" 
+					/>
+					<div class="mt-3">
+						<base-button @click="handlePush()" :disabled="installations.length >= 3">
+							Agregrar instalación +
+						</base-button>
 					</div>
 				</fieldset>
-
-				<div class="mt-3">
-					<base-button @click="handlePush()" :disabled="installations.length >= 3">
-						Agregrar instalación +
-					</base-button>
-				</div>
 			</template>
 
 
@@ -246,46 +220,45 @@
 						</div>
 						<div class="col-lg-6 col-lg-4">
 							<base-field :apiName="`installations.${id}.responsible.name`" name="name" label="Nombre">
-								<field-validate type="text" class="form-control" name="name" rules="required"
+								<field-validate type="text" class="form-control" :name="`responsible[${id}].name`" rules="required"
 									label="Nombre" v-model="installations[id].responsible.name" />
 							</base-field>
 						</div>
 
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installations.${id}.responsible.last_name`" name="last_name"
+							<base-field :apiName="`installations.${id}.responsible.last_name`" :name="`responsible[${id}].last_name`"
 								label="Apellido">
-								<field-validate type="text" class="form-control" name="last_name" rules="required"
+								<field-validate type="text" class="form-control" :name="`responsible[${id}].last_name`" rules="required"
 									label="apellido" v-model="installations[id].responsible.last_name" />
 							</base-field>
 						</div>
 
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installations.${id}.responsible.dni`" name="dni" label="DNI">
-								<field-validate type="text" class="form-control" name="dni"
+							<base-field :apiName="`installations.${id}.responsible.dni`" :name="`responsible[${id}].dni`" label="DNI">
+								<field-validate type="text" class="form-control" :name="`responsible[${id}].dni`"
 									rules="min:9|max:9|alpha_num" label="dni"
 									v-model="installations[id].responsible.dni" />
 							</base-field>
 						</div>
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installation.${id}.responsible.email`" name="email" label="Email">
-								<field-validate type="text" class="form-control" name="email" rules="required|email"
+							<base-field :apiName="`installation.${id}.responsible.email`" :name="`responsible[${id}].email`" label="Email">
+								<field-validate type="text" class="form-control" :name="`responsible[${id}].email`" rules="required|email"
 									label="email" v-model="installations[id].responsible.email" />
 							</base-field>
 						</div>
 
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installation[${id}].responsible.position`" name="position"
+							<base-field :apiName="`installation[${id}].responsible.position`" :name="`responsible[${id}].position`"
 								label="Cargo">
-								<field-validate type="text" class="form-control" name="position"
-									rules="alpha_spaces" label="cargo"
-									v-model="installations[id].responsible.position" />
+								<field-validate type="text" class="form-control" :name="`responsible[${id}].position`" rules="alpha_spaces"
+									label="cargo" v-model="installations[id].responsible.position" />
 							</base-field>
 						</div>
 
 						<div class="col-lg-6 col-lg-4">
 							<base-field :apiName="`installations.${id}.responsible.phone_number`" label="Movil"
-								name="phone_number">
-								<field-validate type="number" class="form-control" name="phone_number" rules=""
+								:name="`responsible[${id}].phone_number`">
+								<field-validate type="number" class="form-control" :name="`responsible[${id}].phone_number`" rules=""
 									label="movil" v-model="installations[id].responsible.phone_number" />
 							</base-field>
 						</div>
@@ -436,9 +409,10 @@ import service from "../../../store/services/model-service";
 import _, { isEmpty } from "lodash";
 import { mapGetters } from 'vuex';
 import AsyncSelect from '../../AsyncSelect.vue';
+import AddressSelect from "../../AddressSelect.vue";
 
 export default {
-	components: { AsyncSelect },
+	components: { AsyncSelect, AddressSelect },
 	mixins: [utils],
 	data() {
 		return {
@@ -474,7 +448,6 @@ export default {
 		];
 
 		this.handlePush();
-		this.provinces = this.getProvinces();
 		this.permits = this.getPermits();
 	},
 	methods: {

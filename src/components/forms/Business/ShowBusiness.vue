@@ -125,18 +125,6 @@
 								/>
 							</base-field>
 						</div>
-						<div class="col-lg-4">
-							<base-field name="address" label="Dirección">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="address"
-									rules=""
-									label="dirección"
-									v-model.number="model.address"
-								/>
-							</base-field>
-						</div>
 						<div class="col-lg-4" v-if="provinces.length >= 1">
 							<base-field name="province_id" label="Provincia">
 								<field-validate
@@ -158,19 +146,15 @@
 								</field-validate>
 							</base-field>
 						</div>
-						<div class="col-lg-4">
-							<base-field name="postal_code" label="Código postal">
-								<field-validate
-									type="number"
-									class="form-control"
-									name="postal_code"
-									rules="numeric|min:5|max:5"
-									label="postal_code"
-									v-model="model.postal_code"
-								/>
-							</base-field>
-						</div>
 					</div>
+
+					
+					<AddressSelect 
+						v-model:address="model.address.address" 
+						v-model:city="model.address.city" 
+						v-model:code="model.address.code" 
+						v-model:country="model.address.country"
+					/>
 				</div>
 			</template>
 			<template v-if="currentStep === 2">
@@ -283,6 +267,7 @@
 import utils from "@/mixins/utils-mixin";
 import service from '../../../store/services/model-service';
 import {isEmpty, isEqual} from 'lodash';
+import AddressSelect from "../../AddressSelect.vue";
 
 export default {
     props: {
@@ -295,46 +280,44 @@ export default {
     data() {
         return {
             steps: [{
-					number: 1,
-					title: "General",
-					valid: false,
-				},
-				{
-					number: 2,
-					title: "Bancario",
-					valid: false,
-				},
+                    number: 1,
+                    title: "General",
+                    valid: false,
+                }, {
+                    number: 2,
+                    title: "Bancario",
+                    valid: false,
+                },
             ],
             original_model: null,
             model: null,
             new_file_doc: false,
             currentStep: 1,
-        }
+        };
     },
     async mounted() {
-        this.show()
+        this.show();
         this.getProvinces();
     },
     methods: {
-        async onUpdate(values){
+        async onUpdate(values) {
             if (this.canUpdate) {
                 if (this.currentStep === 2) {
                     if (this.new_firm_doc || !isEmpty(values.file_doc)) {
-                        this.model.file_document.base64 = await this.toBase64(
-                            values.file_doc[0]
-                        );
+                        this.model.file_document.base64 = await this.toBase64(values.file_doc[0]);
                     }
                 }
                 try {
-                    let data = this.$functions.difference(this.original_model,this.model);
+                    let data = this.$functions.difference(this.original_model, this.model, ['address']);
                     await service.update("business", this.business.id, data);
                     this.$emit("reload");
-                } catch (err) {
+                }
+                catch (err) {
                     console.log(err);
                 }
             }
         },
-        async show(){
+        async show() {
             this.model = this.$functions.copy(this.business);
             this.model.name = this.model.user.name;
             this.model.email = this.model.user.email;
@@ -343,15 +326,14 @@ export default {
             this.model.bank_code = this.model.bank.bank_code;
             this.model.file_document = { file: null };
             this.model.file_date = this.file_doc ? this.file_doc.document_date : null;
-
             this.original_model = this.$functions.copy(this.model);
         }
     },
     computed: {
-        canUpdate(){
-            return !isEqual(this.model,this.original_model)
+        canUpdate() {
+            return !isEqual(this.model, this.original_model);
         },
-        file_doc(){
+        file_doc() {
             return this.$functions.filterDoc(this.model.documents, "DOCUMENTACION");
         },
         canShow() {
@@ -363,9 +345,10 @@ export default {
         },
     },
     watch: {
-        business(){
-            this.show()
+        business() {
+            this.show();
         }
-    }
+    },
+    components: { AddressSelect }
 }
 </script>

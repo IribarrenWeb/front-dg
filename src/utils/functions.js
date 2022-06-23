@@ -18,8 +18,13 @@ function cleanData(model, excludes = [], includes = [], formData = false) {
 function toFormData(data) {
     const dataForm = new FormData
     const keysData = keys(data)
+    
     forEach(keysData, (k) => {
-        dataForm.append(k, data[k])
+        let d = data[k]
+        if (isObject(d)){
+            d = JSON.stringify(d)
+        }
+        dataForm.append(k, d)
     })
     return dataForm
 }
@@ -47,6 +52,7 @@ function pruneData(object, excludes = []) {
     return object;
 }
 function copy(data) {
+    console.log(data,'keinher');
     return JSON.parse(JSON.stringify(data))
 }
 function rolename(role) {
@@ -76,15 +82,16 @@ function pluck(arr, key) {
 function filterDoc(arr, doc_name) {
     return filter(arr, function (o) { return o.type.name == doc_name })[0]
 }
-function difference(obj, newObj) {
-    return changes(obj, newObj)
-}
-function changes(obj, newObj) {
+function difference(obj, newObj, ignore = []) {
     let arrayIndexCounter = 0
     return transform(newObj, function (result, value, key) {
         if (!isEqual(value, obj[key])) {
             let resultKey = isArray(obj) ? arrayIndexCounter++ : key
-            result[resultKey] = (isObject(value) && isObject(obj[key])) ? changes(obj[key],value) : value
+            if (!ignore.includes(key)) {
+                result[resultKey] = (isObject(value) && isObject(obj[key])) ? difference(obj[key],value) : value
+            }else{
+                result[resultKey] = value
+            }
         }
     })
 }
@@ -111,6 +118,19 @@ function status(status) {
 }
 function schemas(type) {
     return copy(schemasRepo[type]) ?? null
+}
+function assignSchema(sch, model, relationSchemas = []){
+    const schema = schemas(sch);
+    const m_keys = keys(model);
+
+    forEach(m_keys, (key) => {
+        if (relationSchemas.includes(key)) {
+            schema[key] = assignSchema(key, model[key]);
+        }else{
+            schema[key] = model[key] 
+        }
+    })
+    return schema
 }
 async function compressImage(imgToCompress, resizingFactor = 0.8, quality = 0.6) {
     return new Promise((resolve) => {
@@ -190,5 +210,6 @@ export default {
     formatDoc,
     cleanData,
     toFormData,
-    timeAgo
+    timeAgo,
+    assignSchema
 }

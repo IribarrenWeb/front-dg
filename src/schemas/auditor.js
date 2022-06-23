@@ -1,10 +1,11 @@
+import address from "./address"
+
 export default {
     dni: "",
     phone_number: "",
     email: "",
-    province_id: null,
     name: "",
-    address: "",
+    address: {...address},
     last_name: "",
     documents: null,
     file_certification: "",

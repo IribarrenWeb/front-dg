@@ -1,3 +1,4 @@
+import address from "./address"
 export default {
     dni: "",
     phone_number: "",
@@ -8,10 +9,7 @@ export default {
     delegation_name: "",
     delegation_phone: "",
     cif_nif: "",
-    address: "",
-    province: {
-        name: null
-    },
+    address: {...address},
     last_name: "",
     documents: null,
     file_certification: "",

@@ -1,3 +1,5 @@
+import address from "./address"
+
 export default {
     name: null,
     property_phone: null,
@@ -5,7 +7,7 @@ export default {
     property_dni: null,
     business_phone: null,
     delegate_id: null,
-    address: null,
+    address: { ...address },
     business_nif: null,
     property_name: null,
     property_last_name: null,
@@ -19,5 +21,4 @@ export default {
         file: null
     },
     file_date: "",
-    postal_code: ""
 }

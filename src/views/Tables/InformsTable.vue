@@ -16,9 +16,8 @@
 				<template v-slot:columns>
 					<th>Empresa</th>
 					<th v-if="this.$store.state.is_admin">Delegación</th>
-					<th>Provincia</th>
 					<th>Dirección</th>
-					<th>Instalaciones</th>
+					<th>Instalaciones (auditadas)</th>
 					<th>Año</th>
 					<th>Estado</th>
 					<th></th>
@@ -32,13 +31,10 @@
 						{{ row.item?.business?.administrable?.user.full_name }}
 					</th>
 					<td>
-						{{ row.item?.business?.province?.name }}
+						{{ row.item?.business?.full_address }}
 					</td>
 					<td>
-						{{ row.item?.business?.address }}
-					</td>
-					<td>
-						{{ row.item?.installations_count }}
+						{{ row.item?.audits_completed_count }}/{{row.item?.audits_count}}
 					</td>
 					<th>
 						{{ row.item?.period }}
