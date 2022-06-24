@@ -23,7 +23,7 @@
 					</base-field>
 				</div>
 
-				<div class="col-lg-4" v-if="ROLE != 'delegate'">
+				<div class="col-lg-4" v-if="ROLE == 'admin' ">
 					<base-field name="delegate" label="Delegado">
 						<div v-if="modelDelegate">
 							<span class="mr-md-4 text-uppercase">{{ modelDelegate.name }}</span>

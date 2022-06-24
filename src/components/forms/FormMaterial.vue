@@ -421,11 +421,16 @@ export default {
 		},
 	},
 	watch: {
-		"model.installation_id": function (newVal) {
-			if (this.ROLE == "business" && newVal >= 1) {
-				this.loadOperations(newVal);
-			}
-		},
+		"model.installation_id": {
+			handler(newVal) {
+				console.log(newVal, 'keinher');
+				if (this.ROLE == "business" && newVal >= 1) {
+					this.loadOperations(newVal);
+				}
+			},
+			immediate: true,
+			deep: true
+		}
 	},
 };
 </script>

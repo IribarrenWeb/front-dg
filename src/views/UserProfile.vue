@@ -11,42 +11,46 @@
 										<h3 class="mb-0">Mi cuenta</h3>
 									</div>
 									<div class="col-4 text-right">
-										<a href="#!" class="btn btn-sm btn-default">Configuracion</a>
+										<!-- <a href="#!" class="btn btn-sm btn-default">Configuracion</a> -->
 									</div>
 								</div>
 							</div>
 						</template>
 
-						<form>
-							<h6 class="heading-small text-muted mb-4">
-								Informacion de usuario
-							</h6>
-							<div class="row">
-								<div class="col-lg-4 col-md-6">
-									<base-input :view="true" name="first_name" label="Nombre"
-										:modelValue="model.name" />
+						<div class="px-lg-5 px-md-3 px-1 mx-xl-5">
+							<div v-if="model.role_id == 1">
+								<h6 class="heading-small text-muted mb-4">
+									Informacion de usuario
+								</h6>
+								<div class="row">
+									<div class="col-lg-4 col-md-6">
+										<base-input :view="true" name="first_name" label="Nombre"
+											:modelValue="model.name" />
+									</div>
+									<div class="col-lg-4 col-md-6">
+										<base-input :view="true" label="Apellido" :modelValue="model.last_name" />
+									</div>
+									<div class="col-lg-4 col-md-6">
+										<base-input :view="true" name="email" label="Correo" :modelValue="model.email" />
+									</div>
 								</div>
-								<div class="col-lg-4 col-md-6">
-									<base-input :view="true" label="Apellido" :modelValue="model.last_name" />
-								</div>
-								<div class="col-lg-4 col-md-6">
-									<base-input :view="true" name="email" label="Correo" :modelValue="model.email" />
-								</div>
+								<hr class="my-4" />
 							</div>
-							<hr class="my-4" />
 							<!-- Address -->
 							<div v-if="model.role_id >= 2">
 								<h6 class="heading-small text-muted mb-4">Informacion de perfil</h6>
-								<div class="pl-lg-4">
-									<AddressSelect
-										v-model:address="roleModel.address.address" 
-										v-model:city="roleModel.address.city" 
-										v-model:code="roleModel.address.code" 
-										v-model:country="roleModel.address.country"
-									/>
+								<div class="px-0">
+									<component :is="component" :id="roleModel.id" :business="roleModel" :profile="true" :user="model"></component>
 								</div>
 							</div>
-						</form>
+							<hr>
+							<div class="mt-5 mb-2">
+								<h6 class="heading-small text-muted mb-4">
+									Cambio de contrasena
+								</h6>
+								<form-password></form-password>
+							</div>
+						</div>
 					</card>
 				</div>
 			</div>
@@ -55,27 +59,46 @@
 </template>
 <script>
 import service from "../store/services/profile-service.js";
-import AddressSelect from "../components/AddressSelect.vue";
 import { computed, onMounted, ref } from "vue";
 import functions from "../utils/functions";
+import FormDelegate from "../components/forms/FormDelegate";
+import FormAuditor from "../components/forms/FormAuditor";
+import FormPassword from "../components/forms/FormPassword";
+import ShowBusiness from "../components/forms/Business/ShowBusiness";
 
 export default {
     name: "user-profile",
-    components: { AddressSelect },
+	components: {
+		FormDelegate,
+		FormAuditor,
+		FormPassword,
+		ShowBusiness
+	},
 	setup() {
-		const model = ref(null)
+		const model = ref({
+			name: null,
+			last_name: null,
+			email: null
+		})
+		const component = computed(() => {
+			let comp = ''
+			if (role.value == 'auditor' || role.value == 'delegate') {
+				comp = 'form-' + role.value
+			}else{
+				comp = 'show-business';
+			}
+			return comp;
+		})
 		const role = computed(() => {
 			return model.value?.role?.name
 		})
 		const roleModel = computed(() => {
-			console.log(model.value,role.value);
-			return functions.assignSchema(role.value, model.value, ['address'])
+			return functions.assignSchema(role.value, model.value[role.value], ['address'])
 		})
 		
 		async function getUser(){
 			const data = await service.get();
 			model.value = data.list.user;
-			roleModel.value = data.list[role.value]
 		}
 
 		onMounted(() => {
@@ -85,6 +108,7 @@ export default {
 		return {
 			model,
 			role,
+			component,
 			roleModel
 		}
 	},

@@ -2,13 +2,14 @@
 	<div>
 		<form-validate v-if="canShow" v-slot="{meta}" @submit="onUpdate">
             <base-steps
+				v-if="!profile"
 				:currentStep="currentStep"
 				listClasses="mb-md-4 pb-md-2"
 				:steps="steps"
 				:meta="meta"
 				@step="currentStep = $event"
 			></base-steps>
-			<template v-if="currentStep === 1">
+			<template v-if="currentStep === 1 || profile">
 				<div>
 					<div class="row border border-light rounded p-2">
 						<div class="col-12">
@@ -157,7 +158,7 @@
 					/>
 				</div>
 			</template>
-			<template v-if="currentStep === 2">
+			<template v-if="currentStep === 2 || profile">
 				<div class="row border border-light rounded p-2">
 					<div class="col-12">
 						<h4>Datos bancarios</h4>
@@ -242,20 +243,21 @@
 					</div>
 				</div>
 			</template>
-            <div class="mt-4 float-md-right">
-                <base-button v-if="canUpdate" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
+            <div class="d-flex justify-items-center mt-2">
+                <base-button v-if="canUpdate || profile" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
 					>Actualizar</base-button
 				>
-                <base-button type="default" @click="currentStep++" v-if="currentStep !== 2 && !canUpdate"
+                <base-button class="ml-2" type="default" @click="currentStep++" v-if="currentStep !== 2 && !canUpdate && !profile" 
 					>Siguiente</base-button
 				>
-                <base-button type="default" @click="currentStep--" v-if="currentStep !== 1"
+                <base-button class="ml-2" type="default" @click="currentStep--" v-if="currentStep !== 1 && !profile"
 					>Anterior</base-button
 				>
 				<base-button
+					v-if="!profile"
 					type="default"
 					:outline="true"
-					class="ml-auto"
+					class="ml-2"
 					@click="this.$emit('close')"
 					>Cancelar
 				</base-button>
@@ -274,7 +276,15 @@ export default {
         business: {
             type: Object,
             required: true
-        }
+        },
+		profile: {
+			type: Boolean,
+			default: false
+		},
+		user: {
+			type: Object,
+			required: false
+		}
     },
     mixins: [utils],
     data() {
@@ -318,12 +328,12 @@ export default {
             }
         },
         async show() {
-            this.model = this.$functions.copy(this.business);
-            this.model.name = this.model.user.name;
-            this.model.email = this.model.user.email;
-            this.model.holder_name = this.model.bank.holder_name;
-            this.model.iban_number = this.model.bank.iban_number;
-            this.model.bank_code = this.model.bank.bank_code;
+            this.model = this.$functions.assignSchema('business', this.business,['address']);
+            this.model.name = this.model?.user?.name ?? this.user?.name;
+            this.model.email = this.model?.user?.email ?? this.user?.email;
+            this.model.holder_name = this.model?.bank?.holder_name;
+            this.model.iban_number = this.model?.bank?.iban_number;
+            this.model.bank_code = this.model?.bank?.bank_code;
             this.model.file_document = { file: null };
             this.model.file_date = this.file_doc ? this.file_doc.document_date : null;
             this.original_model = this.$functions.copy(this.model);

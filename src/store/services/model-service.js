@@ -35,8 +35,9 @@ const apis = {
     non: "nonconformities",
     report: "reports",
     non_actions: "nonconformities-action",
+
 }
-async function api(model, method = 'GET', params = null, page = null) {
+async function api(model, method = 'GET', params = null, page = null, data = null) {
     storage.commit('loading');
     let url_model = `${url}/${model}?_method=${method}`;
 
@@ -48,7 +49,13 @@ async function api(model, method = 'GET', params = null, page = null) {
         url_model += params
     }
 
-    return await axios.request(url_model).then((response) => {
+    const config = {
+        method: method,
+        url: url_model,
+        data: data
+    }
+    
+    return await axios.request(config).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
