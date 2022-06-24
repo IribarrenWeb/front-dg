@@ -12,7 +12,7 @@
 					<h4>Datos principales</h4>
 				</div>
 				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="name" name="name" label="Nombre">
+					<base-field apiName="name" name="name" label="Nombre" :required="true">
 						<field-validate
 							type="text"
 							class="form-control"
@@ -25,7 +25,7 @@
 				</div>
 
 				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="last_name" name="last_name" label="Apellido">
+					<base-field apiName="last_name" name="last_name" label="Apellido" :required="true">
 						<field-validate
 							type="text"
 							class="form-control"
@@ -50,7 +50,7 @@
 					</base-field>
 				</div>
 				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="email" name="email" label="Email">
+					<base-field apiName="email" name="email" label="Email" :required="true">
 						<field-validate
 							type="text"
 							class="form-control"

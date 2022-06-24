@@ -22,19 +22,26 @@
 								<h6 class="heading-small text-muted mb-4">
 									Informacion de usuario
 								</h6>
-								<div class="row">
-									<div class="col-lg-4 col-md-6">
-										<base-input :view="true" name="first_name" label="Nombre"
-											:modelValue="model.name" />
+								<form-validate @submit="updateUser" class="row">
+									<div class="col-md-6">
+										<base-field name="name" label="Nombre">
+											<field-validate class="form-control" name="name" label="nombre" rules="required" v-model="model.name"/>
+										</base-field>
 									</div>
-									<div class="col-lg-4 col-md-6">
-										<base-input :view="true" label="Apellido" :modelValue="model.last_name" />
+									<div class="col-md-6">
+										<base-field name="last_name" label="Apellido">
+											<field-validate class="form-control" name="last_name" label="apellido" rules="required" v-model="model.last_name"/>
+										</base-field>
 									</div>
-									<div class="col-lg-4 col-md-6">
-										<base-input :view="true" name="email" label="Correo" :modelValue="model.email" />
+									<div class="col-md-6">
+										<base-field name="email" label="Correo">
+											<field-validate class="form-control" name="email" label="Correo" rules="required|email" v-model="model.email"/>
+										</base-field>
 									</div>
-								</div>
-								<hr class="my-4" />
+									<div class="col-12 d-flex">
+										<base-button class="mr-0 ml-auto" nativeType="submit">Actualizar</base-button>
+									</div>
+								</form-validate>
 							</div>
 							<!-- Address -->
 							<div v-if="model.role_id >= 2">
@@ -65,7 +72,7 @@ import FormDelegate from "../components/forms/FormDelegate";
 import FormAuditor from "../components/forms/FormAuditor";
 import FormPassword from "../components/forms/FormPassword";
 import ShowBusiness from "../components/forms/Business/ShowBusiness";
-
+import apiService from "../store/services/model-service.js";
 export default {
     name: "user-profile",
 	components: {
@@ -95,6 +102,14 @@ export default {
 		const roleModel = computed(() => {
 			return functions.assignSchema(role.value, model.value[role.value], ['address'])
 		})
+
+		async function updateUser(values){
+			try {
+				await apiService.api('users', 'put', null, null,values)
+			} catch (err) {
+				console.log(err);
+			}
+		}
 		
 		async function getUser(){
 			const data = await service.get();
@@ -108,6 +123,7 @@ export default {
 		return {
 			model,
 			role,
+			updateUser,
 			component,
 			roleModel
 		}
