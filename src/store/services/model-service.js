@@ -35,6 +35,7 @@ const apis = {
     non: "nonconformities",
     report: "reports",
     non_actions: "nonconformities-action",
+    documents: "admin-docs"
 
 }
 async function api(model, method = 'GET', params = null, page = null, data = null) {

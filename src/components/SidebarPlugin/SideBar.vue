@@ -1,6 +1,8 @@
 <template>
-	<nav :class="`navbar navbar-vertical fixed-left navbar-expand-lg navbar-light bg-white ${sidebarClasses}`"
-		id="sidenav-main">
+	<nav
+		:class="`navbar navbar-vertical fixed-left navbar-expand-lg navbar-light bg-white ${sidebarClasses}`"
+		id="sidenav-main"
+	>
 		<div class="container-fluid">
 			<!--Toggler-->
 			<navbar-toggle-button @click="showSidebar">
@@ -11,13 +13,11 @@
 			</router-link>
 
 			<slot name="mobile-right">
-
 				<ul class="nav align-items-center d-lg-none">
 					<!-- Notifications -->
 					<notifications v-if="isMovil" :dark="true"></notifications>
 
 					<!-- End notifications -->
-
 
 					<base-dropdown class="nav-item" position="right">
 						<template v-slot:title>
@@ -44,12 +44,15 @@
 						</a>
 					</base-dropdown>
 				</ul>
-
 			</slot>
 
 			<slot></slot>
 
-			<div v-show="$sidebar.showSidebar" class="navbar-collapse collapse show" id="sidenav-collapse-main">
+			<div
+				v-show="$sidebar.showSidebar"
+				class="navbar-collapse collapse show"
+				id="sidenav-collapse-main"
+			>
 				<div class="navbar-collapse-header d-md-none">
 					<div class="row">
 						<div class="col-6 collapse-brand">
@@ -58,7 +61,9 @@
 							</router-link>
 						</div>
 						<div class="col-6 collapse-close">
-							<navbar-toggle-button @click="closeSidebar"></navbar-toggle-button>
+							<navbar-toggle-button
+								@click="closeSidebar"
+							></navbar-toggle-button>
 						</div>
 					</div>
 				</div>
@@ -71,88 +76,88 @@
 				<!--Heading-->
 				<!-- <h6 class="navbar-heading text-muted">Documentation</h6> -->
 				<!--Navigation-->
-				<!-- <ul class="navbar-nav mb-md-3">
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/vue-argon-dashboard/documentation"
-            >
-              <i class="ni ni-spaceship"></i> Getting started
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/vue-argon-dashboard/documentation/foundation/colors.html"
-            >
-              <i class="ni ni-palette"></i> Foundation
-            </a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://demos.creative-tim.com/vue-argon-dashboard/documentation/components/alerts.html"
-            >
-              <i class="ni ni-ui-04"></i> Components
-            </a>
-          </li>
-        </ul> -->
+				<ul class="navbar-nav mb-md-3">
+					<li class="nav-item">
+						<router-link to="/documents">
+							<span class="nav-link">
+								<i class="fa-solid fa-book"></i> Documentación
+							</span>
+						</router-link>
+					</li>
+
+					<!-- <li class="nav-item">
+						<a
+							class="nav-link"
+							href="https://demos.creative-tim.com/vue-argon-dashboard/documentation/foundation/colors.html"
+						>
+							<i class="ni ni-palette"></i> Foundation
+						</a>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="https://demos.creative-tim.com/vue-argon-dashboard/documentation/components/alerts.html"
+						>
+							<i class="ni ni-ui-04"></i> Components
+						</a>
+					</li> -->
+				</ul>
 			</div>
 		</div>
 	</nav>
 </template>
 <script>
-import NavbarToggleButton from "@/components/NavbarToggleButton";
-import Notifications from '../Notifications.vue';
+	import NavbarToggleButton from "@/components/NavbarToggleButton";
+	import Notifications from "../Notifications.vue";
 
-export default {
-	name: "sidebar",
-	components: {
-		NavbarToggleButton,
-		Notifications,
-	},
-	props: {
-		logo: {
-			type: String,
-			default: process.env.VUE_APP_API_URL + "img/dg_logo.png",
-			description: "Sidebar app logo",
+	export default {
+		name: "sidebar",
+		components: {
+			NavbarToggleButton,
+			Notifications,
 		},
-		autoClose: {
-			type: Boolean,
-			default: true,
-			description:
-				"Whether sidebar should autoclose on mobile when clicking an item",
+		props: {
+			logo: {
+				type: String,
+				default: process.env.VUE_APP_API_URL + "img/dg_logo.png",
+				description: "Sidebar app logo",
+			},
+			autoClose: {
+				type: Boolean,
+				default: true,
+				description:
+					"Whether sidebar should autoclose on mobile when clicking an item",
+			},
+			sidebarClasses: {
+				type: String,
+				required: false,
+			},
 		},
-		sidebarClasses: {
-			type: String,
-			required: false
-		}
-	},
-	provide() {
-		return {
-			autoClose: this.autoClose,
-		};
-	},
-	computed: {
-		isMovil(){
-			return this.$store.state.is_mobile
-		}
-	},	
-	methods: {
-		closeSidebar() {
-			this.$sidebar.displaySidebar(false);
+		provide() {
+			return {
+				autoClose: this.autoClose,
+			};
 		},
-		showSidebar() {
-			this.$sidebar.displaySidebar(true);
+		computed: {
+			isMovil() {
+				return this.$store.state.is_mobile;
+			},
 		},
-		logout() {
-			this.$store.dispatch("auth/logout");
-		}
-	},
-	beforeUnmount() {
-		if (this.$sidebar.showSidebar) {
-			this.$sidebar.showSidebar = false;
-		}
-	},
-};
+		methods: {
+			closeSidebar() {
+				this.$sidebar.displaySidebar(false);
+			},
+			showSidebar() {
+				this.$sidebar.displaySidebar(true);
+			},
+			logout() {
+				this.$store.dispatch("auth/logout");
+			},
+		},
+		beforeUnmount() {
+			if (this.$sidebar.showSidebar) {
+				this.$sidebar.showSidebar = false;
+			}
+		},
+	};
 </script>

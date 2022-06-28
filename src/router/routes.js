@@ -6,6 +6,10 @@ const Dashboard = defineAsyncComponent(() =>
     import ("@/views/Dashboard.vue")
 );
 
+const Documents = defineAsyncComponent(() =>
+    import ("@/views/Documents.vue")
+);
+
 const Vehicle = defineAsyncComponent(() =>
     import ("@/views/Vehicles.vue")
 );
@@ -164,6 +168,13 @@ const routes = [{
                 path: "/installations",
                 name: "instalaciones",
                 components: { default: Installations },
+                meta: { middleware: auth },
+            },
+
+            {
+                path: "/documents",
+                name: "documentos",
+                components: { default: Documents },
                 meta: { middleware: auth },
             },
 
