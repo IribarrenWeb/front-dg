@@ -9,7 +9,8 @@ export default {
     periodicity: null,
     file_document: {
         base64: "",
-        file: []
+        file: [],
+        file_name: null
     },
     auditable: null,
     operation_types_ids: [],

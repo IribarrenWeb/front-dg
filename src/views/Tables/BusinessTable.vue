@@ -20,9 +20,10 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
-					<th>Provincia</th>
+					<th>Ciudad</th>
 					<th>Instalaciones</th>
 					<th></th>
+					<th>Delegación</th>
 					<th>Acciones</th>
 				</template>
 
@@ -30,7 +31,7 @@
 					<th scope="row">
 						{{ row.item?.user.full_name }}
 					</th>
-					<td class="text-uppercase">BARCELONA</td>
+					<td class="text-uppercase">{{row.item?.address?.city}}</td>
 					<td>
 						{{ row.item?.installations.length }}
 					</td>
@@ -43,17 +44,15 @@
 						</span>
 					</td>
 					<td>
+						{{ row.item?.administrable?.user?.full_name }}
+					</td>
+					<td class="d-flex">
 						<router-link
 							:to="`/business/${row.item?.id}`"
 							class="btn btn-sm btn-default"
 							><i class="fa-regular fa-eye"></i></router-link
 						>
-						<a
-							href="#"
-							@click.prevent="destroy(row.item?.id)"
-							class="btn btn-sm btn-outline-default"
-							><i class="fa-regular fa-trash-can"></i></a
-						>
+						<delete-button model="business" :id="row.item?.id" @deleted="getBusiness"></delete-button>
 					</td>
 				</template>
 			</base-table>
@@ -85,9 +84,10 @@
 <script>
 	import FormBusiness from "../../components/forms/Business/FormBusiness.vue";
 	import service from "../../store/services/model-service";
+	import DeleteButton from "../../components/Utils/DeleteButton.vue";
 
 	export default {
-		components: { FormBusiness },
+		components: { FormBusiness, DeleteButton },
 		name: "business-table",
 		data() {
 			return {
@@ -113,7 +113,7 @@
 				const response = await service.getIndex(
 					"business",
 					page,
-					`&includes[]=user&includes[]=installations`
+					`&includes[]=user&includes[]=installations&includes[]=administrable.user`
 				);
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;

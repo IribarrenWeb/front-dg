@@ -38,7 +38,7 @@
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
 						<tr>
-							<td>{{ business?.property_name ?? 'N/A' }} {{ business?.last_name }}</td>
+							<td>{{ business?.property_name ?? 'N/A' }} {{ business?.property_last_name }}</td>
 							<td>{{ business?.property_dni ?? 'N/A' }}</td>
 							<td>{{ business?.property_email ?? 'N/A' }}</td>
 							<td colspan="4">{{ business?.property_phone ?? 'N/A' }}</td>
@@ -61,7 +61,7 @@
 									@click.prevent="getDocument(file_doc?.id)"
 								>
 									<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-									Documentación
+									{{file_doc?.name_document ?? 'Documentación'}}
 								</a>
 								<span v-else>SIN DOCUMENTACIÓN</span>
 							</td>
@@ -72,7 +72,7 @@
 
 			<div class="mt-3 card">
 				<div class="my-2 ml-md-4 ml-2">
-					<h4>Delegado</h4>
+					<h4>Delegación</h4>
 				</div>
 				<table
 					class="table table-bordered table-responsive-md table-sm rounded"

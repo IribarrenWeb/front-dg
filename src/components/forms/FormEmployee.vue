@@ -387,28 +387,39 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 						this.model.file_firm.base64 = await this.toBase64(
 							values.file_firm[0]
 						);
+						this.model.file_firm.file_name = values.file_firm[0].name
 					}
 					if (this.model.driver && (this.new_driver_doc || !this.file_driver)) {
 						this.model.driver_document.base64 = await this.toBase64(
 							values.file_driver[0]
 						);
+						this.model.driver_document.file_name = values.file_driver[0].name
+
 					}
 					if (this.model.dangerous_goods && (this.new_cer_doc || !this.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
+						this.model.file_certification.file_name = values.file_cer[0].name
 					}
 				} else {
-					this.model.file_firm.base64 = await this.toBase64(values.file_firm[0]);
+					if (!this.$functions.empty(values.file_firm)) {
+						this.model.file_firm.base64 = await this.toBase64(
+							values.file_firm[0]
+						);
+						this.model.file_firm.file_name = values.file_firm[0].name
+					}
 					if (this.model.driver && !this.$functions.empty(values.file_driver)) {
 						this.model.driver_document.base64 = await this.toBase64(
 							values.file_driver[0]
 						);
+						this.model.driver_document.file_name = values.file_driver[0].name
 					}
 					if (this.model.dangerous_goods && !this.$functions.empty(values.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
+						this.model.file_certification.file_name = values.file_cer[0].name
 					}
 				}
 

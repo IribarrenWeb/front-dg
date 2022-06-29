@@ -81,7 +81,7 @@
 					<base-field name="file_certification" label="Documento de ceritificado">
 						<div v-if="cert_document && !cer_update">
 							<a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{
-									cert_document.type.name
+									cert_document.name_document ?? cert_document.type.name
 							}}</a>
 							<base-button @click="cer_update = true" size="sm" type="default" :outline="true"><i
 									class="fa-solid fa-pencil"></i></base-button>
@@ -109,7 +109,7 @@
 					<base-field name="file_firm" label="Documento de alta">
 						<div v-if="firm_document && !firm_update">
 							<a href="#" @click.prevent="getDocument(firm_document.id)" class="mr-md-4">{{
-									firm_document.type.name
+									firm_document.name_document ?? firm_document.type.name
 							}}</a>
 							<base-button @click="firm_update = true" size="sm" type="default" :outline="true"><i
 									class="fa-solid fa-pencil"></i></base-button>

@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<div>
-				<visit-tablet title="Visitas"></visit-tablet>
+				<visit-tablet :dash="true" title="Visitas"></visit-tablet>
 			</div>
 			<div class="my-md-4">
 				<informs-table :dash="true"></informs-table>

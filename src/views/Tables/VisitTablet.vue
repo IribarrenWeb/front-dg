@@ -11,6 +11,12 @@
 					</h3>
 				</div>
 				<div class="col text-right">
+					<router-link
+						v-if="dash"
+						to="/visits"
+						class="btn btn-sm btn-default"
+						>Ver todas</router-link
+					>
 				</div>
 			</div>
 		</div>
@@ -72,6 +78,7 @@
 			</base-table>
 
 			<base-pagination
+				v-if="!dash"
 				:perPage="this.metaData.perPage"
 				:value="this.page"
 				@changePage="handleChange($event)"
@@ -92,6 +99,9 @@
 				type: String,
 			},
 			title: String,
+			dash: {
+				default: false
+			}
 		},
 		data() {
 			return {

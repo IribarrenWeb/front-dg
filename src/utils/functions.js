@@ -29,6 +29,7 @@ function toFormData(data) {
     return dataForm
 }
 function pruneData(object, excludes = []) {
+    console.log(object, 'keinher');
     Object
         .entries(object)
         .forEach(([k, v]) => {

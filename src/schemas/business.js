@@ -18,7 +18,8 @@ export default {
     holder_name: null,
     file_document: {
         base64: null,
-        file: null
+        file: null,
+        file_name: null
     },
     file_date: "",
 }

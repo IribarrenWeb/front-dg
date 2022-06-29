@@ -61,7 +61,7 @@
 					<td>{{ row.item?.documents[0]?.document_date }}</td>
 					<td>
 						<a v-if="!$functions.empty(row.item?.documents)" href="#" @click.prevent="getDocument(row.item?.documents[0].id)">
-							DOCUMENTACION
+							{{row.item?.documents[0].name_document ?? 'DOCUMENTACION'}}
 						</a>
 						<span v-else>
 							SIN DOCUMENTACIÓN

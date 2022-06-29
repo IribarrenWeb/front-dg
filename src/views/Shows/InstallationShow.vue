@@ -49,7 +49,7 @@
 					<base-field name="file_document" label="Documentacion">
 						<div v-if="(model.documents.length >= 1) & !new_document.new">
 							<a class="mr-md-4" @click.prevent="getDocument(model.documents[0].id)">
-								{{ model.documents[0].type.name }}
+								{{ model.documents[0].name_document ?? model.documents[0].type.name }}
 							</a>
 							<base-button @click="new_document.new = true" size="sm" type="default" :outline="true"><i
 									class="fa-solid fa-pencil"></i></base-button>
@@ -112,7 +112,7 @@
 											getDocument(responsible?.firm_document?.id)
 										">
 											<i class="fa fa-file-pdf" aria-hidden="true"></i>
-											ALTA
+											{{responsible?.firm_document?.name_document ?? 'ALTA'}}
 										</a>
 									</div>
 								</td>
@@ -342,6 +342,7 @@ export default {
 				) {
 					data.file_document = {
 						base64: await this.toBase64(this.model.file_document[0]),
+						file_name: this.model.file_document[0].name
 					};
 				}
 				if (this.new_auditable.new || this.model.auditable == null) {

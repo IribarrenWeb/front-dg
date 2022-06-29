@@ -133,7 +133,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="quantity" label="Volumen Almacenamiento">
+						<base-field name="quantity" label="Volumen Depósito">
 							<field-validate type="text" class="form-control" name="quantity"
 								label="volumen del Almacenamiento" v-model="model.quantity" />
 						</base-field>
@@ -219,6 +219,7 @@ export default {
 				file_document: {
 					file: [],
 					base64: null,
+					file_name: null
 				},
 				operation_type_id: null,
 			},
@@ -237,6 +238,7 @@ export default {
 			this.original_material.file_document = {
 				file: [],
 				base64: null,
+				file_name: null
 			};
 			this.original_material.adr_material_id = this.original_material.material.id
 
@@ -328,6 +330,7 @@ export default {
 					this.model.file_document.base64 = await this.toBase64(
 						this.model.file_document.file[0]
 					);
+					this.model.file_document.file_name = this.model.file_document.file[0].name
 				}
 			}
 			if (this.currentStep === 2) {
@@ -382,6 +385,7 @@ export default {
 					this.original_material.file_document = {
 						file: [],
 						base64: null,
+						file_name: null
 					};
 					this.model = this.$functions.copy(this.original_material)
 					this.new_document = false

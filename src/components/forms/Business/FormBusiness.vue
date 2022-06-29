@@ -184,25 +184,27 @@
 									v-model="installations[id].file_document.file" />
 							</base-field>
 						</div>
-						
+						<div class="col-12">
+							<address-select 
+								v-model:address="installations[id].address.address"
+								v-model:city="installations[id].address.city" 
+								v-model:code="installations[id].address.code"
+								v-model:country="installations[id].address.country" 
+							/>
+						</div>
 
 						<div class="col-12 mt-2">
 							<base-button type="primary" :outline="true" @click="remove(id)"
 								:disabled="installations.length == 1"><i class="fa-regular fa-trash-can"></i></base-button>
 						</div>
 					</div>
-					<address-select 
-						v-model:address="installations[id].address.address"
-						v-model:city="installations[id].address.city" 
-						v-model:code="installations[id].address.code"
-						v-model:country="installations[id].address.country" 
-					/>
-					<div class="mt-3">
-						<base-button @click="handlePush()" :disabled="installations.length >= 3">
-							Agregrar instalación +
-						</base-button>
-					</div>
+					
 				</fieldset>
+				<div class="mt-3">
+					<base-button @click="handlePush()" :disabled="installations.length >= 3">
+						Agregrar instalación +
+					</base-button>
+				</div>
 			</template>
 
 
@@ -219,14 +221,14 @@
 							<h4>Datos principales</h4>
 						</div>
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installations.${id}.responsible.name`" name="name" label="Nombre">
+							<base-field :apiName="`installations.${id}.responsible.name`" :required="true" name="name" label="Nombre">
 								<field-validate type="text" class="form-control" :name="`responsible[${id}].name`" rules="required"
 									label="Nombre" v-model="installations[id].responsible.name" />
 							</base-field>
 						</div>
 
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installations.${id}.responsible.last_name`" :name="`responsible[${id}].last_name`"
+							<base-field :apiName="`installations.${id}.responsible.last_name`" :required="true" :name="`responsible[${id}].last_name`"
 								label="Apellido">
 								<field-validate type="text" class="form-control" :name="`responsible[${id}].last_name`" rules="required"
 									label="apellido" v-model="installations[id].responsible.last_name" />
@@ -241,7 +243,7 @@
 							</base-field>
 						</div>
 						<div class="col-lg-6 col-lg-4">
-							<base-field :apiName="`installation.${id}.responsible.email`" :name="`responsible[${id}].email`" label="Email">
+							<base-field :apiName="`installation.${id}.responsible.email`" :required="true" :name="`responsible[${id}].email`" label="Email">
 								<field-validate type="text" class="form-control" :name="`responsible[${id}].email`" rules="required|email"
 									label="email" v-model="installations[id].responsible.email" />
 							</base-field>
@@ -468,31 +470,35 @@ export default {
 					this.model.file_document.base64 = await this.toBase64(
 						values.file_document.base64[0]
 					);
+					this.model.file_document.file_name = values.file_document.base64[0].name
 				}
 			}
 
 			if (this.currentStep == 3) {
 				for (let i = 0; i < this.installations.length; i++) {
 					const installation = this.installations[i];
-					if (!isEmpty(installation.file_document.file[0])) {
-						this.model.file_document.base64 = await this.toBase64(
-							values.file_document.base64[0]
+					if (this.installations[i].file_document?.file[0]) {
+						this.installations[i].file_document.base64 = await this.toBase64(
+							values.installations[i].file_document.base64[0]
 						);
+						this.installations[i].file_document.file_name = this.installations[i].file_document.file[0].name
 					}
 					if (!_.isEmpty(installation.auditable)) {
-						installation.auditable_id = installation.auditable.id;
+						this.installations[i].auditable_id = this.installations[i].auditable.id;
 					}
+					console.log(this.installations[i], 'testk');
 					// this.installations[i] = this.$functions.cleanData(installation);
 				}
 			}
 			if (this.currentStep == 4) {
 				for (let i = 0; i < this.installations.length; i++) {
 					// Format firm
-					if (!isEmpty(this.installations[i].responsible.file_firm.file[0])) {
+					if (this.installations[i].responsible.file_firm.file[0]) {
 						this.installations[i].responsible.file_firm.base64 =
 							await this.toBase64(
 								this.installations[i].responsible.file_firm.file[0]
 							);
+						this.installations[i].responsible.file_firm.file_name = this.installations[i].responsible.file_firm.file[0].name
 					}
 					// Format driver documents
 					if (this.installations[i].responsible.driver) {
@@ -500,19 +506,21 @@ export default {
 							await this.toBase64(
 								this.installations[i].responsible.driver_document.file[0]
 							);
+						this.installations[i].responsible.driver_document.file_name = this.installations[i].responsible.driver_document.file[0].name
 					}
 					if (this.installations[i].responsible.dangerous_goods) {
 						this.installations[i].responsible.file_certification.base64 =
 							await this.toBase64(
 								this.installations[i].responsible.file_certification.file[0]
 							);
+						this.installations[i].responsible.file_certification.file_name = this.installations[i].responsible.file_certification.file[0].name
 					}
 				}
 
 				this.model.installations = this.installations;
-
 				try {
 					const data = this.$functions.cleanData(this.model)
+					// eslint-disable-next-line no-unreachable
 					await service.store("business", data);
 					resetForm();
 					this.$emit("close");

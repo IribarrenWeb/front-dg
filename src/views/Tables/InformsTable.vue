@@ -6,7 +6,12 @@
 					<h4 class="mb-0">Informes anuales</h4>
 				</div>
 				<div class="col text-right">
-					<!-- <a href="#" class="btn btn-sm btn-default">Agregar</a> -->
+					<router-link
+						v-if="dash"
+						to="/informs"
+						class="btn btn-sm btn-default"
+						>Ver todas</router-link
+					>
 				</div>
 			</div>
 		</div>

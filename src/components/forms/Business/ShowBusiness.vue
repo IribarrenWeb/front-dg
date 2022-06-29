@@ -220,7 +220,7 @@
 						<base-field name="file_document.base64" label="Documentación">
                             <div v-if="file_doc && !new_file_doc">
                                 <a href="#" @click="getDocument(file_doc.id)" class="mr-md-4">{{
-                                    file_doc.type.name
+                                    file_doc.name_document ?? file_doc.type.name
                                 }}</a>
                                 <base-button
                                     @click="new_file_doc = true"
@@ -315,6 +315,8 @@ export default {
                 if (this.currentStep === 2) {
                     if (this.new_firm_doc || !isEmpty(values.file_doc)) {
                         this.model.file_document.base64 = await this.toBase64(values.file_doc[0]);
+                        this.model.file_document.file_name = values.file_doc[0]?.name;
+						console.log(values.file_doc[0]?.name);
                     }
                 }
                 try {

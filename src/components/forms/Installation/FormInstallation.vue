@@ -667,6 +667,7 @@
 						this.model.file_document.base64 = await this.toBase64(
 							inst.file_document[0]
 						);
+						this.model.file_document.file_name = inst.file_document[0].name
 					}
 					this.model.auditable_id = this.model?.auditable?.id;
 					if (this.isSaved) {
@@ -689,15 +690,18 @@
 						this.model.responsible.file_firm.base64 = await this.toBase64(
 							inst.file_firm[0]
 						);
+						this.model.responsible.file_firm.file_name = inst.file_firm[0].name
 					}
 					if (this.model.responsible.driver) {
 						this.model.responsible.driver_document.base64 = await this.toBase64(
 							inst.file_driver[0]
 						);
+						this.model.responsible.driver_document.file_name = inst.file_driver[0].name
+
 					}
 					if (this.model.responsible.dangerous_goods) {
-						this.model.responsible.file_certification.base64 =
-							await this.toBase64(inst.file_cer[0]);
+						this.model.responsible.file_certification.base64 = await this.toBase64(inst.file_cer[0]);
+						this.model.responsible.file_certification.file_name = inst.file_cer[0].name
 					}
 				}
 

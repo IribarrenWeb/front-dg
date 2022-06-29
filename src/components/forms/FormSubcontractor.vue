@@ -113,7 +113,8 @@ export default {
                 file_document_date: "",
                 file_document: {
                     base64: "",
-                    file: []
+                    file: [],
+                    file_name: null
                 },
                 business: ""
             },
@@ -134,6 +135,7 @@ export default {
         async onSubmit(values, { resetForm }) {
             if (!this.$empty(values.file_document)) {
                 this.model.file_document.base64 = await this.toBase64(values.file_document[0])
+                this.model.file_document.file_name = values.file_document[0]?.name
             }
 
             try {
