@@ -2,7 +2,7 @@
     <div v-if="role == 'business'" class="row border rounded border-light px-4 py-2 mb-2">
         <div class="col">
             <base-field name="installation_id" label="Instalación">
-                <field-validate as="select" class="form-control" name="installation_id" rules="required"
+                <field-validate :disabled="disabled" as="select" class="form-control" name="installation_id" rules="required"
                     label="instalación" v-model="model">
                     <option v-for="(installation, idx) in installations" :key="idx" :value="installation.id"
                         class="text-uppercase">
@@ -22,6 +22,10 @@ import { useStore } from 'vuex';
 export default {
     props: {
         modelValue: {},
+        disabled: {
+            type: Boolean,
+            default: false
+        }
     },
     setup(props, { emit }) {
         const model = ref(props.modelValue);

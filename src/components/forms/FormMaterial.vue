@@ -133,7 +133,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="quantity" label="Volumen Depósito">
+						<base-field name="quantity" label="Volumen Almacenamiento">
 							<field-validate type="text" class="form-control" name="quantity"
 								label="volumen del Almacenamiento" v-model="model.quantity" />
 						</base-field>
@@ -146,7 +146,7 @@
 				<base-button type="default" nativeType="submit" v-if="currentStep !== 2">Siguiente</base-button>
 				<base-button type="default" nativeType="submit" v-if="currentStep == 2 && update && canUpdate">
 					Actualizar</base-button>
-				<base-button type="default" nativeType="submit" v-if="currentStep === 2 && !update">Enviar</base-button>
+				<base-button type="default" nativeType="submit" v-if="currentStep === 2 && !update">Aceptar</base-button>
 				<base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
 				</base-button>
 			</div>

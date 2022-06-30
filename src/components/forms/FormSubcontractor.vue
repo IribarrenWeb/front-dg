@@ -60,7 +60,7 @@
                             <base-button @click="handleChange" size="sm" type="default" :outline="true"><i
                                     class="fa-solid fa-pencil"></i></base-button>
                         </div>
-                        <field-validate v-show="(new_doc && $empty(model.file_document.file)) || (!update && !model.file_document.file.length >= 1)" class="form-control"
+                        <field-validate v-show="(new_doc && $empty(model.file_document.file)) || (!update && !model.file_document.file.length >= 1) || (!document && $empty(model.file_document.file))" class="form-control"
                             type="file" name="file_document"
                             :rules="!$empty(model.file_document_date) ? 'required|ext:pdf' : 'ext:pdf'"
                             :validateOnInput="true" label="documentacion" v-model="model.file_document.file" />
@@ -74,7 +74,7 @@
             </div>
 
             <div class="mt-4 float-md-right">
-                <base-button type="default" nativeType="submit">Enviar</base-button>
+                <base-button type="default" nativeType="submit">Aceptar</base-button>
                 <base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
                 </base-button>
             </div>

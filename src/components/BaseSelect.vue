@@ -1,6 +1,6 @@
 <template>
   <div
-    class="form-group"
+    class=""
     :class="[
       { 'input-group': hasIcon },
       { 'has-danger': error },
@@ -29,7 +29,7 @@
       :value="modelValue"
       v-bind="$attrs"
       v-on="listeners"
-      class="form-control"
+      class="custom-select filter"
       :class="[
         { 'is-valid': valid === true },
         { 'is-invalid': valid === false },
@@ -37,7 +37,7 @@
       ]"
       :disabled="disabled"
     >
-      <option selected>{{ defaultOption }}</option>
+      <option selected :value="0">{{ defaultOption }}</option>
       <slot></slot>
     </select>
     <div v-if="addonRightIcon || $slots.addonRight" class="input-group-append">
@@ -168,6 +168,7 @@
       updateValue(evt) {
         let value = evt.target.value;
         this.$emit("update:modelValue", value);
+        this.$emit("updated", value);
       },
       onFocus(value) {
         this.focused = true;

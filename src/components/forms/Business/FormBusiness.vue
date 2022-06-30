@@ -398,7 +398,7 @@
 			<div class="mt-4 float-md-right">
 				<base-button type="default" @click="prevStep()" v-if="currentStep !== 1">Anterior</base-button>
 				<base-button type="default" nativeType="submit" v-if="currentStep !== 4">Siguiente</base-button>
-				<base-button type="default" nativeType="submit" v-if="currentStep === 4">Enviar</base-button>
+				<base-button type="default" nativeType="submit" v-if="currentStep === 4">Aceptar</base-button>
 				<base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
 				</base-button>
 			</div>

@@ -580,7 +580,7 @@
 					nativeType="submit"
 					v-if="currentStep === 3"
 				>
-					{{ !isSaved ? "Enviar" : "Siguiente" }}</base-button
+					{{ !isSaved ? "Aceptar" : "Siguiente" }}</base-button
 				>
 				<base-button
 					type="default"

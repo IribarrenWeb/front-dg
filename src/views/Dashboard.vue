@@ -4,7 +4,7 @@
 			<div class="row mb-3" v-if="role == 'admin'">
 				<div class="col-xl-3 col-lg-6">
 					<stats-card
-						title="Delegados"
+						title="Delegación"
 						type="gradient-info"
 						:sub-title="counter.delegates"
 						icon="ni ni-single-02"

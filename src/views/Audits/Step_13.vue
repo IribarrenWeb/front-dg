@@ -46,7 +46,7 @@
 						:disabled="!meta.valid"
 						nativeType="submit"
 						v-if="currentStep === 13"
-						>Enviar</base-button
+						>Aceptar</base-button
 					>
 				</div>
 			</div>

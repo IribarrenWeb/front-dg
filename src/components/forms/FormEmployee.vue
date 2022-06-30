@@ -6,7 +6,7 @@
 			v-slot="{ resetForm, meta }"
 			v-if="canShow"
 		>
-			<installation-select v-model="model.installation_id"></installation-select>
+			<installation-select :disabled="update" v-model="model.installation_id"></installation-select>
 			<div class="row border rounded border-light px-4 py-2">
 				<div class="col-12 border-bottom border-light mb-md-3">
 					<h4>Datos principales</h4>
@@ -324,7 +324,7 @@
 					>Actualizar</base-button
 				>
 				<base-button v-if="!update" type="default" :disabled="!meta.valid" nativeType="submit"
-					>Enviar</base-button
+					>Aceptar</base-button
 				>
 				<base-button
 					type="default"

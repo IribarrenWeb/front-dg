@@ -17,6 +17,9 @@
 		</div>
 		<div></div>
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth">
+				<delegate-filter @updated="handleFilter('delegate',$event)" v-if="$store.is_admin"></delegate-filter>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
@@ -58,6 +61,7 @@
 			</base-table>
 			<div>
 				<base-pagination
+					v-if="metaData"
 					:perPage="this.metaData.perPage"
 					:value="this.page"
 					@changePage="handleChange($event)"
@@ -85,9 +89,10 @@
 	import FormBusiness from "../../components/forms/Business/FormBusiness.vue";
 	import service from "../../store/services/model-service";
 	import DeleteButton from "../../components/Utils/DeleteButton.vue";
+import DelegateFilter from "../../components/filters/DelegateFilter.vue";
 
 	export default {
-		components: { FormBusiness, DeleteButton },
+		components: { FormBusiness, DeleteButton, DelegateFilter },
 		name: "business-table",
 		data() {
 			return {
@@ -97,9 +102,12 @@
 				loader: false,
 				metaData: {},
 				page: 1,
+				params: `&includes[]=user&includes[]=installations&includes[]=administrable.user`,
+				params_filter: null,
 			};
 		},
 		mounted() {
+			this.params_filter = this.params
 			this.getBusiness(this.page);
 		},
 		methods: {
@@ -109,15 +117,25 @@
 			handleView(id) {
 				this.$router.push("/business/" + id);
 			},
+			handleFilter(type = 'delegate', value){
+				console.log(value,typeof value,type);
+				if (value >= 1) {
+					this.params_filter += '&delegate_id='+value
+					this.getBusiness(null)
+				}else{
+					this.params_filter = this.params
+					this.getBusiness(null)
+				}
+			},
 			async getBusiness(page) {
 				const response = await service.getIndex(
 					"business",
 					page,
-					`&includes[]=user&includes[]=installations&includes[]=administrable.user`
+					this.params_filter
 				);
 				this.tableData = response.data.data;
-				this.metaData = response.data.meta.page;
-				this.page = this.metaData.currentPage;
+				this.metaData = response.data?.meta?.page;
+				this.page = this.metaData?.currentPage;
 			},
 			async handleChange(event) {
 				if (this.page == event) {
@@ -139,5 +157,8 @@
 <style>
 	.max-h-modal {
 		max-height: 850px;
+	}
+	.bac-ligth{
+		background: #F6F9FC;
 	}
 </style>

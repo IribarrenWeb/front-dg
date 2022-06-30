@@ -57,7 +57,7 @@
                 >Actualizar</base-button
                 >
                 <base-button type="default" nativeType="submit"
-                >Enviar</base-button
+                >Aceptar</base-button
                 >
                 <base-button
                     type="default"

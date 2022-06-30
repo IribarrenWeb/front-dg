@@ -113,7 +113,7 @@
 					>Siguiente</base-button
 				>
 				<base-button type="default" nativeType="submit" v-if="currentStep === 2"
-					>Enviar</base-button
+					>Aceptar</base-button
 				>
 				<base-button
 					type="default"

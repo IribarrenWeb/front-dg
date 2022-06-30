@@ -12,7 +12,7 @@
     :aria-hidden="!show"
   >
     <div
-      class="modal-dialog modal-dialog-centered modal-xl"
+      class="modal-dialog modal-dialog-centered"
       :class="[{ 'modal-notice': type === 'notice' }, modalClasses]"
     >
       <div

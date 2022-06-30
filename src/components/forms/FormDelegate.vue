@@ -142,7 +142,7 @@
 
 			<div class="d-flex justify-content-lg-end my-3">
 				<base-button type="default" nativeType="submit" size="sm" v-if="!update" :disabled="!meta.valid">
-					Enviar
+					Aceptar
 				</base-button>
 				<base-button type="default" nativeType="submit" size="sm" v-if="update"
 					:disabled="!meta.valid || !meta.dirty">

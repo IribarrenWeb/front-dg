@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="mt-4 float-md-right">
-				<base-button type="default" nativeType="submit">Enviar</base-button>
+				<base-button type="default" nativeType="submit">Aceptar</base-button>
 				<base-button
 					type="default"
 					:outline="true"

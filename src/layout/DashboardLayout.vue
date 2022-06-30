@@ -77,7 +77,7 @@
 				<sidebar-item
 					v-if="role == 'admin'"
 					:link="{
-						name: 'Delegados',
+						name: 'Delegación',
 						icon: 'ni ni-single-02 text-default',
 						path: '/delegates',
 					}"

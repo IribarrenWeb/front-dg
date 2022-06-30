@@ -12,7 +12,7 @@
               class="nav-link"
               active-class="active"
             >
-              Delegados
+              Delegación
             </router-link>
           </li>
           <li class="nav-item">

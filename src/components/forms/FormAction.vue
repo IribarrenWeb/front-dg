@@ -118,7 +118,7 @@
 
             <div class="mt-4 float-md-right">
                 <base-button v-if="role == 'business'" type="default" nativeType="submit" :disabled="!meta.valid"
-                >Enviar</base-button
+                >Aceptar</base-button
                 >
                 <base-button v-else-if="canAccept && role != 'business'" type="default" @click="accept"
                 ><i class="fa-solid fa-check"></i> Aceptar</base-button

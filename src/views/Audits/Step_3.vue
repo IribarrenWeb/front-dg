@@ -143,7 +143,7 @@
 										" label="Deposito" disabled />
 									</div>
 									<div class="col-md-3">
-										<base-field label="Volumen envase">
+										<base-field label="Volumen almacenamiento">
 											<field-validate name="quantity" type="number" class="form-control"
 												v-model="deposit.quantity" :disabled="deposit.quantity == null">
 											</field-validate>
@@ -250,7 +250,7 @@
 										" label="Deposito" disabled />
 									</div>
 									<div class="col-md-3">
-										<base-field label="Volumen envase">
+										<base-field label="Volumen almacenamiento">
 											<field-validate name="quantity" type="number" class="form-control"
 												v-model="residue.quantity" :disabled="residue.quantity == null">
 											</field-validate>

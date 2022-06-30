@@ -11,7 +11,7 @@
 		<ul class="navbar-nav align-items-center d-none d-lg-flex">
 			<notifications :dark="false"></notifications>
 			<li class="nav-item dropdown">
-				<base-dropdown class="nav-link pr-0">
+				<base-dropdown class="nav-link pr-0" position="right">
 					<template v-slot:title>
 						<div class="media align-items-center">
 							<span class="avatar avatar-sm rounded-circle">
