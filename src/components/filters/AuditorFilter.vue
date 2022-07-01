@@ -3,7 +3,7 @@
 		<multiselect
 			v-model="model"
 			:options="data"
-			placeholder="Delegados"
+			placeholder="Auditores"
 			label="label"
 			track-by="label"
 			@select="$emit('updated', $event.value)"
@@ -32,7 +32,7 @@
 			});
 
 			async function getDelegates() {
-				const res = await service.getIndex("delegate", null, "includes[]=user");
+				const res = await service.getIndex("auditor", null, "includes[]=user");
 				delegates.value = res.data.data;
 			}
 

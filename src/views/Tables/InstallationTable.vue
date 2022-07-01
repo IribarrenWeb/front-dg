@@ -17,6 +17,15 @@
 		</div>
 		<div></div>
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
+				<div class="filter">
+					<async-select @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
+				</div>
+				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<div>
+					<base-button size="sm" @click="params_filter = params,getInstallations()">Limbiar filtros</base-button>
+				</div>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
                     <th>#</th>
@@ -104,9 +113,11 @@
 	import service from "../../store/services/model-service";
 	import InstallationShow from "../Shows/InstallationShow.vue";
 	import { isNull } from "lodash";
+	import CityFilter from "../../components/filters/CityFilter.vue";
+	import AsyncSelect from "../../components/AsyncSelect.vue";
 
 	export default {
-		components: { FormInstallation, InstallationShow },
+		components: { FormInstallation, InstallationShow, CityFilter, AsyncSelect },
 		name: "installation-table",
 		props: {
 			business_id: {
@@ -135,9 +146,12 @@
 				isView: false,
 				action: "Registrar",
 				installation_id: {},
+				params: 'includes[]=auditable.user&includes[]=employees&includes[]=province&order_by=id&order_direction=asc',
+				params_filter: null
 			};
 		},
 		mounted() {
+			this.params_filter = this.params
 			this.getInstallations();
 		},
 		methods: {
@@ -146,14 +160,28 @@
 			},
 			async getInstallations(page = 1) {
 				let response = null;
+				console.log('send', this.params_filter);
 				if (isNull(this.business_id)) {
-					response = await service.getIndex("installation", page, 'includes[]=auditable.user&includes[]=employees&includes[]=province&order_by=id&order_direction=asc');
+					response = await service.getIndex("installation", page, this.params_filter);
 				} else {
-					response = await service.instByBusiness(this.business_id, page);
+					response = await service.getIndex("installation", page, this.params_filter + '&business_id=' + this.business_id);
 				}
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;
 				this.page = page;
+			},
+			handleFilter(type, value){
+				if (!this.$empty(value) || value >= 1) {
+					if (type == 'auditor') {
+						type = !this.$empty(value.auditor) ? 'auditor' : 'delegate';
+						value = value[type].id
+					}
+					this.params_filter += `&${type}_id=`+value
+					this.getInstallations(this.page)
+				}else{
+					this.params_filter = this.params
+					this.getInstallations(this.page)
+				}
 			},
 			async destroy(id) {
 				try {

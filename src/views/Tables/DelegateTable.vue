@@ -17,6 +17,12 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex" v-if="$store.state.is_admin">
+				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<div>
+					<base-button size="sm" @click="params_filter = params,getDelegates()">Limbiar filtros</base-button>
+				</div>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
@@ -89,11 +95,12 @@
 </template>
 
 <script>
+import CityFilter from '../../components/filters/CityFilter.vue';
 import DeleteButton from '../../components/Utils/DeleteButton.vue';
 	import service from "../../store/services/model-service";
 
 	export default {
-	components: { DeleteButton },
+	components: { DeleteButton, CityFilter },
 		name: "delegate-table",
 		data() {
 			return {
@@ -105,9 +112,12 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				delegate_id: null,
 				disabled: false,
 				action: "Registrar",
+				params: `&includes[]=user&includes[]=province`,
+				params_filter: null
 			};
 		},
 		mounted() {
+			this.params_filter = this.params
 			this.getDelegates(this.page);
 		},
 		methods: {
@@ -115,8 +125,7 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				const response = await service.getIndex(
 					"delegate",
 					page,
-					`&includes[]=user`+
-					'&includes[]=province'
+					this.params_filter
 				);
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;
@@ -132,6 +141,15 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				this.action = "editar";
 				this.disabled = true;
 				this.modal = true;
+			},
+			handleFilter(type, value){
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=`+value
+					this.getDelegates(null)
+				}else{
+					this.params_filter = this.params
+					this.getDelegates(null)
+				}
 			},
 			handleAdd() {
 				this.delegate_id = null;

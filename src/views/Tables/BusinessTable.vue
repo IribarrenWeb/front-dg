@@ -18,7 +18,8 @@
 		<div></div>
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth">
-				<delegate-filter @updated="handleFilter('delegate',$event)" v-if="$store.is_admin"></delegate-filter>
+				<delegate-filter @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
+				<city-filter @updated="handleFilter('city',$event)"></city-filter>
 			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
@@ -89,10 +90,11 @@
 	import FormBusiness from "../../components/forms/Business/FormBusiness.vue";
 	import service from "../../store/services/model-service";
 	import DeleteButton from "../../components/Utils/DeleteButton.vue";
-import DelegateFilter from "../../components/filters/DelegateFilter.vue";
+	import DelegateFilter from "../../components/filters/DelegateFilter.vue";
+	import CityFilter from "../../components/filters/CityFilter.vue";
 
 	export default {
-		components: { FormBusiness, DeleteButton, DelegateFilter },
+		components: { FormBusiness, DeleteButton, DelegateFilter, CityFilter },
 		name: "business-table",
 		data() {
 			return {
@@ -118,9 +120,9 @@ import DelegateFilter from "../../components/filters/DelegateFilter.vue";
 				this.$router.push("/business/" + id);
 			},
 			handleFilter(type = 'delegate', value){
-				console.log(value,typeof value,type);
-				if (value >= 1) {
-					this.params_filter += '&delegate_id='+value
+				console.log(value, type);
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=`+value
 					this.getBusiness(null)
 				}else{
 					this.params_filter = this.params
@@ -158,7 +160,5 @@ import DelegateFilter from "../../components/filters/DelegateFilter.vue";
 	.max-h-modal {
 		max-height: 850px;
 	}
-	.bac-ligth{
-		background: #F6F9FC;
-	}
+	
 </style>

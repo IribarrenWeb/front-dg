@@ -14,13 +14,19 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
+				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<div>
+					<base-button size="sm" @click="params_filter = params,getAuditors()">Limbiar filtros</base-button>
+				</div>
+			</div>
 			<base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark' : ''"
 				:thead-classes="type === 'dark' ? 'thead-dark' : 'thead-light'" tbody-classes="list" :data="tableData">
 				<template v-slot:columns>
 					<th>Empresa</th>
 					<th>Instalacion</th>
 					<th>Nombre</th>
-					<th>Provincia</th>
+					<th>Dirección</th>
 					<th>Ultima auditoria</th>
 					<th>Estado</th>
 					<th>Hora y fecha</th>
@@ -48,7 +54,7 @@
 						{{ row.item?.name }}
 					</td>
 					<td>
-						{{ row.item?.installation?.province?.name }}
+						{{ row.item?.installation?.full_address }}
 					</td>
 					<td>Sin datos</td>
 					<td>
@@ -117,7 +123,7 @@
 					<base-field label="Auditor actual">
 						<input disabled :value="audit?.auditable?.user?.full_name" class="form-control"/>
 					</base-field>
-					<AsyncSelect :list="true" :roles="[2,3]" @selected="new_auditable = $event" :params="params"></AsyncSelect>
+					<AsyncSelect :list="true" :roles="[2,3]" @selected="new_auditable = $event" :params="params_async"></AsyncSelect>
 					<div class="mt-2 row">
 						<div class="col">
 							<base-button size="sm" :block="true" @click="submitDelegate">Aceptar</base-button>
@@ -137,6 +143,7 @@
 import { mapGetters } from "vuex";
 import service from "../../store/services/model-service";
 import AsyncSelect from "../../components/AsyncSelect.vue";
+import CityFilter from '../../components/filters/CityFilter.vue';
 export default {
     name: "audits-table",
     props: {
@@ -158,15 +165,21 @@ export default {
             url: this.$store.state.api_url,
             toDelegate: false,
 			new_auditable: null,
-			audit: null
+			audit: null,
+			params:"includes[]=auditable.user" +
+                "&includes[]=installation.company.user" +
+                "&order_by=scheduled_date" +
+                "&order_direction=asc",
+			params_filter: null 
         };
     },
     mounted() {
+		this.params_filter = this.params
         this.getAudits(this.page);
     },
     computed: {
         ...mapGetters(["CURRENT_DATE", "ROLE"]),
-		params(){
+		params_async(){
 			let params = null;
 			if (this.audit) {
 				params = '&delegate_id=' + this.audit.installation.company?.administrable_id;
@@ -176,17 +189,22 @@ export default {
     },
     methods: {
         async getAudits(page = 1) {
-            const resp = await service.getIndex("audit", page, "includes[]=installation.province" +
-                "&includes[]=auditable.user" +
-                "&includes[]=installation.company.user" +
-                "&order_by=scheduled_date" +
-                "&order_direction=asc");
+            const resp = await service.getIndex("audit", page, this.params_filter);
             if (typeof resp.data.data != "undefined") {
                 this.tableData = resp.data.data;
                 this.metaData = resp.data.meta.page;
                 this.page = this.metaData.currentPage;
             }
         },
+		handleFilter(type, value){
+			if (!this.$empty(value) || value >= 1) {
+				this.params_filter += `&${type}_id=`+value
+				this.getAudits(this.page)
+			}else{
+				this.params_filter = this.params
+				this.getAudits(this.page)
+			}
+		},
         handleInit(item) {
             const link = `/audit-init/${item.id}`;
             if (item.can_init == null || item.can_init == false) {
@@ -256,7 +274,7 @@ export default {
 			}
 		}
     },
-    components: { AsyncSelect },
+    components: { AsyncSelect, CityFilter },
 };
 </script>
 <style>

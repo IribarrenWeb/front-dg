@@ -1,7 +1,7 @@
 <template>
     <div>
         <multiselect :disabled="disabled" v-model="content" v-if="typeof options == 'object'" :searchable="true" @select="handleSelect" label="label" :options="options"
-            trackBy="label" :close-on-select="true" @search-change="getUsers"></multiselect>
+            trackBy="label" :close-on-select="true" @search-change="getUsers" openDirection="bottom"></multiselect>
     </div>
 
 </template>
@@ -23,6 +23,10 @@ export default {
         list: {
             type: Boolean,
             default: true
+        },
+        placeHolder: {
+            type: String,
+            default: 'Selecciona...'
         },
         minSearch: {
             type: Number,
@@ -48,7 +52,7 @@ export default {
             default: false
         },
     },
-    emits: ['input', 'selected'],
+    emits: ['input', 'selected', 'updated'],
     components: {
         Multiselect
     },
@@ -87,8 +91,10 @@ export default {
         })
 
         function handleSelect(evt) {
+            console.log(evt);
             emit('selected', evt?.value)
             emit('input', evt?.value)
+            emit('updated', evt?.value)
         }
 
         console.log(options.value);

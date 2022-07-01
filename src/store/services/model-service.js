@@ -35,7 +35,9 @@ const apis = {
     non: "nonconformities",
     report: "reports",
     non_actions: "nonconformities-action",
-    documents: "admin-docs"
+    documents: "admin-docs",
+    province: "provinces",
+    city: "cities",
 
 }
 async function api(model, method = 'GET', params = null, page = null, data = null) {
@@ -230,7 +232,7 @@ async function destroy(model, id) {
 
 function instByBusiness(id, page = 1) {
     storage.commit('loading');
-    return axios.get(`${url}/installations?page=${page}&includes[]=auditable.user&includes[]=employees&business_id=${id}&includes[]=province`).then((response) => {
+    return axios.get(`${url}/installations?page=${page}&includes[]=auditable.user&includes[]=employees&business_id=${id}`).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
