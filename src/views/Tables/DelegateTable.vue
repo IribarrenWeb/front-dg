@@ -18,9 +18,9 @@
 
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex" v-if="$store.state.is_admin">
-				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
 				<div>
-					<base-button size="sm" @click="params_filter = params,getDelegates()">Limbiar filtros</base-button>
+					<base-button size="sm" @click="params_filter = params,getDelegates(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
@@ -28,7 +28,7 @@
 					<th>Nombre</th>
 					<th>Email</th>
 					<th>Móvil</th>
-					<th>Dirección</th>
+					<th>Ciudad</th>
 					<th>Acciones</th>
 				</template>
 
@@ -43,7 +43,7 @@
 						{{ row.item?.phone_number }}
 					</td>
 					<td>
-						{{ row.item?.full_address }}
+						{{ row.item?.address?.city }}
 					</td>
 					<td class="d-flex">
 						<a
@@ -107,6 +107,7 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				tableData: {},
 				metaData: {},
 				page: 1,
+				clear: false,
 				modal: false,
 				submit: false,
 				delegate_id: null,

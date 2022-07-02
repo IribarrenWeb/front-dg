@@ -19,7 +19,7 @@
 						<base-field name="is_residue" label="Tipo">
 							<select v-model="model_is_residue" class="form-control" :disabled="residue != null">
 								<option value="true" selected>Residuo ADR</option>
-								<option value="false">Material</option>
+								<option value="false">Mercancia ADR</option>
 							</select>
 						</base-field>
 					</div>
@@ -53,7 +53,7 @@
 										class="fa-solid fa-pencil"></i></base-button>
 							</div>
 							<div v-else>
-								<field-validate name="material" label="Material adr" rules="required">
+								<field-validate name="material" label="mercancia adr" rules="required">
 									<async-select @selected="adr_material = $event" :materials="true">
 									</async-select>
 								</field-validate>

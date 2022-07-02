@@ -1,19 +1,11 @@
 <template>
 	<div class="d-inline-block mx-2 filter">
-        <input placeholder="Ciudad" class="form-control filter" v-model="selectedCity" @input="handleEmit"/>
-		<!-- <multiselect
-			v-model="selectedCity"
-			:options="data"
-			placeholder="Ciudades"
-			label="label"
-			track-by="label"
-			@select="$emit('updated', $event.value)"
-		></multiselect> -->
+        <input placeholder="Ciudad" class="form-control form-control-sm" v-model="selectedCity" @input="handleEmit"/>
 	</div>
 </template>
 <script>
 	import { debounce } from "lodash";
-import { ref, computed } from "vue";
+	import { ref, computed, watch } from "vue";
 	import service from "../../store/services/model-service";
 	// import Multiselect from "vue-multiselect";
 
@@ -22,9 +14,14 @@ import { ref, computed } from "vue";
 		components: {
 			// Multiselect,
 		},
+		props: {
+			clear: {
+				type:Boolean,
+				default: false
+			}
+		},
 		setup(props, {emit}) {
 			const provinces = ref([]);
-			const model = ref(0);
 			const selectedCity = ref(null);
 			const data = computed(() => {
 				return provinces.value.map((p) => {
@@ -44,8 +41,14 @@ import { ref, computed } from "vue";
             }, 500)
 			getDelegates();
 
+			watch(() => props.clear, (val) => {
+				if (val) {
+					selectedCity.value = null
+					emit('update:clear', false)
+				}
+			})
+
 			return {
-				model,
 				data,
                 handleEmit,
 				selectedCity,

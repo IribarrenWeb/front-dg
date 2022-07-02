@@ -17,9 +17,12 @@
 		</div>
 		<div></div>
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth">
-				<delegate-filter @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
-				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex align-items-center">
+				<delegate-filter v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
+				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+				<div>
+					<base-button size="sm" @click="params_filter = params,getBusiness(),clear = true">Borrar filtros</base-button>
+				</div>
 			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
@@ -103,6 +106,7 @@
 				delegate: {},
 				loader: false,
 				metaData: {},
+				clear: false,
 				page: 1,
 				params: `&includes[]=user&includes[]=installations&includes[]=administrable.user`,
 				params_filter: null,

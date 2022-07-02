@@ -4,7 +4,7 @@
 
     <div class="container-fluid mt--7">
       <!--Tables-->
-        <div v-if="ROLE == 'delegate'">
+        <div>
             <formation-table @reloadTraining="handleReload"></formation-table>
         </div>
         <div class="mt-3">

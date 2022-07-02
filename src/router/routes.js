@@ -222,12 +222,12 @@ const routes = [{
 
             {
                 path: "/materials",
-                name: "materiales",
+                name: "mercancias",
                 components: { default: Materials },
                 meta: { middleware: auth },
                 children: [{
                         path: "",
-                        name: "materiales",
+                        name: "mercancias",
                         components: { default: MaterialsTable },
                         meta: { middleware: auth },
                     },

@@ -19,13 +19,13 @@
                         </field-validate>
                     </base-field>
                 </div>
-                <div class=" col-lg-4">
+                <div class="col-lg-4">
                     <base-field name="duration" label="Duración">
                         <field-validate type="text" class="form-control text-uppercase" name="duration" rules="required"
                             label="Duración" v-model="model.duration" />
                     </base-field>
                 </div>
-                <div class=" col-lg-6">
+                <div class=" col-lg-6" v-if="!$store.state.is_auditor">
                     <base-field name="auditor_id" label="Responsable">
                         <field-validate name="auditor_id" label="Responsable" rules="required" v-model="model.facilitable_id">
                             <async-select :roles="[2,3]" @selected="auditable = $event" :list="true">
@@ -89,7 +89,10 @@ export default {
                 data.append('document', this.model.document[0])
                 data.append('name', this.model.name)
                 data.append('content', this.model.content)
-                data.append('facilitable_id', this.auditable.id)
+
+                if (!this.$store.state.is_auditor) {
+                    data.append('facilitable_id', this.auditable.id)
+                }
                 data.append('duration', this.model.duration)
                 data.append('formation_type_id', this.model.formation_type_id)
 

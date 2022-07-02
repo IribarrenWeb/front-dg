@@ -19,11 +19,11 @@
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
 				<div class="filter">
-					<async-select @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
+					<async-select v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
 				</div>
-				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
 				<div>
-					<base-button size="sm" @click="params_filter = params,getInstallations()">Limbiar filtros</base-button>
+					<base-button size="sm" @click="params_filter = params,getInstallations(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
@@ -143,6 +143,7 @@
 				delegate: {},
 				metaData: {},
 				page: 1,
+				clear: false,
 				isView: false,
 				action: "Registrar",
 				installation_id: {},

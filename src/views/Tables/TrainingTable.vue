@@ -16,8 +16,8 @@
 				<template v-slot:columns>
 					<th>Formación</th>
 					<th>Responsable</th>
-					<th>Empresa</th>
 					<th>Instalación</th>
+					<th>Modalidad</th>
 					<th>Empleados</th>
 					<th>Fecha</th>
 					<th>Estatus</th>
@@ -31,11 +31,11 @@
                     <th scope="row" class="text-uppercase">
 						{{ row.item?.formation.facilitable.user.full_name }}
 					</th>
-					<td class="text-uppercase">
-						{{ row.item?.installation.company.name }}
-					</td>
                     <td class="text-uppercase">
 						{{ row.item?.installation.name }}
+					</td>
+					<td class="text-uppercase">
+						{{ row.item?.formation?.type?.name }}
 					</td>
                     <td>
                         {{ row.item?.employees_count }}
@@ -45,7 +45,7 @@
                     </td>
 					<td>
                         <badge
-							class="badge-dot mr-4"
+							class="badge-dot mr-4 text-lowercase"
 							:type="row.item?.status ? 'success' : 'danger'"
 						>
 							<i :class="`bg-danger`"></i>
@@ -53,7 +53,8 @@
 						</badge>
 					</td>
                     <td>
-                        <base-button type="primary" @click="toSchedule(row.item?.id)" size="sm">Re-agendar</base-button>
+                        <base-button type="primary" @click="generate(row.item)" size="sm">Reporte</base-button>
+                        <base-button type="primary" @click="toSchedule(row.item?.id)" :outline="true" size="sm">Re-agendar</base-button>
                     </td>
 				</template>
 			</base-table>
@@ -97,7 +98,7 @@
 				const resp = await service.getIndex(
 					"training",
 					page,
-					"includes[]=installation.company&counts[]=employees&includes[]=formation.facilitable.user"
+					"includes[]=installation.company&counts[]=employees&includes[]=formation.facilitable.user&includes[]=formation.type"
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;
@@ -123,7 +124,22 @@
             async toSchedule(id){
                 await this.$store.dispatch('toSchedule', {model:'trainings',id: id, name: 'formacion'})
                 this.index()
-            }
+            },
+			async generate(training) {
+				try {
+					const rep = await service.api('trainings/report/'+training.id,'GET');
+					const b64 = rep.data.data;
+					const fileUrl = await this.$functions.formatDoc(b64);
+					window.open(fileUrl);
+				} catch (err) {
+					console.log(err);
+					this.$toast.error(
+						typeof err.response.data != undefined
+							? err.data.message
+							: "Ocurrio un error al generar el informe"
+					);
+				}
+			},
         },
         watch: {
             reload(newVal){

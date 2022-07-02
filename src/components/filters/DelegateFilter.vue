@@ -11,7 +11,7 @@
 	</div>
 </template>
 <script>
-	import { ref, computed } from "vue";
+	import { ref, computed, watch } from "vue";
 	import service from "../../store/services/model-service";
 	import Multiselect from "vue-multiselect";
 
@@ -19,9 +19,15 @@
         components: {
 			Multiselect,
 		},
-		setup() {
+		props:{
+			clear:{
+				type: Boolean,
+				default: false
+			}
+		},
+		setup(props, {emit}) {
+			const model = ref(null)
 			const delegates = ref({});
-			const model = ref(null);
 			const data = computed(() => {
 				return delegates.value.map((p) => {
 					return {
@@ -36,6 +42,12 @@
 				delegates.value = res.data.data;
 			}
 
+			watch(() => props.clear, (val) => {
+				if (val) {
+					model.value = null
+					emit('update:clear', false)
+				}
+			})
 			getDelegates();
 
 			return {

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="classes">
         <multiselect :disabled="disabled" v-model="content" v-if="typeof options == 'object'" :searchable="true" @select="handleSelect" label="label" :options="options"
             trackBy="label" :close-on-select="true" @search-change="getUsers" openDirection="bottom"></multiselect>
     </div>
@@ -11,7 +11,7 @@
 <script>
 import Multiselect from 'vue-multiselect'
 import { debounce, map } from 'lodash'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import dataService from '../store/services/data-service'
 export default {
@@ -20,6 +20,10 @@ export default {
             type: String,
             required: false
         },
+        clear: {
+            type: Boolean,
+            default: false
+        },
         list: {
             type: Boolean,
             default: true
@@ -27,6 +31,9 @@ export default {
         placeHolder: {
             type: String,
             default: 'Selecciona...'
+        },
+        classes: {
+            type: String,
         },
         minSearch: {
             type: Number,
@@ -96,6 +103,13 @@ export default {
             emit('input', evt?.value)
             emit('updated', evt?.value)
         }
+
+        watch(() => props.clear, (val) => {
+            if (val) {
+                content.value = null
+                emit('update:clear', false)
+            }
+        })
 
         console.log(options.value);
         return {

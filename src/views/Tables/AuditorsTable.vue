@@ -18,10 +18,10 @@
 
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
-				<delegate-filter @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
-				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<delegate-filter v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
+				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
 				<div>
-					<base-button size="sm" @click="params_filter = params,getAuditors()">Limbiar filtros</base-button>
+					<base-button size="sm" @click="params_filter = params,getAuditors(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
@@ -29,7 +29,7 @@
 					<th>Nombre</th>
 					<th>Email</th>
 					<th>Móvil</th>
-					<th>Dirección</th>
+					<th>Ciudad</th>
 					<th>Delegado</th>
 					<th>Acciones</th>
 				</template>
@@ -45,7 +45,7 @@
 						{{ row.item?.phone_number }}
 					</td>
 					<td>
-						{{ row.item?.full_address }}
+						{{ row.item?.address?.city }}
 					</td>
 					<td>
 						{{ row.item?.delegate.user.full_name }}
@@ -107,6 +107,7 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				modal: false,
 				submit: false,
 				loader: false,
+				clear: false,
 				auditor_id: null,
 				disabled: false,
 				action: "Registrar",

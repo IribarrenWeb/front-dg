@@ -15,9 +15,9 @@
 
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
-				<city-filter @updated="handleFilter('city',$event)"></city-filter>
+				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
 				<div>
-					<base-button size="sm" @click="params_filter = params,getAuditors()">Limbiar filtros</base-button>
+					<base-button size="sm" @click="params_filter = params,getAuditors(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>
 			<base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark' : ''"
@@ -26,39 +26,31 @@
 					<th>Empresa</th>
 					<th>Instalacion</th>
 					<th>Nombre</th>
-					<th>Dirección</th>
+					<th>Ciudad</th>
 					<th>Ultima auditoria</th>
 					<th>Estado</th>
 					<th>Hora y fecha</th>
-					<th v-if="ROLE != 'business'"></th>
+					<th></th>
 				</template>
 
 				<template v-slot:default="row">
 					<th scope="row">
-						<div class="media align-items-center">
-							<a href="#" class="avatar rounded-circle mr-3">
-								<img alt="Installation images" :src="baseImage" />
-							</a>
-							<div class="media-body">
-								<span class="name mb-0 text-sm">{{
-										row.item?.installation.company.user.full_name
-								}}</span>
-							</div>
-						</div>
+						<span class="name mb-0 text-sm">{{
+							row.item?.installation.company.user.full_name
+						}}</span>
 					</th>
 					<td>
 						{{row.item?.installation.name}}
 					</td>
 					<td class="budget">
-						<!-- AUDITORIA2022 -->
 						{{ row.item?.name }}
 					</td>
 					<td>
-						{{ row.item?.installation?.full_address }}
+						{{ row.item?.installation?.address?.city }}
 					</td>
 					<td>Sin datos</td>
 					<td>
-						<badge class="badge-dot mr-4" :type="setStatusType(row.item?.status)">
+						<badge class="badge-dot mr-4 text-lowercase" :type="setStatusType(row.item?.status)">
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
 							<span class="status">{{ row.item?.status }}</span>
 						</badge>
@@ -67,7 +59,7 @@
 						{{ row.item?.scheduled_date }}
 					</td>
 					<td v-if="ROLE == 'business' && row.item?.status == 'COMPLETADO'">
-						<base-button size="sm">Imprimir</base-button>
+						<a class="btn btn-sm btn-primary" :href="url + '/audits/report/' + row.item?.id" target="_blank">Imprimir</a>
 					</td>
 					<td class="text-right" v-if="ROLE != 'business'">
 						<base-dropdown class="dropdown audit-drop" position="right" direction="down">
@@ -162,6 +154,7 @@ export default {
             baseImage: process.env.VUE_APP_API_URL + "img/dg_logo.png",
             loader: false,
             page: 1,
+			clear: false,
             url: this.$store.state.api_url,
             toDelegate: false,
 			new_auditable: null,

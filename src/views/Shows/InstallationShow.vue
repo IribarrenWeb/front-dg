@@ -413,7 +413,11 @@ export default {
 			this.currentStep++;
 		},
 		handleClose() {
-			this.$emit("close");
+			if (this.$store.state.is_business) {
+				this.$router.back()
+			}else{
+				this.$emit("close");
+			}
 		},
 		async loadOperations() {
 			const res = await dataService.getOperations();

@@ -16,11 +16,11 @@
                             Empleados
                             </router-link>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <router-link  to="/employees/formations" class="nav-link tab-custom-link disabled" exact-active-class="active" @click="residue = 'true'">
                             Formaciones
                             </router-link>
-                        </li>
+                        </li> -->
                     </ul>
                     <router-view v-slot="{Component}">
                         <component classes="border-radius-top-0" title="Empleados" :is="Component"></component>
