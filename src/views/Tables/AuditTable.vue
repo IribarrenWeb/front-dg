@@ -8,20 +8,49 @@
 					</h3>
 				</div>
 				<div class="col text-right">
-					<base-button v-if="!$store.state.is_business" type="default" size="sm">Iniciar auditoria</base-button>
+					<base-button v-if="!$store.state.is_business" type="default" size="sm"
+						>Iniciar auditoria</base-button
+					>
 				</div>
 			</div>
 		</div>
 
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
-				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+				<delegate-filter
+					v-model:clear="clear"
+					@updated="handleFilter('delegate', $event)"
+					v-if="$store.state.is_admin"
+				></delegate-filter>
+				<business-filter
+					v-model:clear="clear"
+					@updated="handleFilter('business', $event)"
+					v-if="$store.state.is_auditor || $store.state.is_delegate"
+				></business-filter>
+				<installation-filter
+					v-model:clear="clear"
+					@updated="handleFilter('installation', $event)"
+					v-if="$store.state.is_business"
+				></installation-filter>
+				<city-filter
+					v-model:clear="clear"
+					@updated="handleFilter('city', $event)"
+				></city-filter>
 				<div>
-					<base-button size="sm" @click="params_filter = params,getAuditors(),clear = true">Borrar filtros</base-button>
+					<base-button
+						size="sm"
+						@click="(params_filter = params), getAudits(), (clear = true)"
+						>Borrar filtros</base-button
+					>
 				</div>
 			</div>
-			<base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark' : ''"
-				:thead-classes="type === 'dark' ? 'thead-dark' : 'thead-light'" tbody-classes="list" :data="tableData">
+			<base-table
+				class="table align-items-center table-flush"
+				:class="type === 'dark' ? 'table-dark' : ''"
+				:thead-classes="type === 'dark' ? 'thead-dark' : 'thead-light'"
+				tbody-classes="list"
+				:data="tableData"
+			>
 				<template v-slot:columns>
 					<th>Empresa</th>
 					<th>Instalacion</th>
@@ -40,7 +69,7 @@
 						}}</span>
 					</th>
 					<td>
-						{{row.item?.installation.name}}
+						{{ row.item?.installation.name }}
 					</td>
 					<td class="budget">
 						{{ row.item?.name }}
@@ -50,7 +79,10 @@
 					</td>
 					<td>Sin datos</td>
 					<td>
-						<badge class="badge-dot mr-4" :type="setStatusType(row.item?.status)">
+						<badge
+							class="badge-dot mr-4"
+							:type="setStatusType(row.item?.status)"
+						>
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
 							<span class="status">{{ row.item?.status_name }}</span>
 						</badge>
@@ -59,50 +91,90 @@
 						{{ row.item?.scheduled_date }}
 					</td>
 					<td v-if="ROLE == 'business' && row.item?.status == 'COMPLETADO'">
-						<a class="btn btn-sm btn-primary" :href="url + '/audits/report/' + row.item?.id" target="_blank">Imprimir</a>
+						<a
+							class="btn btn-sm btn-primary"
+							:href="url + '/audits/report/' + row.item?.id"
+							target="_blank"
+							>Imprimir</a
+						>
 					</td>
 					<td class="text-right" v-if="ROLE != 'business'">
-						<base-dropdown class="dropdown audit-drop" position="right" direction="down">
+						<base-dropdown
+							class="dropdown audit-drop"
+							position="right"
+							direction="down"
+						>
 							<template v-slot:title>
-								<a class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">
+								<a
+									class="btn btn-sm btn-icon-only text-light"
+									role="button"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
 									<i class="fas fa-ellipsis-v"></i>
 								</a>
 							</template>
-							<a class="dropdown-item" href="#" v-if="row.item?.status == 'PENDIENTE'"
-								@click.prevent="toSchedule(row.item?.id)">{{ row.item?.scheduled_date != null ?
-										'Re-agendar' : 'Agendar'
-								}}</a>
-							<a href="#" class="dropdown-item" @click="handleInit(row.item)"
-								v-if="row.item?.status != 'COMPLETADO' && row.item?.scheduled_date != null">
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="row.item?.status == 'PENDIENTE'"
+								@click.prevent="toSchedule(row.item?.id)"
+								>{{
+									row.item?.scheduled_date != null ? "Re-agendar" : "Agendar"
+								}}</a
+							>
+							<a
+								href="#"
+								class="dropdown-item"
+								@click="handleInit(row.item)"
+								v-if="
+									row.item?.status != 'COMPLETADO' &&
+									row.item?.scheduled_date != null
+								"
+							>
 								{{ row.item?.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
 							</a>
-							<router-link class="dropdown-item" v-if="row.item?.status == 'COMPLETADO'"
-								to="/audits/nonconformities">
+							<router-link
+								class="dropdown-item"
+								v-if="row.item?.status == 'COMPLETADO'"
+								to="/audits/nonconformities"
+							>
 								No conformidades
 							</router-link>
-							<a 
-								class="dropdown-item" 
-								href="#" 
-								@click.prevent="handleDelegate(row.item)" 
-								v-if="row.item?.status != 'COMPLETADO' && !$store.state.is_auditor"
+							<a
+								class="dropdown-item"
+								href="#"
+								@click.prevent="handleDelegate(row.item)"
+								v-if="
+									row.item?.status != 'COMPLETADO' && !$store.state.is_auditor
+								"
 								:disabled="row.item?.status != 'PENDIENTE'"
 							>
 								Delegar
 							</a>
 							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
-							<a class="dropdown-item" v-if="row.item?.status == 'COMPLETADO'"
-								:href="url + '/audits/report/' + row.item?.id" target="_blank">Imprimir</a>
+							<a
+								class="dropdown-item"
+								v-if="row.item?.status == 'COMPLETADO'"
+								:href="url + '/audits/report/' + row.item?.id"
+								target="_blank"
+								>Imprimir</a
+							>
 							<!-- <a class="dropdown-item" href="#" @click.prevent="">Eliminar</a> -->
-
 						</base-dropdown>
 					</td>
 				</template>
 			</base-table>
 			<!-- <loader v-if="loader"></loader> -->
 
-			<base-pagination :perPage="this.metaData.perPage" :value="this.page" @changePage="handleChange($event)"
-				:total="this.metaData.total" align="center">
+			<base-pagination
+				:perPage="this.metaData.perPage"
+				:value="this.page"
+				@changePage="handleChange($event)"
+				:total="this.metaData.total"
+				align="center"
+			>
 			</base-pagination>
 
 			<modal
@@ -113,15 +185,32 @@
 			>
 				<div class="mb-4 pb-md-2">
 					<base-field label="Auditor actual">
-						<input disabled :value="audit?.auditable?.user?.full_name" class="form-control"/>
+						<input
+							disabled
+							:value="audit?.auditable?.user?.full_name"
+							class="form-control"
+						/>
 					</base-field>
-					<AsyncSelect :list="true" :roles="[2,3]" @selected="new_auditable = $event" :params="params_async"></AsyncSelect>
+					<AsyncSelect
+						:list="true"
+						:roles="[2, 3]"
+						@selected="new_auditable = $event"
+						:params="params_async"
+					></AsyncSelect>
 					<div class="mt-2 row">
 						<div class="col">
-							<base-button size="sm" :block="true" @click="submitDelegate">Aceptar</base-button>
+							<base-button size="sm" :block="true" @click="submitDelegate"
+								>Aceptar</base-button
+							>
 						</div>
 						<div class="col">
-							<base-button :outiline="true" size="sm" :block="true" @click="toDelegate = false">Cancelar</base-button>
+							<base-button
+								:outiline="true"
+								size="sm"
+								:block="true"
+								@click="toDelegate = false"
+								>Cancelar</base-button
+							>
 						</div>
 					</div>
 				</div>
@@ -130,145 +219,157 @@
 	</div>
 </template>
 <script>
-// import { axios } from '@/axios';
+	// import { axios } from '@/axios';
 
-import { mapGetters } from "vuex";
-import service from "../../store/services/model-service";
-import AsyncSelect from "../../components/AsyncSelect.vue";
-import CityFilter from '../../components/filters/CityFilter.vue';
-export default {
-    name: "audits-table",
-    props: {
-        type: {
-            type: String,
-        },
-        title: String,
-        classes: {
-            type: String,
-        },
-    },
-    data() {
-        return {
-            tableData: [],
-            metaData: {},
-            baseImage: process.env.VUE_APP_API_URL + "img/dg_logo.png",
-            loader: false,
-            page: 1,
-			clear: false,
-            url: this.$store.state.api_url,
-            toDelegate: false,
-			new_auditable: null,
-			audit: null,
-			params:"includes[]=auditable.user" +
-                "&includes[]=installation.company.user" +
-                "&order_by=scheduled_date" +
-                "&order_direction=asc",
-			params_filter: null 
-        };
-    },
-    mounted() {
-		this.params_filter = this.params
-        this.getAudits(this.page);
-    },
-    computed: {
-        ...mapGetters(["CURRENT_DATE", "ROLE"]),
-		params_async(){
-			let params = null;
-			if (this.audit) {
-				params = '&delegate_id=' + this.audit.installation.company?.administrable_id;
-			}
-			return params
-		}
-    },
-    methods: {
-        async getAudits(page = 1) {
-            const resp = await service.getIndex("audit", page, this.params_filter);
-            if (typeof resp.data.data != "undefined") {
-                this.tableData = resp.data.data;
-                this.metaData = resp.data.meta.page;
-                this.page = this.metaData.currentPage;
-            }
-        },
-		handleFilter(type, value){
-			if (!this.$empty(value) || value >= 1) {
-				this.params_filter += `&${type}_id=`+value
-				this.getAudits(this.page)
-			}else{
-				this.params_filter = this.params
-				this.getAudits(this.page)
-			}
+	import { mapGetters } from "vuex";
+	import service from "../../store/services/model-service";
+	import AsyncSelect from "../../components/AsyncSelect.vue";
+	import CityFilter from "../../components/filters/CityFilter.vue";
+	import DelegateFilter from "../../components/filters/DelegateFilter";
+	import BusinessFilter from "../../components/filters/BusinessFilter.vue";
+import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+
+	export default {
+		name: "audits-table",
+		props: {
+			type: {
+				type: String,
+			},
+			title: String,
+			classes: {
+				type: String,
+			},
 		},
-        handleInit(item) {
-            const link = `/audit-init/${item.id}`;
-            if (item.can_init == null || item.can_init == false) {
-                let msg = "Esta auditoria no se puede iniciar ya que no esta programada";
-                if (item.can_init == false) {
-                    msg = "Esta auditoria esta programada para la fecha: <b>" + item.scheduled_date + "</b>";
-                }
-                this.$swal("Auditoria no programada", msg, "warning");
-            }
-            else if (item.auditable == null) {
-                this.$swal("Instalación sin auditor", `La instalación <b>${item.installation.name}</b> no cuenta con un auditor.`, "warning");
-            }
-            else {
-                this.$router.push(link);
-            }
-        },
-        setStatusType(status) {
-            let type = "";
-            switch (status) {
-                case "PENDIENTE":
-                    type = "danger";
-                    break;
-                case "INCOMPLETO":
-                    type = "warning";
-                    break;
-                case "COMPLETADO":
-                    type = "success";
-                    break;
-                default:
-                    break;
-            }
-            return type;
-        },
-        async handleChange(event) {
-            if (event == this.page) {
-                return;
-            }
-            this.getAudits(event);
-        },
-		handleDelegate(audit){
-			this.audit = audit
-			this.toDelegate = true
+		data() {
+			return {
+				tableData: [],
+				metaData: {},
+				baseImage: process.env.VUE_APP_API_URL + "img/dg_logo.png",
+				loader: false,
+				page: 1,
+				clear: false,
+				url: this.$store.state.api_url,
+				toDelegate: false,
+				new_auditable: null,
+				audit: null,
+				params:
+					"includes[]=auditable.user" +
+					"&includes[]=installation.company.user" +
+					"&order_by=scheduled_date" +
+					"&order_direction=asc",
+				params_filter: null,
+			};
 		},
-        async toSchedule(id) {
-            await this.$store.dispatch("toSchedule", {
-                model: "audits",
-                id: id,
-                name: "auditoria",
-            });
-            console.log("asdasdasd");
-            this.getAudits();
-        },
-		async submitDelegate(){
-			if (this.new_auditable) {
-				try {
-					await service.update('audit',this.audit.id,{
-						auditable_id: this.new_auditable.id
-					})
-					this.getAudits();
-					this.toDelegate = false;
-					this.$toast.success('Auditoria delegada con exito');
-				} catch (err) {
-					console.log(err);
+		mounted() {
+			this.params_filter = this.params;
+			this.getAudits(this.page);
+		},
+		computed: {
+			...mapGetters(["CURRENT_DATE", "ROLE"]),
+			params_async() {
+				let params = null;
+				if (this.audit) {
+					params =
+						"&delegate_id=" + this.audit.installation.company?.administrable_id;
 				}
-			}else{
-				this.$toast.warning('Tienen que seleccionar un auditor.')
-			}
-		}
-    },
-    components: { AsyncSelect, CityFilter },
-};
+				return params;
+			},
+		},
+		methods: {
+			async getAudits(page = 1) {
+				const resp = await service.getIndex("audit", page, this.params_filter);
+				if (typeof resp.data.data != "undefined") {
+					this.tableData = resp.data.data;
+					this.metaData = resp.data.meta.page;
+					this.page = this.metaData.currentPage;
+				}
+			},
+			handleFilter(type, value) {
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=` + value;
+					this.getAudits(this.page);
+				} else {
+					this.params_filter = this.params;
+					this.getAudits(this.page);
+				}
+			},
+			handleInit(item) {
+				const link = `/audit-init/${item.id}`;
+				if (item.can_init == null || item.can_init == false) {
+					let msg =
+						"Esta auditoria no se puede iniciar ya que no esta programada";
+					if (item.can_init == false) {
+						msg =
+							"Esta auditoria esta programada para la fecha: <b>" +
+							item.scheduled_date +
+							"</b>";
+					}
+					this.$swal("Auditoria no programada", msg, "warning");
+				} else if (item.auditable == null) {
+					this.$swal(
+						"Instalación sin auditor",
+						`La instalación <b>${item.installation.name}</b> no cuenta con un auditor.`,
+						"warning"
+					);
+				} else {
+					this.$router.push(link);
+				}
+			},
+			setStatusType(status) {
+				let type = "";
+				switch (status) {
+					case "PENDIENTE":
+						type = "danger";
+						break;
+					case "INCOMPLETO":
+						type = "warning";
+						break;
+					case "COMPLETADO":
+						type = "success";
+						break;
+					default:
+						break;
+				}
+				return type;
+			},
+			async handleChange(event) {
+				if (event == this.page) {
+					return;
+				}
+				this.getAudits(event);
+			},
+			handleDelegate(audit) {
+				this.audit = audit;
+				this.toDelegate = true;
+			},
+			async toSchedule(id) {
+				await this.$store.dispatch("toSchedule", {
+					model: "audits",
+					id: id,
+					name: "auditoria",
+				});
+				console.log("asdasdasd");
+				this.getAudits();
+			},
+			async submitDelegate() {
+				if (this.new_auditable) {
+					try {
+						await service.update("audit", this.audit.id, {
+							auditable_id: this.new_auditable.id,
+						});
+						this.getAudits();
+						this.toDelegate = false;
+						this.$toast.success("Auditoria delegada con exito");
+					} catch (err) {
+						console.log(err);
+					}
+				} else {
+					this.$toast.warning("Tienen que seleccionar un auditor.");
+				}
+			},
+		},
+		components: { AsyncSelect, CityFilter, DelegateFilter, BusinessFilter, InstallationFilter },
+	};
 </script>
 <style>
 </style>

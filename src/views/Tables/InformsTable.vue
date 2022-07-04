@@ -17,6 +17,24 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
+				<delegate-filter
+					v-model:clear="clear"
+					@updated="handleFilter('delegate', $event)"
+					v-if="$store.state.is_admin"
+				></delegate-filter>
+				<city-filter
+					v-model:clear="clear"
+					@updated="handleFilter('city', $event)"
+				></city-filter>
+				<div>
+					<base-button
+						size="sm"
+						@click="(params_filter = params), index(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Empresa</th>
@@ -30,10 +48,10 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item?.business?.user.full_name }}
+						{{ row.item?.business?.user?.full_name }}
 					</th>
 					<th scope="row" v-if="this.$store.state.is_admin">
-						{{ row.item?.business?.administrable?.user.full_name }}
+						{{ row.item?.business?.administrable?.user?.full_name }}
 					</th>
 					<td>
 						{{ row.item?.business?.address?.city }}
@@ -104,12 +122,13 @@
 </template>
 <script>
 	import service from "../../store/services/model-service";
-	import { isEmpty } from "lodash";
 	import ReportShow from "../Shows/ReportShow.vue";
 	import { mapGetters } from "vuex";
+	import DelegateFilter from '../../components/filters/DelegateFilter.vue';
+	import CityFilter from "../../components/filters/CityFilter.vue";
 
 	export default {
-		components: { ReportShow },
+		components: { ReportShow, DelegateFilter, CityFilter },
 		name: "informs-table",
 		props: {
 			dash: {
@@ -124,6 +143,14 @@
 				page: 1,
 				modal: false,
 				report_id: null,
+				params: "includes[]=business.user" +
+					"&includes[]=business.user" +
+					"&counts[]=nonconformities" +
+					"&counts[]=installations" +
+					"&counts[]=audits" +
+					"&counts[]=audits_completed",
+				params_filter: null,
+				clear: false
 			};
 		},
 		computed: {
@@ -134,13 +161,12 @@
 		},
 		methods: {
 			async index(page = 1) {
-				let params =
-					"includes[]=business.province.city" +
-					"&includes[]=business.user" +
-					"&counts[]=nonconformities" +
-					"&counts[]=installations" +
-					"&counts[]=audits" +
-					"&counts[]=audits_completed";
+				
+				if (this.params_filter == null) {
+					this.params_filter = this.params
+				}
+
+				let params = this.params_filter
 
 				if (this.$store.state.is_admin) {
 					params += "&includes[]=business.administrable.user";
@@ -151,17 +177,24 @@
 				}
 
 				const resp = await service.getIndex("report", page, params);
-				if (!isEmpty(resp.data.data)) {
-					this.tableData = resp.data.data;
-					this.metaData = resp.data.meta.page;
-					this.page = page;
-				}
+				this.tableData = resp?.data?.data;
+				this.metaData = resp?.data?.meta?.page;
+				this.page = page;
 			},
 			async handleChange(event) {
 				if (event == this.page) {
 					return;
 				}
 				this.index(event);
+			},
+			handleFilter(type, value) {
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=` + value;
+					this.index(this.page);
+				} else {
+					this.params_filter = this.params;
+					this.index(this.page);
+				}
 			},
 			handleView(item) {
 				let audits_completed = item.audits_count == item.audits_completed_count;

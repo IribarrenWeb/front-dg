@@ -22,6 +22,19 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
+				<installation-filter
+					v-model:clear="clear"
+					@updated="handleFilter('installation', $event)"
+				></installation-filter>
+				<div class="ml-2">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), getVisits(), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"
@@ -91,8 +104,10 @@
 </template>
 <script>
     import { mapGetters} from 'vuex';
+import InstallationFilter from '../../components/filters/InstallationFilter.vue';
 	import service from "../../store/services/model-service";
 	export default {
+	components: { InstallationFilter },
 		name: "audits-table",
 		props: {
 			type: {
@@ -109,7 +124,11 @@
 				metaData: {},
 				loader: false,
 				page: 1,
-                url: this.$store.state.api_url
+                url: this.$store.state.api_url,
+				clear: false,
+				params: "includes[]=visitable.installation.auditable.user"+
+					"&status=false",
+				params_filter: null
 			};
 		},
 		mounted() {
@@ -120,16 +139,27 @@
         },
 		methods: {
 			async getVisits(page = 1) {
+				
+				if (this.params_filter == null) {
+					this.params_filter = this.params
+				}
+
 				const resp = await service.getIndex(
 					"visit",
 					page,
-					"includes[]=visitable.installation.auditable.user"+
-					"&status=false"
+					this.params_filter
 				);
-				if (typeof resp.data.data != "undefined") {
-					this.tableData = resp.data.data;
-					this.metaData = resp.data.meta.page;
-					this.page = this.metaData.currentPage;
+				this.tableData = resp?.data?.data;
+				this.metaData = resp?.data?.meta?.page;
+				this.page = this.metaData?.currentPage;
+			},
+			handleFilter(type, value) {
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=` + value;
+					this.getVisits(this.page);
+				} else {
+					this.params_filter = this.params;
+					this.getVisits(this.page);
 				}
 			},
 			async handleChange(event) {
