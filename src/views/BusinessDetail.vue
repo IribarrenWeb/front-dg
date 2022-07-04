@@ -12,7 +12,7 @@
             </div>
 			<div class="card overflow-auto">
 				<table class="table table-sm table-bordered">
-					<thead>
+					<tbody>
 						<tr class="text-uppercase">
 							<th scope="row">Nombre empresa</th>
 							<th scope="col">CIF/NIF</th>
@@ -21,8 +21,6 @@
 							<th scope="row">Pais</th>
 							<th scope="row">Instalaciones</th>
 						</tr>
-					</thead>
-					<tbody>
 						<tr>
 							<td>{{ business?.user.full_name }}</td>
 							<td>{{ business?.business_nif ?? 'N/A' }}</td>

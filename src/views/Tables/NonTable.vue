@@ -40,14 +40,14 @@
 						{{ row.item?.description }}
 					</td>
 					<td v-if="!dash">
-						{{ row.item?.action ? row.item?.action?.date_end : 'SIN ACTUACIÓN' }}
+						{{
+							row.item?.action ? row.item?.action?.date_end : "SIN ACTUACIÓN"
+						}}
 					</td>
 					<td :class="`text-${row.item?.priority?.colour}`">
 						{{ row.item?.priority?.name }}
 					</td>
-					<td>
-						{{ row.item?.priority?.term }}MESES
-					</td>
+					<td>{{ row.item?.priority?.term }}MESES</td>
 					<td>
 						<badge
 							class="badge-dot mr-4"
@@ -58,8 +58,19 @@
 						</badge>
 					</td>
 					<td v-if="!dash">
-						<a href="#" v-if="(row.item?.status == 'PENDIENTE' && ROLE == 'business') ||( row.item?.status == 'PENDIENTE' && ROLE != 'business')" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
-						<a href="#" v-if="row.item?.status == 'POR REVISAR' && ROLE != 'business'" @click="modal = true, selected_non = row.item" class="btn btn-sm btn-default"><i class="fa-regular fa-circle-check"></i></a>
+						<a
+							href="#"
+							@click="(modal = true), (selected_non = row.item)"
+							class="btn btn-sm btn-default"
+							><i class="fa-regular fa-circle-check"></i
+						></a>
+						<a
+							href="#"
+							v-if="row.item?.status == 'POR REVISAR' && ROLE != 'business'"
+							@click="(modal = true), (selected_non = row.item)"
+							class="btn btn-sm btn-default"
+							><i class="fa-regular fa-circle-check"></i
+						></a>
 					</td>
 				</template>
 			</base-table>
@@ -79,18 +90,24 @@
 			modalClasses="modal-xl"
 			model="actuación de no conformidad"
 		>
-			<form-action :role="ROLE" @close="modal = false" :nonconformity="selected_non" :show="ROLE != 'business'" @reload="index(page)"></form-action>
+			<form-action
+				:role="ROLE"
+				@close="modal = false"
+				:nonconformity="selected_non"
+				:show="ROLE != 'business'"
+				@reload="index(page)"
+			></form-action>
 		</modal>
 	</div>
 </template>
 <script>
 	import service from "../../store/services/model-service";
 	import { isEmpty } from "lodash";
-    import FormAction from '../../components/forms/FormAction.vue';
-    import { mapGetters } from 'vuex';
+	import FormAction from "../../components/forms/FormAction.vue";
+	import { mapGetters } from "vuex";
 
 	export default {
-	components: { FormAction },
+		components: { FormAction },
 		name: "non-table",
 		props: {
 			dash: {
@@ -106,8 +123,8 @@
 				tableData: [],
 				metaData: {},
 				page: 1,
-                modal: false,
-                selected_non: null
+				modal: false,
+				selected_non: null,
 			};
 		},
 		mounted() {
@@ -115,21 +132,17 @@
 		},
 		methods: {
 			async index(page = 1) {
-                let params = "includes[]=installation&includes[]=audit";
-                
-                if (this.ROLE != 'business' && !this.dash) {
-                    params += '&includes[]=action.responsible'
-                }
+				let params = "includes[]=installation&includes[]=audit";
+
+				if (this.ROLE != "business" && !this.dash) {
+					params += "&includes[]=action.responsible";
+				}
 
 				if (this.dash) {
 					params += "&status_dash=true";
 				}
 
-				const resp = await service.getIndex(
-					"non",
-					page,
-					params
-				);
+				const resp = await service.getIndex("non", page, params);
 				if (!isEmpty(resp.data.data)) {
 					this.tableData = resp.data.data;
 					this.metaData = resp.data.meta.page;
@@ -143,9 +156,9 @@
 				this.index(event);
 			},
 		},
-        computed: {
-            ...mapGetters(['ROLE']),
-        }
+		computed: {
+			...mapGetters(["ROLE"]),
+		},
 	};
 </script>
 <style></style>

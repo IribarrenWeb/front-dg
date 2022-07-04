@@ -50,9 +50,9 @@
 					</td>
 					<td>Sin datos</td>
 					<td>
-						<badge class="badge-dot mr-4 text-lowercase" :type="setStatusType(row.item?.status)">
+						<badge class="badge-dot mr-4" :type="setStatusType(row.item?.status)">
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
-							<span class="status">{{ row.item?.status }}</span>
+							<span class="status">{{ row.item?.status_name }}</span>
 						</badge>
 					</td>
 					<td>
@@ -85,7 +85,7 @@
 								class="dropdown-item" 
 								href="#" 
 								@click.prevent="handleDelegate(row.item)" 
-								v-if="row.item?.status != 'COMPLETADO'"
+								v-if="row.item?.status != 'COMPLETADO' && !$store.state.is_auditor"
 								:disabled="row.item?.status != 'PENDIENTE'"
 							>
 								Delegar

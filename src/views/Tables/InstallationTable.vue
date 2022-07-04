@@ -30,7 +30,7 @@
 				<template v-slot:columns>
                     <th>#</th>
 					<th>Nombre</th>
-					<th>Direccion</th>
+					<th>Ciudad</th>
 					<th>Empleados</th>
 					<th>Auditor</th>
 					<th>Acciones</th>
@@ -42,7 +42,7 @@
 						{{ row.item?.name ?? 'N/A' }}
 					</th>
 					<td class="text-uppercase">
-						{{ row.item?.full_address ?? 'N/A' }}
+						{{ row.item?.address?.city ?? 'N/A' }}
 					</td>
 					<td>
 						{{ row.item?.employees.length }}

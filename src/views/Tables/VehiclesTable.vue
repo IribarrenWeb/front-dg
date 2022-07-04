@@ -27,6 +27,7 @@
 				:data="tableData"
 			>
 				<template v-slot:columns>
+					<th v-if="$store.state.is_business">Instalación</th>
 					<th>Matricula</th>
 					<th>Flota</th>
 					<th>Tara</th>
@@ -39,6 +40,9 @@
 				</template>
 
 				<template v-slot:default="row">
+					<th v-if="$store.state.is_business" scope="row">
+						{{ row.item?.installation.name }}
+					</th>
 					<th scope="row">
 						{{ row.item?.registration_number }}
 					</th>
@@ -148,6 +152,10 @@
 		methods: {
 			async getVehicles(page) {
 				let params = "includes[]=adr&includes[]=type";
+
+				if (this.$store.state.is_business) {
+					params += '&includes[]=installation'
+				}
 
 				if (this.installation_id != null) {
 					params += "&installation_id=" + this.installation_id;

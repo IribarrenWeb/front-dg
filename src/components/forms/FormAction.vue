@@ -117,10 +117,10 @@
             </div>
 
             <div class="mt-4 float-md-right">
-                <base-button v-if="role == 'business'" type="default" nativeType="submit" :disabled="!meta.valid"
+                <base-button v-if="role == 'business' && nonconformity.status != 'COMPLETADO'" type="default" nativeType="submit" :disabled="!meta.valid"
                 >Aceptar</base-button
                 >
-                <base-button v-else-if="canAccept && role != 'business'" type="default" @click="accept"
+                <base-button v-else-if="canAccept && role != 'business' && nonconformity.status != 'COMPLETADO'" type="default" @click="accept"
                 ><i class="fa-solid fa-check"></i> Aceptar</base-button
                 >
                 <base-button
