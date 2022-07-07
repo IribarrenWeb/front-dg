@@ -172,6 +172,12 @@
     padding-top: 0px;
     padding-bottom: 0px;
 }
+.filter input{
+    height: 40px;
+}
+.filter select{
+    height: 40px;
+}
 
 .bac-ligth{
     background: #F6F9FC;
@@ -180,7 +186,7 @@
 .multiselect__tags{
     display: block;
     width: 100%;
-    height: calc(1.5em + 1.25rem + 2px);
+
     padding: 0.625rem 0.75rem;
     font-size: 0.875rem;
     font-weight: 400;
@@ -193,7 +199,7 @@
     box-shadow: none;
     transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    height: calc(1.5em + 0.5rem + 2px);
+    height: 40px;
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
     line-height: 1.5;

@@ -17,6 +17,36 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex align-items-center">
+				<div class="col-md-10">
+					<date-filter
+					v-model:clear="clear"
+					@updated="handleFilter('acting_date', $event)"
+					/>
+					<installation-filter
+						v-model:clear="clear"
+						@updated="handleFilter('installation', $event)"
+					/>
+					<select-filter 
+						v-model:clear="clear"
+						:options="nonTypes"
+						@updated="handleFilter('type', $event)"
+					/>
+					<!-- <select-filter 
+						v-model:clear="clear"
+						:options="nonTypes"
+						placeholder="Prioridad"
+						@updated="handleFilter('priority', $event)"
+					/> -->
+				</div>
+				<div class="col-md-2 d-flex">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), index(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Instalación</th>
@@ -102,12 +132,14 @@
 </template>
 <script>
 	import service from "../../store/services/model-service";
-	import { isEmpty } from "lodash";
 	import FormAction from "../../components/forms/FormAction.vue";
 	import { mapGetters } from "vuex";
+	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+	import DateFilter from "../../components/filters/DateFilter.vue";
+	import SelectFilter from "../../components/filters/SelectFilter.vue";
 
 	export default {
-		components: { FormAction },
+		components: { FormAction, InstallationFilter, DateFilter, SelectFilter },
 		name: "non-table",
 		props: {
 			dash: {
@@ -125,14 +157,23 @@
 				page: 1,
 				modal: false,
 				selected_non: null,
+				params: "includes[]=installation&includes[]=audit",
+				params_filter: null,
+				clear: false,
+				nonTypes: []
 			};
 		},
 		mounted() {
 			this.index();
+			this.getTypes();
 		},
 		methods: {
 			async index(page = 1) {
-				let params = "includes[]=installation&includes[]=audit";
+				if (this.params_filter == null){
+					this.params_filter = this.params
+				}
+
+				let params = this.params_filter;
 
 				if (this.ROLE != "business" && !this.dash) {
 					params += "&includes[]=action.responsible";
@@ -143,17 +184,34 @@
 				}
 
 				const resp = await service.getIndex("non", page, params);
-				if (!isEmpty(resp.data.data)) {
-					this.tableData = resp.data.data;
-					this.metaData = resp.data.meta.page;
-					this.page = this.metaData.currentPage;
-				}
+				this.tableData = resp?.data?.data;
+				this.metaData = resp?.data?.meta?.page;
+				this.page = this?.metaData?.currentPage;
 			},
 			async handleChange(event) {
 				if (event == this.page) {
 					return;
 				}
 				this.index(event);
+			},
+			async getTypes(){
+				const res = await service.api('non-types','get',null,null);
+
+				this.nonTypes = res?.data?.data.map((d) => {
+					return {
+						label: d.name,
+						value: d.id
+					}
+				})
+			},
+			handleFilter(type, value) {
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=` + value;
+					this.index(this.page);
+				} else {
+					this.params_filter = this.params;
+					this.index(this.page);
+				}
 			},
 		},
 		computed: {

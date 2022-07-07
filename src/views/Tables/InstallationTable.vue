@@ -22,7 +22,7 @@
 					<async-select v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
 				</div>
 				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div>
+				<div class="d-flex">
 					<base-button size="sm" @click="params_filter = params,getInstallations(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>

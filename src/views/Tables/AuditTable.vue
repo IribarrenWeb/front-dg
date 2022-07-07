@@ -7,7 +7,7 @@
 						{{ title }}
 					</h3>
 				</div>
-				<div class="col text-right">
+				<div class="col justify-content-end d-flex">
 					<base-button v-if="!$store.state.is_business" type="default" size="sm"
 						>Iniciar auditoria</base-button
 					>
@@ -36,6 +36,12 @@
 					v-model:clear="clear"
 					@updated="handleFilter('city', $event)"
 				></city-filter>
+				<select-filter 
+					v-model:clear="clear"
+					:options="[{label:'Pendiente',value:'pendiente'},{label:'Completado',value:'completado'},{label:'En progreso',value:'en progreso'}]"
+					placeholder="Selecciona un estado..."
+					@updated="handleFilter('status', $event)"
+				/>
 				<div>
 					<base-button
 						size="sm"
@@ -228,6 +234,7 @@
 	import DelegateFilter from "../../components/filters/DelegateFilter";
 	import BusinessFilter from "../../components/filters/BusinessFilter.vue";
 import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+import SelectFilter from '../../components/filters/SelectFilter.vue';
 
 	export default {
 		name: "audits-table",
@@ -368,7 +375,7 @@ import InstallationFilter from '../../components/filters/InstallationFilter.vue'
 				}
 			},
 		},
-		components: { AsyncSelect, CityFilter, DelegateFilter, BusinessFilter, InstallationFilter },
+		components: { AsyncSelect, CityFilter, DelegateFilter, BusinessFilter, InstallationFilter, SelectFilter },
 	};
 </script>
 <style>

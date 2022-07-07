@@ -20,7 +20,7 @@
 			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
 				<delegate-filter v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
 				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div>
+				<div class="d-flex">
 					<base-button size="sm" @click="params_filter = params,getAuditors(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>

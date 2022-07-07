@@ -22,12 +22,21 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex align-items-center">
+				<date-filter
+					v-model:clear="clear"
+					@updated="handleFilter('date', $event)"
+				/>
+				<select-filter
+					v-model:clear="clear"
+					:options="[{label: 'auditoria',value:'auditoria'},{label:'formacion',value:'formacion'}]"
+					@updated="handleFilter('type', $event)"
+				/>
 				<installation-filter
 					v-model:clear="clear"
 					@updated="handleFilter('installation', $event)"
 				></installation-filter>
-				<div class="ml-2">
+				<div class="ml-2 d-flex">
 					<base-button
 						size="sm"
 						@click="(params_filter = params), getVisits(), (clear = true)"
@@ -73,7 +82,7 @@
 						{{ row.item?.type }}
 					</td>
 					<td>
-						{{ this.$functions.formatDate(row.item?.date_scheduled) }}
+						{{ row.item?.date_scheduled }}
 					</td>
                     <td>
 						{{ row.item?.time }}
@@ -104,10 +113,12 @@
 </template>
 <script>
     import { mapGetters} from 'vuex';
-import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+	import DateFilter from '../../components/filters/DateFilter.vue';
+	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+import SelectFilter from '../../components/filters/SelectFilter.vue';
 	import service from "../../store/services/model-service";
 	export default {
-	components: { InstallationFilter },
+	components: { InstallationFilter, DateFilter, SelectFilter },
 		name: "audits-table",
 		props: {
 			type: {
@@ -154,6 +165,7 @@ import InstallationFilter from '../../components/filters/InstallationFilter.vue'
 				this.page = this.metaData?.currentPage;
 			},
 			handleFilter(type, value) {
+				console.log(type,value);
 				if (!this.$empty(value) || value >= 1) {
 					this.params_filter += `&${type}_id=` + value;
 					this.getVisits(this.page);

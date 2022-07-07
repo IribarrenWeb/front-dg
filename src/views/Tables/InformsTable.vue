@@ -17,7 +17,13 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex align-items-center">
+				<year-filter
+					label="Año"
+					v-model:clear="clear"
+					placeholder="Año"
+					@updated="handleFilter('year', $event)"
+				/>
 				<delegate-filter
 					v-model:clear="clear"
 					@updated="handleFilter('delegate', $event)"
@@ -27,7 +33,13 @@
 					v-model:clear="clear"
 					@updated="handleFilter('city', $event)"
 				></city-filter>
-				<div>
+				<select-filter 
+					v-model:clear="clear"
+					:options="[{label:'Pendiente',value:'pendiente'},{label:'Completado',value:'completado'},{label:'POR REVISAR',value:'POR REVISAR'}]"
+					placeholder="Selecciona un estado..."
+					@updated="handleFilter('status', $event)"
+				/>
+				<div class="d-flex">
 					<base-button
 						size="sm"
 						@click="(params_filter = params), index(page), (clear = true)"
@@ -126,9 +138,11 @@
 	import { mapGetters } from "vuex";
 	import DelegateFilter from '../../components/filters/DelegateFilter.vue';
 	import CityFilter from "../../components/filters/CityFilter.vue";
+import SelectFilter from '../../components/filters/SelectFilter.vue';
+import YearFilter from '../../components/filters/YearFilter.vue';
 
 	export default {
-		components: { ReportShow, DelegateFilter, CityFilter },
+		components: { ReportShow, DelegateFilter, CityFilter, SelectFilter, YearFilter },
 		name: "informs-table",
 		props: {
 			dash: {
