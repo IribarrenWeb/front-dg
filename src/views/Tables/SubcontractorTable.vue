@@ -22,6 +22,27 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center" v-if="false">
+				<installation-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					@updated="handleFilter('installation', $event)"
+				></installation-filter>
+				<!-- <select-filter
+					class="col-md-3"
+					placeholder="Mercancias peligrosas"
+					v-model:clear="clear"
+					:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
+					@updated="handleFilter('adr', $event)"
+				/> -->
+				<div class="col-md-2">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), getSubcontractors(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"
@@ -136,7 +157,10 @@
 				loader: false,
 				page: 1,
 				modal: false,
-				sub: null
+				sub: null,
+				params: "includes[]=documents",
+				params_filter: null,
+				clear: false
 			};
 		},
 		mounted() {
@@ -144,7 +168,11 @@
 		},
 		methods: {
 			async getSubcontractors(page) {
-				let params = "includes[]=documents";
+				if (this.params_filter == null) {
+					this.params_filter = this.params
+				}
+
+				let params = this.params_filter;
 
 				if (this.installation_id != null) {
 					params += "&installation_id=" + this.installation_id;
@@ -152,17 +180,25 @@
 
 				const resp = await service.getIndex("subcontractor", page, params);
 
-				if (typeof resp.data.data != "undefined") {
-					this.tableData = resp.data.data;
-					this.metaData = resp.data.meta.page;
-					this.page = this.metaData.currentPage;
-				}
+				this.tableData = resp?.data?.data;
+				this.metaData = resp?.data?.meta?.page;
+				this.page = this?.metaData?.currentPage;
 			},
 			async handleChange(event) {
 				if (event == this.page) {
 					return;
 				}
 				this.getSubcontractors(event, this.installation_id);
+			},
+			handleFilter(type = 'delegate', value){
+				console.log(value, type);
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=`+value
+					this.getSubcontractors(this.page)
+				}else{
+					this.params_filter = this.params
+					this.getSubcontractors(this.page)
+				}
 			},
 			async destroy(id) {
 				try {

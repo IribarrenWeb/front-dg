@@ -1,5 +1,5 @@
 <template>
-	<div class="d-inline-block mx-2 filter">
+	<div class="filter">
 		<base-field :label="label">
 			<input class="form-control form-control-sm" type="date" v-model="date" @input="handleEmit"/>
 		</base-field>
@@ -12,6 +12,7 @@
 	// import Multiselect from "vue-multiselect";
 
 	export default {
+		inheritAttrs: true,
         name: 'date-filter',
 		components: {
 			// Multiselect,

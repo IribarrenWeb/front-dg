@@ -14,6 +14,27 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center" v-if="$store.state.is_business">
+				<installation-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					@updated="handleFilter('installation', $event)"
+				></installation-filter>
+				<select-filter
+					class="col-md-3"
+					placeholder="Mercancias peligrosas"
+					v-model:clear="clear"
+					:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
+					@updated="handleFilter('adr', $event)"
+				/>
+				<div class="col-md-2">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), index(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th v-if="isClient">Instalación</th>
@@ -106,9 +127,11 @@
 	import FormEmployee from "../../components/forms/FormEmployee.vue";
     import { mapGetters } from 'vuex';
 import DeleteButton from '../../components/Utils/DeleteButton.vue';
+import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+import SelectFilter from '../../components/filters/SelectFilter.vue';
 
 	export default {
-		components: { FormEmployee, DeleteButton },
+		components: { FormEmployee, DeleteButton, InstallationFilter, SelectFilter },
 		mixins: [utils],
 		name: "employees-table",
 		props: {
@@ -137,7 +160,10 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				action: "registrar",
 				modal: false,
 				metaData: {},
-                employee_id: null
+                employee_id: null,
+				params: "includes[]=documents.type&includes[]=installation",
+				params_filter: null,
+				clear: false
 			};
 		},
 		mounted() {
@@ -146,12 +172,17 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 		methods: {
 			async index(page) {
 				try {
-					let params = "includes[]=documents.type&includes[]=installation";
+					if (this.params_filter == null) {
+						this.params_filter = this.params
+					}
+
+					let params = this.params_filter;
+					
 					if (this.installation_id != null) {
 						params += "&installation_id=" + this.installation_id;
 					}
 					if (this.ROLE != 'business') {
-						params += "&adr=true";
+						params += "&adr_id=true";
 					}
 					if (this.driver != null) {
 						params += "&driver=true";
@@ -185,6 +216,16 @@ import DeleteButton from '../../components/Utils/DeleteButton.vue';
 				}
 
 				this.index(event);
+			},
+			handleFilter(type = 'delegate', value){
+				console.log(value, type);
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=`+value
+					this.index(this.page)
+				}else{
+					this.params_filter = this.params
+					this.index(this.page)
+				}
 			},
 			async deleteEmployee(id) {
 				try {

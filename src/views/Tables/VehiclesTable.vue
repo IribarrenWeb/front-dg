@@ -19,6 +19,27 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center" v-if="$store.state.is_business">
+				<installation-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					@updated="handleFilter('installation', $event)"
+				></installation-filter>
+				<!-- <select-filter
+					class="col-md-3"
+					placeholder="Mercancias peligrosas"
+					v-model:clear="clear"
+					:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
+					@updated="handleFilter('adr', $event)"
+				/> -->
+				<div class="col-md-2">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), getVehicles(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"
@@ -41,7 +62,7 @@
 
 				<template v-slot:default="row">
 					<th v-if="$store.state.is_business" scope="row">
-						{{ row.item?.installation.name }}
+						{{ row.item?.installation?.name }}
 					</th>
 					<th scope="row">
 						{{ row.item?.registration_number }}
@@ -110,10 +131,11 @@
 	import utils from "@/mixins/utils-mixin";
 	import FormVehicle from "../../components/forms/FormVehicle.vue";
 	import service from "../../store/services/model-service";
+	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
 
 	export default {
 		mixins: [utils],
-		components: { FormVehicle },
+		components: { FormVehicle, InstallationFilter },
 		name: "vehicle-table",
 		props: {
 			type: {
@@ -144,6 +166,9 @@
 				page: 1,
 				modal: false,
 				vehicle: null,
+				params: "includes[]=adr&includes[]=type",
+				params_filter: null,
+				clear: false
 			};
 		},
 		mounted() {
@@ -151,7 +176,11 @@
 		},
 		methods: {
 			async getVehicles(page) {
-				let params = "includes[]=adr&includes[]=type";
+				if (this.params_filter == null) {
+					this.params_filter = this.params
+				}
+
+				let params = this.params_filter;
 
 				if (this.$store.state.is_business) {
 					params += '&includes[]=installation'
@@ -167,11 +196,9 @@
 
 				const resp = await service.getIndex("vehicle", page, params);
 
-				if (typeof resp.data.data != "undefined") {
-					this.tableData = resp.data.data;
-					this.metaData = resp.data.meta.page;
-					this.page = this.metaData.currentPage;
-				}
+				this.tableData = resp?.data?.data;
+				this.metaData = resp?.data?.meta?.page;
+				this.page = this?.metaData?.currentPage;
 			},
 			async handleChange(event) {
 				if (event == this.page) {
@@ -192,6 +219,16 @@
 						break;
 				}
 				return type;
+			},
+			handleFilter(type = 'delegate', value){
+				console.log(value, type);
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=`+value
+					this.getVehicles(this.page)
+				}else{
+					this.params_filter = this.params
+					this.getVehicles(this.page)
+				}
 			},
 			async destroy(id) {
 				try {

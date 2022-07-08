@@ -17,9 +17,9 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex" v-if="$store.state.is_admin">
-				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div class="d-flex">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row" v-if="$store.state.is_admin">
+				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+				<div class="col-md-2">
 					<base-button size="sm" @click="params_filter = params,getDelegates(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>

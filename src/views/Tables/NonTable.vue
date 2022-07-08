@@ -17,29 +17,43 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex align-items-center">
+			<div
+				class="card-header border-0 py-3 bac-ligth row align-items-center"
+			>
 				<div class="col-md-10">
-					<date-filter
-					v-model:clear="clear"
-					@updated="handleFilter('acting_date', $event)"
-					/>
-					<installation-filter
-						v-model:clear="clear"
-						@updated="handleFilter('installation', $event)"
-					/>
-					<select-filter 
-						v-model:clear="clear"
-						:options="nonTypes"
-						@updated="handleFilter('type', $event)"
-					/>
-					<!-- <select-filter 
+					<div class="row align-items-center">
+						<date-filter
+							class="col-md-4 col-lg-3"
+							v-model:clear="clear"
+							@updated="handleFilter('acting_date', $event)"
+						/>
+						<installation-filter
+							class="col-md-4 col-lg-3"
+							v-model:clear="clear"
+							@updated="handleFilter('installation', $event)"
+						/>
+						<select-filter
+							class="col-md-4 col-lg-3"
+							v-model:clear="clear"
+							:options="nonTypes"
+							@updated="handleFilter('type', $event)"
+						/>
+
+						<select-filter
+							class="col-md-4 col-lg-3"
+							v-model:clear="clear"
+							:options="priorities"
+							@updated="handleFilter('priority', $event)"
+						/>
+						<!-- <select-filter 
 						v-model:clear="clear"
 						:options="nonTypes"
 						placeholder="Prioridad"
 						@updated="handleFilter('priority', $event)"
 					/> -->
+					</div>
 				</div>
-				<div class="col-md-2 d-flex">
+				<div class="col-md-2">
 					<base-button
 						size="sm"
 						@click="(params_filter = params), index(page), (clear = true)"
@@ -134,7 +148,7 @@
 	import service from "../../store/services/model-service";
 	import FormAction from "../../components/forms/FormAction.vue";
 	import { mapGetters } from "vuex";
-	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+	import InstallationFilter from "../../components/filters/InstallationFilter.vue";
 	import DateFilter from "../../components/filters/DateFilter.vue";
 	import SelectFilter from "../../components/filters/SelectFilter.vue";
 
@@ -160,17 +174,19 @@
 				params: "includes[]=installation&includes[]=audit",
 				params_filter: null,
 				clear: false,
-				nonTypes: []
+				nonTypes: [],
+				priorities: [],
 			};
 		},
 		mounted() {
 			this.index();
 			this.getTypes();
+			this.getPiorities();
 		},
 		methods: {
 			async index(page = 1) {
-				if (this.params_filter == null){
-					this.params_filter = this.params
+				if (this.params_filter == null) {
+					this.params_filter = this.params;
 				}
 
 				let params = this.params_filter;
@@ -194,15 +210,25 @@
 				}
 				this.index(event);
 			},
-			async getTypes(){
-				const res = await service.api('non-types','get',null,null);
+			async getTypes() {
+				const res = await service.api("non-types", "get", null, null);
 
 				this.nonTypes = res?.data?.data.map((d) => {
 					return {
 						label: d.name,
-						value: d.id
-					}
-				})
+						value: d.id,
+					};
+				});
+			},
+			async getPiorities() {
+				const res = await service.api("priorities", "get", null, null);
+
+				this.priorities = res?.data?.data.map((d) => {
+					return {
+						label: d.name,
+						value: d.id,
+					};
+				});
 			},
 			handleFilter(type, value) {
 				if (!this.$empty(value) || value >= 1) {

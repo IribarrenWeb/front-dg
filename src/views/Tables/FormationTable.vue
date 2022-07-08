@@ -6,12 +6,43 @@
 					<h4 class="mb-0">Formaciones</h4>
 				</div>
 				<div class="col text-right">
-					<a href="#" class="btn btn-sm btn-default" @click.prevent="handleAdd">Agregar</a>
+					<a href="#" class="btn btn-sm btn-default" @click.prevent="handleAdd"
+						>Agregar</a
+					>
 				</div>
 			</div>
 		</div>
 
 		<div class="table-responsive">
+			<div
+				class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center"
+			>
+				<div class="col-md-3 filter">
+					<async-select
+						placeholder="Selecciona responsable..."
+						v-model:clear="clear"
+						@updated="handleFilter('facilitable', $event.id)"
+						v-if="!$store.state.is_auditor"
+						:roles="[2, 3]"
+					></async-select>
+				</div>
+				<select-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					:options="[
+						{ label: 'Online', value: 1 },
+						{ label: 'Presencial', value: 2 },
+					]"
+					@updated="handleFilter('type', $event)"
+				/>
+				<div class="col-md-2">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), index(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Formación</th>
@@ -28,18 +59,23 @@
 					<td>
 						{{ row.item?.type.name }}
 					</td>
-                    <td>
+					<td>
 						{{ row.item?.duration }}
 					</td>
 					<td>
 						{{ row.item?.facilitable.user.full_name }}
 					</td>
 					<td>
-						<a href="#" class="btn btn-sm btn-default" @click="handleAssign(row.item?.id)">Asignar</a>
+						<a
+							href="#"
+							class="btn btn-sm btn-default"
+							@click="handleAssign(row.item?.id)"
+							>Asignar</a
+						>
 					</td>
 				</template>
 			</base-table>
-            <base-pagination
+			<base-pagination
 				:perPage="this.metaData.perPage"
 				:value="this.page"
 				@changePage="handleChange($event)"
@@ -48,7 +84,7 @@
 			>
 			</base-pagination>
 
-            <modal
+			<modal
 				v-if="this.modal"
 				v-model:show="this.modal"
 				:action="action"
@@ -56,18 +92,29 @@
 				modalClasses="modal-xl"
 				model="formación"
 			>
-                <form-formation v-if="!assign" @reload="index" @close="handleClose"></form-formation>
-                <form-formation-assign v-else @reload="handleReload" @close="handleClose" :formation_id="formation_id"></form-formation-assign>
+				<form-formation
+					v-if="!assign"
+					@reload="index"
+					@close="handleClose"
+				></form-formation>
+				<form-formation-assign
+					v-else
+					@reload="handleReload"
+					@close="handleClose"
+					:formation_id="formation_id"
+				></form-formation-assign>
 			</modal>
 		</div>
 	</div>
 </template>
 <script>
-import FormFormation from '../../components/forms/FormFormation.vue';
-import FormFormationAssign from '../../components/forms/FormFormationAssign.vue';
+	import AsyncSelect from "../../components/AsyncSelect.vue";
+	import SelectFilter from "../../components/filters/SelectFilter.vue";
+	import FormFormation from "../../components/forms/FormFormation.vue";
+	import FormFormationAssign from "../../components/forms/FormFormationAssign.vue";
 	import service from "../../store/services/model-service";
 	export default {
-	components: { FormFormation, FormFormationAssign },
+		components: { FormFormation, FormFormationAssign, SelectFilter, AsyncSelect },
 		name: "formation-table",
 		data() {
 			return {
@@ -77,18 +124,25 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
 				action: "Registrar",
 				page: 1,
 				formation_id: null,
-                assign: false
+				assign: false,
+				clear: false,
+				params: "includes[]=type&includes[]=facilitable.user",
+				params_filter: null,
 			};
 		},
-        mounted() {
+		mounted() {
 			this.index(this.page);
-        },
-        methods: {
-            async index(page = 1) {
+		},
+		methods: {
+			async index(page = 1) {
+				if (this.params_filter == null) {
+					this.params_filter = this.params;
+				}
+
 				const resp = await service.getIndex(
 					"formation",
 					page,
-					"includes[]=type&includes[]=facilitable.user"
+					this.params_filter
 				);
 				if (typeof resp.data.data != "undefined") {
 					this.tableData = resp.data.data;
@@ -96,31 +150,39 @@ import FormFormationAssign from '../../components/forms/FormFormationAssign.vue'
 					this.page = this.metaData.currentPage;
 				}
 			},
-            async handleChange(event) {
+			async handleChange(event) {
 				if (event == this.page) {
 					return;
 				}
 				this.index(event);
 			},
-            handleAdd() {
+			handleFilter(type, value) {
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=` + value;
+					this.index(this.page);
+				} else {
+					this.params_filter = this.params;
+					this.index(this.page);
+				}
+			},
+			handleAdd() {
 				this.modal = true;
 			},
-            handleAssign(id){
-                this.formation_id = id;
-                this.assign = true;
-                this.action = 'Asignar';
-                this.modal = true;
-            },
-            handleClose() {
-                this.action = 'registrar';
-                this.modal = false;
-                this.assign = false;
-            },
-            handleReload(){
-                this.$emit('reloadTraining')
-            },
-            
-        }
+			handleAssign(id) {
+				this.formation_id = id;
+				this.assign = true;
+				this.action = "Asignar";
+				this.modal = true;
+			},
+			handleClose() {
+				this.action = "registrar";
+				this.modal = false;
+				this.assign = false;
+			},
+			handleReload() {
+				this.$emit("reloadTraining");
+			},
+		},
 	};
 </script>
 <style></style>

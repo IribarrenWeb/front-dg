@@ -16,14 +16,15 @@
 	import Multiselect from "vue-multiselect";
 
 	export default {
+		inheritAttrs: true,
         components: {
 			Multiselect,
 		},
 		setup() {
-			const delegates = ref({});
+			const auditors = ref({});
 			const model = ref(null);
 			const data = computed(() => {
-				return delegates.value.map((p) => {
+				return auditors.value.map((p) => {
 					return {
 						label: p.user.full_name,
 						value: p.id,
@@ -31,12 +32,12 @@
 				});
 			});
 
-			async function getDelegates() {
+			async function getAuditors() {
 				const res = await service.getIndex("auditor", null, "includes[]=user");
-				delegates.value = res.data.data;
+				auditors.value = res.data.data;
 			}
 
-			getDelegates();
+			getAuditors();
 
 			return {
 				model,

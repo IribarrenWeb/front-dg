@@ -1,5 +1,5 @@
 <template>
-	<div class="d-inline-block mx-2 filter">
+	<div class="filter">
 		<base-field :label="label">
 			<input
 				class="form-control form-control-sm"
@@ -18,6 +18,7 @@
 	import { ref, watch } from "vue";
 
 	export default {
+		inheritAttrs: true,
 		name: "year-filter",
 		components: {
 			// Multiselect,

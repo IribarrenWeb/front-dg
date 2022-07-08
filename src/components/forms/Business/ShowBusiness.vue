@@ -126,27 +126,6 @@
 								/>
 							</base-field>
 						</div>
-						<div class="col-lg-4" v-if="provinces.length >= 1">
-							<base-field name="province_id" label="Provincia">
-								<field-validate
-									class="form-control"
-									as="select"
-									name="province_id"
-									rules=""
-									label="Provincia"
-									v-model="model.province_id"
-								>
-									<option value="" selected>Selecciona una provincia</option>
-									<option
-										v-for="province in provinces"
-										:key="province.id"
-										:value="province.id"
-									>
-										{{ province.name }}
-									</option>
-								</field-validate>
-							</base-field>
-						</div>
 					</div>
 
 					
@@ -307,7 +286,7 @@ export default {
     },
     async mounted() {
         this.show();
-        this.getProvinces();
+        // this.getProvinces();
     },
     methods: {
         async onUpdate(values) {

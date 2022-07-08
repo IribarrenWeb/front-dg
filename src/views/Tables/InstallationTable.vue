@@ -17,12 +17,12 @@
 		</div>
 		<div></div>
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
-				<div class="filter">
-					<async-select v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row">
+				<div class="col-md-3 filter">
+					<async-select placeholder="Selecciona auditor..." v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
 				</div>
-				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div class="d-flex">
+				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+				<div class="col-md-2">
 					<base-button size="sm" @click="params_filter = params,getInstallations(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>

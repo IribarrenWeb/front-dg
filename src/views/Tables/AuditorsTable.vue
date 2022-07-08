@@ -17,10 +17,10 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
-				<delegate-filter v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
-				<city-filter v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div class="d-flex">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row">
+				<delegate-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
+				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+				<div class="col-md-2">
 					<base-button size="sm" @click="params_filter = params,getAuditors(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>

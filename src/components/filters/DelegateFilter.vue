@@ -1,5 +1,5 @@
 <template>
-	<div class="d-inline-block filter">
+	<div class="filter">
 		<multiselect
 			v-model="model"
 			:options="data"
@@ -16,6 +16,7 @@
 	import Multiselect from "vue-multiselect";
 
 	export default {
+		inheritAttrs: true,
         components: {
 			Multiselect,
 		},

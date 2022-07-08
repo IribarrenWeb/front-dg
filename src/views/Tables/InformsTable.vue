@@ -6,10 +6,7 @@
 					<h4 class="mb-0">Informes anuales</h4>
 				</div>
 				<div class="col text-right">
-					<router-link
-						v-if="dash"
-						to="/informs"
-						class="btn btn-sm btn-default"
+					<router-link v-if="dash" to="/informs" class="btn btn-sm btn-default"
 						>Ver todas</router-link
 					>
 				</div>
@@ -17,29 +14,43 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex align-items-center">
-				<year-filter
-					label="Año"
-					v-model:clear="clear"
-					placeholder="Año"
-					@updated="handleFilter('year', $event)"
-				/>
-				<delegate-filter
-					v-model:clear="clear"
-					@updated="handleFilter('delegate', $event)"
-					v-if="$store.state.is_admin"
-				></delegate-filter>
-				<city-filter
-					v-model:clear="clear"
-					@updated="handleFilter('city', $event)"
-				></city-filter>
-				<select-filter 
-					v-model:clear="clear"
-					:options="[{label:'Pendiente',value:'pendiente'},{label:'Completado',value:'completado'},{label:'POR REVISAR',value:'POR REVISAR'}]"
-					placeholder="Selecciona un estado..."
-					@updated="handleFilter('status', $event)"
-				/>
-				<div class="d-flex">
+			<div
+				class="card-header border-0 py-3 bac-ligth row align-items-center"
+			>
+				<div class="col-md-10">
+					<div class="row align-items-center">
+						<year-filter
+							label="Año"
+							class="col-md-3"
+							v-model:clear="clear"
+							placeholder="Año"
+							@updated="handleFilter('year', $event)"
+						/>
+						<delegate-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('delegate', $event)"
+							v-if="$store.state.is_admin"
+						></delegate-filter>
+						<city-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('city', $event)"
+						></city-filter>
+						<select-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							:options="[
+								{ label: 'Pendiente', value: 'pendiente' },
+								{ label: 'Completado', value: 'completado' },
+								{ label: 'POR REVISAR', value: 'POR REVISAR' },
+							]"
+							placeholder="Selecciona un estado..."
+							@updated="handleFilter('status', $event)"
+						/>
+					</div>
+				</div>
+				<div class="col-md-2">
 					<base-button
 						size="sm"
 						@click="(params_filter = params), index(page), (clear = true)"
@@ -69,7 +80,7 @@
 						{{ row.item?.business?.address?.city }}
 					</td>
 					<td>
-						{{ row.item?.audits_completed_count }}/{{row.item?.audits_count}}
+						{{ row.item?.audits_completed_count }}/{{ row.item?.audits_count }}
 					</td>
 					<th>
 						{{ row.item?.period }}
@@ -136,13 +147,19 @@
 	import service from "../../store/services/model-service";
 	import ReportShow from "../Shows/ReportShow.vue";
 	import { mapGetters } from "vuex";
-	import DelegateFilter from '../../components/filters/DelegateFilter.vue';
+	import DelegateFilter from "../../components/filters/DelegateFilter.vue";
 	import CityFilter from "../../components/filters/CityFilter.vue";
-import SelectFilter from '../../components/filters/SelectFilter.vue';
-import YearFilter from '../../components/filters/YearFilter.vue';
+	import SelectFilter from "../../components/filters/SelectFilter.vue";
+	import YearFilter from "../../components/filters/YearFilter.vue";
 
 	export default {
-		components: { ReportShow, DelegateFilter, CityFilter, SelectFilter, YearFilter },
+		components: {
+			ReportShow,
+			DelegateFilter,
+			CityFilter,
+			SelectFilter,
+			YearFilter,
+		},
 		name: "informs-table",
 		props: {
 			dash: {
@@ -157,14 +174,15 @@ import YearFilter from '../../components/filters/YearFilter.vue';
 				page: 1,
 				modal: false,
 				report_id: null,
-				params: "includes[]=business.user" +
+				params:
+					"includes[]=business.user" +
 					"&includes[]=business.user" +
 					"&counts[]=nonconformities" +
 					"&counts[]=installations" +
 					"&counts[]=audits" +
 					"&counts[]=audits_completed",
 				params_filter: null,
-				clear: false
+				clear: false,
 			};
 		},
 		computed: {
@@ -175,12 +193,11 @@ import YearFilter from '../../components/filters/YearFilter.vue';
 		},
 		methods: {
 			async index(page = 1) {
-				
 				if (this.params_filter == null) {
-					this.params_filter = this.params
+					this.params_filter = this.params;
 				}
 
-				let params = this.params_filter
+				let params = this.params_filter;
 
 				if (this.$store.state.is_admin) {
 					params += "&includes[]=business.administrable.user";

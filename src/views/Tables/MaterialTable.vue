@@ -19,6 +19,27 @@
 		</div>
 
 		<div class="table-responsive">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center" v-if="$store.state.is_business">
+				<installation-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					@updated="handleFilter('installation', $event)"
+				></installation-filter>
+				<!-- <select-filter
+					class="col-md-3"
+					placeholder="Mercancias peligrosas"
+					v-model:clear="clear"
+					:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
+					@updated="handleFilter('adr', $event)"
+				/> -->
+				<div class="col-md-2">
+					<base-button
+						size="sm"
+						@click="(params_filter = params), getMaterials(page), (clear = true)"
+						>Borrar filtros</base-button
+					>
+				</div>
+			</div>
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"
@@ -100,12 +121,13 @@
 	</div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+	import { mapGetters } from 'vuex';
+	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
 	import service from "../../store/services/model-service";
 	import MaterialShow from "../Shows/MaterialShow.vue";
 
 	export default {
-		components: { MaterialShow },
+		components: { MaterialShow, InstallationFilter },
 		name: "material-table",
 		props: {
 			type: {
@@ -139,7 +161,10 @@ import { mapGetters } from 'vuex';
 				metaData: {},
 				page: 1,
 				modal: false,
-                material: null
+                material: null,
+				params: "includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents&includes[]=installation",
+				params_filter: null,
+				clear: false
 			};
 		},
 		mounted() {
@@ -150,8 +175,12 @@ import { mapGetters } from 'vuex';
 		},
 		methods: {
 			async getMaterials(page = 1, id = null) {
-				let params =
-					"includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents&includes[]=installation";
+
+				if (this.params_filter == null) {
+					this.params_filter = this.params
+				}
+
+				let params = this.params_filter;
 
 				if (id != null) {
 					params += "&installation_id=" + id;
@@ -165,17 +194,25 @@ import { mapGetters } from 'vuex';
 
 				const resp = await service.getIndex("material", page, params);
 
-				if (typeof resp.data.data != "undefined") {
-					this.tableData = resp.data.data;
-					this.metaData = resp.data.meta.page;
-					this.page = this.metaData.currentPage;
-				}
+				this.tableData = resp?.data?.data;
+				this.metaData = resp?.data?.meta?.page;
+				this.page = this?.metaData?.currentPage;
 			},
 			async handleChange(event) {
 				if (event == this.page) {
 					return;
 				}
 				this.getMaterials(event, this.installation_id);
+			},
+			handleFilter(type = 'delegate', value){
+				console.log(value, type);
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}_id=`+value
+					this.getMaterials(this.page)
+				}else{
+					this.params_filter = this.params
+					this.getMaterials(this.page)
+				}
 			},
 			handleView(id) {
 				(this.material_id = id), (this.modal = true);

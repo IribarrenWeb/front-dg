@@ -1,8 +1,8 @@
 <template>
-	<div class="d-inline-block mx-2 filter">
-		<select class="form-control p-0 text-uppercase" @input="handleEmit" v-model="value">
+	<div class="filter">
+		<select class="form-control form-control-sm p-0" @input="handleEmit" v-model="value">
 			<option selected :value="0">{{placeholder}}</option>
-			<option :value="option.value" class="text-uppercase" v-for="option,idx in options" :key="idx">{{option.label}}</option>
+			<option :value="option.value" class="text-capitalize" v-for="option,idx in options" :key="idx">{{option.label}}</option>
 		</select>
 	</div>
 </template>
@@ -11,6 +11,7 @@
 	import { ref, watch } from "vue";
 
 	export default {
+		inheritAttrs: true,
         name: 'select-filter',
 		components: {
 			// Multiselect,

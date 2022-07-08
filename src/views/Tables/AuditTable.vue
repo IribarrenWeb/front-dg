@@ -16,33 +16,54 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth d-flex">
-				<delegate-filter
-					v-model:clear="clear"
-					@updated="handleFilter('delegate', $event)"
-					v-if="$store.state.is_admin"
-				></delegate-filter>
-				<business-filter
-					v-model:clear="clear"
-					@updated="handleFilter('business', $event)"
-					v-if="$store.state.is_auditor || $store.state.is_delegate"
-				></business-filter>
-				<installation-filter
-					v-model:clear="clear"
-					@updated="handleFilter('installation', $event)"
-					v-if="$store.state.is_business"
-				></installation-filter>
-				<city-filter
-					v-model:clear="clear"
-					@updated="handleFilter('city', $event)"
-				></city-filter>
-				<select-filter 
-					v-model:clear="clear"
-					:options="[{label:'Pendiente',value:'pendiente'},{label:'Completado',value:'completado'},{label:'En progreso',value:'en progreso'}]"
-					placeholder="Selecciona un estado..."
-					@updated="handleFilter('status', $event)"
-				/>
-				<div>
+			<div
+				class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center"
+			>
+				<div class="col-md-10">
+					<div class="row align-items-center">
+						<date-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('scheduled_date', $event)"
+						/>
+						<delegate-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('delegate', $event)"
+							v-if="$store.state.is_admin"
+						></delegate-filter>
+						<business-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('business', $event)"
+							v-if="$store.state.is_auditor || $store.state.is_delegate"
+						></business-filter>
+						<installation-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('installation', $event)"
+							v-if="$store.state.is_business"
+						></installation-filter>
+						<city-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							@updated="handleFilter('city', $event)"
+						></city-filter>
+						<select-filter
+							class="col-md-3"
+							v-model:clear="clear"
+							:options="[
+								{ label: 'Pendiente', value: 'pendiente' },
+								{ label: 'Completado', value: 'completado' },
+								{ label: 'En progreso', value: 'en progreso' },
+							]"
+							placeholder="Selecciona un estado..."
+							@updated="handleFilter('status', $event)"
+						/>
+					</div>
+				</div>
+
+				<div class="col-md-2">
 					<base-button
 						size="sm"
 						@click="(params_filter = params), getAudits(), (clear = true)"
@@ -233,8 +254,9 @@
 	import CityFilter from "../../components/filters/CityFilter.vue";
 	import DelegateFilter from "../../components/filters/DelegateFilter";
 	import BusinessFilter from "../../components/filters/BusinessFilter.vue";
-import InstallationFilter from '../../components/filters/InstallationFilter.vue';
-import SelectFilter from '../../components/filters/SelectFilter.vue';
+	import InstallationFilter from "../../components/filters/InstallationFilter.vue";
+	import SelectFilter from "../../components/filters/SelectFilter.vue";
+	import DateFilter from "../../components/filters/DateFilter.vue";
 
 	export default {
 		name: "audits-table",
@@ -375,7 +397,15 @@ import SelectFilter from '../../components/filters/SelectFilter.vue';
 				}
 			},
 		},
-		components: { AsyncSelect, CityFilter, DelegateFilter, BusinessFilter, InstallationFilter, SelectFilter },
+		components: {
+			AsyncSelect,
+			CityFilter,
+			DelegateFilter,
+			BusinessFilter,
+			InstallationFilter,
+			SelectFilter,
+			DateFilter,
+		},
 	};
 </script>
 <style>

@@ -1,5 +1,5 @@
 <template>
-	<div class="d-inline-block mx-2 filter">
+	<div class="filter">
         <input placeholder="Ciudad" class="form-control form-control-sm" v-model="selectedCity" @input="handleEmit"/>
 	</div>
 </template>
@@ -10,6 +10,7 @@
 	// import Multiselect from "vue-multiselect";
 
 	export default {
+		inheritAttrs: true,
         name: 'city-filter',
 		components: {
 			// Multiselect,

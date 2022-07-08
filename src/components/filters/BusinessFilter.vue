@@ -1,10 +1,12 @@
 <template>
-	<div class="d-inline-block filter ml-2">
+	<div class="d-inline-block filter">
 		<multiselect
 			v-model="model"
 			:options="data"
 			placeholder="Empresa"
 			label="label"
+			selectLabel="+"
+			deselectLabel="-"
 			track-by="label"
 			@select="$emit('updated', $event.value)"
 		></multiselect>
@@ -16,6 +18,7 @@
 	import Multiselect from "vue-multiselect";
 
 	export default {
+		inheritAttrs: true,
         components: {
 			Multiselect,
 		},
