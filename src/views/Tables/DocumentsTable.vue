@@ -13,6 +13,8 @@
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
+					<th>Tipo</th>
+					<th>Empresa</th>
 					<th>Extension</th>
 					<th>Tamaño</th>
 					<th>Fecha de carga</th>
@@ -26,6 +28,12 @@
 							row.item?.doc_name
 						}}</a>
 					</th>
+					<td>
+						{{ row.item?.type?.name }}
+					</td>
+					<td>
+						{{ row.item?.business?.user?.full_name }}
+					</td>
 					<td>
 						{{ row.item?.extension }}
 					</td>
@@ -88,7 +96,7 @@
 		methods: {
 			async getDocuments(page = 1) {
 				try {
-					const response = await service.getIndex("documents", page);
+					const response = await service.getIndex("documents", page,'includes[]=type&includes[]=business.user');
 					this.tableData = response.data.data;
 					this.metaData = response.data.meta.page;
 					this.page = this.metaData.currentPage;
