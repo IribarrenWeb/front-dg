@@ -21,8 +21,17 @@
 						<base-field
 							label="Firma Responsable Consejero ADR que ha realizado la visita "
 						>
-							<textarea class="form-control" cols="30" rows="10"></textarea>
+							<signature-pad
+								:customStyle="customStyle"
+								ref="signaturePad"
+								:height="400"
+							/>
+							<div class="row mx-0 justify-content-end mt-4">
+								<base-button @click="save" size="sm" v-if="signatureFile == null">Guardar firma</base-button>
+								<base-button @click="undo" size="sm" v-else>Cancelar firma</base-button>
+							</div>
 						</base-field>
+
 					</div>
 				</div>
 			</div>
@@ -43,7 +52,7 @@
 					>
 					<base-button
 						type="default"
-						:disabled="!meta.valid"
+						:disabled="!meta.valid || signatureFile == null"
 						nativeType="submit"
 						v-if="currentStep === 13"
 						>Aceptar</base-button
@@ -54,13 +63,24 @@
 	</form-validate>
 </template>
 <script>
+	import SignaturePad from 'vue3-signature-pad';
 	import service from "@/store/services/model-service";
 	export default {
 		props: ["audit", "currentStep"],
 		data() {
 			return {
 				audit_id: this.$route.params.id,
+				signatureFile: null,
+				customStyle: {
+					border: 'grey 1px solid',
+					'border-radius': '5px',
+					background: 'white',
+					width: '100%',
+				} 
 			};
+		},
+		components: {
+			SignaturePad
 		},
 		async mounted() {},
 		methods: {
@@ -82,6 +102,7 @@
 										? this.audit.valid_step
 										: this.currentStep,
 								status: "COMPLETADO",
+								signature_image: this.signatureFile
 							});
 							this.$emit("next", 13);
 						}
@@ -94,6 +115,23 @@
 					console.log(err);
 				}
 			},
+			undo() {
+				this.$refs.signaturePad.openSignaturePad();
+				this.$refs.signaturePad.undoSignature();
+				this.$refs.signaturePad.clearSignature();
+				this.signatureFile = null;
+			},
+			save() {
+				const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+				if(isEmpty){
+					this.$toast.error('La firma esta vacia');
+				}else{
+					this.$refs.signaturePad.lockSignaturePad()
+					this.signatureFile = data;
+					console.log(isEmpty);
+					console.log(data);
+				}
+			}
 		},
 	};
 </script>
