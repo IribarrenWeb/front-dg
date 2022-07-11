@@ -17,7 +17,7 @@
 		</div>
 		<div></div>
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth row align-items-center">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
 				<delegate-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
 				<city-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
 				<div class="col-md-4 col-lg-3">

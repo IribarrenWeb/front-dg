@@ -17,7 +17,7 @@
 		</div>
 		<div></div>
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth row">
+			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row">
 				<div class="col-md-3 filter">
 					<async-select placeholder="Selecciona auditor..." v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
 				</div>
