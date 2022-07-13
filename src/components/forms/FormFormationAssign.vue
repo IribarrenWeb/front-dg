@@ -86,7 +86,7 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" :value="employee.id" v-model="model.employees_ids">
                                         <label class="form-check-label" for="flexCheckDefault">
-                                            {{employee.name}}
+                                            {{employee.full_name}}
                                         </label>
                                     </div>
                                 </td>

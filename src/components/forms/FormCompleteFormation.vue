@@ -24,7 +24,7 @@
 									v-model="employees_ids"
 								/>
 								<label class="form-check-label" for="flexCheckDefault">
-									{{ employee.name }}
+									{{ employee.full_name }}
 								</label>
 							</div>
 						</td>

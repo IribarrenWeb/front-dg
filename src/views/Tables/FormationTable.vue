@@ -118,7 +118,6 @@
 				modalClasses="modal-xl"
 				model="formación"
 			>
-			{{formation_id}}
 				<form-formation
 					v-if="!assign"
 					@reload="index"

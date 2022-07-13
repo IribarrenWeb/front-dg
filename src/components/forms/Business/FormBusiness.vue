@@ -118,16 +118,16 @@
 				</div>
 				<div class="row border border-light mt-3 rounded p-2">
 					<div class="col-12">
-						<h4>Documentación de la empresa</h4>
+						<h4>Alta empresa</h4>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_date.date" label="Fecha de documentación">
+						<base-field name="file_date.date" label="Fecha de alta">
 							<field-validate type="date" class="form-control" name="file_date.date"
-								label="fecha documentación" v-model="model.file_date" />
+								label="fecha alta" v-model="model.file_date" />
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_document.base64" label="Documentación">
+						<base-field name="file_document.base64" label="Alta empresa">
 							<div v-if="model.file_document.file != null">
 								<span class="mr-md-4">{{
 										model.file_document.file[0].name
@@ -170,7 +170,7 @@
 							</base-field>
 						</div>
 						<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
-							<base-field :name="`installations[${id}].file_document.base64`" label="Documentación">
+							<base-field :name="`installations[${id}].file_document.base64`" label="Alta instalación">
 								<div v-if="installations[id].file_document.file.length >= 1">
 									<span class="mr-md-4">{{
 											installations[id].file_document.file[0].name
@@ -180,7 +180,7 @@
 								</div>
 								<field-validate v-show="!installations[id].file_document.file.length >= 1"
 									class="form-control" type="file" :name="`installations[${id}].file_document.base64`"
-									rules="ext:pdf" :validateOnInput="true" label="documentación"
+									rules="ext:pdf" :validateOnInput="true" label="alta instalación"
 									v-model="installations[id].file_document.file" />
 							</base-field>
 						</div>

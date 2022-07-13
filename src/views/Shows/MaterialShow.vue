@@ -51,7 +51,7 @@
 					<tbody>
 						<tr>
 							<td>{{ material.installation.name }}</td>
-							<td>{{ material.installation?.province?.city.name }}</td>
+							<td>{{ material.installation?.address?.city }}</td>
 							<td>
 								<span
 									v-for="op in material.installation.operations"

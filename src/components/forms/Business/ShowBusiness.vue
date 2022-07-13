@@ -7,7 +7,9 @@
 				listClasses="mb-md-4 pb-md-2"
 				:steps="steps"
 				:meta="meta"
+				:edit="true"
 				@step="currentStep = $event"
+				@navigate="currentStep = $event"
 			></base-steps>
 			<template v-if="currentStep === 1 || profile">
 				<div>
@@ -222,7 +224,7 @@
 					</div>
 				</div>
 			</template>
-            <div class="d-flex justify-items-center mt-2">
+            <div class="row mx-0 justify-content-end">
                 <base-button v-if="canUpdate || profile" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
 					>Actualizar</base-button
 				>

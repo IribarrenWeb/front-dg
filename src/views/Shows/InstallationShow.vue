@@ -209,10 +209,10 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<div class="mt-4 float-md-right">
+		<div class="mt-4 row mx-0 justify-content-end">
 			<base-button type="default" @click="currentStep--" v-if="currentStep !== 1">Anterior</base-button>
 			<base-button type="default" @click="handleNext" v-if="currentStep < steps.length">Siguiente</base-button>
-			<base-button type="default" :outline="true" class="ml-auto" @click="handleClose">Cerrar
+			<base-button type="default" :outline="true" @click="handleClose">Cerrar
 			</base-button>
 		</div>
 	</div>

@@ -54,7 +54,8 @@
             </div>
 
             <div class="mt-4 float-md-right">
-                <base-button type="default" nativeType="submit">Aceptar</base-button>
+                <base-button type="default" nativeType="submit" v-if="!update">Aceptar</base-button>
+                <base-button type="default" nativeType="submit" v-if="update && canUpdate">Actualizar</base-button>
                 <base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
                 </base-button>
             </div>
@@ -154,7 +155,7 @@ export default {
     },
     watch: {
         auditable(val){
-            this.model.facilitable_id = val ?? null
+            this.model.facilitable_id = val.id ?? null
         },
         update: {
             handler(val) {
@@ -168,6 +169,9 @@ export default {
     computed: {
         update(){
             return this.formation_id != null;
+        },
+        canUpdate() {
+            return !this.$empty(this.$functions.difference(this.originalModel,this.model))
         }
     }
 }

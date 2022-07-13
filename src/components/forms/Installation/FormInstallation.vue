@@ -78,7 +78,7 @@
 						</base-field>
 					</div>
 					<div class="col-lg-6">
-						<base-field name="file_document" label="Documentación">
+						<base-field name="file_document" label="Alta Instalación">
 							<div v-if="model.file_document.file.length >= 1">
 								<span class="mr-md-4">{{
 									model.file_document.file[0].name
@@ -100,7 +100,7 @@
 								name="file_document"
 								rules="ext:pdf"
 								:validateOnInput="true"
-								label="documentacion"
+								label="alta Instalación"
 								v-model="model.file_document.file"
 							/>
 						</base-field>
