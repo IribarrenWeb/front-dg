@@ -425,12 +425,12 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 				try {
 					if (this.update) {
-                        console.log(this.model);
                         let data = this.$functions.difference(this.original_model,this.model);
 						await service.update("employee", this.model.id, data);
 						this.show();
 					} else {
-						await service.store("employee", this.model);
+						const data = this.$functions.cleanData(this.model);
+						await service.store("employee", data);
 						resetForm();
 						this.$emit("close");
 					}

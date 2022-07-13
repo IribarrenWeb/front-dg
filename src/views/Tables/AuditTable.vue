@@ -129,7 +129,7 @@
 						<base-dropdown
 							class="dropdown audit-drop"
 							position="right"
-							direction="down"
+							direction="up"
 						>
 							<template v-slot:title>
 								<a

@@ -3,6 +3,7 @@
 		<multiselect
 			:disabled="disabled"
 			v-model="content"
+			:value="selectedItem"
 			:placeholder="placeholder"
 			v-if="typeof options == 'object'"
 			:searchable="true"
@@ -68,7 +69,7 @@
 			materials: {
 				type: Boolean,
 				default: false,
-			},
+			}
 		},
 		emits: ["input", "selected", "updated"],
 		components: {
@@ -77,7 +78,7 @@
 		setup(props, { emit }) {
 			const options = ref([]);
 			const store = useStore();
-			const content = ref(props.value);
+			const content = ref(null);
 
 			const getUsers = debounce(async function search(query = null) {
 				if (query?.length >= props.minSearch || props.list) {
@@ -98,6 +99,9 @@
 								params: props.params,
 							});
 							options.value = res;
+							if (props.value) {
+								content.value = props.value
+							}
 						}
 					} catch (error) {
 						console.log(error);
@@ -129,12 +133,11 @@
 				}
 			);
 
-			console.log(options.value);
 			return {
 				handleSelect,
 				getUsers,
 				content,
-				options,
+				options
 			};
 		},
 	};

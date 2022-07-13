@@ -66,12 +66,38 @@
 						{{ row.item?.facilitable.user.full_name }}
 					</td>
 					<td>
-						<a
-							href="#"
-							class="btn btn-sm btn-default"
-							@click="handleAssign(row.item?.id)"
-							>Asignar</a
+						<base-dropdown
+							v-if="!row.item?.status"
+							class="dropdown audit-drop"
+							position="right"
+							direction="up"
 						>
+							<template v-slot:title>
+								<a
+									class="btn btn-sm btn-icon-only text-light"
+									role="button"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									<i class="fas fa-ellipsis-v"></i>
+								</a>
+							</template>
+							<a
+								class="dropdown-item"
+								href="#"
+								@click="handleAssign(row.item?.id)"
+								>Asignar</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="!row.item?.status"
+								@click="handleView(row.item)"
+								>Detalles</a
+							>
+							
+						</base-dropdown>
 					</td>
 				</template>
 			</base-table>
@@ -92,10 +118,12 @@
 				modalClasses="modal-xl"
 				model="formación"
 			>
+			{{formation_id}}
 				<form-formation
 					v-if="!assign"
 					@reload="index"
 					@close="handleClose"
+					:formation_id="formation_id"
 				></form-formation>
 				<form-formation-assign
 					v-else
@@ -167,6 +195,11 @@
 			},
 			handleAdd() {
 				this.modal = true;
+			},
+			handleView(item) {
+				this.modal = true;
+				this.formation_id = item.id 
+				this.action = 'editar';
 			},
 			handleAssign(id) {
 				this.formation_id = id;

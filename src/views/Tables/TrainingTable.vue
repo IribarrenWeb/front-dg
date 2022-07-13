@@ -95,26 +95,55 @@
 					</td>
 					<td>
 						<badge
-							class="badge-dot mr-4 text-lowercase"
+							class="badge-dot mr-4 text-capitalize"
 							:type="row.item?.status ? 'success' : 'danger'"
 						>
-							<i :class="`bg-danger`"></i>
+							<i :class="`bg-${row.item?.status ? 'success' : 'danger'}`"></i>
 							<span class="status">{{
 								row.item?.status ? "COMPLETADO" : "PENDIENTE"
 							}}</span>
 						</badge>
 					</td>
 					<td>
-						<base-button type="primary" @click="generate(row.item)" size="sm"
-							>Reporte</base-button
+						<base-dropdown
+							v-if="!row.item?.status"
+							class="dropdown audit-drop"
+							position="right"
+							direction="up"
 						>
-						<base-button
-							type="primary"
-							@click="toSchedule(row.item?.id)"
-							:outline="true"
-							size="sm"
-							>Re-agendar</base-button
-						>
+							<template v-slot:title>
+								<a
+									class="btn btn-sm btn-icon-only text-light"
+									role="button"
+									data-toggle="dropdown"
+									aria-haspopup="true"
+									aria-expanded="false"
+								>
+									<i class="fas fa-ellipsis-v"></i>
+								</a>
+							</template>
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="!row.item?.status"
+								@click="generate(row.item)"
+								>Reporte</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="!row.item?.status"
+								@click="toSchedule(row.item?.id)"
+								>Re-agendar</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="!row.item?.status"
+								@click="toComplete(row.item)"
+								>Completar</a
+							>
+						</base-dropdown>
 					</td>
 				</template>
 			</base-table>
@@ -126,18 +155,23 @@
 				align="center"
 			>
 			</base-pagination>
+
+			<modal v-if="this.modal" modalClasses="modal-xl" v-model:show="this.modal" model="Formación">
+				<form-complete-formation :training_id="training_id" @close="modal = false, training_id = null" @reload="index"/>
+			</modal>
 		</div>
 	</div>
 </template>
 <script>
 	import AsyncSelect from "../../components/AsyncSelect.vue";
 	import BusinessFilter from "../../components/filters/BusinessFilter.vue";
-import DateFilter from '../../components/filters/DateFilter.vue';
+	import DateFilter from '../../components/filters/DateFilter.vue';
 	import InstallationFilter from "../../components/filters/InstallationFilter.vue";
 	import SelectFilter from "../../components/filters/SelectFilter.vue";
+	import FormCompleteFormation from '../../components/forms/FormCompleteFormation.vue';
 	import service from "../../store/services/model-service";
 	export default {
-		components: { AsyncSelect, SelectFilter, BusinessFilter, InstallationFilter, DateFilter },
+		components: { AsyncSelect, SelectFilter, BusinessFilter, InstallationFilter, DateFilter, FormCompleteFormation },
 		props: {
 			reload: {
 				type: Boolean,
@@ -158,6 +192,7 @@ import DateFilter from '../../components/filters/DateFilter.vue';
 					"includes[]=installation.company&counts[]=employees&includes[]=formation.facilitable.user&includes[]=formation.type",
 				params_filter: null,
 				clear: null,
+				training_id: null
 			};
 		},
 		mounted() {
@@ -205,6 +240,16 @@ import DateFilter from '../../components/filters/DateFilter.vue';
 					name: "formacion",
 				});
 				this.index();
+			},
+			async toComplete(item) {
+				if (!item.can_complete) {
+					this.$swal('No se puede completar esta Formación', 
+					'Esta formación no se puede completar debido a que la fecha agendada es anterior a la fecha actual.',
+					'error')
+					return;
+				}
+				this.training_id = item.id;
+				this.modal = true;
 			},
 			async generate(training) {
 				try {

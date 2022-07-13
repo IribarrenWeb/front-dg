@@ -28,12 +28,12 @@
                 <div class=" col-lg-6" v-if="!$store.state.is_auditor">
                     <base-field name="auditor_id" label="Responsable">
                         <field-validate name="auditor_id" label="Responsable" rules="required" v-model="model.facilitable_id">
-                            <async-select :roles="[2,3]" @selected="auditable = $event" :list="true">
+                            <async-select :roles="[2,3]" @selected="auditable = $event" :value="formation?.facilitable_data" :list="true">
                             </async-select>
                         </field-validate>
                     </base-field>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" v-if="!update">
                     <base-field name="document" label="Documento de formación">
                         <!-- <div v-if="cert_document && !cer_update">
                             <a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{cert_document.type.name}}</a>
@@ -72,11 +72,14 @@ export default {
     components: {
         AsyncSelect
     },
+    props: ['formation_id'],
     data() {
         return {
             model: this.$functions.schemas('formation'),
             types: {},
-            auditable: null
+            originalModel: null,
+            auditable: null,
+            formation: null
         }
     },
     mounted() {
@@ -86,21 +89,31 @@ export default {
         async onSubmit(values, { resetForm }) {
             try {
                 let data = new FormData()
-                data.append('document', this.model.document[0])
-                data.append('name', this.model.name)
-                data.append('content', this.model.content)
+                if (this.update) {
+                    let data = this.$functions.difference(this.originalModel,this.model);
+                    data = this.$functions.toFormData(data, ['facilitable_id']);
+                    if (!this.$store.state.is_auditor && this.auditable != null ) {
+                        data.append('facilitable_id', this.auditable.id)
+                    }
+                    await service.update('formation',this.formation_id, data, true)
+                    this.$toast.success('Formación actualizada')
+                }else{
+                    data.append('document', this.model.document[0])
+                    data.append('name', this.model.name)
+                    data.append('content', this.model.content)
 
-                if (!this.$store.state.is_auditor) {
-                    data.append('facilitable_id', this.auditable.id)
+                    if (!this.$store.state.is_auditor) {
+                        data.append('facilitable_id', this.auditable.id)
+                    }
+                    data.append('duration', this.model.duration)
+                    data.append('formation_type_id', this.model.formation_type_id)
+
+                    await service.store('formation', data, true)
+
+                    this.$toast.success('Formación registrada')
+                    resetForm()
+                    this.$emit('close')
                 }
-                data.append('duration', this.model.duration)
-                data.append('formation_type_id', this.model.formation_type_id)
-
-                await service.store('formation', data, true)
-
-                this.$toast.success('Formación registrada')
-                resetForm()
-                this.$emit('close')
                 this.$emit('reload')
             } catch (error) {
                 console.log(error);
@@ -119,11 +132,42 @@ export default {
         handleClose(reset) {
             reset()
             this.$emit('close')
+        },
+        async getFormation(){
+            try {
+                const resp = await service.show('formation',this.formation_id);
+                this.formation = resp.data.data;
+                this.setModel()
+            } catch (err) {
+                console.log(err.response);
+                // this.$toast.error('No se pudieron cargar los tipos de vehiculos')
+            }
+        },
+        setModel(){
+            this.model.name = this.formation.name;
+            this.model.formation_type_id = this.formation.formation_type_id;
+            this.model.facilitable_id = this.formation.facilitable.user.id;
+            this.model.duration = this.formation.duration;
+            this.model.content = this.formation.content;
+            this.originalModel = this.$functions.copy(this.model);
         }
     },
     watch: {
         auditable(val){
             this.model.facilitable_id = val ?? null
+        },
+        update: {
+            handler(val) {
+                if (val) {
+                    this.getFormation();
+                }
+            },
+            immediate: true
+        }
+    },
+    computed: {
+        update(){
+            return this.formation_id != null;
         }
     }
 }
