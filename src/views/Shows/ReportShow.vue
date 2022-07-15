@@ -126,7 +126,7 @@
 					<tbody v-if="materials != null && materials.length >= 1">
 						<tr v-for="material, idx in materials" :key="material.id">
 							<th>
-								#{{ idx }} -
+								#{{ idx + 1 }} -
 								{{ material.installation.name }}
 							</th>
 							<th>{{ material.operation.name }}</th>

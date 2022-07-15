@@ -14,7 +14,10 @@ const $swal = $Swal.mixin({
 
 import { createToaster } from "@meforma/vue-toaster";
 import { map } from 'lodash';
-const toaster = createToaster({ /* options */ });
+const toaster = createToaster({ /* options */
+    maxToasts: 1,
+    queue: true, 
+});
 
 const url = process.env.VUE_APP_API_BASE_URL;
 

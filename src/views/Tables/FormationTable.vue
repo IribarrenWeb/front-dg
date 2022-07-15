@@ -92,6 +92,12 @@
 							<a
 								class="dropdown-item"
 								href="#"
+								@click="handleDelete(row.item?.id)"
+								>Eliminar</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
 								v-if="!row.item?.status"
 								@click="handleView(row.item)"
 								>Detalles</a
@@ -194,6 +200,7 @@
 			},
 			handleAdd() {
 				this.modal = true;
+				this.formation_id = null;
 			},
 			handleView(item) {
 				this.modal = true;
@@ -210,6 +217,14 @@
 				this.action = "registrar";
 				this.modal = false;
 				this.assign = false;
+			},
+			async handleDelete(id) {
+				try {
+					await this.$store.dispatch('delete', {model: 'formation', id: id})
+					this.index(this.page);
+				} catch (error) {
+					console.log(error);
+				}
 			},
 			handleReload() {
 				this.$emit("reloadTraining");

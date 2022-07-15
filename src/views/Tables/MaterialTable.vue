@@ -51,6 +51,7 @@
 					<th v-if="ROLE == 'business'">Instalación</th>
 					<th>UN</th>
 					<th>Nombre</th>
+					<th>Operación</th>
 					<th>Denominación</th>
 					<th>Clase</th>
 					<th>GE</th>
@@ -65,6 +66,7 @@
 						{{ row.item?.material.un_code }}
 					</td>
 					<td>{{ row.item?.name }}</td>
+					<td>{{ row.item?.operation?.name }}</td>
 					<td>{{ row.item?.material.denomination_name }}</td>
 					<td>{{ row.item?.material.class.code }}</td>
 					<td>{{ row.item?.material.packing.code }}</td>
@@ -162,7 +164,7 @@
 				page: 1,
 				modal: false,
                 material: null,
-				params: "includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents&includes[]=installation",
+				params: "includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents&includes[]=installation&includes[]=operation",
 				params_filter: null,
 				clear: false
 			};

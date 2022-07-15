@@ -86,7 +86,7 @@
 					<hr />
 				</div>
 				<div class="col-lg-6">
-					<base-field name="file_certification" label="Documento de ceritificado">
+					<base-field name="file_certification" label="Certificado Consejero ADR (Titulación)">
 						<div v-if="cert_document && !cer_update">
 							<a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{
 									cert_document.name_document ?? cert_document.type.name
@@ -98,7 +98,7 @@
 							<field-validate class="form-control" type="file" name="file_certification" :rules="{
 								required: !cert_document || cer_update,
 								ext: ['pdf'],
-							}" label="documento certificado" v-model="model.file_certification" />
+							}" label="Certificado Consejero ADR (Titulación)" v-model="model.file_certification" />
 							<base-button v-if="update && cer_update" @click="reset('file_cer')" size="sm" type="default"
 								:outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
 						</div>
@@ -106,14 +106,14 @@
 				</div>
 
 				<div class="col-lg-6">
-					<base-field name="certification_date" label="Fecha certificado">
+					<base-field name="certification_date" label="Fecha Caducidad Certificado Consejero ADR">
 						<field-validate class="form-control" name="certification_date" type="date"
-							label="Fecha certificado" rules="required" v-model="model.certification_date" />
+							label="Fecha Caducidad Certificado Consejero ADR" rules="required" v-model="model.certification_date" />
 					</base-field>
 				</div>
 
 				<div class="col-lg-6">
-					<base-field name="file_firm" label="Documento de alta">
+					<base-field name="file_firm" label="Contrato de Servicios">
 						<div v-if="firm_document && !firm_update">
 							<a href="#" @click.prevent="getDocument(firm_document.id)" class="mr-md-4">{{
 									firm_document.name_document ?? firm_document.type.name
@@ -125,7 +125,7 @@
 							<field-validate class="form-control" type="file" name="file_firm" :rules="{
 								required: firm_update || !firm_document,
 								ext: ['pdf'],
-							}" label="documento alta" v-model="model.file_firm" />
+							}" label="Contrato de Servicios" v-model="model.file_firm" />
 							<base-button v-if="update && firm_update" @click="firm_update = false" size="sm"
 								type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
 						</div>

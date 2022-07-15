@@ -16,7 +16,52 @@
 					</div>
 					<div class="col-md-12 mt-md-3">
 						<h6 class="text-uppercase text-muted">Reportaje Fotográfico</h6>
-						<input type="file" multiple class="form-control" accept="image/*" />
+						<base-field>
+							<div class="clearfix">
+								<div v-if="images.length >= 1" class="row overflow-auto border border-light rounded p-3 mb-3"
+									style="max-height: 400px">
+									<div v-for="(image, id) in images" :key="id" class="
+											col-md-3
+											d-flex
+											justify-content-center
+											position-relative
+											my-1
+										">
+										<img :src="image.url" alt="" class="img-thumbnail" width="100" />
+										<a class="text-danger position-absolute" style="right: 10%; top: 1%"
+											@click.prevent="deleteImg(image.id)">
+											<i class="fa-solid fa-circle-xmark"></i>
+										</a>
+									</div>
+								</div>
+								<div class="">
+									<base-button type="primary" @click="addImages = !addImages" size="sm">{{
+											!addImages ? "Agregar imagenes" : "Cancelar"
+									}}</base-button>
+								</div>
+							</div>
+							<div v-if="addImages || images?.length < 1">
+								<div class="d-flex my-3 border border-ligth rounded p-2">
+									<base-button :type="takePic ? 'secondary' : 'primary'" size="sm"
+										@click="takePic = true">
+										Tomar foto
+									</base-button>
+									<base-button :type="takePic === false ? 'secondary' : 'primary'" size="sm"
+										@click="takePic = false, this.$store.commit('stopedCamera', true)">
+										Subir foto
+									</base-button>
+								</div>
+								<camera v-if="takePic && takePic != null" apiModel="audit" :apiId="audit?.id"
+									data-name="general_images_base64" @photo_taken="loadImages"></camera>
+								<div v-else-if="takePic === false">
+									<UploadImages @changed="handleImages" />
+									<div class="float-lg-right mt-2">
+										<base-button type="primary" @click="submitImages" size="sm" v-if="upBtn">Guardar
+										</base-button>
+									</div>
+								</div>
+							</div>
+						</base-field>
 					</div>
 				</div>
 			</div>
@@ -43,14 +88,26 @@
 <script>
 	import service from "@/store/services/model-service";
 	import _, { random } from "lodash";
+	import UploadImages from "vue-upload-drop-images";
+
 	export default {
 		props: ["audit", "currentStep"],
+		components: {
+			UploadImages,
+		},
 		data() {
 			return {
 				audit_id: this.$route.params.id,
+				takePic: null,
+				addImages: false,
+				upBtn: false,
+				images: {},
+				general_images: {},
 			};
 		},
-		async mounted() {},
+		async mounted() {
+			this.loadImages();
+		},
 		methods: {
 			async onSubmit() {
 				try {
@@ -117,6 +174,50 @@
 				);
 
 				this.nonconformities.splice(position_item, 1);
+			},
+			async deleteImg(id) {
+				try {
+					await service.destroy("audit_image", id);
+
+					this.loadImages();
+				} catch (err) {
+					console.log(err);
+				}
+			},
+			handleImages(imgs) {
+				this.general_images = imgs;
+				if (imgs.length >= 1) {
+					this.upBtn = true;
+				} else {
+					this.upBtn = false;
+				}
+			},
+			async loadImages() {
+				try {
+					const res_images = await service.getIndex(
+						"audit_image",
+						null,
+						"audit_id=" + this.audit_id + "&type=GENERAL"
+					);
+					this.images = res_images.data.data;
+				} catch (err) {
+					console.log(err);
+				}
+			},
+			async submitImages() {
+				try {
+					let data = new FormData();
+					_.each(this.general_images, function (img) {
+						data.append("general_images[]", img);
+					});
+
+					await service.update("audit", this.audit_id, data);
+					this.loadImages();
+					this.upBtn = false;
+					this.takePic = null;
+				} catch (err) {
+					console.log(err);
+				}
 			},
 		},
 		computed: {},

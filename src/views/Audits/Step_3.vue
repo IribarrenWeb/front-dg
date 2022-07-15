@@ -306,8 +306,8 @@
 				</div>
 				<div class="col-md-12 my-3">
 					<base-field label="Imagenes:">
-						<div v-if="images.length >= 1" class="clearfix">
-							<div class="row overflow-auto border border-light rounded p-3 mb-3"
+						<div class="clearfix">
+							<div v-if="images.length >= 1" class="row overflow-auto border border-light rounded p-3 mb-3"
 								style="max-height: 400px">
 								<div v-for="(image, id) in images" :key="id" class="
 										col-md-3
@@ -323,7 +323,7 @@
 									</a>
 								</div>
 							</div>
-							<div class="float-lg-right">
+							<div class="">
 								<base-button type="primary" @click="addImages = !addImages" size="sm">{{
 								!addImages ? "Agregar imagenes" : "Cancelar"
 								}}</base-button>

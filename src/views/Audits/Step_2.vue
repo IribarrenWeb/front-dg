@@ -93,9 +93,6 @@
 		},
 		methods: {
 			async onSubmit() {
-				if (!this.check1 && !this.check2) {
-					this.$toast.warning("Tiene que marcar los checkbox");
-				}
 				try {
 					await service.update("audit", this.audit_id, {
 						current_step: 3,

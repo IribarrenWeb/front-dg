@@ -67,7 +67,7 @@ appInstance.use(timeago,  timeagoOptions)
 // appInstance.use(VeeValidate);
 appInstance.use(Toaster, {
     // One of the options
-    maxToasts: 2,
+    maxToasts: 1,
     queue: true,
 });
 

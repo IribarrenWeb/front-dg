@@ -45,12 +45,6 @@
 							:options="priorities"
 							@updated="handleFilter('priority', $event)"
 						/>
-						<!-- <select-filter 
-						v-model:clear="clear"
-						:options="nonTypes"
-						placeholder="Prioridad"
-						@updated="handleFilter('priority', $event)"
-					/> -->
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -65,7 +59,8 @@
 				<template v-slot:columns>
 					<th>Instalación</th>
 					<th>Tipo</th>
-					<th>Descripción</th>
+					<th v-if="!$store.state.is_business">Empresa</th>
+					<th v-else>Descripción</th>
 					<th v-if="!dash">Fecha actuación</th>
 					<th>Prioridad</th>
 					<th>Plazo</th>
@@ -80,7 +75,10 @@
 					<th scope="row">
 						{{ row.item?.type.name }}
 					</th>
-					<td>
+					<td v-if="!$store.state.is_business">
+						{{ row.item?.installation?.company?.user?.full_name }}
+					</td>
+					<td v-else>
 						{{ row.item?.description }}
 					</td>
 					<td v-if="!dash">
@@ -192,7 +190,7 @@
 				let params = this.params_filter;
 
 				if (this.ROLE != "business" && !this.dash) {
-					params += "&includes[]=action.responsible";
+					params += "&includes[]=action.responsible&includes[]=installation.company.user";
 				}
 
 				if (this.dash) {
