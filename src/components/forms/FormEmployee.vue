@@ -154,6 +154,7 @@
 						<div class="col-lg-2">
 							<base-switch
 								v-model="model.dangerous_goods"
+								:disabled="model.last_formation?.dg_formation"
 								:value="model.dangerous_goods != 0 ? true : false"
 								label="Mercancias peligrosas"
 							></base-switch>
@@ -170,6 +171,7 @@
 									name="date_cer"
 									rules="required"
 									label="fecha"
+									:disabled="model.last_formation?.dg_formation"
 									v-model="model.date_certification"
 								/>
 							</base-field>
@@ -180,39 +182,44 @@
 								name="file_cer"
 								label="Documento de formación"
 							>
-								<div v-if="!$functions.empty(model.file_certification.file) && !update">
-									<span class="mr-md-4">{{
-										model.file_certification.file[0].name
-									}}</span>
-									<base-button
-										@click="model.file_certification.file = []"
-										size="sm"
-										type="default"
-										:outline="true"
-										><i class="fa-solid fa-pencil"></i
-									></base-button>
+								<div v-if="(model.last_formation && !model.last_formation?.dg_formation) || !model.last_formation">
+									<div v-if="!$functions.empty(model.file_certification.file) && !update">
+										<span class="mr-md-4">{{
+											model.file_certification.file[0].name
+										}}</span>
+										<base-button
+											@click="model.file_certification.file = []"
+											size="sm"
+											type="default"
+											:outline="true"
+											><i class="fa-solid fa-pencil"></i
+										></base-button>
+									</div>
+									<div v-else-if="update && file_cer && !new_cer_doc">
+										<a href="#" @click="getDocument(file_cer.id)" class="mr-md-4">{{
+											file_cer.type.name
+										}}</a>
+										<base-button
+											@click="new_cer_doc = true"
+											size="sm"
+											type="default"
+											:outline="true"
+											><i class="fa-solid fa-pencil"></i
+										></base-button>
+									</div>
+									<field-validate
+										v-else
+										type="file"
+										class="form-control"
+										name="file_cer"
+										rules="required"
+										label="documento"
+										v-model="model.file_certification.file"
+									/>
 								</div>
-                                <div v-else-if="update && file_cer && !new_cer_doc">
-                                    <a href="#" @click="getDocument(file_cer.id)" class="mr-md-4">{{
-                                        file_cer.type.name
-                                    }}</a>
-                                    <base-button
-                                        @click="new_cer_doc = true"
-                                        size="sm"
-                                        type="default"
-                                        :outline="true"
-                                        ><i class="fa-solid fa-pencil"></i
-                                    ></base-button>
-                                </div>
-								<field-validate
-									v-else
-									type="file"
-									class="form-control"
-									name="file_cer"
-									rules="required"
-									label="documento"
-									v-model="model.file_certification.file"
-								/>
+								<div v-else>
+									<a href="#" @click.prevent="">{{model.last_formation?.data?.name}}</a>
+								</div>
 							</base-field>
 						</div>
 					</div>
@@ -273,39 +280,41 @@
 								name="file_driver"
 								label="Documentacion ADR"
 							>
-								<div v-if="!$functions.empty(model.driver_document.file) && !update">
-									<span class="mr-md-4">{{
-										model.driver_document.file[0].name
-									}}</span>
-									<base-button
-										@click="model.driver_document.file = []"
-										size="sm"
-										type="default"
-										:outline="true"
-										><i class="fa-solid fa-pencil"></i
-									></base-button>
-								</div>
-                                <div v-else-if="update && file_driver && !new_driver_doc">
-                                    <a href="#" @click="getDocument(file_driver.id)" class="mr-md-4">{{
-                                        file_driver.type.name
-                                    }}</a>
-                                    <base-button
-                                        @click="new_driver_doc = true"
-                                        size="sm"
-                                        type="default"
-                                        :outline="true"
-                                        ><i class="fa-solid fa-pencil"></i
-                                    ></base-button>
-                                </div>
-								<field-validate
-									v-else
-									type="file"
-									class="form-control"
-									name="file_driver"
-									rules="required"
-									label="documento"
-									v-model="model.driver_document.file"
-								/>
+									<div v-if="!$functions.empty(model.driver_document.file) && !update">
+										<span class="mr-md-4">{{
+											model.driver_document.file[0].name
+										}}</span>
+										<base-button
+											@click="model.driver_document.file = []"
+											size="sm"
+											type="default"
+											:outline="true"
+											><i class="fa-solid fa-pencil"></i
+										></base-button>
+									</div>
+									<div v-else-if="update && file_driver && !new_driver_doc">
+										<a href="#" @click="getDocument(file_driver.id)" class="mr-md-4">{{
+											file_driver.type.name
+										}}</a>
+										<base-button
+											@click="new_driver_doc = true"
+											size="sm"
+											type="default"
+											:outline="true"
+											><i class="fa-solid fa-pencil"></i
+										></base-button>
+									</div>
+									<field-validate
+										v-else
+										type="file"
+										class="form-control"
+										name="file_driver"
+										rules="required"
+										label="documento"
+										v-model="model.driver_document.file"
+									/>
+								
+								
 							</base-field>
 						</div>
 					</div>
@@ -457,6 +466,7 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 					this.model.dangerous_goods = this.model.is_dangerous_goods ? true : false;
 					this.model.file_firm = { file: null };
 					this.model.adr_permit_id = this.model.adr_permission_id;
+
 					this.model.file_certification = { file: null };
 					this.model.driver_document = { file: null };
 					this.model.date_firm = this.file_firm ? this.file_firm.document_date : null;
@@ -464,9 +474,17 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
                     if (this.model.is_driver) {
                         this.model.driver_document_date = this.file_driver.document_date
                     }
-                    if (this.model.is_dangerous_goods) {
-                        this.model.date_certification = this.file_cer.document_date
-                    }
+
+					if (this.model.last_formation) {
+						this.model.is_dangerous_goods = true;
+						if (this.model.last_formation.dg_formation) {
+							this.model.date_certification = this.model.last_formation.formation_date;
+						}else{
+							if (this.model.is_dangerous_goods) {
+								this.model.date_certification = this.file_cer.document_date
+							}
+						}
+					}
 
 					this.original_model = this.$functions.copy(this.model);
 				} catch (error) {
@@ -509,6 +527,9 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 				return this.$functions.filterDoc(this.model.documents, "ALTA");
 			},
             file_cer() {
+				if (this.model.last_formation && this.model.last_formation.dg_formation) {
+					return false;
+				}
 				return this.$functions.filterDoc(this.model.documents, "CERTIFICADO");
 			},
             file_driver() {

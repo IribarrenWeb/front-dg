@@ -71,17 +71,17 @@
 						{{ row.item?.is_dangerous_goods ? 'SI' : 'NO' }}
 					</td>
 					<td>
-						<div v-if="row.item?.formation_document != null">
+						<div v-if="row.item.last_formation">
 							<span class="d-block">{{
-								this.formatDate(row.item?.formation_document.document_date, "GB")
+								this.formatDate(row.item?.last_formation.formation_date, "GB")
 							}}</span>
 							<a
 								href="#"
 								class="text-uppercase d-block"
-								@click.prevent="getDocument(row.item?.formation_document.id)"
+								@click.prevent="!row.item?.last_formation.dg_formation ? getDocument(row.item?.last_formation?.data?.id) : null"
 							>
 								<i class="fa fa-file-pdf" aria-hidden="true"></i>
-								{{ row.item?.formation_document.type.name }}
+								{{ row.item?.last_formation?.document_name }}
 							</a>
 						</div>
 						<div v-else>No procede</div>
@@ -126,9 +126,9 @@
 	import _ from "lodash";
 	import FormEmployee from "../../components/forms/FormEmployee.vue";
     import { mapGetters } from 'vuex';
-import DeleteButton from '../../components/Utils/DeleteButton.vue';
-import InstallationFilter from '../../components/filters/InstallationFilter.vue';
-import SelectFilter from '../../components/filters/SelectFilter.vue';
+	import DeleteButton from '../../components/Utils/DeleteButton.vue';
+	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
+	import SelectFilter from '../../components/filters/SelectFilter.vue';
 
 	export default {
 		components: { FormEmployee, DeleteButton, InstallationFilter, SelectFilter },
@@ -167,7 +167,7 @@ import SelectFilter from '../../components/filters/SelectFilter.vue';
 			};
 		},
 		mounted() {
-			this.index();
+			// this.index();
 		},
 		methods: {
 			async index(page) {
@@ -241,7 +241,17 @@ import SelectFilter from '../../components/filters/SelectFilter.vue';
                 return this.ROLE == 'business' && this.driver == null
             },
             ...mapGetters(['ROLE'])
-        }
+        },
+		watch: {
+			ROLE: {
+				handler(val){
+					if (val) {
+						this.index()
+					}
+				},
+				immediate: true
+			}
+		}
 	};
 </script>
 <style></style>

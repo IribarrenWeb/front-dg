@@ -97,7 +97,7 @@
                                     {{employee.position}}
                                 </td>
                                 <td>
-                                    {{employee.last_formation == null ? 'SIN FORMACIÓN' : this.$functions.formatDate(employee.last_formation.document_date)}}
+                                    {{employee.last_document_formation == null ? 'SIN FORMACIÓN' : this.$functions.formatDate(employee.last_document_formation.document_date)}}
                                 </td>
                             </tr>
                         </tbody>
@@ -195,7 +195,7 @@ export default {
         },
         async loadEmployees(id){
             try {
-                const resp = await service.getIndex('employee', null, 'installation_id=' + id + '&not_formation_id='+this.formation_id + '&includes[]=last_formation');
+                const resp = await service.getIndex('employee', null, 'installation_id=' + id + '&not_formation_id='+this.formation_id + '&includes[]=last_document_formation');
                 this.employees = resp.data.data;
             } catch (err) {
                 this.model.date = ''

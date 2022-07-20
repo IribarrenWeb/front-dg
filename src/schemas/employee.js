@@ -29,4 +29,9 @@ export default {
         file_name: null
     },
     date_certification: "",
+    last_formation: {
+        formation_date: "",
+        dg_formation: null,
+        data: []
+    }
 }
