@@ -21,7 +21,7 @@
                     </div>
                     <div class="pl-1">
                         <div class="w-100">
-                            <span class="badge bg-danger mx-1 text-light" v-if="notification.read_at == null">Nuevo</span>
+                            <span class="badge bg-danger mx-1 text-white" v-if="notification.read_at == null">Nuevo</span>
                             <span class=" font-weight-bold text-wrap" style="width: 6rem;">{{
                                     notification.data.message
                             }}</span>
