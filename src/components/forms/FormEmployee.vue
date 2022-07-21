@@ -1,349 +1,365 @@
 <template>
 	<div>
-		<form-validate
-			ref="form"
-			@submit="onSubmit"
-			v-slot="{ resetForm, meta }"
-			v-if="canShow"
-		>
-			<installation-select :disabled="update" v-model="model.installation_id"></installation-select>
-			<div class="row border rounded border-light px-4 py-2">
-				<div class="col-12 border-bottom border-light mb-md-3">
-					<h4>Datos principales</h4>
-				</div>
-				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="name" name="name" label="Nombre" :required="true">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="name"
-							rules="required|alpha_spaces"
-							label="Nombre"
-							v-model="model.name"
-						/>
-					</base-field>
-				</div>
+		<base-steps
+			v-if="employee_id"
+			:currentStep="currentStep"
+			listClasses="mb-md-4 pb-md-2"
+			:steps="steps"
+			:edit="true"
+			@step="currentStep = $event"
+			@navigate="currentStep = $event"
+		></base-steps>
+		<template v-if="currentStep == 1 || !employee_id">
+			<form-validate
+				ref="form"
+				@submit="onSubmit"
+				v-slot="{ resetForm, meta }"
+				v-if="canShow"
+			>
+				<installation-select :disabled="update" v-model="model.installation_id"></installation-select>
+				<div class="row border rounded border-light px-4 py-2">
+					<div class="col-12 border-bottom border-light mb-md-3">
+						<h4>Datos principales</h4>
+					</div>
+					<div class="col-lg-6 col-lg-4">
+						<base-field apiName="name" name="name" label="Nombre" :required="true">
+							<field-validate
+								type="text"
+								class="form-control"
+								name="name"
+								rules="required|alpha_spaces"
+								label="Nombre"
+								v-model="model.name"
+							/>
+						</base-field>
+					</div>
 
-				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="last_name" name="last_name" label="Apellido" :required="true">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="last_name"
-							rules="required|alpha_spaces"
-							label="apellido"
-							v-model="model.last_name"
-						/>
-					</base-field>
-				</div>
+					<div class="col-lg-6 col-lg-4">
+						<base-field apiName="last_name" name="last_name" label="Apellido" :required="true">
+							<field-validate
+								type="text"
+								class="form-control"
+								name="last_name"
+								rules="required|alpha_spaces"
+								label="apellido"
+								v-model="model.last_name"
+							/>
+						</base-field>
+					</div>
 
-				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="dni" name="dni" label="DNI">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="dni"
-							rules="alpha_num|min:9|max:9"
-							label="dni"
-							v-model.trim="model.dni"
-						/>
-					</base-field>
-				</div>
-				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="email" name="email" label="Email" :required="true">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="email"
-							rules="required|email"
-							label="email"
-							v-model="model.email"
-						/>
-					</base-field>
-				</div>
+					<div class="col-lg-6 col-lg-4">
+						<base-field apiName="dni" name="dni" label="DNI">
+							<field-validate
+								type="text"
+								class="form-control"
+								name="dni"
+								rules="alpha_num|min:9|max:9"
+								label="dni"
+								v-model.trim="model.dni"
+							/>
+						</base-field>
+					</div>
+					<div class="col-lg-6 col-lg-4">
+						<base-field apiName="email" name="email" label="Email" :required="true">
+							<field-validate
+								type="text"
+								class="form-control"
+								name="email"
+								rules="required|email"
+								label="email"
+								v-model="model.email"
+							/>
+						</base-field>
+					</div>
 
-				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="position" name="position" label="Cargo">
-						<field-validate
-							type="text"
-							class="form-control"
-							name="position"
-							rules="alpha_spaces"
-							label="cargo"
-							v-model="model.position"
-						/>
-					</base-field>
-				</div>
+					<div class="col-lg-6 col-lg-4">
+						<base-field apiName="position" name="position" label="Cargo">
+							<field-validate
+								type="text"
+								class="form-control"
+								name="position"
+								rules="alpha_spaces"
+								label="cargo"
+								v-model="model.position"
+							/>
+						</base-field>
+					</div>
 
-				<div class="col-lg-6 col-lg-4">
-					<base-field apiName="phone_number" label="Movil" name="phone_number">
-						<field-validate
-							type="number"
-							class="form-control"
-							name="phone_number"
-							rules="min:5|max:15"
-							label="movil"
-							v-model="model.phone_number"
-						/>
-					</base-field>
+					<div class="col-lg-6 col-lg-4">
+						<base-field apiName="phone_number" label="Movil" name="phone_number">
+							<field-validate
+								type="number"
+								class="form-control"
+								name="phone_number"
+								rules="min:5|max:15"
+								label="movil"
+								v-model="model.phone_number"
+							/>
+						</base-field>
+					</div>
 				</div>
-			</div>
-			<div class="row border rounded border-light px-4 py-2 mt-3">
-				<div class="col-12 border-bottom border-light mb-md-3">
-					<h4>Documentacion</h4>
-				</div>
-				<div class="col-lg-6">
-					<base-field
-						apiName="date_firm"
-						name="date_firm"
-						label="Fecha de Alta"
-					>
-						<field-validate
-							type="date"
-							class="form-control"
+				<div class="row border rounded border-light px-4 py-2 mt-3">
+					<div class="col-12 border-bottom border-light mb-md-3">
+						<h4>Documentacion</h4>
+					</div>
+					<div class="col-lg-6">
+						<base-field
+							apiName="date_firm"
 							name="date_firm"
-							:rules="{'required':!$functions.empty(model.file_firm.file)}"
-							label="fecha"
-							v-model="model.date_firm"
-						/>
-					</base-field>
-				</div>
-				<div class="col-lg-6">
-					<base-field
-						apiName="file_firm"
-						name="file_firm"
-						label="Documento de Alta"
-					>
-						<div v-if="!$functions.empty(model.file_firm.file) && !update">
-							<span class="mr-md-4">{{ model.file_firm.file[0].name }}</span>
-							<base-button
-								@click="model.file_firm.file = []"
-								size="sm"
-								type="default"
-								:outline="true"
-								><i class="fa-solid fa-pencil"></i
-							></base-button>
-						</div>
-						<div v-else-if="update && file_firm && !new_firm_doc">
-							<a href="#" @click="getDocument(file_firm.id)" class="mr-md-4">{{
-								file_firm.type.name
-							}}</a>
-							<base-button
-								@click="new_firm_doc = true"
-								size="sm"
-								type="default"
-								:outline="true"
-								><i class="fa-solid fa-pencil"></i
-							></base-button>
-						</div>
-						<field-validate
-							v-else
-							type="file"
-							class="form-control"
+							label="Fecha de Alta"
+						>
+							<field-validate
+								type="date"
+								class="form-control"
+								name="date_firm"
+								:rules="{'required':!$functions.empty(model.file_firm.file)}"
+								label="fecha"
+								v-model="model.date_firm"
+							/>
+						</base-field>
+					</div>
+					<div class="col-lg-6">
+						<base-field
+							apiName="file_firm"
 							name="file_firm"
-							:rules="{'required':!$functions.empty(model.date_firm)}"
-							label="documento"
-							v-model="model.file_firm.file"
-						/>
-					</base-field>
-				</div>
-				<!-- --------------------------------------- -->
+							label="Documento de Alta"
+						>
+							<div v-if="!$functions.empty(model.file_firm.file) && !update">
+								<span class="mr-md-4">{{ model.file_firm.file[0].name }}</span>
+								<base-button
+									@click="model.file_firm.file = []"
+									size="sm"
+									type="default"
+									:outline="true"
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
+							</div>
+							<div v-else-if="update && file_firm && !new_firm_doc">
+								<a href="#" @click="getDocument(file_firm.id)" class="mr-md-4">{{
+									file_firm.type.name
+								}}</a>
+								<base-button
+									@click="new_firm_doc = true"
+									size="sm"
+									type="default"
+									:outline="true"
+									><i class="fa-solid fa-pencil"></i
+								></base-button>
+							</div>
+							<field-validate
+								v-else
+								type="file"
+								class="form-control"
+								name="file_firm"
+								:rules="{'required':!$functions.empty(model.date_firm)}"
+								label="documento"
+								v-model="model.file_firm.file"
+							/>
+						</base-field>
+					</div>
+					<!-- --------------------------------------- -->
 
-				<div class="col-lg-12">
-					<div class="row">
-						<div class="col-lg-2">
-							<base-switch
-								v-model="model.dangerous_goods"
-								:disabled="model.last_formation?.dg_formation"
-								:value="model.dangerous_goods != 0 ? true : false"
-								label="Mercancias peligrosas"
-							></base-switch>
-						</div>
-						<div v-if="model.dangerous_goods" class="col-lg-5">
-							<base-field
-								apiName="date_certification"
-								name="date_cer"
-								label="Fecha de formación"
-							>
-								<field-validate
-									type="date"
-									class="form-control"
-									name="date_cer"
-									rules="required"
-									label="fecha"
+					<div class="col-lg-12">
+						<div class="row">
+							<div class="col-lg-2">
+								<base-switch
+									v-model="model.dangerous_goods"
 									:disabled="model.last_formation?.dg_formation"
-									v-model="model.date_certification"
-								/>
-							</base-field>
-						</div>
-						<div v-if="model.dangerous_goods" class="col-lg-5">
-							<base-field
-								apiName="file_certification"
-								name="file_cer"
-								label="Documento de formación"
-							>
-								<div v-if="(model.last_formation && !model.last_formation?.dg_formation) || !model.last_formation">
-									<div v-if="!$functions.empty(model.file_certification.file) && !update">
-										<span class="mr-md-4">{{
-											model.file_certification.file[0].name
-										}}</span>
-										<base-button
-											@click="model.file_certification.file = []"
-											size="sm"
-											type="default"
-											:outline="true"
-											><i class="fa-solid fa-pencil"></i
-										></base-button>
-									</div>
-									<div v-else-if="update && file_cer && !new_cer_doc">
-										<a href="#" @click="getDocument(file_cer.id)" class="mr-md-4">{{
-											file_cer.type.name
-										}}</a>
-										<base-button
-											@click="new_cer_doc = true"
-											size="sm"
-											type="default"
-											:outline="true"
-											><i class="fa-solid fa-pencil"></i
-										></base-button>
-									</div>
+									:value="model.dangerous_goods != 0 ? true : false"
+									label="Mercancias peligrosas"
+								></base-switch>
+							</div>
+							<div v-if="model.dangerous_goods" class="col-lg-5">
+								<base-field
+									apiName="date_certification"
+									name="date_cer"
+									label="Fecha de formación"
+								>
 									<field-validate
-										v-else
-										type="file"
+										type="date"
 										class="form-control"
-										name="file_cer"
+										name="date_cer"
 										rules="required"
-										label="documento"
-										v-model="model.file_certification.file"
+										label="fecha"
+										:disabled="model.last_formation?.dg_formation"
+										v-model="model.date_certification"
 									/>
-								</div>
-								<div v-else>
-									<a href="#" @click.prevent="">{{model.last_formation?.data?.name}}</a>
-								</div>
-							</base-field>
+								</base-field>
+							</div>
+							<div v-if="model.dangerous_goods" class="col-lg-5">
+								<base-field
+									apiName="file_certification"
+									name="file_cer"
+									label="Documento de formación"
+								>
+									<div v-if="(model.last_formation && !model.last_formation?.dg_formation) || !model.last_formation">
+										<div v-if="!$functions.empty(model.file_certification.file) && !update">
+											<span class="mr-md-4">{{
+												model.file_certification.file[0].name
+											}}</span>
+											<base-button
+												@click="model.file_certification.file = []"
+												size="sm"
+												type="default"
+												:outline="true"
+												><i class="fa-solid fa-pencil"></i
+											></base-button>
+										</div>
+										<div v-else-if="update && file_cer && !new_cer_doc">
+											<a href="#" @click="getDocument(file_cer.id)" class="mr-md-4">{{
+												file_cer.type.name
+											}}</a>
+											<base-button
+												@click="new_cer_doc = true"
+												size="sm"
+												type="default"
+												:outline="true"
+												><i class="fa-solid fa-pencil"></i
+											></base-button>
+										</div>
+										<field-validate
+											v-else
+											type="file"
+											class="form-control"
+											name="file_cer"
+											rules="required"
+											label="documento"
+											v-model="model.file_certification.file"
+										/>
+									</div>
+									<div v-else>
+										<a href="#" @click.prevent="">{{model.last_formation?.data?.name}}</a>
+									</div>
+								</base-field>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-lg-12">
-					<div class="row">
-						<div class="col-lg-2">
-							<base-switch
-								v-model="model.driver"
-								label="Conductor"
-								:disabled="driver"
-								:value="model.driver != 0 ? true : false"
-							></base-switch>
-						</div>
-						<div class="col-lg-3" v-if="model.driver">
-							<base-field
-								apiName="phone_number"
-								name="adr_permit_id"
-								label="Permiso ADR"
-							>
-								<field-validate
-									as="select"
-									class="form-control"
+					<div class="col-lg-12">
+						<div class="row">
+							<div class="col-lg-2">
+								<base-switch
+									v-model="model.driver"
+									label="Conductor"
+									:disabled="driver"
+									:value="model.driver != 0 ? true : false"
+								></base-switch>
+							</div>
+							<div class="col-lg-3" v-if="model.driver">
+								<base-field
+									apiName="phone_number"
 									name="adr_permit_id"
-									v-model="model.adr_permit_id"
-									rules="required"
+									label="Permiso ADR"
 								>
-									<option selected>Permiso adr</option>
-									<option
-										:value="permit.id"
-										v-for="(permit, key) in permits"
-										:key="key.id"
-									>
-										{{ permit.name }}
-									</option>
-								</field-validate>
-							</base-field>
-						</div>
-						<div class="col-lg-3" v-if="model.driver">
-							<base-field
-								apiName="driver_document_date"
-								name="driver_date"
-								label="Fecha documentacion"
-							>
-								<field-validate
-									type="date"
-									class="form-control"
-									name="driver_date"
-									v-model="model.driver_document_date"
-									rules="required"
-								>
-								</field-validate>
-							</base-field>
-						</div>
-						<div class="col-lg-4" v-if="model.driver">
-							<base-field
-								apiName="file_driver"
-								name="file_driver"
-								label="Documentacion ADR"
-							>
-									<div v-if="!$functions.empty(model.driver_document.file) && !update">
-										<span class="mr-md-4">{{
-											model.driver_document.file[0].name
-										}}</span>
-										<base-button
-											@click="model.driver_document.file = []"
-											size="sm"
-											type="default"
-											:outline="true"
-											><i class="fa-solid fa-pencil"></i
-										></base-button>
-									</div>
-									<div v-else-if="update && file_driver && !new_driver_doc">
-										<a href="#" @click="getDocument(file_driver.id)" class="mr-md-4">{{
-											file_driver.type.name
-										}}</a>
-										<base-button
-											@click="new_driver_doc = true"
-											size="sm"
-											type="default"
-											:outline="true"
-											><i class="fa-solid fa-pencil"></i
-										></base-button>
-									</div>
 									<field-validate
-										v-else
-										type="file"
+										as="select"
 										class="form-control"
-										name="file_driver"
+										name="adr_permit_id"
+										v-model="model.adr_permit_id"
 										rules="required"
-										label="documento"
-										v-model="model.driver_document.file"
-									/>
-								
-								
-							</base-field>
+									>
+										<option selected>Permiso adr</option>
+										<option
+											:value="permit.id"
+											v-for="(permit, key) in permits"
+											:key="key.id"
+										>
+											{{ permit.name }}
+										</option>
+									</field-validate>
+								</base-field>
+							</div>
+							<div class="col-lg-3" v-if="model.driver">
+								<base-field
+									apiName="driver_document_date"
+									name="driver_date"
+									label="Fecha documentacion"
+								>
+									<field-validate
+										type="date"
+										class="form-control"
+										name="driver_date"
+										v-model="model.driver_document_date"
+										rules="required"
+									>
+									</field-validate>
+								</base-field>
+							</div>
+							<div class="col-lg-4" v-if="model.driver">
+								<base-field
+									apiName="file_driver"
+									name="file_driver"
+									label="Documentacion ADR"
+								>
+										<div v-if="!$functions.empty(model.driver_document.file) && !update">
+											<span class="mr-md-4">{{
+												model.driver_document.file[0].name
+											}}</span>
+											<base-button
+												@click="model.driver_document.file = []"
+												size="sm"
+												type="default"
+												:outline="true"
+												><i class="fa-solid fa-pencil"></i
+											></base-button>
+										</div>
+										<div v-else-if="update && file_driver && !new_driver_doc">
+											<a href="#" @click="getDocument(file_driver.id)" class="mr-md-4">{{
+												file_driver.type.name
+											}}</a>
+											<base-button
+												@click="new_driver_doc = true"
+												size="sm"
+												type="default"
+												:outline="true"
+												><i class="fa-solid fa-pencil"></i
+											></base-button>
+										</div>
+										<field-validate
+											v-else
+											type="file"
+											class="form-control"
+											name="file_driver"
+											rules="required"
+											label="documento"
+											v-model="model.driver_document.file"
+										/>
+									
+									
+								</base-field>
+							</div>
 						</div>
 					</div>
+					<div class="col-12">
+						<base-switch
+							v-model="model.representative"
+							@change="handleRep"
+							:value="model.representative != 0 ? true : false"
+							label="Representante de la instalación"
+						></base-switch>
+					</div>
 				</div>
-				<div class="col-12">
-					<base-switch
-						v-model="model.representative"
-						@change="handleRep"
-						:value="model.representative != 0 ? true : false"
-						label="Representante de la instalación"
-					></base-switch>
+				<div class="mt-4 float-md-right">
+					<base-button v-if="update" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
+						>Actualizar</base-button
+					>
+					<base-button v-if="!update" type="default" :disabled="!meta.valid" nativeType="submit"
+						>Aceptar</base-button
+					>
+					<base-button
+						type="default"
+						:outline="true"
+						class="ml-auto"
+						@click="handleClose(resetForm)"
+						>Cancelar
+					</base-button>
 				</div>
+			</form-validate>
+		</template>
+		<template v-if="currentStep == 2 && employee_id">
+			<div>
+				<employee-training-table :tableData="formations"/>
 			</div>
-			<div class="mt-4 float-md-right">
-                <base-button v-if="update" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
-					>Actualizar</base-button
-				>
-				<base-button v-if="!update" type="default" :disabled="!meta.valid" nativeType="submit"
-					>Aceptar</base-button
-				>
-				<base-button
-					type="default"
-					:outline="true"
-					class="ml-auto"
-					@click="handleClose(resetForm)"
-					>Cancelar
-				</base-button>
-			</div>
-		</form-validate>
+		</template>
 	</div>
 </template>
 
@@ -351,10 +367,11 @@
 	import utils from "@/mixins/utils-mixin";
 	import service from "@/store/services/model-service";
 	import {isEqual} from "lodash";
-import InstallationSelect from '../Utils/InstallationSelect.vue';
+	import InstallationSelect from '../Utils/InstallationSelect.vue';
+	import EmployeeTrainingTable from '../../views/Tables/EmployeeTrainingTable.vue';
 
 	export default {
-	components: { InstallationSelect },
+		components: { InstallationSelect, EmployeeTrainingTable },
 		name: "form-employee",
 		mixins: [utils],
 		props: {
@@ -377,6 +394,20 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 				new_firm_doc: false,
 				new_driver_doc: false,
 				new_cer_doc: false,
+				currentStep: 1,
+				steps: [
+					{
+						number: 1,
+						title: 'General',
+						valid: null,
+					},
+					{
+						number: 2,
+						title: 'Formaciones',
+						valid: null,
+					},
+				],
+				formations: []
 			};
 		},
 		mounted() {
@@ -458,7 +489,7 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 					const res = await service.show(
 						"employee",
 						this.employee_id,
-						"includes[]=documents.type"
+						"includes[]=documents.type&includes[]=formations.formation.type&includes[]=formations.formation.facilitable.user"
 					);
 					this.model = this.$functions.copy(res.data.data);
 					this.model.representative = this.model.is_representative ? true : false;
@@ -466,6 +497,8 @@ import InstallationSelect from '../Utils/InstallationSelect.vue';
 					this.model.dangerous_goods = this.model.is_dangerous_goods ? true : false;
 					this.model.file_firm = { file: null };
 					this.model.adr_permit_id = this.model.adr_permission_id;
+					this.formations = this.model.formations;
+
 
 					this.model.file_certification = { file: null };
 					this.model.driver_document = { file: null };
