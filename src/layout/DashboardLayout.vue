@@ -113,9 +113,7 @@
 			:data="sidebarBackground"
 		>
 			<dashboard-navbar :me="me"></dashboard-navbar>
-
-			
-			<base-header type="gradient-default" class="pb-6 pt-5 pt-md-8">
+			<base-header type="gradient-default" :class="$route.path == '/profile' ? 'pt-4 pb-5' : 'pb-6 pt-5 pt-md-8'">
 			</base-header>
 
 			<div @click="toggleSidebar">

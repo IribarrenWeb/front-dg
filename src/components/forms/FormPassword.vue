@@ -2,7 +2,7 @@
 	<div>
 		<form-validate @submit="changePass">
 			<div class="row border rounded border-light px-md-3 py-md-2">
-				<div class="col-6">
+				<div class="col-md-6">
 					<base-field name="password" label="Contrasena actual">
 						<field-validate
 							type="password"
@@ -48,7 +48,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-12 d-flex justify-content-end">
+				<div class="col-12 d-flex justify-content-end mb-3">
 					<base-button
 						type="default"
 						nativeType="submit"

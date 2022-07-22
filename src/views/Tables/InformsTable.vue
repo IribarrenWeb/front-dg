@@ -15,6 +15,7 @@
 
 		<div class="table-responsive">
 			<div
+				v-if="!dash"
 				class="card-header border-0 py-3 bac-ligth row align-items-center"
 			>
 				<div class="col-md-10">

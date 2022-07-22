@@ -68,30 +68,8 @@
 				</table>
 			</div>
 
-			<div class="mt-3 card">
-				<div class="my-2 ml-md-4 ml-2">
-					<h4>Delegación</h4>
-				</div>
-				<table
-					class="table table-bordered table-responsive-md table-sm rounded"
-				>
-					<thead>
-						<tr>
-							<td>Nombre</td>
-							<td>CIF/NIF</td>
-							<td>Móvil</td>
-							<td>Email</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<th>{{ business?.administrable?.user?.full_name ?? 'N/A' }}</th>
-							<th>{{ business?.administrable?.cif_nif ? business?.administrable?.cif_nif : dni ?? null }}</th>
-							<th>{{ business?.administrable?.phone_number ?? 'N/A' }}</th>
-							<th>{{ business?.administrable?.user?.email ?? 'N/A' }}</th>
-						</tr>
-					</tbody>
-				</table>
+			<div>
+				<profile-show :profile="business?.administrable" />
 			</div>
 
             <modal
@@ -120,9 +98,10 @@
 	import utils from "@/mixins/utils-mixin";
 	import InstallationTable from "./Tables/InstallationTable.vue";
     import ShowBusiness from '../components/forms/Business/ShowBusiness.vue';
+	import ProfileShow from '../components/ProfileShow.vue';
 
 	export default {
-		components: { InstallationTable, ShowBusiness },
+		components: { InstallationTable, ShowBusiness, ProfileShow },
 		mixins: [utils],
 		data() {
 			return {

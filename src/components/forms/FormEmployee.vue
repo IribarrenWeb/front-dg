@@ -228,7 +228,7 @@
 										/>
 									</div>
 									<div v-else>
-										<a href="#" @click.prevent="">{{model.last_formation?.data?.name}}</a>
+										<a :href="model.last_formation?.link" target="_blank">{{model.last_formation?.data?.name}}</a>
 									</div>
 								</base-field>
 							</div>

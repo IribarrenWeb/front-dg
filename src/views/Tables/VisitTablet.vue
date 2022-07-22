@@ -1,6 +1,7 @@
 <template>
 	<div class="card shadow" :class="type === 'dark' ? 'bg-default' : ''">
 		<div
+			
 			class="card-header border-0"
 			:class="type === 'dark' ? 'bg-transparent' : ''"
 		>
@@ -22,7 +23,7 @@
 		</div>
 
 		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
+			<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
 				<date-filter
 					class="col-md-3"
 					v-model:clear="clear"

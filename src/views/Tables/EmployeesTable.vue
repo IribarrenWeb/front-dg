@@ -78,7 +78,7 @@
 							<a
 								href="#"
 								class="text-uppercase d-block"
-								@click.prevent="!row.item?.last_formation.dg_formation ? getDocument(row.item?.last_formation?.data?.id) : null"
+								@click.prevent="openFormation(row.item?.last_formation)"
 							>
 								<i class="fa fa-file-pdf" aria-hidden="true"></i>
 								{{ row.item?.last_formation?.document_name }}
@@ -235,6 +235,13 @@
 					console.log(err);
 				}
 			},
+			openFormation(formation) {
+				if (formation.dg_formation) {
+                    window.open(formation.link);
+				}else{
+					this.getDocument(formation?.data?.id)
+				}
+			}
 		},
         computed: {
             isClient(){

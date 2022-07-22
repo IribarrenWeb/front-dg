@@ -10,7 +10,11 @@ function get(params = null) {
         },
     };
 
-    return axios.get(`${url}/me?`+params, options).then((response) => {
+    let formatUrl = `${url}/me`
+    if (params) {
+        formatUrl += '?' + params;
+    }
+    return axios.get(formatUrl, options).then((response) => {
         return {
             list: response.data,
             meta: response.data.meta,
