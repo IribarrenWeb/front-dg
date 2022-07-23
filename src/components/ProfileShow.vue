@@ -2,7 +2,7 @@
 	<div>
 		<div class="mt-3 card">
 			<div class="my-2 ml-md-4 ml-2">
-				<h4>Delegación</h4>
+				<h4>{{title}}</h4>
 			</div>
 			<table class="table table-bordered table-responsive-md table-sm rounded">
 				<thead>
@@ -39,6 +39,10 @@ export default {
             type: Object,
             required: true
         },
+		title: {
+			type: String,
+			default: 'Delegación'
+		}
     },
     setup() {
       return {

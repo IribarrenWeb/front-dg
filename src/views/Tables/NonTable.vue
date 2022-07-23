@@ -107,13 +107,6 @@
 							class="btn btn-sm btn-default"
 							><i class="fa-regular fa-circle-check"></i
 						></a>
-						<a
-							href="#"
-							v-if="row.item?.status == 'POR REVISAR' && ROLE != 'business'"
-							@click="(modal = true), (selected_non = row.item)"
-							class="btn btn-sm btn-default"
-							><i class="fa-regular fa-circle-check"></i
-						></a>
 					</td>
 				</template>
 			</base-table>

@@ -127,7 +127,7 @@ export default {
             } else if (!isEmpty(echo.value)) {
                 echo.value.disconnect()
             }
-        })
+        },{immediate: true})
 
         return {
             connect,
