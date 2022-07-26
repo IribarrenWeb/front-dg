@@ -36,7 +36,7 @@
 					</td>
 					<td>{{ row.item?.date }}</td>
 					<td>
-						<a href="#" @click.prevent="">CERTIFICADO</a>
+						<a :href="row.item?.link_certificate + '/' + id" target="_blank">CERTIFICADO</a>
 					</td>
 				</template>
 			</base-table>
@@ -57,7 +57,7 @@
 	// import service from "../../store/services/model-service";
 	export default {
 		name: "documents-table",
-		props: ["reload", "tableData"],
+		props: ["reload", "tableData", "id"],
 		data() {
 			return {
 				metaData: {},

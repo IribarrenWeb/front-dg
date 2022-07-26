@@ -128,7 +128,10 @@
 								</div>
 							</template>
 							<div class="px-md-2 px-1 mx-xl-1">
-								<profile-show :profile="profileModel" :title="model.role_id == 4 ? 'Consultores ADR' : 'Delegación'" />
+								<profile-show :profile="profileModel" :columns="colsProfile" :title="model.role_id == 4 ? 'Consultores ADR' : 'Delegación'" />
+							</div>
+							<div class="px-md-2 px-1 mx-xl-1" v-if="$store.state.is_business">
+								<profile-show :data="model.business.installations" :columns="colsAuditors" title="Auditores ADR" />
 							</div>
 						</card>
 					</div>
@@ -164,6 +167,47 @@
 				last_name: null,
 				email: null,
 			});
+			const colsProfile = [
+				{
+					title: 'Nombre',
+					field: 'user.full_name'
+				},
+				{
+					title: 'CIF/NIF',
+					field: 'cif_nif',
+					op_field: 'dni'
+				},
+				{
+					title: 'Móvil',
+					field: 'phone_number'
+				},
+				{
+					title: 'Email',
+					field: 'user.email'
+				},
+			]
+			const colsAuditors = [
+				{
+					title: 'Instalación',
+					field: 'name'
+				},
+				{
+					title: 'Nombre',
+					field: 'auditable.user.full_name'
+				},
+				{
+					title: 'DNI',
+					field: 'auditable.dni'
+				},
+				{
+					title: 'Móvil',
+					field: 'auditable.phone_number'
+				},
+				{
+					title: 'Email',
+					field: 'auditable.user.email'
+				},
+			]
 			const store = useStore();
 			const component = computed(() => {
 				let comp = "";
@@ -232,7 +276,7 @@
 						
 						let params = '';
 						if (v == 4) {
-							params = 'includes[]=administrable.user';
+							params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
 
 							steps.value.push({
 								title: "Consultores ADR",
@@ -260,12 +304,14 @@
 			return {
 				model,
 				role,
-				updateUser,
 				component,
 				roleModel,
+				colsProfile,
 				steps,
 				currentStep,
-				profileModel
+				profileModel,
+				colsAuditors,
+				updateUser,
 			};
 		},
 	};

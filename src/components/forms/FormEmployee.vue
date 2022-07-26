@@ -357,7 +357,7 @@
 		</template>
 		<template v-if="currentStep == 2 && employee_id">
 			<div>
-				<employee-training-table :tableData="formations"/>
+				<employee-training-table :id="employee_id" :tableData="formations"/>
 			</div>
 		</template>
 	</div>
