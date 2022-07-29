@@ -125,7 +125,7 @@ export default {
                 bindChannels()
                 isConnected.value = true
             } else if (!isEmpty(echo.value)) {
-                echo.value.disconnect()
+                // echo.value.disconnect()
             }
         },{immediate: true})
 

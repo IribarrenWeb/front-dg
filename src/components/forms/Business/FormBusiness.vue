@@ -106,7 +106,7 @@
 					<div class="col-lg-4">
 						<base-field name="bank_code" label="BIC/SWIFT">
 							<field-validate type="text" class="form-control text-uppercase" name="bank_code"
-								rules="min:11|max:11|alpha_num" label="BIC/SWIFT" v-model="model.bank_code" />
+								rules="min:11|max:11" label="BIC/SWIFT" v-model="model.bank_code" />
 						</base-field>
 					</div>
 					<div class="col-lg-4">

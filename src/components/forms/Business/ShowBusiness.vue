@@ -162,7 +162,7 @@
 								type="text"
 								class="form-control"
 								name="bank_code"
-								rules="min:11|max:11|alpha_num"
+								rules="min:11|max:11"
 								label="BIC/SWIFT"
 								v-model="model.bank_code"
 							/>
