@@ -47,7 +47,7 @@ const MaterialsTable = defineAsyncComponent(() =>
 );
 
 const AuditsTable = defineAsyncComponent(() =>
-    import ("@/views/Tables/AuditTable.vue")
+    import ("@/views/Tables/Audits/AuditTable.vue")
 );
 
 const NonTable = defineAsyncComponent(() =>

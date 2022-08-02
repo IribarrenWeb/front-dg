@@ -798,7 +798,7 @@
 					},
 					{
 						number: 4,
-						title: "MERCANCÍAS ADR",
+						title: "Mercancías ADR",
 						valid: false,
 					},
 					{

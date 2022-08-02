@@ -90,11 +90,11 @@
 	</div>
 </template>
 <script>
-	import FormBusiness from "../../components/forms/Business/FormBusiness.vue";
-	import service from "../../store/services/model-service";
-	import DeleteButton from "../../components/Utils/DeleteButton.vue";
-	import DelegateFilter from "../../components/filters/DelegateFilter.vue";
-	import CityFilter from "../../components/filters/CityFilter.vue";
+	import FormBusiness from "../../../components/forms/Business/FormBusiness.vue";
+	import service from "../../../store/services/model-service";
+	import DeleteButton from "../../../components/Utils/DeleteButton.vue";
+	import DelegateFilter from "../../../components/filters/DelegateFilter.vue";
+	import CityFilter from "../../../components/filters/CityFilter.vue";
 
 	export default {
 		components: { FormBusiness, DeleteButton, DelegateFilter, CityFilter },

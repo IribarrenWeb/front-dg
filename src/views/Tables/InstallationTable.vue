@@ -87,13 +87,13 @@
 				v-if="this.modal"
 				v-model:show="this.modal"
 				:action="action"
-				@close="action = 'registrar'"
+				@close="action = 'registrar',isView = false"
 				modalClasses="modal-xl"
 				model="instalación"
 			>
 				<form-installation
 					v-if="!isView"
-					@close="this.modal = false"
+					@close="modal = false"
 					@reload="getInstallations()"
 					:business_id="business_id"
 					:delegate_id="delegate_id"
@@ -102,7 +102,7 @@
 					v-else
 					:installation_id="installation_id"
 					@reload="getInstallations()"
-					@close="(this.modal = false), (this.isView = false)"
+					@close="(modal = false), (isView = false)"
 				></installation-show>
 			</modal>
 		</div>

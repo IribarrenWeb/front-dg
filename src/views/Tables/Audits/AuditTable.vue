@@ -8,7 +8,11 @@
 					</h3>
 				</div>
 				<div class="col justify-content-end d-flex">
-					<base-button v-if="!$store.state.is_business" type="default" size="sm"
+					<base-button
+						v-if="!$store.state.is_business"
+						@click="toInit = true"
+						type="default"
+						size="sm"
 						>Iniciar auditoria</base-button
 					>
 				</div>
@@ -17,7 +21,16 @@
 
 		<div class="table-responsive">
 			<div
-				class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center"
+				class="
+					card-header
+					border-0
+					pl-2
+					py-3
+					bac-ligth
+					mx-0
+					row
+					align-items-center
+				"
 			>
 				<div class="col-md-10">
 					<div class="row align-items-center">
@@ -242,6 +255,18 @@
 					</div>
 				</div>
 			</modal>
+			<modal
+				modalClasses="modal-xl"
+				v-model:show="toInit"
+				model="auditoria"
+				action="iniciar"
+				v-if="toInit"
+			>
+				<init-table
+					@cancel="toInit = false"
+					:data="toInitAudit"
+				/>
+			</modal>
 		</div>
 	</div>
 </template>
@@ -249,14 +274,15 @@
 	// import { axios } from '@/axios';
 
 	import { mapGetters } from "vuex";
-	import service from "../../store/services/model-service";
-	import AsyncSelect from "../../components/AsyncSelect.vue";
-	import CityFilter from "../../components/filters/CityFilter.vue";
-	import DelegateFilter from "../../components/filters/DelegateFilter";
-	import BusinessFilter from "../../components/filters/BusinessFilter.vue";
-	import InstallationFilter from "../../components/filters/InstallationFilter.vue";
-	import SelectFilter from "../../components/filters/SelectFilter.vue";
-	import DateFilter from "../../components/filters/DateFilter.vue";
+	import service from "../../../store/services/model-service";
+	import AsyncSelect from "../../../components/AsyncSelect.vue";
+	import CityFilter from "../../../components/filters/CityFilter.vue";
+	import DelegateFilter from "../../../components/filters/DelegateFilter";
+	import BusinessFilter from "../../../components/filters/BusinessFilter.vue";
+	import InstallationFilter from "../../../components/filters/InstallationFilter.vue";
+	import SelectFilter from "../../../components/filters/SelectFilter.vue";
+	import DateFilter from "../../../components/filters/DateFilter.vue";
+	import InitTable from './InitTable.vue';
 
 	export default {
 		name: "audits-table",
@@ -287,6 +313,7 @@
 					"&order_by=scheduled_date" +
 					"&order_direction=asc",
 				params_filter: null,
+				toInit: false,
 			};
 		},
 		mounted() {
@@ -302,6 +329,9 @@
 						"&delegate_id=" + this.audit.installation.company?.administrable_id;
 				}
 				return params;
+			},
+			toInitAudit() {
+				return this.tableData.filter((d) => d.can_init && d.status == 'PENDIENTE');
 			},
 		},
 		methods: {
@@ -371,6 +401,9 @@
 				this.audit = audit;
 				this.toDelegate = true;
 			},
+			cancel(){
+				alert('canelll')
+			},
 			async toSchedule(id) {
 				await this.$store.dispatch("toSchedule", {
 					model: "audits",
@@ -405,6 +438,7 @@
 			InstallationFilter,
 			SelectFilter,
 			DateFilter,
+InitTable,
 		},
 	};
 </script>
