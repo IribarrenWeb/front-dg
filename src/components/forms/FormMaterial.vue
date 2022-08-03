@@ -213,7 +213,7 @@ export default {
 				sell: "",
 				quantity: "",
 				transported: "",
-				unit: null,
+				unit: 'TONELADAS',
 				is_residue: null,
 				is_dangerous: false,
 				file_document: {

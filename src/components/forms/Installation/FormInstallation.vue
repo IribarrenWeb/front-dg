@@ -9,109 +9,23 @@
 				@step="currentStep = $event"
 			></base-steps>
 			<template v-if="currentStep == 1">
-				<div class="row border rounded border-light px-4 py-2">
-					<div class="col-12">
-						<h4>Datos principales</h4>
-					</div>
-					<div class="col-lg-4">
-						<base-field name="name" label="Nombre de instalación">
-							<field-validate
-								:disabled="isSaved"
-								type="text"
-								class="form-control"
-								name="name"
-								rules="required"
-								label="Nombre"
-								v-model="model.name"
-							/>
-						</base-field>
-					</div>
-					<div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
-						<base-field name="auditable" label="Auditor">
-							<div v-if="model.auditable != null">
-								<span class="mr-md-4 text-uppercase"
-									>{{ model.auditable.name }}
-									{{ model.auditable.last_name }}</span
-								>
-								<base-button
-									@click="model.auditable = null"
-									size="sm"
-									type="default"
-									:outline="true"
-									:disabled="isSaved"
-									><i class="fa-solid fa-pencil"></i
-								></base-button>
-							</div>
-							<div v-else>
-								<field-validate
-									name="auditable"
-									label="Auditor"
-									rules=""
-									v-model="model.auditable"
-								>
-									<async-select
-										@selected="model.auditable = $event"
-										:roles="[2, 3]"
-										:disabled="isSaved"
-										:params="`&delegate_id=${delegate_id}`"
-									>
-									</async-select>
-								</field-validate>
-							</div>
-						</base-field>
-					</div>
-					<div class="col-lg-4" v-if="ROLE != 'business'">
-						<base-field name="periodicy" label="Periodicidad de visitas">
-							<field-validate
-								:disabled="isSaved"
-								class="form-control"
-								as="select"
-								name="periodicy"
-								rules=""
-								label="periodicidad"
-								v-model="model.periodicity"
-							>
-								<option value="" selected>Selecciona una periodicidad</option>
-								<option value="ANUAL">ANUAL</option>
-								<option value="BIANUAL">BIANUAL</option>
-							</field-validate>
-						</base-field>
-					</div>
-					<div class="col-lg-6">
-						<base-field name="file_document" label="Alta Instalación">
-							<div v-if="model.file_document.file.length >= 1">
-								<span class="mr-md-4">{{
-									model.file_document.file[0].name
-								}}</span>
-								<base-button
-									@click="model.file_document.file = []"
-									size="sm"
-									type="default"
-									:outline="true"
-									:disabled="isSaved"
-									><i class="fa-solid fa-pencil"></i
-								></base-button>
-							</div>
-							<field-validate
-								:disabled="isSaved"
-								v-show="!model.file_document.file.length >= 1"
-								class="form-control"
-								type="file"
-								name="file_document"
-								rules="ext:pdf"
-								:validateOnInput="true"
-								label="alta Instalación"
-								v-model="model.file_document.file"
-							/>
-						</base-field>
-					</div>
-				</div>
+				<general-data 
+					v-model:file_document="model.file_document.file"
+					v-model:auditable="model.auditable"
+					v-model:name="model.name"
+					v-model:periodicity="model.periodicity"
+					:delegate_id="delegate_id"
+					:isSaved="isSaved"
+				/>
 
 				<address-select
 					v-model:address="model.address.address"
 					v-model:city="model.address.city"
 					v-model:code="model.address.code"
 					v-model:country="model.address.country"
+					v-model:province="model.address.province"
+					v-model:comunity="model.address.comunity"
+					v-model:street_number="model.address.street_number"
 				/>
 			</template>
 			<!-- ------------------------------------------------------ -->
@@ -208,7 +122,12 @@
 							<h4>Datos principales</h4>
 						</div>
 						<div class="col-lg-6 col-lg-4">
-							<base-field apiName="responsible.name" name="name" label="Nombre" :required="true">
+							<base-field
+								apiName="responsible.name"
+								name="name"
+								label="Nombre"
+								:required="true"
+							>
 								<field-validate
 									:disabled="isSaved"
 									type="text"
@@ -226,7 +145,7 @@
 								apiName="responsible.last_name"
 								name="last_name"
 								label="Apellido"
-                                :required="true"
+								:required="true"
 							>
 								<field-validate
 									:disabled="isSaved"
@@ -258,7 +177,7 @@
 								apiName="responsible.email"
 								name="email"
 								label="Email"
-                                :required="true"
+								:required="true"
 							>
 								<field-validate
 									:disabled="isSaved"
@@ -473,13 +392,14 @@
 									<base-field
 										apiName="responsible.driver_document_date"
 										name="driver_date"
-										label="Fecha documentacion"
+										label="Caducidad Carnet ADR"
 									>
 										<field-validate
 											:disabled="isSaved"
 											type="date"
 											class="form-control"
 											name="driver_date"
+											label="Caducidad Carnet ADR"
 											v-model="model.responsible.driver_document_date"
 											rules="required"
 										>
@@ -603,8 +523,8 @@
 	import SubcontractorTable from "@/views/Tables/SubcontractorTable.vue";
 	import EmployeesTable from "../../../views/Tables/EmployeesTable.vue";
 	import { mapGetters } from "vuex";
-	import AsyncSelect from "../../AsyncSelect.vue";
 	import AddressSelect from "../../AddressSelect.vue";
+	import GeneralData from "./Modules/GeneralData.vue";
 
 	export default {
 		mixins: [utils],
@@ -613,8 +533,8 @@
 			VehiclesTable,
 			SubcontractorTable,
 			EmployeesTable,
-			AsyncSelect,
 			AddressSelect,
+			GeneralData,
 		},
 		props: {
 			business_id: {
@@ -663,11 +583,12 @@
 				const inst = values;
 
 				if (this.currentStep == 1 && !this.isSaved) {
-					if (!this.$functions.empty(values.file_document)) {
+					console.log(this.model.file_document.file);
+					if (!this.$functions.empty(this.model.file_document.file)) {
 						this.model.file_document.base64 = await this.toBase64(
-							inst.file_document[0]
+							this.model.file_document.file[0]
 						);
-						this.model.file_document.file_name = inst.file_document[0].name
+						this.model.file_document.file_name = this.model.file_document.file[0].name;
 					}
 					this.model.auditable_id = this.model?.auditable?.id;
 					if (this.isSaved) {
@@ -690,18 +611,20 @@
 						this.model.responsible.file_firm.base64 = await this.toBase64(
 							inst.file_firm[0]
 						);
-						this.model.responsible.file_firm.file_name = inst.file_firm[0].name
+						this.model.responsible.file_firm.file_name = inst.file_firm[0].name;
 					}
 					if (this.model.responsible.driver) {
 						this.model.responsible.driver_document.base64 = await this.toBase64(
 							inst.file_driver[0]
 						);
-						this.model.responsible.driver_document.file_name = inst.file_driver[0].name
-
+						this.model.responsible.driver_document.file_name =
+							inst.file_driver[0].name;
 					}
 					if (this.model.responsible.dangerous_goods) {
-						this.model.responsible.file_certification.base64 = await this.toBase64(inst.file_cer[0]);
-						this.model.responsible.file_certification.file_name = inst.file_cer[0].name
+						this.model.responsible.file_certification.base64 =
+							await this.toBase64(inst.file_cer[0]);
+						this.model.responsible.file_certification.file_name =
+							inst.file_cer[0].name;
 					}
 				}
 

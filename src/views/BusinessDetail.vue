@@ -1,15 +1,15 @@
 <template>
 	<div>
 		<div class="container-fluid mt--7">
-            <div class="d-flex justify-content-lg-end mb-2">
-                <base-button
-                    @click="this.modal = true"
-                    size="sm"
-                    type="default"
-                    :outline="false"
-                    ><i class="fa-solid fa-pencil"></i
-                > Editar</base-button>
-            </div>
+			<div class="d-flex justify-content-lg-end mb-2">
+				<base-button
+					@click="this.modal = true"
+					size="sm"
+					type="default"
+					:outline="false"
+					><i class="fa-solid fa-pencil"></i> Editar</base-button
+				>
+			</div>
 			<div class="card overflow-auto">
 				<table class="table table-sm table-bordered">
 					<tbody>
@@ -23,10 +23,10 @@
 						</tr>
 						<tr>
 							<td>{{ business?.user.full_name }}</td>
-							<td>{{ business?.business_nif ?? 'N/A' }}</td>
-							<td>{{ business?.address?.city ?? 'N/A' }}</td>
-							<td>{{ business?.address?.code ?? 'N/A' }}</td>
-							<td>{{ business?.address?.country ?? 'N/A' }}</td>
+							<td>{{ business?.business_nif ?? "N/A" }}</td>
+							<td>{{ business?.address?.city ?? "N/A" }}</td>
+							<td>{{ business?.address?.code ?? "N/A" }}</td>
+							<td>{{ business?.address?.country ?? "N/A" }}</td>
 							<td>{{ business?.installations_count }}</td>
 						</tr>
 						<tr class="text-uppercase">
@@ -36,10 +36,13 @@
 							<th colspan="4" scope="col">Movil</th>
 						</tr>
 						<tr>
-							<td>{{ business?.property_name ?? 'N/A' }} {{ business?.property_last_name }}</td>
-							<td>{{ business?.property_dni ?? 'N/A' }}</td>
-							<td>{{ business?.property_email ?? 'N/A' }}</td>
-							<td colspan="4">{{ business?.property_phone ?? 'N/A' }}</td>
+							<td>
+								{{ business?.property_name ?? "N/A" }}
+								{{ business?.property_last_name }}
+							</td>
+							<td>{{ business?.property_dni ?? "N/A" }}</td>
+							<td>{{ business?.property_email ?? "N/A" }}</td>
+							<td colspan="4">{{ business?.property_phone ?? "N/A" }}</td>
 						</tr>
 						<tr class="text-uppercase">
 							<th scope="row">Fecha de ALTA</th>
@@ -59,7 +62,7 @@
 									@click.prevent="getDocument(file_doc?.id)"
 								>
 									<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-									{{file_doc?.name_document ?? 'Documentación'}}
+									{{ file_doc?.name_document ?? "Documentación" }}
 								</a>
 								<span v-else>SIN DOCUMENTACIÓN</span>
 							</td>
@@ -69,10 +72,10 @@
 			</div>
 
 			<div>
-				<profile-show :profile="business?.administrable" />
+				<profile-show :columns="colsProfile" :profile="business?.administrable" />
 			</div>
 
-            <modal
+			<modal
 				v-if="this.modal"
 				v-model:show="this.modal"
 				modalClasses="modal-xl"
@@ -97,8 +100,8 @@
 	import service from "../store/services/model-service";
 	import utils from "@/mixins/utils-mixin";
 	import InstallationTable from "./Tables/InstallationTable.vue";
-    import ShowBusiness from '../components/forms/Business/ShowBusiness.vue';
-	import ProfileShow from '../components/ProfileShow.vue';
+	import ShowBusiness from "../components/forms/Business/ShowBusiness.vue";
+	import ProfileShow from "../components/ProfileShow.vue";
 
 	export default {
 		components: { InstallationTable, ShowBusiness, ProfileShow },
@@ -108,7 +111,26 @@
 				meta: {},
 				business: null,
 				id: "",
-                modal: false
+				modal: false,
+				colsProfile: [
+					{
+						title: "Nombre",
+						field: "user.full_name",
+					},
+					{
+						title: "CIF/NIF",
+						field: "cif_nif",
+						op_field: "dni",
+					},
+					{
+						title: "Móvil",
+						field: "phone_number",
+					},
+					{
+						title: "Email",
+						field: "user.email",
+					},
+				],
 			};
 		},
 		async created() {
@@ -127,17 +149,20 @@
 				const response = await service.show(
 					"business",
 					id,
-					"includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank"+
-					"&includes[]=administrable.user"
+					"includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank" +
+						"&includes[]=administrable.user"
 				);
 				this.business = response.data.data;
 			},
 		},
-        computed: {
-            file_doc(){
-                return this.$functions.filterDoc(this.business?.documents, 'DOCUMENTACION')
-            }
-        }
+		computed: {
+			file_doc() {
+				return this.$functions.filterDoc(
+					this.business?.documents,
+					"DOCUMENTACION"
+				);
+			},
+		},
 	};
 </script>
 <style>

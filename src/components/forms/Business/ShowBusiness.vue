@@ -136,6 +136,9 @@
 						v-model:city="model.address.city" 
 						v-model:code="model.address.code" 
 						v-model:country="model.address.country"
+						v-model:province="model.address.province" 
+						v-model:comunity="model.address.comunity" 
+						v-model:street_number="model.address.street_number"
 					/>
 				</div>
 			</template>

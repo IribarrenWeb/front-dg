@@ -28,7 +28,6 @@
 		inheritAttrs: true,
 		props: {
 			profile: {
-				type: Object,
 				required: true,
 			},
 			data : {

@@ -272,7 +272,7 @@
 								<base-field
 									apiName="driver_document_date"
 									name="driver_date"
-									label="Fecha documentacion"
+									label="Caducidad Carnet ADR"
 								>
 									<field-validate
 										type="date"
@@ -280,6 +280,7 @@
 										name="driver_date"
 										v-model="model.driver_document_date"
 										rules="required"
+										label="Caducidad Carnet ADR"
 									>
 									</field-validate>
 								</base-field>

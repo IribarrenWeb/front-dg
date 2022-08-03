@@ -89,6 +89,9 @@
 						v-model:city="model.address.city"
 						v-model:code="model.address.code"
 						v-model:country="model.address.country"
+						v-model:province="model.address.province" 
+						v-model:comunity="model.address.comunity" 
+						v-model:street_number="model.address.street_number"
 					/>
 				</div>
 			</template>
@@ -170,7 +173,7 @@
 							</base-field>
 						</div>
 						<div :class="ROLE === 'auditor' ? 'col-lg-6' : 'col-lg-4'">
-							<base-field :name="`installations[${id}].file_document.base64`" label="Alta instalación">
+							<base-field :name="`installations[${id}].file_document.base64`" label="Alta consejero ADR">
 								<div v-if="installations[id].file_document.file.length >= 1">
 									<span class="mr-md-4">{{
 											installations[id].file_document.file[0].name
@@ -180,7 +183,7 @@
 								</div>
 								<field-validate v-show="!installations[id].file_document.file.length >= 1"
 									class="form-control" type="file" :name="`installations[${id}].file_document.base64`"
-									rules="ext:pdf" :validateOnInput="true" label="alta instalación"
+									rules="ext:pdf" :validateOnInput="true" label="alta consejero ADR"
 									v-model="installations[id].file_document.file" />
 							</base-field>
 						</div>
@@ -190,6 +193,9 @@
 								v-model:city="installations[id].address.city" 
 								v-model:code="installations[id].address.code"
 								v-model:country="installations[id].address.country" 
+								v-model:province="installations[id].address.province" 
+								v-model:comunity="installations[id].address.comunity" 
+								v-model:street_number="installations[id].address.street_number"
 							/>
 						</div>
 
@@ -202,7 +208,7 @@
 				</fieldset>
 				<div class="mt-3">
 					<base-button @click="handlePush()" :disabled="installations.length >= 3">
-						Agregrar instalación +
+						Agregrar instalación
 					</base-button>
 				</div>
 			</template>
@@ -358,7 +364,7 @@
 								</div>
 								<div class="col-lg-3" v-if="installations[id].responsible.driver">
 									<base-field :name="`installations.${id}.responsible.driver_document_date.date`"
-										label="Fecha">
+										label="Caducidad Carnet ADR">
 										<field-validate type="date" class="form-control"
 											:name="`installations.${id}.responsible.driver_document_date.date`" v-model="
 												installations[id].responsible.driver_document_date

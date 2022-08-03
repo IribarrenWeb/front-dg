@@ -3,7 +3,7 @@
 		<multiselect
 			:disabled="disabled"
 			v-model="content"
-			:value="selectedItem"
+			:value="value"
 			:placeholder="placeholder"
 			v-if="typeof options == 'object'"
 			:searchable="true"
@@ -61,7 +61,7 @@
 				type: Number,
 				default: 500,
 			},
-			value: {},
+			value: null,
 			disabled: {
 				type: Boolean,
 				default: false,

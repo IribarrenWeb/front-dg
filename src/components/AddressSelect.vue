@@ -5,25 +5,43 @@
         </div>
         <div class="col">
             <div class="row">
-                <div class="col-6">
+                <div class="col-12 col-md-4">
                     <base-field label="Calle">
                         <input class="form-control" type="text" ref="street" :value="address"
                             @input="$emit('update:address', $event.target.value)" />
                     </base-field>
                 </div>
-                <div class="col-6">
+                <div class="col-6 col-md-2">
+                    <base-field label="Numero">
+                        <input class="form-control" type="text" :value="street_number"
+                            @input="$emit('update:street_number', $event.target.street_number)" />
+                    </base-field>
+                </div>
+                <div class="col-6 col-md-2">
                     <base-field label="Codigo postal">
                         <input class="form-control" type="text" :value="code"
                             @input="$emit('update:code', $event.target.value)" />
                     </base-field>
                 </div>
-                <div class="col-6">
-                    <base-field label="Ciudad">
+                <div class="col-12 col-md-4">
+                    <base-field label="Municipio">
                         <input class="form-control" type="text" :value="city"
                             @input="$emit('update:city', $event.target.value)" />
                     </base-field>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-4">
+                    <base-field label="Provincia">
+                        <input class="form-control" type="text" :value="province"
+                            @input="$emit('update:province', $event.target.value)" />
+                    </base-field>
+                </div>
+                <div class="col-12 col-md-4">
+                    <base-field label="Comunidad Autónoma">
+                        <input class="form-control" type="text" :value="comunity"
+                            @input="$emit('update:comunity', $event.target.value)" />
+                    </base-field>
+                </div>
+                <div class="col-12 col-md-4">
                     <base-field label="Pais">
                         <input class="form-control" type="text" :value="country"
                             @input="$emit('update:country', $event.target.value)" />
@@ -58,6 +76,18 @@ export default {
             type: String,
             default: ''
         },
+        province: {
+            type: String,
+            default: ''
+        },
+        comunity: {
+            type: String,
+            default: ''
+        },
+        street_number: {
+            type: String,
+            default: ''
+        },
     },
     setup(props, { emit }) {
         const street = ref()
@@ -79,6 +109,9 @@ export default {
                     locality: "update:city",
                     postal_code: "update:code",
                     country: "update:country",
+                    street_number: "update:street_number",
+                    administrative_area_level_2: "update:province",
+                    administrative_area_level_1: "update:comunity",
                 }
 
                 for (const type in mapping) {

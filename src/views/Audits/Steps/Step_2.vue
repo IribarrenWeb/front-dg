@@ -30,18 +30,17 @@
 								Verificación de operaciones de carga/descarga de cisternas; -
 								Verificación de operaciones de carga/descarga de bultos; -
 								Verificación de los vehículos destinados al transporte; - Sesión
-								de Formación; - Reunión final Este informe es de carácter
-								interno y la información aquí mostrada no esla que se comunica
-								oficialmente al Ministerio de Fomento cuando se presenta
-								elinforme anual; no obstante, se revisan todas aquellas
-								cuestiones que esobligación del Consejero de Seguridad
-								verificar, con objeto de valorar el gradode cumplimiento de los
-								requisitos aplicables. Informe correspondiente a la visita
-								realizada por su Consejero de Seguridad designado por la
-								empresa, de acuerdo con las recomendaciones del Ministerio de
-								Fomento, comprobando y revisando aquellos aspectos que figuran
-								como obligatorios en el informe de los Consejeros de Seguridad,
-								según el RD 97/2017
+								de Formación; - Reunión final . Este informe es de carácter
+								interno y la información aquí mostrada no es la que se comunica
+								oficialmente al Ministerio de Fomento cuando se presenta el
+								informe anual; no obstante, se revisan todas aquellas cuestiones
+								que es obligación del Consejero de Seguridad verificar, con
+								objeto de valorar el grado de cumplimiento de los requisitos
+								aplicables. Informe correspondiente a la visita realizada por su
+								Consejero de Seguridad designado por la empresa, de acuerdo con
+								las recomendaciones del Ministerio de Fomento, comprobando y
+								revisando aquellos aspectos que figuran como obligatorios en el
+								informe de los Consejeros de Seguridad, según el RD 97/2017
 							</b>
 						</base-checkbox>
 					</div>
@@ -73,10 +72,10 @@
 		props: ["audit", "currentStep"],
 		data() {
 			return {
-				check1: false,
-				check2: false,
+				check1: true,
+				check2: true,
 				audit_id: this.$route.params.id,
-				checked: false,
+				checked: true,
 			};
 		},
 		async mounted() {
