@@ -17,87 +17,14 @@
 				v-if="canShow"
 			>
 				<installation-select :disabled="update" v-model="model.installation_id"></installation-select>
-				<div class="row border rounded border-light px-4 py-2">
-					<div class="col-12 border-bottom border-light mb-md-3">
-						<h4>Datos principales</h4>
-					</div>
-					<div class="col-lg-6 col-lg-4">
-						<base-field apiName="name" name="name" label="Nombre" :required="true">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="name"
-								rules="required|alpha_spaces"
-								label="Nombre"
-								v-model="model.name"
-							/>
-						</base-field>
-					</div>
-
-					<div class="col-lg-6 col-lg-4">
-						<base-field apiName="last_name" name="last_name" label="Apellido" :required="true">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="last_name"
-								rules="required|alpha_spaces"
-								label="apellido"
-								v-model="model.last_name"
-							/>
-						</base-field>
-					</div>
-
-					<div class="col-lg-6 col-lg-4">
-						<base-field apiName="dni" name="dni" label="DNI">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="dni"
-								rules="alpha_num|min:9|max:9"
-								label="dni"
-								v-model.trim="model.dni"
-							/>
-						</base-field>
-					</div>
-					<div class="col-lg-6 col-lg-4">
-						<base-field apiName="email" name="email" label="Email" :required="true">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="email"
-								rules="required|email"
-								label="email"
-								v-model="model.email"
-							/>
-						</base-field>
-					</div>
-
-					<div class="col-lg-6 col-lg-4">
-						<base-field apiName="position" name="position" label="Cargo">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="position"
-								rules="alpha_spaces"
-								label="cargo"
-								v-model="model.position"
-							/>
-						</base-field>
-					</div>
-
-					<div class="col-lg-6 col-lg-4">
-						<base-field apiName="phone_number" label="Movil" name="phone_number">
-							<field-validate
-								type="number"
-								class="form-control"
-								name="phone_number"
-								rules="min:5|max:15"
-								label="movil"
-								v-model="model.phone_number"
-							/>
-						</base-field>
-					</div>
-				</div>
+				<general-data
+					v-model:name="model.name"
+					v-model:last_name="model.last_name"
+					v-model:phone_number="model.phone_number"
+					v-model:position="model.position"
+					v-model:dni="model.dni"
+					v-model:email="model.email"
+				/>
 				<div class="row border rounded border-light px-4 py-2 mt-3">
 					<div class="col-12 border-bottom border-light mb-md-3">
 						<h4>Documentacion</h4>
@@ -368,11 +295,12 @@
 	import utils from "@/mixins/utils-mixin";
 	import service from "@/store/services/model-service";
 	import {isEqual} from "lodash";
-	import InstallationSelect from '../Utils/InstallationSelect.vue';
-	import EmployeeTrainingTable from '../../views/Tables/EmployeeTrainingTable.vue';
+	import InstallationSelect from '../../Utils/InstallationSelect.vue';
+	import EmployeeTrainingTable from '../../../views/Tables/EmployeeTrainingTable.vue';
+	import GeneralData from '../Employee/Modules/GeneralData.vue';
 
 	export default {
-		components: { InstallationSelect, EmployeeTrainingTable },
+		components: { InstallationSelect, EmployeeTrainingTable, GeneralData },
 		name: "form-employee",
 		mixins: [utils],
 		props: {

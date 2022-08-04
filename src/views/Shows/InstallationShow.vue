@@ -233,7 +233,7 @@ import utils from "@/mixins/utils-mixin";
 import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
 import { filter, forEach, isArray, isEmpty, isEqual, isUndefined, map } from "lodash";
 import { mapGetters } from "vuex";
-import FormEmployee from "../../components/forms/FormEmployee.vue";
+import FormEmployee from "../../components/forms/Employee/FormEmployee.vue";
 import AsyncSelect from '../../components/AsyncSelect.vue';
 import AddressSelect from "../../components/AddressSelect.vue";
 

@@ -124,7 +124,7 @@
 	import utils from "@/mixins/utils-mixin";
 	import service from "@/store/services/model-service";
 	import _ from "lodash";
-	import FormEmployee from "../../components/forms/FormEmployee.vue";
+	import FormEmployee from "../../components/forms/Employee/FormEmployee.vue";
     import { mapGetters } from 'vuex';
 	import DeleteButton from '../../components/Utils/DeleteButton.vue';
 	import InstallationFilter from '../../components/filters/InstallationFilter.vue';

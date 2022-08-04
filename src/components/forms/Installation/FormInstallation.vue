@@ -117,116 +117,15 @@
 			<!-- ------------------------------------------------------ -->
 			<template v-if="currentStep == 3">
 				<div v-if="!isSaved">
-					<div class="row border rounded border-light px-4 py-2">
-						<div class="col-12 border-bottom border-light mb-md-3">
-							<h4>Datos principales</h4>
-						</div>
-						<div class="col-lg-6 col-lg-4">
-							<base-field
-								apiName="responsible.name"
-								name="name"
-								label="Nombre"
-								:required="true"
-							>
-								<field-validate
-									:disabled="isSaved"
-									type="text"
-									class="form-control"
-									name="name"
-									rules="required|alpha_spaces"
-									label="Nombre"
-									v-model="model.responsible.name"
-								/>
-							</base-field>
-						</div>
-
-						<div class="col-lg-6 col-lg-4">
-							<base-field
-								apiName="responsible.last_name"
-								name="last_name"
-								label="Apellido"
-								:required="true"
-							>
-								<field-validate
-									:disabled="isSaved"
-									type="text"
-									class="form-control"
-									name="last_name"
-									rules="required|alpha_spaces"
-									label="apellido"
-									v-model="model.responsible.last_name"
-								/>
-							</base-field>
-						</div>
-
-						<div class="col-lg-6 col-lg-4">
-							<base-field apiName="responsible.dni" name="dni" label="DNI">
-								<field-validate
-									:disabled="isSaved"
-									type="text"
-									class="form-control text-uppercase"
-									name="dni"
-									rules="alpha_num|min:9|max:9"
-									label="dni"
-									v-model="model.responsible.dni"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-6 col-lg-4">
-							<base-field
-								apiName="responsible.email"
-								name="email"
-								label="Email"
-								:required="true"
-							>
-								<field-validate
-									:disabled="isSaved"
-									type="text"
-									class="form-control"
-									name="email"
-									rules="required|email"
-									label="email"
-									v-model="model.responsible.email"
-								/>
-							</base-field>
-						</div>
-
-						<div class="col-lg-6 col-lg-4">
-							<base-field
-								apiName="responsible.position"
-								name="position"
-								label="Cargo"
-							>
-								<field-validate
-									:disabled="isSaved"
-									type="text"
-									class="form-control"
-									name="position"
-									rules="alpha_spaces"
-									label="cargo"
-									v-model="model.responsible.position"
-								/>
-							</base-field>
-						</div>
-
-						<div class="col-lg-6 col-lg-4">
-							<base-field
-								apiName="responsible.phone_number"
-								label="Movil"
-								name="phone_number"
-							>
-								<field-validate
-									:disabled="isSaved"
-									type="number"
-									class="form-control"
-									name="phone_number"
-									rules="min:5|max:15"
-									label="movil"
-									v-model="model.responsible.phone_number"
-								/>
-							</base-field>
-						</div>
-					</div>
+					<employee-general-data
+						custom_key="responsible"
+						v-model:name="model.responsible.name"
+						v-model:last_name="model.responsible.last_name"
+						v-model:phone_number="model.responsible.phone_number"
+						v-model:position="model.responsible.position"
+						v-model:dni="model.responsible.dni"
+						v-model:email="model.responsible.email"
+					/>
 					<div class="row border rounded border-light px-4 py-2 mt-3">
 						<div class="col-12 border-bottom border-light mb-md-3">
 							<h4>Documentacion</h4>
@@ -525,6 +424,7 @@
 	import { mapGetters } from "vuex";
 	import AddressSelect from "../../AddressSelect.vue";
 	import GeneralData from "./Modules/GeneralData.vue";
+	import EmployeeGeneralData from "../Employee/Modules/GeneralData.vue";
 
 	export default {
 		mixins: [utils],
@@ -535,6 +435,7 @@
 			EmployeesTable,
 			AddressSelect,
 			GeneralData,
+			EmployeeGeneralData
 		},
 		props: {
 			business_id: {

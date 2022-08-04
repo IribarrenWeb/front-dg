@@ -1,16 +1,16 @@
 <template>
 	<div>
-		<div class="row border rounded border-light px-4 py-2">
+		<div class="row" :class="classes">
 			<div class="col-12">
 				<h4>Datos principales</h4>
 			</div>
 			<div class="col-lg-4">
-				<base-field name="name" label="Nombre de instalación">
+				<base-field :name="form_id ? `installarions[${form_id}].` : '' + 'name'" label="Nombre de instalación">
 					<field-validate
 						:disabled="isSaved"
 						type="text"
 						class="form-control"
-						name="name"
+						:name="form_id ? `installarions[${form_id}].` : '' + 'name'"
 						rules="required"
 						label="Nombre"
 						@input="$emit('update:name', $event.target.value)"
@@ -19,7 +19,7 @@
 				</base-field>
 			</div>
 			<div class="col-lg-4" v-if="role != 'auditor' && role != 'business'">
-				<base-field name="auditable" label="Auditor">
+				<base-field :name="form_id ? `installarions[${form_id}].` : '' + 'auditable'" label="Auditor">
 					<div v-if="auditable != null">
 						<span class="mr-md-4 text-uppercase"
 							>{{ auditable?.name }} {{ auditable?.last_name }}</span
@@ -35,7 +35,7 @@
 					</div>
 					<div v-else>
 						<field-validate
-							name="auditable"
+							:name="form_id ? `installarions[${form_id}].` : '' + 'auditable'"
 							label="Auditor"
 							rules=""
 							@input="$emit('update:auditable', $event.target.value)"
@@ -53,12 +53,12 @@
 				</base-field>
 			</div>
 			<div class="col-lg-4" v-if="role != 'business'">
-				<base-field name="periodicy" label="Periodicidad de visitas">
+				<base-field :name="form_id ? `installarions[${form_id}].` : '' + 'periodicy'" label="Periodicidad de visitas">
 					<field-validate
 						:disabled="isSaved"
 						class="form-control"
 						as="select"
-						name="periodicy"
+						:name="form_id ? `installarions[${form_id}].` : '' + 'periodicy'"
 						rules=""
 						label="periodicidad"
 						@input="$emit('update:periodicity', $event.target.value)"
@@ -71,11 +71,11 @@
 				</base-field>
 			</div>
 			<div class="col-lg-6">
-				<base-field name="file_document" label="Alta consejero ADR">
+				<base-field name="file_document.base64" label="Documentación de la instalación">
 					<div v-if="file_document.length >= 1">
 						<span class="mr-md-4">{{ file_document[0].name }}</span>
 						<base-button
-							@click="$emit('update:file_document', [])"
+							@click="$emit('update:file_document', null)"
 							size="sm"
 							type="default"
 							:outline="true"
@@ -85,13 +85,13 @@
 					</div>
 					<field-validate
 						:disabled="isSaved"
-						v-show="file_document.length < 1"
+						v-show="$empty(file_document)"
 						class="form-control"
 						type="file"
-						name="file_document"
+						:name="form_id ? `installarions[${form_id}].` : '' + 'file_document.base64'"
 						rules="ext:pdf"
 						:validateOnInput="true"
-						label="alta consejero ADR"
+						label="documentación de la instalación"
 						@change="$emit('update:file_document', $event.target.files)"
 					/>
 				</base-field>
@@ -126,15 +126,28 @@ import { computed } from '@vue/runtime-core';
 				type: Number,
 				required: true,
 			},
+			form_id: {
+				type:Number,
+				default: null
+			},
+			onlyForm: {
+				type: Boolean,
+				default: false
+			}
 		},
-		setup() {
+		setup(props) {
 			const store = useStore();
             const role = computed(() => {
                 return store.getters.ROLE
             })
+			const classes = computed(() => {
+				const styles = 'border rounded border-light px-4 py-2'
+                return !props.onlyForm ? styles : 'm-0' 
+            })
 
             return {
-                role
+                role,
+				classes
             }
 		},
 	};

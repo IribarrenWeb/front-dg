@@ -87,7 +87,7 @@
 	import utils from "@/mixins/utils-mixin";
 	import service from "@/store/services/model-service";
 	import _ from "lodash";
-	import FormEmployee from "../../components/forms/FormEmployee.vue";
+	import FormEmployee from "../../components/forms/Employee/FormEmployee.vue";
 
 	export default {
 		components: { FormEmployee },
