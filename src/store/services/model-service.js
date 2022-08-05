@@ -138,6 +138,7 @@ function users_select(query = null, roles = [], ext_params = null) {
                 }
             }
             return {
+                id: user.id,
                 value: user,
                 label: label,
             };

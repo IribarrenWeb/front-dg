@@ -55,7 +55,6 @@ function pruneData(object, excludes = []) {
     return object;
 }
 function copy(data) {
-    console.log(data,'keinher');
     return JSON.parse(JSON.stringify(data))
 }
 function rolename(role) {
@@ -139,7 +138,7 @@ function assignSchema(sch, model, relationSchemas = []){
         if (relationSchemas.includes(key)) {
             schema[key] = assignSchema(key, model[key]);
         }else{
-            schema[key] = model[key] 
+            schema[key] = model[key] ? model[key] : schema[key]
         }
     })
     return schema
@@ -208,6 +207,16 @@ function formatDoc(b64) {
     var fileURL = URL.createObjectURL(file);
     return fileURL;
 }
+
+async function toBase64(file) {
+    return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
+}
+
 export default {
     copy,
     rolename,
@@ -223,5 +232,6 @@ export default {
     cleanData,
     toFormData,
     timeAgo,
-    assignSchema
+    assignSchema,
+    toBase64
 }

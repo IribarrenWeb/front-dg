@@ -3,68 +3,17 @@
 		<base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :edit="true"
 			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
 		<template v-if="currentStep == number('Instalacion') && show">
-			<div class="row border rounded border-light bg-white px-4 py-2">
-				<div class="col-12">
-					<h4>Datos principales</h4>
-				</div>
-				<div :class="ROLE != 'auditor' && ROLE != 'business' ? 'col-lg-4' : 'col-lg-6'">
-					<base-field name="name" label="Nombre de instalacion">
-						<field-validate type="text" class="form-control" name="name" rules="required" label="Nombre"
-							v-model="model.name" />
-					</base-field>
-				</div>
-				<div class="col-lg-4" v-if="ROLE != 'auditor' && ROLE != 'business'">
-					<base-field name="auditable" label="Auditor">
-						<div v-if="!new_auditable.new && model.auditable != null">
-							<span class="mr-md-4 text-uppercase">{{ model.auditable.user.full_name }}</span>
-							<base-button v-if="!this.$store.state.is_auditor" @click="new_auditable.new = true"
-								size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i>
-							</base-button>
-						</div>
-						<div v-else-if="new_auditable.new || model.auditable == null">
-							<field-validate name="auditable" label="Auditor" rules="required">
-								<async-select @selected="new_auditable.value = $event" :roles="[2, 3]" :list="true"
-									:params="queryParams">
-								</async-select>
-							</field-validate>
-							<div class="mt-md-2" @click="handleForm" v-if="new_auditable.new">
-								<base-button @click="handleCancel('auditable')" size="sm" type="danger" :outline="true">
-									<i class="fa-solid fa-rotate-left"></i>
-								</base-button>
-							</div>
-						</div>
-					</base-field>
-				</div>
-				<div class="col-lg-6">
-					<base-field name="periodicy" label="Periodicidad de visitas">
-						<field-validate class="form-control" as="select" name="periodicy" rules="required"
-							label="periodicidad" v-model="model.periodicity">
-							<option value="" selected>Selecciona una periodicidad</option>
-							<option value="ANUAL">ANUAL</option>
-							<option value="BIANUAL">BIANUAL</option>
-						</field-validate>
-					</base-field>
-				</div>
-				<div class="col-lg-6">
-					<base-field name="file_document" label="Documentacion">
-						<div v-if="(model.documents.length >= 1) & !new_document.new">
-							<a class="mr-md-4" @click.prevent="getDocument(model.documents[0].id)">
-								{{ model.documents[0].name_document ?? model.documents[0].type.name }}
-							</a>
-							<base-button @click="new_document.new = true" size="sm" type="default" :outline="true"><i
-									class="fa-solid fa-pencil"></i></base-button>
-						</div>
-						<field-validate v-show="new_document.new || model.documents.length < 1" class="form-control"
-							type="file" name="file_document" rules="ext:pdf" :validateOnInput="true"
-							label="documentacion" v-model="model.file_document" />
-						<div class="mt-md-2">
-							<base-button v-if="new_document.new" @click="handleCancel('document')" size="sm"
-								type="danger" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button>
-						</div>
-					</base-field>
-				</div>
-
-			</div>
+			<general-data 
+				v-model:file_document="model.file_document"
+				v-model:file_auditor="model.file_auditor"
+				v-model:auditable="model.auditable_id"
+				v-model:name="model.name"
+				v-model:periodicity="model.periodicity"
+				:delegate_id="queryParams"
+				:auditable_value="model.auditable?.user?.id"
+				:firm_document="model.firm_document"
+				:auditor_document="model.auditor_document"
+			/>
 
 			<address-select
 				v-model:address="model.address.address" 
@@ -231,11 +180,11 @@ import EmployeesTable from "../Tables/EmployeesTable.vue";
 import utils from "@/mixins/utils-mixin";
 
 import DashboardEmployee from "../../components/Dashs/DashboardEmployee.vue";
-import { filter, forEach, isArray, isEmpty, isEqual, isUndefined, map } from "lodash";
+import { filter, forEach, isEmpty, isEqual, isUndefined, map } from "lodash";
 import { mapGetters } from "vuex";
 import FormEmployee from "../../components/forms/Employee/FormEmployee.vue";
-import AsyncSelect from '../../components/AsyncSelect.vue';
 import AddressSelect from "../../components/AddressSelect.vue";
+import GeneralData from "../../components/forms/Installation/Modules/GeneralData.vue";
 
 export default {
 	name: "installation-show",
@@ -246,8 +195,8 @@ export default {
     EmployeesTable,
     DashboardEmployee,
     FormEmployee,
-    AsyncSelect,
-    AddressSelect
+    AddressSelect,
+    GeneralData
 },
 	mixins: [utils],
 	props: {
@@ -275,10 +224,6 @@ export default {
 			steps: {},
 			modal: false,
 			original_model: null,
-			new_auditable: {
-				new: false,
-				value: null,
-			},
 			currentStep: 1,
 			operations: [],
 			deposits: [],
@@ -299,16 +244,18 @@ export default {
 					"installation",
 					this.installation_id,
 					"includes[]=operations&includes[]=equipments" +
-					"&includes[]=auditable.user&includes[]=documents.type" +
-					"&includes[]=province&includes[]=depositTypes" +
+					"&includes[]=auditable.user" +
+					"&includes[]=depositTypes" +
 					"&includes[]=responsible.firm_document" +
+					"&includes[]=firm_document"+
+					"&includes[]=auditor_document"+
 					"&includes[]=company"
 				);
 
 				this.model = this.$functions.assignSchema('installation', res.data.data, ['address']);
 				console.log('keinher', this.model);
 				this.responsible = this.$functions.assignSchema('employee', res.data.data?.responsible);
-				this.model.file_document = null;
+				// this.model.file_document = null;
 				this.model.auditable_id = null;
 
 				let f_doc = null;
@@ -322,6 +269,7 @@ export default {
 				}
 
 				this.model.responsible = null;
+				this.model.hasTransport = this.model.hasTransport ? this.model.hasTransport : null;
 
 				this.original_model = this.$functions.copy(this.model);
 
@@ -339,17 +287,15 @@ export default {
 					periodicity: this.model.periodicity,
 					province_id: this.model.province_id
 				};
-				if (
-					this.new_document.new ||
-					(this.model.documents < 1 && isArray(this.model.file_document))
-				) {
-					data.file_document = {
-						base64: await this.toBase64(this.model.file_document[0]),
-						file_name: this.model.file_document[0].name
-					};
+				if (!isEmpty(this.model.file_document.base64)) {
+					data.file_document = this.model.file_document;
 				}
-				if (this.new_auditable.new || this.model.auditable == null) {
-					data.auditable_id = this.model.auditable_id;
+				
+				if (this.model.auditable_id || (this.model.auditable && !this.model.auditor_document)) {
+					data.auditable_id = this.model.auditable_id ? this.model.auditable_id : this.model.auditable.user.id;
+					if (!isEmpty(this.model.file_auditor.base64)) {
+						data.file_auditor = this.model.file_auditor;
+					}
 				}
 
 				if (!isEqual(this.model, this.original_model)) {
@@ -358,7 +304,6 @@ export default {
 						await service.update("installation", this.installation_id, data);
 						this.$emit("reload");
 						await this.getInst();
-						this.resetNews();
 					} catch (err) {
 						this.$toast.error("No se pudieron guardar los cambios.");
 						return;
@@ -469,31 +414,6 @@ export default {
 			this.equipments = equipments;
 			return;
 		},
-		handleCancel(model) {
-			switch (model) {
-				case "document":
-					this.new_document.new = false;
-					this.model.file_document = null;
-					break;
-
-				case "auditable":
-					this.new_auditable.new = false;
-					this.new_auditable.value = false;
-					break;
-
-				default:
-					break;
-			}
-		},
-		resetNews() {
-			this.new_auditable = {
-				new: false,
-			};
-			this.new_document = {
-				new: false,
-			};
-			this.model.file_document = null;
-		},
 		formatSteps() {
 			let steps = [
 				"Instalacion",
@@ -563,7 +483,7 @@ export default {
 			return has;
 		},
 		queryParams() {
-			return this.ROLE == 'admin' ? '&delegate_id=' + this.model?.company?.administrable_id : null
+			return this.ROLE == 'admin' ? this.model?.company?.administrable_id : null
 		}
 	},
 	watch: {

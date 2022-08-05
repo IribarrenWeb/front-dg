@@ -13,123 +13,21 @@
 			></base-steps>
 			<template v-if="currentStep === 1 || profile">
 				<div>
-					<div class="row border border-light rounded p-2">
-						<div class="col-12">
-							<h4>Datos generales</h4>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="property_name" label="Nombre representante">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="property_name"
-									label="nombre"
-									v-model="model.property_name"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="property_last_name" label="Apellido representante">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="property_last_name"
-									label="apellido"
-									v-model="model.property_last_name"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="property_dni" label="DNI">
-								<field-validate
-									type="text"
-									class="form-control text-uppercase"
-									name="property_dni"
-									rules="alpha_num|min:9|max:9"
-									label="dni"
-									v-model.trim="model.property_dni"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="property_phone" label="Móvil">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="property_phone"
-									rules="min:5|max:15|numeric"
-									label="móvil"
-									v-model.number="model.property_phone"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="property_email" label="Email">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="property_email"
-									rules="email"
-									label="email"
-									v-model.trim="model.property_email"
-								/>
-							</base-field>
-						</div>
-					</div>
-					<div class="row border border-light rounded p-2 mt-2">
-						<div class="col-12">
-							<h4>Datos de empresa</h4>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="name" :required="true" label="Nombre">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="name"
-									rules="required|"
-									label="nombre empresa"
-									v-model="model.name"
-								/>
-							</base-field>
-						</div>
-                        <div class="col-lg-4">
-							<base-field name="email" :required="true" label="Email">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="email"
-									rules="required|email"
-									label="email"
-									v-model.trim="model.email"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="business_nif" label="CIF/NIF">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="business_nif"
-									rules=""
-									label="nombre"
-									v-model.trim="model.business_nif"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="business_phone" label="Fijo">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="business_phone"
-									rules="min:5|max:15|numeric"
-									label="fijó"
-									v-model.number="model.business_phone"
-								/>
-							</base-field>
-						</div>
-					</div>
+					<general-data
+						class="mb-2"
+						v-model:property_name="model.property_name"
+						v-model:property_last_name="model.property_last_name"
+						v-model:property_dni="model.property_dni"
+						v-model:property_phone="model.property_phone"
+						v-model:property_email="model.property_email"
+					/>
 
+					<business-data
+						v-model:name="model.name"
+						v-model:email="model.email"
+						v-model:business_nif="model.business_nif"
+						v-model:business_phone="model.business_phone"
+					/>
 					
 					<AddressSelect 
 						v-model:address="model.address.address" 
@@ -143,47 +41,18 @@
 				</div>
 			</template>
 			<template v-if="currentStep === 2 || profile">
-				<div class="row border border-light rounded p-2">
-					<div class="col-12">
-						<h4>Datos bancarios</h4>
-					</div>
-					<div class="col-lg-4">
-						<base-field name="holder_name" label="Nombre del titular">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="holder_name"
-								rules="alpha_spaces"
-								label="nombre"
-								v-model="model.holder_name"
-							/>
-						</base-field>
-					</div>
-					<div class="col-lg-4">
-						<base-field name="bank_code" label="BIC/SWIFT">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="bank_code"
-								rules="min:11|max:11"
-								label="BIC/SWIFT"
-								v-model="model.bank_code"
-							/>
-						</base-field>
-					</div>
-					<div class="col-lg-4">
-						<base-field name="iban_number" label="IBAN">
-							<field-validate
-								type="text"
-								class="form-control"
-								name="iban_number"
-								rules="min:24|max:24|alpha_num"
-								label="numero iban"
-								v-model="model.iban_number"
-							/>
-						</base-field>
-					</div>
-				</div>
+				<responsible-data
+					v-model:responsible_name="model.responsible_name"
+					v-model:responsible_last_name="model.responsible_last_name"
+					v-model:responsible_dni="model.responsible_dni"
+					v-model:responsible_phone_number="model.responsible_phone_number"
+					v-model:responsible_email="model.responsible_email"
+				/>
+				<bank-data
+					v-model:holder_name="model.holder_name"
+					v-model:bank_code="model.bank_code"
+					v-model:iban_number="model.iban_number"
+				/>
 				<div class="row border border-light mt-3 rounded p-2">
 					<div class="col-12">
 						<h4>Documentación de la empresa</h4>
@@ -254,6 +123,9 @@ import utils from "@/mixins/utils-mixin";
 import service from '../../../store/services/model-service';
 import {isEmpty, isEqual} from 'lodash';
 import AddressSelect from "../../AddressSelect.vue";
+import GeneralData from './Modules/GeneralData.vue';
+import BusinessData from './Modules/BusinessData.vue';
+import ResponsibleData from './Modules/ResponsibleData.vue';
 
 export default {
     props: {
@@ -345,6 +217,7 @@ export default {
             this.show();
         }
     },
-    components: { AddressSelect }
+    components: { AddressSelect, GeneralData, BusinessData,ResponsibleData}
 }
-</script>
+</script>,
+        

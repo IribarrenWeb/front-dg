@@ -80,9 +80,10 @@
 				v-model:show="this.modal"
 				modalClasses="modal-xl"
 				model="empresa"
+				action="Editar"
 			>
 				<show-business
-					@close="this.modal = false"
+					@close="modal = false"
 					@reload="getBusiness()"
 					:business="business"
 				></show-business>

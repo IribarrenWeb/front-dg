@@ -21,58 +21,13 @@
 						v-model:property_phone="model.property_phone"
 						v-model:property_email="model.property_email"
 					/>
-					<div class="row border border-light rounded p-2 mt-2">
-						<div class="col-12">
-							<h4>Datos de empresa</h4>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="name" label="Nombre" :required="true">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="name"
-									rules="required"
-									label="nombre empresa"
-									v-model="model.name"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="email" label="Email" :required="true">
-								<field-validate
-									type="text"
-									class="form-control"
-									name="email"
-									rules="required|email"
-									label="email"
-									v-model.trim="model.email"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="business_nif" label="CIF/NIF">
-								<field-validate
-									type="text"
-									class="form-control text-uppercase"
-									name="business_nif"
-									rules="alpha_num"
-									label="nombre"
-									v-model.trim="model.business_nif"
-								/>
-							</base-field>
-						</div>
-						<div class="col-lg-4">
-							<base-field name="business_phone" label="Fijo">
-								<field-validate
-									type="number"
-									class="form-control"
-									name="business_phone"
-									rules="min:5|max:15"
-									label="fijó"
-									v-model.number="model.business_phone"
-								/>
-							</base-field>
-						</div>
+					<business-data
+						class="mt-2"
+						v-model:name="model.name"
+						v-model:email="model.email"
+						v-model:business_nif="model.business_nif"
+						v-model:business_phone="model.business_phone"
+					>
 						<div class="col-lg-8" v-if="ROLE == 'admin'">
 							<base-field name="delegate_id" label="Delegado" :required="true">
 								<div v-if="delegate != null">
@@ -102,7 +57,8 @@
 								</div>
 							</base-field>
 						</div>
-					</div>
+					</business-data>
+					
 					<address-select
 						v-model:address="model.address.address"
 						v-model:city="model.address.city"
@@ -115,6 +71,14 @@
 				</div>
 			</template>
 			<template v-if="currentStep === 2">
+				<responsible-data
+					class="mb-2"
+					v-model:responsible_name="model.responsible_name"
+					v-model:responsible_last_name="model.responsible_last_name"
+					v-model:responsible_dni="model.responsible_dni"
+					v-model:responsible_phone_number="model.responsible_phone_number"
+					v-model:responsible_email="model.responsible_email"
+				/>
 				<bank-data
 					v-model:holder_name="model.holder_name"
 					v-model:bank_code="model.bank_code"
@@ -132,12 +96,13 @@
 				>
 					<div class="border border-light rounded p-2 row mt-3">
 						<installation-general-data
-							:onlyForm="true"
-							:form_id="id"
-							v-model:file_document="installations[id].file_document.file"
-							v-model:auditable="installations[id].auditable"
+							v-model:file_document="installations[id].file_document"
+							v-model:file_auditor="installations[id].file_auditor"
+							v-model:auditable="installations[id].auditable_id"
 							v-model:name="installations[id].name"
 							v-model:periodicity="installations[id].periodicity"
+							:onlyForm="true"
+							:form_id="id"
 							:delegate_id="delegateId"
 						/>
 						<div class="col-12">
@@ -462,6 +427,8 @@
 	import DocumentData from "./Modules/DocumentData.vue";
 	import InstallationGeneralData from "../Installation/Modules/GeneralData.vue";
 	import EmployeeGeneralData from "../Employee/Modules/GeneralData.vue";
+import BusinessData from './Modules/BusinessData.vue';
+import ResponsibleData from './Modules/ResponsibleData.vue';
 
 	export default {
 		components: {
@@ -472,6 +439,8 @@
 			DocumentData,
 			InstallationGeneralData,
 			EmployeeGeneralData,
+			BusinessData,
+			ResponsibleData,
 		},
 		mixins: [utils],
 		data() {
@@ -534,23 +503,9 @@
 				}
 
 				if (this.currentStep == 3) {
-					for (let i = 0; i < this.installations.length; i++) {
-						const installation = this.installations[i];
-						if (this.installations[i].file_document?.file[0]) {
-							this.installations[i].file_document.base64 = await this.toBase64(
-								this.installations[i].file_document.file[0]
-							);
-							this.installations[i].file_document.file_name =
-								this.installations[i].file_document.file[0].name;
-						}
-						if (!_.isEmpty(installation.auditable)) {
-							this.installations[i].auditable_id =
-								this.installations[i].auditable.id;
-						}
-						console.log(this.installations[i], "testk");
-						// this.installations[i] = this.$functions.cleanData(installation);
-					}
+					// 
 				}
+				
 				if (this.currentStep == 4) {
 					for (let i = 0; i < this.installations.length; i++) {
 						// Format firm

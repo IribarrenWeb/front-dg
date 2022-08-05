@@ -10,8 +10,9 @@
 			></base-steps>
 			<template v-if="currentStep == 1">
 				<general-data 
-					v-model:file_document="model.file_document.file"
-					v-model:auditable="model.auditable"
+					v-model:file_document="model.file_document"
+					v-model:file_auditor="model.file_auditor"
+					v-model:auditable="model.auditable_id"
 					v-model:name="model.name"
 					v-model:periodicity="model.periodicity"
 					:delegate_id="delegate_id"
@@ -469,7 +470,6 @@
 			};
 		},
 		mounted() {
-			this.loadProvinces();
 			this.initVals();
 			console.log(this.delegate_id);
 		},
@@ -484,14 +484,6 @@
 				const inst = values;
 
 				if (this.currentStep == 1 && !this.isSaved) {
-					console.log(this.model.file_document.file);
-					if (!this.$functions.empty(this.model.file_document.file)) {
-						this.model.file_document.base64 = await this.toBase64(
-							this.model.file_document.file[0]
-						);
-						this.model.file_document.file_name = this.model.file_document.file[0].name;
-					}
-					this.model.auditable_id = this.model?.auditable?.id;
 					if (this.isSaved) {
 						return;
 					}
@@ -562,10 +554,6 @@
 					id: id,
 					name: "auditoria",
 				});
-			},
-			async loadProvinces() {
-				const res = await dataService.getProvinces();
-				this.provinces = res.data.data;
 			},
 			async loadDeposits() {
 				const res = await dataService.getDeposits();

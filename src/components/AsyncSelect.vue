@@ -3,14 +3,13 @@
 		<multiselect
 			:disabled="disabled"
 			v-model="content"
-			:value="value"
 			:placeholder="placeholder"
 			v-if="typeof options == 'object'"
 			:searchable="true"
 			@select="handleSelect"
 			label="label"
 			:options="options"
-			trackBy="label"
+			trackBy="id"
 			:close-on-select="true"
 			@search-change="getUsers"
 			openDirection="bottom"
@@ -79,9 +78,15 @@
 			const options = ref([]);
 			const store = useStore();
 			const content = ref(null);
+			const loaded = ref(false)
 
 			const getUsers = debounce(async function search(query = null) {
 				if (query?.length >= props.minSearch || props.list) {
+					
+					if (props.list && loaded.value) {
+						return
+					}
+
 					try {
 						if (props.materials) {
 							const res = await dataService.getAdrMaterials(`un_code=${query}`);
@@ -89,6 +94,7 @@
 							options.value = map(data, (material) => {
 								return {
 									value: material,
+									// id:material.id,
 									label: `${material.un_code} - ${material.denomination_name}`,
 								};
 							});
@@ -98,11 +104,14 @@
 								roles: props.roles,
 								params: props.params,
 							});
+
 							options.value = res;
+
 							if (props.value) {
-								content.value = props.value
+								content.value = options.value.find((o) => o.id == props.value)
 							}
 						}
+						loaded.value = true
 					} catch (error) {
 						console.log(error);
 					}
@@ -110,10 +119,10 @@
 			}, props.wait);
 
 			onMounted(() => {
+				options.value = [];
 				if (props.list) {
 					getUsers(null);
 				}
-				options.value = [];
 			});
 
 			function handleSelect(evt) {

@@ -8,7 +8,13 @@ export default {
     province_id: null,
     periodicity: null,
     file_document: {
-        base64: "",
+        base64: null,
+        file: [],
+        file_name: null
+    },
+
+    file_auditor: {
+        base64: null,
         file: [],
         file_name: null
     },
@@ -17,4 +23,6 @@ export default {
     deposit_types_ids: [],
     equipments_ids: [],
     responsible: {...employee},
+    firm_document: null,
+    auditor_document: null,
 }

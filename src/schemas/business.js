@@ -22,4 +22,9 @@ export default {
         file_name: null
     },
     file_date: "",
+    responsible_name: null,
+    responsible_last_name: null,
+    responsible_dni: null,
+    responsible_phone_number: null,
+    responsible_email: null,
 }
