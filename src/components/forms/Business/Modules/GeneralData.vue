@@ -74,6 +74,7 @@
 	import { computed } from "@vue/runtime-core";
 	import { useStore } from "vuex";
 	export default {
+		inheritAttrs: true,
 		props: {
 			property_name: {
 				type: String,

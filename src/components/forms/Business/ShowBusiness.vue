@@ -42,6 +42,7 @@
 			</template>
 			<template v-if="currentStep === 2 || profile">
 				<responsible-data
+					class="mb-3"
 					v-model:responsible_name="model.responsible_name"
 					v-model:responsible_last_name="model.responsible_last_name"
 					v-model:responsible_dni="model.responsible_dni"
