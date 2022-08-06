@@ -126,6 +126,7 @@ import AddressSelect from "../../AddressSelect.vue";
 import GeneralData from './Modules/GeneralData.vue';
 import BusinessData from './Modules/BusinessData.vue';
 import ResponsibleData from './Modules/ResponsibleData.vue';
+import BankData from './Modules/BankData.vue';
 
 export default {
     props: {
@@ -217,7 +218,7 @@ export default {
             this.show();
         }
     },
-    components: { AddressSelect, GeneralData, BusinessData,ResponsibleData}
+    components: { AddressSelect, GeneralData, BusinessData, ResponsibleData, BankData}
 }
 </script>,
         

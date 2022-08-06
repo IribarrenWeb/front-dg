@@ -27,6 +27,9 @@
       </div>
       <slot>
       </slot>
+      <small id="passwordHelpBlock" v-if="helpText" class="form-text text-muted">
+        {{helpText}}
+      </small>
       <div
         v-if="addonRightIcon || $slots.addonRight"
         class="input-group-append"
@@ -118,6 +121,10 @@
         description: "Addon right icon",
       },
       addonLeftIcon: {
+        type: String,
+        description: "Addont left icon",
+      },
+      helpText: {
         type: String,
         description: "Addont left icon",
       },

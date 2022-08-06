@@ -81,7 +81,7 @@
 					<hr>
 				</div>
 				<div class="col-lg-6">
-					<base-field name="file_certification" label="Documento de ceritificado">
+					<base-field name="file_certification" label="Documento Certificado ADR">
 						<div v-if="cert_document && !cer_update">
 							<a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{
 									cert_document.name_document ?? cert_document.type.name
@@ -101,9 +101,9 @@
 				</div>
 
 				<div class="col-lg-6">
-					<base-field name="certification_date" label="Fecha certificado">
+					<base-field name="certification_date" label="Fecha Caducidad Certificado ADR">
 						<field-validate class="form-control" name="certification_date" type="date"
-							label="Fecha certificado" rules="required" v-model="model.certification_date">
+							label="fecha caducidad certificado ADR" rules="required" v-model="model.certification_date">
 						</field-validate>
 					</base-field>
 				</div>
