@@ -461,7 +461,7 @@ import ResponsibleData from './Modules/ResponsibleData.vue';
 				},
 				{
 					number: 2,
-					title: "Bancario",
+					title: "Detalles",
 					valid: false,
 				},
 				{

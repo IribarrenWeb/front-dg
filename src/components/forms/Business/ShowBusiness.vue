@@ -153,7 +153,7 @@ export default {
                     valid: false,
                 }, {
                     number: 2,
-                    title: "Bancario",
+                    title: "Detalles",
                     valid: false,
                 },
             ],

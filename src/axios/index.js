@@ -8,7 +8,10 @@ axios.defaults.headers.common['Accept'] = 'application/json';
 const tokenName = process.env.VUE_APP_USER_TOKEN_NAME
 
 axios.interceptors.request.use(function(config) {
-    store.commit('resetApiErrors')
+    console.log('config', config.method);
+    if (config.method == 'post') {
+        store.commit('resetApiErrors')
+    }
     const token = localStorage.getItem(tokenName);
     config.baseURL = process.env.VUE_APP_API_BASE_URL;
 

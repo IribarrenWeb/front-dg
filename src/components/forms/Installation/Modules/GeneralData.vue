@@ -40,15 +40,15 @@
 						<async-select
 							@selected="$emit('update:auditable', $event.id)"
 							:roles="[2, 3]"
-							:value="auditable_value"
+							:value="auditable_id"
 							:disabled="isSaved"
-							:params="`&delegate_id=${delegate_id}`"
+							:params="params"
 						>
 						</async-select>
 					</field-validate>
 				</base-field>
 			</div>
-			<div class="col-lg-4" v-if="auditable || auditable_value">
+			<div class="col-lg-4" v-if="(auditable || auditable_value) && (role != 'auditor' && role != 'business')">
 				<base-field name="file_auditor.base64" label="Alta del auditor ">
 					<div
 						v-if="
@@ -226,6 +226,9 @@
 			const role = computed(() => {
 				return store.getters.ROLE;
 			});
+			const params = computed(() => {
+				return props.delegate_id ? `&delegate_id=${props.delegate_id}` : null
+			})
 			
 			const file_inst = ref(props.file_document);
 			const file_aud = ref(props.file_auditor);
@@ -233,6 +236,9 @@
 			const newAuditor = computed(() => {
 				return props.auditable && props.auditable != props.auditable_value;
 			});
+			const auditable_id = computed(() => {
+				return props.auditable ? props.auditable : props.auditable_value
+			})
 			const newDoc = ref(false);
 
 			const classes = computed(() => {
@@ -270,6 +276,8 @@
 				newAuditor,
 				file_inst,
 				file_aud,
+				auditable_id,
+				params,
 				functions: functions
 			};
 		},

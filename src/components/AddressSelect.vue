@@ -12,13 +12,13 @@
                     </base-field>
                 </div>
                 <div class="col-6 col-md-2">
-                    <base-field label="Numero">
+                    <base-field label="Número">
                         <input class="form-control" type="text" :value="street_number"
                             @input="$emit('update:street_number', $event.target.street_number)" />
                     </base-field>
                 </div>
                 <div class="col-6 col-md-2">
-                    <base-field label="Codigo postal">
+                    <base-field label="Código postal">
                         <input class="form-control" type="text" :value="code"
                             @input="$emit('update:code', $event.target.value)" />
                     </base-field>
@@ -42,7 +42,7 @@
                     </base-field>
                 </div>
                 <div class="col-12 col-md-4">
-                    <base-field label="Pais">
+                    <base-field label="País">
                         <input class="form-control" type="text" :value="country"
                             @input="$emit('update:country', $event.target.value)" />
                     </base-field>

@@ -1,7 +1,7 @@
 <template>
 	<div class="row border border-light mt-3 rounded p-2">
 		<div class="col-12">
-			<h4>Alta empresa</h4>
+			<h4>Documentación de alta</h4>
 		</div>
 		<div class="col-lg-6">
 			<base-field name="file_date.date" label="Fecha de alta">
@@ -16,7 +16,7 @@
 			</base-field>
 		</div>
 		<div class="col-lg-6">
-			<base-field name="file_document.base64" label="Alta empresa">
+			<base-field name="file_document.base64" label="Documentación de alta">
 				<div v-if="file_document?.length >= 1">
 					<span class="mr-md-4">{{ file_document[0].name }}</span>
 					<base-button

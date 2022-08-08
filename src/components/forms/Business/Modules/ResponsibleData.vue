@@ -1,7 +1,7 @@
 <template>
 	<div class="row border border-light rounded p-2">
 		<div class="col-12">
-			<h4>Datos generales (responsable ADR)</h4>
+			<h4>Datos generales responsable ADR</h4>
 		</div>
 		<div class="col-lg-4">
 			<base-field name="responsible_name" label="Nombre responsable">
