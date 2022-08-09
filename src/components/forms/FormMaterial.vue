@@ -54,7 +54,7 @@
 							</div>
 							<div v-else>
 								<field-validate name="material" label="mercancia adr" rules="required">
-									<async-select @selected="adr_material = $event" :materials="true">
+									<async-select @selected="adr_material = $event" :materials="true" :list="false">
 									</async-select>
 								</field-validate>
 							</div>

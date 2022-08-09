@@ -10,6 +10,7 @@
 			label="label"
 			:options="options"
 			trackBy="id"
+			:loading="loading"
 			:close-on-select="true"
 			@search-change="getUsers"
 			openDirection="bottom"
@@ -79,6 +80,7 @@
 			const store = useStore();
 			const content = ref(null);
 			const loaded = ref(false)
+			const loading = ref(false)
 
 			const getUsers = debounce(async function search(query = null) {
 				if (query?.length >= props.minSearch || props.list) {
@@ -89,6 +91,7 @@
 
 					try {
 						if (props.materials) {
+							loading.value = true
 							const res = await dataService.getAdrMaterials(`un_code=${query}`);
 							const data = res.data.data;
 							options.value = map(data, (material) => {
@@ -98,6 +101,7 @@
 									label: `${material.un_code} - ${material.denomination_name}`,
 								};
 							});
+							loading.value = false
 						} else {
 							const res = await store.dispatch("users", {
 								query: query ?? "",
@@ -146,7 +150,8 @@
 				handleSelect,
 				getUsers,
 				content,
-				options
+				options,
+				loading
 			};
 		},
 	};

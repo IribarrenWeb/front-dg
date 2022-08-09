@@ -224,3 +224,11 @@
     padding: 2px 5px;
     width: auto;
 }
+
+.multiselect__input:focus{
+    width: 85%;
+}
+
+.multiselect__spinner{
+    z-index: 1;
+}
