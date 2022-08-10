@@ -1,6 +1,6 @@
 <template>
 	<div :class="`card shadow mt-3 ${classes}`">
-		<div class="card-header border-0">
+		<div class="card-header border-0" v-if="!byAuditableId">
 			<div class="row align-items-center">
 				<div class="col">
 					<h4 class="mb-0">Instalaciones</h4>
@@ -18,11 +18,11 @@
 		<div></div>
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row">
-				<div class="col-md-3 filter">
+				<div class="col-md-3 filter" v-if="!byAuditableId">
 					<async-select placeholder="Selecciona auditor..." v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
 				</div>
 				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div class="col-md-2">
+				<div class="col-md-3">
 					<base-button size="sm" @click="params_filter = params,getInstallations(),clear = true">Borrar filtros</base-button>
 				</div>
 			</div>
@@ -32,8 +32,8 @@
 					<th>Nombre</th>
 					<th>Ciudad</th>
 					<th>Empleados</th>
-					<th>Auditor</th>
-					<th>Acciones</th>
+					<th v-if="!byAuditableId">Auditor</th>
+					<th v-if="!byAuditableId">Acciones</th>
 				</template>
 
 				<template v-slot:default="row">
@@ -47,13 +47,13 @@
 					<td>
 						{{ row.item?.employees.length }}
 					</td>
-					<td class="text-uppercase">
+					<td class="text-uppercase" v-if="!byAuditableId">
 						<a v-if="row.item?.auditable != null" href="#" @click="showAuditor()"
 							>{{ row.item?.auditable.user.full_name }}</a
 						>
 						<span v-else>SIN AUDITOR</span>
 					</td>
-					<td>
+					<td v-if="!byAuditableId">
                         <router-link v-if="client" class="btn btn-sm btn-default" :to="`/installations/${row.item?.id}`">
                             <i class="fa-regular fa-eye"></i>
                         </router-link>
@@ -134,7 +134,15 @@
             client: {
                 type: Boolean,
                 default: false
-            }
+            },
+			byAuditableId: {
+				type: Number,
+				default: null
+			},
+			byAuditableType: {
+				type: String,
+				default: 'delegate_id'
+			}
 		},
 		data() {
 			return {
@@ -161,12 +169,15 @@
 			},
 			async getInstallations(page = 1) {
 				let response = null;
-				console.log('send', this.params_filter);
+				if (this.byAuditableId) {
+					this.params_filter += "&"+this.byAuditableType+"="+this.byAuditableId
+				}
 				if (isNull(this.business_id)) {
 					response = await service.getIndex("installation", page, this.params_filter);
 				} else {
 					response = await service.getIndex("installation", page, this.params_filter + '&business_id=' + this.business_id);
 				}
+
 				this.tableData = response.data.data;
 				this.metaData = response.data.meta.page;
 				this.page = page;

@@ -1,6 +1,6 @@
 <template>
 	<div class="card">
-		<div class="card-header border-0">
+		<div class="card-header border-0" v-if="!byAuditableId">
 			<div class="row align-items-center">
 				<div class="col">
 					<h3 class="mb-0">Empresas</h3>
@@ -18,7 +18,7 @@
 		<div></div>
 		<div class="table-responsive">
 			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
-				<delegate-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin"></delegate-filter>
+				<delegate-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin && !byAuditableId"></delegate-filter>
 				<city-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
 				<div class="col-md-4 col-lg-3">
 					<base-button size="sm" @click="params_filter = params,getBusiness(),clear = true">Borrar filtros</base-button>
@@ -30,8 +30,8 @@
 					<th>Ciudad</th>
 					<th>Instalaciones</th>
 					<th></th>
-					<th>Delegación</th>
-					<th>Acciones</th>
+					<th v-if="!byAuditableId">Delegación</th>
+					<th v-if="!byAuditableId">Acciones</th>
 				</template>
 
 				<template v-slot:default="row">
@@ -50,10 +50,10 @@
 							{{ installation.name }},
 						</span>
 					</td>
-					<td>
+					<td v-if="!byAuditableId">
 						{{ row.item?.administrable?.user?.full_name }}
 					</td>
-					<td class="d-flex">
+					<td class="d-flex" v-if="!byAuditableId">
 						<router-link
 							:to="`/business/${row.item?.id}`"
 							class="btn btn-sm btn-default"
@@ -99,6 +99,12 @@
 	export default {
 		components: { FormBusiness, DeleteButton, DelegateFilter, CityFilter },
 		name: "business-table",
+		props: {
+			byAuditableId: {
+				type: Number,
+				default: null
+			},
+		},
 		data() {
 			return {
 				tableData: {},
@@ -134,6 +140,9 @@
 				}
 			},
 			async getBusiness(page) {
+				if (this.byAuditableId) {
+					this.params_filter += "&delegate_id="+this.byAuditableId
+				}
 				const response = await service.getIndex(
 					"business",
 					page,

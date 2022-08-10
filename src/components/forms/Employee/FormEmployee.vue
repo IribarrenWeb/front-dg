@@ -134,7 +134,7 @@
 										</div>
 										<div v-else-if="update && file_cer && !new_cer_doc">
 											<a href="#" @click="getDocument(file_cer.id)" class="mr-md-4">{{
-												file_cer.type.name
+												file_cer.name_document ?? file_cer.type.name
 											}}</a>
 											<base-button
 												@click="new_cer_doc = true"
