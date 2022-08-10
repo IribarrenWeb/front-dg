@@ -92,7 +92,7 @@
 							:type="setStatusType(row.item?.status)"
 						>
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
-							<span class="status">{{ row.item?.status }}</span>
+							<span class="status">{{ $functions.toCapitalize(row.item?.status) }}</span>
 						</badge>
 					</td>
 					<td>

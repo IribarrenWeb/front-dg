@@ -97,7 +97,7 @@
 							:type="setStatusType(row.item?.status)"
 						>
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
-							<span class="status">{{ row.item?.status == 0 ? 'PENDIENTE' : 'COMPLETADO' }}</span>
+							<span class="status">{{ row.item?.status == 0 ? 'Pendiente' : 'Completado' }}</span>
 						</badge>
 					</td>
 				</template>

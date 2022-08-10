@@ -97,7 +97,7 @@
 							:type="$functions.status(row.item?.status)"
 						>
 							<i :class="`bg-${$functions.status(row.item?.status)}`"></i>
-							<span class="status">{{ row.item?.status }}</span>
+							<span class="status">{{ $functions.toCapitalize(row.item?.status) }}</span>
 						</badge>
 					</td>
 					<td v-if="!dash">

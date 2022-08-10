@@ -100,7 +100,7 @@
 						>
 							<i :class="`bg-${row.item?.status ? 'success' : 'danger'}`"></i>
 							<span class="status">{{
-								row.item?.status ? "COMPLETADO" : "PENDIENTE"
+								row.item?.status ? "Completado" : "Pendiente"
 							}}</span>
 						</badge>
 					</td>

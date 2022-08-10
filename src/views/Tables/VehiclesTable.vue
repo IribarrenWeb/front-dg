@@ -84,7 +84,7 @@
 						>
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
 							<span class="status">{{
-								row.item?.status ? "VIGENTE" : "CADUCADO"
+								row.item?.status ? "Vigente" : "Caducado"
 							}}</span>
 						</badge>
 					</td>

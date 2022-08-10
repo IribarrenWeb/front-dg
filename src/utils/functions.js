@@ -130,6 +130,10 @@ function status(status) {
 function schemas(type) {
     return copy(schemasRepo[type]) ?? null
 }
+function toCapitalize(string){
+    string = string ? string.toLowerCase() : null; 
+    return string ? string.replace(/^\w/, (c) => c.toUpperCase()) : '';
+}
 function assignSchema(sch, model, relationSchemas = []){
     const schema = schemas(sch);
     const m_keys = keys(model);
@@ -233,5 +237,6 @@ export default {
     toFormData,
     timeAgo,
     assignSchema,
-    toBase64
+    toBase64,
+    toCapitalize
 }
