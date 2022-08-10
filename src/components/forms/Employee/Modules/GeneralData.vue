@@ -38,12 +38,12 @@
 			</div>
 
 			<div class="col-lg-6 col-lg-4">
-				<base-field :apiName="prevName +'dni'" :name="prevName + 'dni'" label="DNI">
+				<base-field :apiName="prevName +'dni'" :name="prevName + 'dni'" label="DNI" :required="true">
 					<field-validate
 						type="text"
 						class="form-control"
 						:name="prevName + 'dni'"
-						rules="alpha_num|min:9|max:9"
+						rules="required|alpha_num|min:9|max:9"
 						label="dni"
 						@input="$emit('update:dni', $event.target.value)"
 						:value="dni"
@@ -51,12 +51,12 @@
 				</base-field>
 			</div>
 			<div class="col-lg-6 col-lg-4">
-				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="true">
+				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email">
 					<field-validate
 						type="text"
 						class="form-control"
 						:name="prevName + 'email'"
-						rules="required|email"
+						rules="email"
 						label="email"
 						@input="$emit('update:email', $event.target.value)"
 						:value="email"

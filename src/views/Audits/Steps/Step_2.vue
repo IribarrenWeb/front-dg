@@ -11,7 +11,7 @@
 				<h4 class="text-uppercase">Contenido de la visita</h4>
 				<div class="row justify-content-center">
 					<div class="col-md-12">
-						<base-checkbox :checked="checked" @input="check1 = $event">
+						<base-checkbox checked @input="check1 = $event">
 							<b>
 								INFORME TÉCNICO DE EVALUACIÓN INICIAL. ACTIVIDADES CON
 								MERCANCÍAS PELIGROSAS SUJETAS A CUMPLIMIENTO SEGÚN ADR (
@@ -20,27 +20,34 @@
 						</base-checkbox>
 					</div>
 					<div class="col-md-12 mt-md-4">
-						<base-checkbox :checked="checked" @input="check2 = $event">
+						<base-checkbox checked @input="check2 = $event">
 							<b>
-								CONTENIDOS DE LA VISITA: - Reunión informativa previa ; -
-								Revisión/Análisis de la gestión de las actividades con
-								mercancías peligrosas.; - Verificación de las áreas de
-								carga/descarga y almacenamiento de mercancías peligrosas; -
-								Verificación de operaciones de carga de residuos peligrosos; -
-								Verificación de operaciones de carga/descarga de cisternas; -
-								Verificación de operaciones de carga/descarga de bultos; -
-								Verificación de los vehículos destinados al transporte; - Sesión
-								de Formación; - Reunión final . Este informe es de carácter
-								interno y la información aquí mostrada no es la que se comunica
-								oficialmente al Ministerio de Fomento cuando se presenta el
-								informe anual; no obstante, se revisan todas aquellas cuestiones
-								que es obligación del Consejero de Seguridad verificar, con
-								objeto de valorar el grado de cumplimiento de los requisitos
-								aplicables. Informe correspondiente a la visita realizada por su
-								Consejero de Seguridad designado por la empresa, de acuerdo con
-								las recomendaciones del Ministerio de Fomento, comprobando y
-								revisando aquellos aspectos que figuran como obligatorios en el
-								informe de los Consejeros de Seguridad, según el RD 97/2017
+								CONTENIDOS DE LA VISITA: 
+								<br>
+								<br>
+								<div class="text-justify">
+									- Reunión informativa previa ; <br> 
+									- Revisión/Análisis de la gestión de las actividades con mercancías peligrosas.; <br> 
+									- Verificación de las áreas de carga/descarga y almacenamiento de mercancías peligrosas; <br>
+									- Verificación de operaciones de carga de residuos peligrosos; <br>
+									- Verificación de operaciones de carga/descarga de cisternas; <br>
+									- Verificación de operaciones de carga/descarga de bultos; <br>
+									- Verificación de los vehículos destinados al transporte; <br>
+									- Sesión de Formación; <br>
+									- Reunión final . <br><br>
+									
+									Este informe es de carácter
+									interno y la información aquí mostrada no es la que se comunica
+									oficialmente al Ministerio de Fomento cuando se presenta el
+									informe anual; no obstante, se revisan todas aquellas cuestiones
+									que es obligación del Consejero de Seguridad verificar, con
+									objeto de valorar el grado de cumplimiento de los requisitos
+									aplicables. Informe correspondiente a la visita realizada por su
+									Consejero de Seguridad designado por la empresa, de acuerdo con
+									las recomendaciones del Ministerio de Fomento, comprobando y
+									revisando aquellos aspectos que figuran como obligatorios en el
+									informe de los Consejeros de Seguridad, según el RD 97/2017
+								</div>
 							</b>
 						</base-checkbox>
 					</div>
@@ -82,12 +89,8 @@
 			if (typeof this.audit.id == "undefined") {
 				const res = await service.show("audit", this.audit_id);
 				this.checked = res.data.data.valid_step >= 2;
-				this.check1 = this.checked;
-				this.check2 = this.checked;
 			} else {
 				this.checked = this.audit.valid_step >= 2;
-				this.check1 = this.checked;
-				this.check2 = this.checked;
 			}
 		},
 		methods: {

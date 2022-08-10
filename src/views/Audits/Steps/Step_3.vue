@@ -329,7 +329,7 @@
 								}}</base-button>
 							</div>
 						</div>
-						<div v-if="addImages || images?.length < 1">
+						<div v-if="addImages">
 							<div class="d-flex my-3 border border-ligth rounded p-2">
 								<base-button :type="takePic ? 'secondary' : 'primary'" size="sm"
 									@click="takePic = true">

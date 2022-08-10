@@ -32,7 +32,7 @@
 				<select-filter
 					class="col-md-3"
 					v-model:clear="clear"
-					:options="[{label: 'auditoria',value:'auditoria'},{label:'formacion',value:'formacion'}]"
+					:options="[{label: 'Auditoria',value:'auditoria'},{label:'Formación',value:'formacion'}]"
 					@updated="handleFilter('type', $event)"
 				/>
 				<installation-filter

@@ -85,11 +85,11 @@
 											<i class="fa-solid fa-pencil"></i>
 										</base-button>
 									</div>
-									<div v-else>
+									<div v-show="!file_document">
 										<field-validate type="file" class="form-control mb-1" name="file_document"
-											rules="required" label="Ficha de datos de seguridad"
+											rules="mimes:pdf" label="Ficha de datos de seguridad"
 											v-model="model.file_document.file" />
-										<base-button @click="new_document = false" v-if="update && !file_document"
+										<base-button @click="model.file_document.file = null, new_document = false" v-if="file_document"
 											size="sm" type="default" :outline="true">
 											Cancelar
 										</base-button>
@@ -108,8 +108,8 @@
 				<div class="row border rounded border-light px-4 py-2">
 					<div class="col-lg-3">
 						<base-field name="address" label="Unidad">
-							<select name="" class="form-control" v-model="model.unit">
-								<option value="TONELADAS">TONELADAS</option>
+							<select name="" class="form-control" disabled v-model="model.unit">
+								<option value="TONELADAS" selected>TONELADAS</option>
 								<option value="KILOS">KILOS</option>
 							</select>
 						</base-field>
@@ -236,7 +236,7 @@ export default {
 		if (this.update) {
 			this.original_material = this.$functions.copy(this.material)
 			this.original_material.file_document = {
-				file: [],
+				file: null,
 				base64: null,
 				file_name: null
 			};
@@ -261,18 +261,15 @@ export default {
 		},
 		file_document() {
 			let file = false
-			if (this.update && !this.new_document) {
-				if (this.model.documents != null && !isEmpty(this.model.documents)) {
-					file = {
-						document: this.model.documents[0],
-						name: "FICHA SEGURIDAD"
-					}
-				}
-			}
-			if (!this.update && this.model.file_document.file.length >= 1) {
+			if (this.model.file_document?.file?.length >= 1) {
 				file = {
 					document: this.model.file_document.file,
 					name: this.model.file_document.file[0].name
+				}
+			}else if (this.model.documents != null && !isEmpty(this.model.documents) && !this.new_document) {
+				file = {
+					document: this.model.documents[0],
+					name: "FICHA SEGURIDAD"
 				}
 			}
 			return file;
@@ -301,9 +298,9 @@ export default {
 		resetFile() {
 			if (this.update) {
 				this.new_document = true
-				this.model.file_document.file = []
+				this.model.file_document.file = null
 			} else {
-				this.model.file_document.file = []
+				this.model.file_document.file = null
 			}
 		},
 		resetMaterial() {
@@ -383,7 +380,7 @@ export default {
 					const res = await service.update('material', this.material.id, data)
 					this.original_material = this.$functions.copy(res.data.data)
 					this.original_material.file_document = {
-						file: [],
+						file: null,
 						base64: null,
 						file_name: null
 					};
