@@ -28,7 +28,7 @@
                 <div class=" col-lg-6" v-if="!$store.state.is_auditor">
                     <base-field name="auditor_id" label="Responsable">
                         <field-validate name="auditor_id" label="Responsable" rules="required" v-model="model.facilitable_id">
-                            <async-select :roles="[2,3]" @selected="auditable = $event" :value="formation?.facilitable_data" :list="true">
+                            <async-select :roles="[2,3]" @selected="auditable = $event" :value="formation?.facilitable_data?.value?.id" :list="true">
                             </async-select>
                         </field-validate>
                     </base-field>

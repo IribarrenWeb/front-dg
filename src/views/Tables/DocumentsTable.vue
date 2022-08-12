@@ -17,8 +17,8 @@
 					<th>Empresa</th>
 					<th>Extension</th>
 					<th>Tamaño</th>
-					<th>Fecha de carga</th>
-					<th>Fecha de actualización</th>
+					<th>Fecha</th>
+					<th>Subido por</th>
 					<th></th>
 				</template>
 
@@ -42,7 +42,7 @@
 						{{ row.item?.created_date }}
 					</td>
 					<td>
-						{{ row.item?.updated_date }}
+						{{ row.item?.created_by?.full_name }}
 					</td>
 					<td class="d-flex">
 						<!-- <a
@@ -96,7 +96,7 @@
 		methods: {
 			async getDocuments(page = 1) {
 				try {
-					const response = await service.getIndex("documents", page,'includes[]=type&includes[]=business.user');
+					const response = await service.getIndex("documents", page,'includes[]=type&includes[]=business.user&includes[]=createdBy');
 					this.tableData = response.data.data;
 					this.metaData = response.data.meta.page;
 					this.page = this.metaData.currentPage;

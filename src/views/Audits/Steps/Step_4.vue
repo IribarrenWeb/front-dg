@@ -12,41 +12,56 @@
 				<div class="row justify-content-center">
 					<div class="col-md-12 mt-md-4">
 						<base-checkbox :checked="true" @input="check2 = $event">
-							<b>
-								ACTIVIDAD. Las cantidades exentas, según 1.1.3.4, 1.1.3.5 y
-								1.1.3.6, no son objeto de este informe, por lo que habrá que
-								referirse a Las Normas para conocer su tratamiento.En cualquier
-								caso y a modo de resumen:- La exención 1.1.3.4 se refiere a
-								cantidades limitadas por bulto en la que solo se requiere
-								básicamente un etiquetado Específico en cada bulto, aplicando a
-								envases no superiores a 5 litros en embalaje combinado.- La
-								exención 1.1.3.5 se refiere a cantidades exceptuadas, solo
-								válida para muestras y que incorpora los mismos criterios que
-								para el transporte aéreo de este tamaño.- La exención 1.1.3.6 se
-								refiere a cantidades limitadas por vehículo, en las que no se
-								requiere básicamente cumplir con Los requisitos de transporte,
-								pero sí con los de envasado, etiquetado y documentación; por
-								tanto aunque no se consideran Transporte ADR, debe respetarse el
-								envasado original y realizar carta de porte en la que se
-								demuestre dicha condición de exento (cantidad total de riesgo en
-								el vehículo no superior a 1000, siendo la mercancía transportada
-								G.E. III).Todas las situaciones anteriores quedan fuera del
-								ámbito de actuación del Consejero de Seguridad, aunque quedan
-								incorporadas tanto en la Formación como en las Normas, debiendo
-								ser consultadas en caso de duda. METODOLOGÍA.- Previamente a la
-								realización de cualquier visita, el personal de las áreas
-								afectadas, especialmente los responsables de las mismas, habrán
-								de ser informados de los aspectos que se evalúen, de tal manera
-								que un incumplimiento de un procedimiento o norma no puede ser
-								achacable a la falta de información.Al mismo tiempo se avisará
-								con antelación suficiente para que los responsables de las
-								unidades implicadas puedan preparar la documentación que deba
-								ser consultada en la dicha visita.En cada instalación se
-								conservará una copia de este informe al menos durante un año.
-								CALCULO NIVEL DE CUMPLIMIENTOEl objetivo de la visita técnica es
-								la comprobación del proceso de manipulación de mercancías
-								peligrosas. Se evaluará el nivel de cumplimiento que quedará
-								reflejado en el punto 14 de la Auditoria.
+							<b class="text-justify">
+								ACTIVIDAD. <br><br>
+								<div class="text-justify">
+									Las cantidades exentas, según 1.1.3.4, 1.1.3.5 y 1.1.3.6, no
+									son objeto de este informe, por lo que habrá que referirse a
+									Las Normas para conocer su tratamiento.En cualquier caso y a
+									modo de resumen:
+									<br />
+									- La exención 1.1.3.4 se refiere a cantidades limitadas por
+									bulto en la que solo se requiere básicamente un etiquetado
+									Específico en cada bulto, aplicando a envases no superiores a
+									5 litros en embalaje combinado.
+									<br />
+
+									- La exención 1.1.3.5 se refiere a cantidades exceptuadas,
+									solo válida para muestras y que incorpora los mismos criterios
+									que para el transporte aéreo de este tamaño.
+									<br />
+
+									- La exención 1.1.3.6 se refiere a cantidades limitadas por
+									vehículo, en las que no se requiere básicamente cumplir con
+									Los requisitos de transporte, pero sí con los de envasado,
+									etiquetado y documentación; por tanto aunque no se consideran
+									Transporte ADR, debe respetarse el envasado original y
+									realizar carta de porte en la que se demuestre dicha condición
+									de exento (cantidad total de riesgo en el vehículo no superior
+									a 1000, siendo la mercancía transportada G.E. III).Todas las
+									situaciones anteriores quedan fuera del ámbito de actuación
+									del Consejero de Seguridad, aunque quedan incorporadas tanto
+									en la Formación como en las Normas, debiendo ser consultadas
+									en caso de duda. METODOLOGÍA.
+									<br />
+
+									- Previamente a la realización de cualquier visita, el
+									personal de las áreas afectadas, especialmente los
+									responsables de las mismas, habrán de ser informados de los
+									aspectos que se evalúen, de tal manera que un incumplimiento
+									de un procedimiento o norma no puede ser achacable a la falta
+									de información.Al mismo tiempo se avisará con antelación
+									suficiente para que los responsables de las unidades
+									implicadas puedan preparar la documentación que deba ser
+									consultada en la dicha visita.En cada instalación se
+									conservará una copia de este informe al menos durante un año.
+
+									<br />
+									CALCULO NIVEL DE CUMPLIMIENTOEl objetivo de la visita técnica
+									es la comprobación del proceso de manipulación de mercancías
+									peligrosas. Se evaluará el nivel de cumplimiento que quedará
+									reflejado en el punto 14 de la Auditoria.
+								</div>
 							</b>
 						</base-checkbox>
 					</div>

@@ -120,7 +120,7 @@
 				v-if="this.modal"
 				v-model:show="this.modal"
 				:action="action"
-				@close="action = 'registrar'"
+				@close="action = 'registrar',assign = false"
 				modalClasses="modal-xl"
 				model="formación"
 			>

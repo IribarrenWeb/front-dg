@@ -18,11 +18,11 @@
 				<div class="col-md-10">
 					<div class="row align-items-center">
 						<date-filter
-							class="col-md-3 col-lg-2"
+							class="col-12 col-md-4 col-lg-3"
 							v-model:clear="clear"
 							@updated="handleFilter('date', $event)"
 						/>
-						<div class="col-md-3 col-lg-3 filter">
+						<div class="col-12 col-md-4  mt-2 mt-md-0 col-lg-3 filter">
 							<async-select
 								placeholder="Selecciona responsable..."
 								v-model:clear="clear"
@@ -32,18 +32,18 @@
 							></async-select>
 						</div>
 						<business-filter
-							class="col-md-3 col-lg-2"
+							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
 							v-model:clear="clear"
 							@updated="handleFilter('business', $event)"
 							v-if="$store.state.is_auditor || $store.state.is_delegate"
 						/>
 						<installation-filter
-							class="col-md-3 col-lg-2"
+							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
 							v-model:clear="clear"
 							@updated="handleFilter('installation', $event)"
 						/>
 						<select-filter
-							class="col-md-3 col-lg-3"
+							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
 							v-model:clear="clear"
 							placeholder="Selecciona un estatus..."
 							:options="[
@@ -54,7 +54,7 @@
 						/>
 					</div>
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-2 mt-2 mt-md-0">
 					<base-button
 						size="sm"
 						@click="(params_filter = params), index(page), (clear = true)"
