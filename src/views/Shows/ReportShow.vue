@@ -225,14 +225,30 @@
 						</base-field>
 					</div>
 					<div v-if="model.has_formations">
-						<base-field label="Indicar la descripción de la formación">
-							<textarea
-								class="form-control"
-								cols="30"
-								rows="10"
-								v-model="model.formation_desc"
-							></textarea>
-						</base-field>
+						<div class="row">
+							<base-field v-if="report.last_training" class="col-md-3" label="Cantidad de empleados">
+								<input
+									class="form-control"
+									:disabled="true"
+									:value="report.last_training.employees_count" 
+								/>
+							</base-field>
+							<base-field v-if="report.last_training" class="col-md-3" label="Fecha de la formación">
+								<input
+									class="form-control"
+									:disabled="true"
+									:value="report.last_training.date" 
+								/>
+							</base-field>
+							<base-field class="col-md-12" label="Descripción de la formación">
+								<textarea
+									class="form-control"
+									cols="30"
+									rows="10"
+									v-model="model.formation_desc"
+								></textarea>
+							</base-field>
+						</div>
 					</div>
 					<div v-if="!model.has_formations">
 						<base-field
@@ -375,7 +391,7 @@
 
 					this.model.has_formations =
 						this.report.has_formations == 0 ? false : true;
-					this.model.formation_desc = this.report.formation_desc;
+					this.model.formation_desc = this.report?.last_training?.formation?.content;
 					this.model.deficiency_desc = this.report.deficiency_desc;
 					this.model.has_formations_records =
 						this.report.has_formations_records == 0 ? false : true;

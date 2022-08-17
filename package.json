@@ -21,6 +21,7 @@
         "google-maps": "4.3.3",
         "javascript-time-ago": "^2.5.4",
         "lodash": "^4.17.21",
+        "moment": "^2.29.4",
         "nouislider": "14.6.0",
         "simple-vue-camera": "^1.1.1",
         "vee-validate": "^4.5.11",

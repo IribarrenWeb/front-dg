@@ -70,7 +70,7 @@
 <script>
   import { mapState } from 'vuex'
   export default {
-    inheritAttrs: false,
+    inheritAttrs: true,
     name: "base-input",
     props: {
       required: {

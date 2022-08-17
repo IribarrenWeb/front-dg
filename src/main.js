@@ -40,6 +40,7 @@ import schemas from './schemas';
 import { isEmpty, isNil } from "lodash";
 import timeago from 'vue-timeago3' // import timeago
 import { es as esp } from 'date-fns/locale' // import custom locale
+import moment from "moment"
 
 Object.keys(AllRules).forEach((rule) => {
     defineRule(rule, AllRules[rule]);
@@ -72,6 +73,7 @@ appInstance.use(Toaster, {
 });
 
 appInstance.config.globalProperties.$functions = functions;
+appInstance.config.globalProperties.$moment = moment;
 appInstance.config.globalProperties.$empty = (val) => {
     return isEmpty(val) || isNil(val)
 };
