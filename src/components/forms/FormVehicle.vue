@@ -5,7 +5,7 @@
             <div class="row border rounded border-light px-3 py-2">
                 <div class=" col-lg-3">
                     <base-field   name="fleet" label="Flota">
-                        <field-validate as="select" class="form-control" name="fleet" rules="required" label="flota" v-model="model.fleet">
+                        <field-validate as="select" class="form-control" name="fleet" label="flota" v-model="model.fleet">
                             <option value="ajena" selected>Ajena</option>
                             <option value="propia">Propia</option>
                         </field-validate>
@@ -13,27 +13,27 @@
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="registration" label="Matricula">
-                        <field-validate type="text" class="form-control text-uppercase" name="registration" rules="required" label="matricula" v-model="model.registration_number"/>
+                        <field-validate type="text" class="form-control text-uppercase" name="registration" label="matricula" v-model="model.registration_number"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-5">
                     <base-field   name="mma" label="MMA">
-                        <field-validate type="number" class="form-control" name="mma" rules="required" label="mma" v-model.number="model.mma"/>
+                        <field-validate type="number" class="form-control" name="mma" label="mma" v-model.number="model.mma"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="tara" label="TARA">
-                        <field-validate type="number" class="form-control" name="tara" rules="required" label="tara" v-model.number="model.tara"/>
+                        <field-validate type="number" class="form-control" name="tara" label="tara" v-model.number="model.tara"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
                     <base-field   name="adr_kit" label="Fecha Instalación KIT ADR">
-                        <field-validate type="date" class="form-control" name="adr_kit" rules="required" label="Fecha Instalación KIT ADR" v-model="model.adr_kit"/>
+                        <field-validate type="date" class="form-control" name="adr_kit" label="Fecha Instalación KIT ADR" v-model="model.adr_kit"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4" v-if="(update && types != null) || !update">
                     <base-field name="vehicle_type_id" label="Tipo">
-                        <field-validate as="select" class="form-control" name="vehicle_type_id" rules="required" label="tipo de vehiculo" v-model.number="model.vehicle_type_id">
+                        <field-validate as="select" class="form-control" name="vehicle_type_id" label="tipo de vehiculo" v-model.number="model.vehicle_type_id">
                             <option v-for="type in types" :key="type.key" :value="type.id">
                                 {{type.name}}
                             </option>
@@ -42,7 +42,7 @@
                 </div>
                 <div class=" col-lg-4" v-if="(update && designations != null) || !update">
                     <base-field   name="adr_designation_id" label="Designacion Adr">
-                        <field-validate as="select" class="form-control" name="adr_designation_id" rules="required" label="designacion adr" v-model.number="model.adr_designation_id">
+                        <field-validate as="select" class="form-control" name="adr_designation_id" label="designacion adr" v-model.number="model.adr_designation_id">
                             <option v-for="designation in designations" :key="designation.key" :value="designation.id">
                                 {{designation.code}}
                             </option>
@@ -56,7 +56,7 @@
                 :disabled="!canUpdate"
                 >Actualizar</base-button
                 >
-                <base-button type="default" nativeType="submit"
+                <base-button type="default" :disabled="!canCreate" nativeType="submit"
                 >Aceptar</base-button
                 >
                 <base-button
@@ -76,7 +76,7 @@ import dataService from "../../store/services/data-service";
 import service from "@/store/services/model-service";
  
 import utils from "@/mixins/utils-mixin";
-import {isEqual} from "lodash";
+import {isEqual, forEach, isEmpty, keys, isNumber} from "lodash";
 import InstallationSelect from '../Utils/InstallationSelect.vue';
 
 export default {
@@ -98,11 +98,11 @@ export default {
             model: {
                 installation_id: this.installation_id ?? null,
                 vehicle_type_id: null,
-                registration_number: "",
-                fleet: "",
-                mma: "",
-                tara: "",
-                adr_kit: "",
+                registration_number: null,
+                fleet: null,
+                mma: null,
+                tara: null,
+                adr_kit: null,
                 adr_designation_id: null,
             },
             original_vehicle: null,
@@ -127,6 +127,16 @@ export default {
         },
         canUpdate() {
             return !isEqual(this.model,this.original_vehicle)
+        },
+        canCreate() {
+            const length = keys(this.model).length -1;
+            let count = 0;
+            forEach(this.model, (m) => {
+                if (isEmpty(m) && !isNumber(m)) {
+                    count++
+                }
+            },count)
+            return length > count;
         }
     },
     methods: {
@@ -140,7 +150,8 @@ export default {
                     this.model = this.$functions.copy(res.data.data) 
                     this.original_vehicle = this.$functions.copy(this.model)
                 }else{
-                    await service.store('vehicle',this.model)
+                    const data = this.$functions.cleanData(this.model)
+                    await service.store('vehicle',data)
                     this.$toast.success('Vehiculo registrado')
                     resetForm()
                     this.$emit('close')

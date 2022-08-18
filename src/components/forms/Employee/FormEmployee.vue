@@ -87,16 +87,16 @@
 					<!-- --------------------------------------- -->
 
 					<div class="col-lg-12">
+						<div>
+							<base-switch
+								v-model="model.dangerous_goods"
+								:disabled="model.last_formation?.dg_formation"
+								:value="model.dangerous_goods != 0 ? true : false"
+								label="Mercancias peligrosas"
+							></base-switch>
+						</div>
 						<div class="row">
-							<div class="col-lg-2">
-								<base-switch
-									v-model="model.dangerous_goods"
-									:disabled="model.last_formation?.dg_formation"
-									:value="model.dangerous_goods != 0 ? true : false"
-									label="Mercancias peligrosas"
-								></base-switch>
-							</div>
-							<div v-if="model.dangerous_goods" class="col-lg-5">
+							<div class="col-lg-6">
 								<base-field
 									apiName="date_certification"
 									name="date_cer"
@@ -106,14 +106,14 @@
 										type="date"
 										class="form-control"
 										name="date_cer"
-										rules="required"
+										:rules="{'required':!$empty(model.file_certification.file)}"
 										label="fecha"
 										:disabled="model.last_formation?.dg_formation"
 										v-model="model.date_certification"
 									/>
 								</base-field>
 							</div>
-							<div v-if="model.dangerous_goods" class="col-lg-5">
+							<div class="col-lg-6">
 								<base-field
 									apiName="file_certification"
 									name="file_cer"
@@ -149,7 +149,6 @@
 											type="file"
 											class="form-control"
 											name="file_cer"
-											rules="required"
 											label="documento"
 											v-model="model.file_certification.file"
 										/>

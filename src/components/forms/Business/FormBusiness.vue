@@ -211,21 +211,20 @@
 							</base-field>
 						</div>
 						<div class="col-lg-12">
+							<div>
+								<base-switch
+									v-model="installations[id].responsible.dangerous_goods"
+									:value="
+										installations[id].responsible.dangerous_goods != 0
+											? true
+											: false
+									"
+									label="Mercancias peligrosas"
+								></base-switch>
+							</div>
 							<div class="row">
-								<div class="col-lg-2">
-									<base-switch
-										v-model="installations[id].responsible.dangerous_goods"
-										:value="
-											installations[id].responsible.dangerous_goods != 0
-												? true
-												: false
-										"
-										label="Mercancias peligrosas"
-									></base-switch>
-								</div>
 								<div
-									v-if="installations[id].responsible.dangerous_goods"
-									class="col-lg-5"
+									class="col-lg-6"
 								>
 									<base-field
 										apiName="responsible.date_certification"
@@ -236,15 +235,14 @@
 											type="date"
 											class="form-control"
 											name="date_cer"
-											rules="required"
+											:rules="{'required':!$empty(installations[id].responsible.file_certification.file)}"
 											label="fecha"
 											v-model="installations[id].responsible.date_certification"
 										/>
 									</base-field>
 								</div>
 								<div
-									v-if="installations[id].responsible.dangerous_goods"
-									class="col-lg-5"
+									class="col-lg-6"
 								>
 									<base-field
 										apiName="responsible.file_certification"
@@ -278,7 +276,7 @@
 											type="file"
 											class="form-control"
 											name="file_cer"
-											rules="required"
+											:rules="{'required':!$empty(installations[id].responsible.date_certification)}"
 											label="documento"
 											v-model="
 												installations[id].responsible.file_certification.file
@@ -526,7 +524,7 @@ import ResponsibleData from './Modules/ResponsibleData.vue';
 							this.installations[i].responsible.driver_document.file_name =
 								this.installations[i].responsible.driver_document.file[0].name;
 						}
-						if (this.installations[i].responsible.dangerous_goods) {
+						if (!this.$functions.empty(this.installations[i].responsible.file_certification.file)) {
 							this.installations[i].responsible.file_certification.base64 =
 								await this.toBase64(
 									this.installations[i].responsible.file_certification.file[0]

@@ -9,7 +9,6 @@
 					type="text"
 					class="form-control"
 					name="holder_name"
-					rules="alpha_spaces"
 					label="nombre"
 					@input="$emit('update:holder_name', $event.target.value)"
 					:value="holder_name"

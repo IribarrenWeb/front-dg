@@ -74,11 +74,12 @@
 						{{ row.item?.tara }}
 					</td>
 					<td>{{ row.item?.mma }}</td>
-					<td>{{ row.item?.type.name }}</td>
-					<td>{{ row.item?.adr.code }}</td>
+					<td>{{ row.item?.type?.name }}</td>
+					<td>{{ row.item?.adr?.code }}</td>
 					<td>{{ row.item?.adr_kit_date }}</td>
 					<td>
 						<badge
+							v-if="row.item?.status != null"
 							class="badge-dot mr-4"
 							:type="setStatusType(row.item?.status)"
 						>
@@ -87,6 +88,9 @@
 								row.item?.status ? "Vigente" : "Caducado"
 							}}</span>
 						</badge>
+						<span v-else>
+							SIN ESTATUS
+						</span>
 					</td>
 					<td class="text-right">
 						<a class="btn btn-primary btn-sm" href="#" @click.prevent="vehicle = row.item, modal = true"

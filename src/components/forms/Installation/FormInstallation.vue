@@ -187,18 +187,16 @@
 						</div>
 						<!-- --------------------------------------- -->
 						<div class="col-lg-12">
+							<base-switch
+								v-model="model.responsible.dangerous_goods"
+								:value="
+									model.responsible.dangerous_goods != 0 ? true : false
+								"
+								:disabled="isSaved"
+								label="Mercancias peligrosas"
+							></base-switch>
 							<div class="row">
-								<div class="col-lg-2">
-									<base-switch
-										v-model="model.responsible.dangerous_goods"
-										:value="
-											model.responsible.dangerous_goods != 0 ? true : false
-										"
-										:disabled="isSaved"
-										label="Mercancias peligrosas"
-									></base-switch>
-								</div>
-								<div v-if="model.responsible.dangerous_goods" class="col-lg-5">
+								<div class="col-lg-6">
 									<base-field
 										apiName="responsible.date_certification"
 										name="date_cer"
@@ -209,13 +207,15 @@
 											type="date"
 											class="form-control"
 											name="date_cer"
-											rules="required"
+											:rules="{
+												required: !$functions.empty(model.responsible.file_certification.file),
+											}"
 											label="fecha"
 											v-model="model.responsible.date_certification"
 										/>
 									</base-field>
 								</div>
-								<div v-if="model.responsible.dangerous_goods" class="col-lg-5">
+								<div class="col-lg-6">
 									<base-field
 										apiName="responsible.file_certification"
 										name="file_cer"
@@ -244,8 +244,9 @@
 											type="file"
 											class="form-control"
 											name="file_cer"
-											rules="required"
-											label="documento"
+											:rules="{
+												required: !$functions.empty(model.responsible.date_certification),
+											}"
 											v-model="model.responsible.file_certification.file"
 										/>
 									</base-field>
@@ -513,7 +514,7 @@
 						this.model.responsible.driver_document.file_name =
 							inst.file_driver[0].name;
 					}
-					if (this.model.responsible.dangerous_goods) {
+					if (!this.$functions.empty(this.model.responsible.file_certification.file)) {
 						this.model.responsible.file_certification.base64 =
 							await this.toBase64(inst.file_cer[0]);
 						this.model.responsible.file_certification.file_name =

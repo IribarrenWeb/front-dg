@@ -42,7 +42,7 @@
 							v-model:clear="clear"
 							@updated="handleFilter('installation', $event)"
 						/>
-						<select-filter
+						<!-- <select-filter
 							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
 							v-model:clear="clear"
 							placeholder="Selecciona un estatus..."
@@ -51,7 +51,7 @@
 								{ label: 'Completado', value: 'true' },
 							]"
 							@updated="handleFilter('status', $event)"
-						/>
+						/> -->
 					</div>
 				</div>
 				<div class="col-md-2 mt-2 mt-md-0">
@@ -167,11 +167,10 @@
 	import BusinessFilter from "../../components/filters/BusinessFilter.vue";
 	import DateFilter from '../../components/filters/DateFilter.vue';
 	import InstallationFilter from "../../components/filters/InstallationFilter.vue";
-	import SelectFilter from "../../components/filters/SelectFilter.vue";
 	import FormCompleteFormation from '../../components/forms/FormCompleteFormation.vue';
 	import service from "../../store/services/model-service";
 	export default {
-		components: { AsyncSelect, SelectFilter, BusinessFilter, InstallationFilter, DateFilter, FormCompleteFormation },
+		components: { AsyncSelect, BusinessFilter, InstallationFilter, DateFilter, FormCompleteFormation },
 		props: {
 			reload: {
 				type: Boolean,
