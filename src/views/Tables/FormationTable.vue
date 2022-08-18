@@ -124,18 +124,11 @@
 				modalClasses="modal-xl"
 				model="formación"
 			>
-				<form-formation
-					v-if="!assign"
-					@reload="index"
-					@close="handleClose"
-					:formation_id="formation_id"
-				></form-formation>
-				<form-formation-assign
-					v-else
+				<component :is='component'
 					@reload="handleReload"
 					@close="handleClose"
 					:formation_id="formation_id"
-				></form-formation-assign>
+				/>
 			</modal>
 		</div>
 	</div>
@@ -165,6 +158,11 @@
 		},
 		mounted() {
 			this.index(this.page);
+		},
+		computed: {
+			component() {
+				return this.assign ? "form-formation" : "form-formation-assign"
+			}
 		},
 		methods: {
 			async index(page = 1) {
@@ -227,7 +225,11 @@
 				}
 			},
 			handleReload() {
-				this.$emit("reloadTraining");
+				if (this.assign) {
+					this.$emit("reloadTraining");
+				}else{
+					this.index()
+				}
 			},
 		},
 	};
