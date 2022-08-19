@@ -97,7 +97,7 @@
                                     {{employee?.position}}
                                 </td>
                                 <td>
-                                    {{employee?.last_formation == null ? 'SIN FORMACIÓN' : this.$functions.formatDate(employee.last_formation.formation_date)}}
+                                    {{employee?.last_formation == null ? 'SIN FORMACIÓN' : employee.last_formation.date_formatted}}
                                 </td>
                             </tr>
                         </tbody>

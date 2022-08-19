@@ -36,11 +36,9 @@
 						</td>
 						<td>
 							{{
-								employee.last_document_formation == null
+								employee.last_formation == null
 									? "SIN FORMACIÓN"
-									: this.$functions.formatDate(
-											employee.last_document_formation.document_date
-									  )
+									: employee.last_formation.date_formatted
 							}}
 						</td>
 					</tr>

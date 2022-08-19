@@ -91,7 +91,7 @@
 						{{ row.item?.employees_count }}
 					</td>
 					<td>
-						{{ row.item?.date }}
+						{{ row.item?.date_formatted }}
 					</td>
 					<td>
 						<badge
