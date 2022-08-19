@@ -130,7 +130,7 @@
 				:role="ROLE"
 				@close="modal = false"
 				:nonconformity="selected_non"
-				:show="ROLE != 'business'"
+				:show="ROLE != 'business' || selected_non.status == 'COMPLETADO'"
 				@reload="index(page)"
 			></form-action>
 		</modal>

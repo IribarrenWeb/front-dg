@@ -525,6 +525,8 @@
 				if (this.currentStep === 3 && !this.isSaved) {
 					this.model.business_id = this.business_id;
 					try {
+						this.model.responsible.representative = true;
+						
 						const data = this.$functions.cleanData(this.model);
 						const res = await service.store("installation", data);
 						this.installation_id = res.data.data.id;

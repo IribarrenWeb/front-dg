@@ -229,15 +229,22 @@
 							<base-field v-if="report.last_training" class="col-md-3" label="Cantidad de empleados">
 								<input
 									class="form-control"
-									:disabled="true"
-									:value="report.last_training.employees_count" 
+									type="text"
+									v-model="model.formation_data.employees_count"
 								/>
 							</base-field>
 							<base-field v-if="report.last_training" class="col-md-3" label="Fecha de la formación">
 								<input
 									class="form-control"
-									:disabled="true"
-									:value="report.last_training.date" 
+									type="date"
+									v-model="model.formation_data.date_formation"
+								/>
+							</base-field>
+							<base-field v-if="report.last_training" class="col-md-3" label="Hora de la formación">
+								<input
+									class="form-control"
+									type="text"
+									v-model="model.formation_data.time_formation"
 								/>
 							</base-field>
 							<base-field class="col-md-12" label="Descripción de la formación">
@@ -369,6 +376,11 @@
 					formation_desc: null,
 					deficiency_desc: null,
 					has_formations_records: null,
+					formation_data: {
+						employees_count: null,
+						date_formation: null,
+						time_formation: null
+					}
 				},
 			};
 		},
@@ -392,6 +404,9 @@
 					this.model.has_formations =
 						this.report.has_formations == 0 ? false : true;
 					this.model.formation_desc = this.report?.last_training?.formation?.content;
+					this.model.formation_data.employees_count = this.report?.last_training?.employees_count;
+					this.model.formation_data.date_formation = this.report?.last_training?.year_date;
+					this.model.formation_data.time_formation = this.report?.last_training?.time_date;
 					this.model.deficiency_desc = this.report.deficiency_desc;
 					this.model.has_formations_records =
 						this.report.has_formations_records == 0 ? false : true;

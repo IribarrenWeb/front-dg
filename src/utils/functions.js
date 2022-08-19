@@ -95,13 +95,11 @@ function filterDoc(arr, doc_name) {
 function difference(obj, newObj, ignore = []) {
     let arrayIndexCounter = 0
     return transform(newObj, function (result, value, key) {
-        if (!isEqual(value, obj[key])) {
-            let resultKey = isArray(obj) ? arrayIndexCounter++ : key
-            if (!ignore.includes(key)) {
-                result[resultKey] = (isObject(value) && isObject(obj[key])) ? difference(obj[key],value) : value
-            }else{
-                result[resultKey] = value
-            }
+        let resultKey = isArray(obj) ? arrayIndexCounter++ : key
+        if (!isEqual(value, obj[key]) && !ignore.includes(key)) {
+            result[resultKey] = (isObject(value) && isObject(obj[key])) ? difference(obj[key],value) : value
+        }else if(ignore.includes(key)){
+            result[resultKey] = value
         }
     })
 }

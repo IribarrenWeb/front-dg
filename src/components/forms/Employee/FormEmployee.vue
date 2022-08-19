@@ -90,8 +90,7 @@
 						<div>
 							<base-switch
 								v-model="model.dangerous_goods"
-								:disabled="model.last_formation?.dg_formation"
-								:value="model.dangerous_goods != 0 ? true : false"
+								:value="model.dangerous_goods"
 								label="Mercancias peligrosas"
 							></base-switch>
 						</div>
@@ -364,7 +363,7 @@
 						this.model.driver_document.file_name = values.file_driver[0].name
 
 					}
-					if (this.model.dangerous_goods && (this.new_cer_doc || !this.file_cer)) {
+					if (!this.$functions.empty(values.file_cer) && (this.new_cer_doc || !this.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
@@ -383,7 +382,7 @@
 						);
 						this.model.driver_document.file_name = values.file_driver[0].name
 					}
-					if (this.model.dangerous_goods && !this.$functions.empty(values.file_cer)) {
+					if (!this.$functions.empty(values.file_cer)) {
 						this.model.file_certification.base64 = await this.toBase64(
 							values.file_cer[0]
 						);
@@ -393,7 +392,7 @@
 
 				try {
 					if (this.update) {
-                        let data = this.$functions.difference(this.original_model,this.model);
+                        let data = this.$functions.difference(this.original_model,this.model, ['installation_id']);
 						await service.update("employee", this.model.id, data);
 						this.show();
 					} else {
@@ -437,13 +436,10 @@
                     }
 
 					if (this.model.last_formation) {
-						this.model.is_dangerous_goods = true;
 						if (this.model.last_formation.dg_formation) {
 							this.model.date_certification = this.model.last_formation.formation_date;
 						}else{
-							if (this.model.is_dangerous_goods) {
-								this.model.date_certification = this.file_cer.document_date
-							}
+							this.model.date_certification = this.file_cer.document_date
 						}
 					}
 

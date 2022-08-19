@@ -8,7 +8,7 @@ export default {
     position: "",
     driver: false,
     dangerous_goods: false,
-    representative: true,
+    representative: false,
     installation_id: null,
     driver_document: {
         base64: "",

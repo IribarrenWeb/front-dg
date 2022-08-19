@@ -532,6 +532,7 @@ import ResponsibleData from './Modules/ResponsibleData.vue';
 							this.installations[i].responsible.file_certification.file_name =
 								this.installations[i].responsible.file_certification.file[0].name;
 						}
+						this.installations[i].responsible.representative = true;
 					}
 
 					this.model.installations = this.installations;

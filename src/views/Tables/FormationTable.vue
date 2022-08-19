@@ -161,7 +161,7 @@
 		},
 		computed: {
 			component() {
-				return this.assign ? "form-formation" : "form-formation-assign"
+				return !this.assign ? "form-formation" : "form-formation-assign"
 			}
 		},
 		methods: {

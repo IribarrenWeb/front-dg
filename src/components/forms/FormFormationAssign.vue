@@ -20,8 +20,8 @@
 
             <template v-if="currentStep == 1">
                 <div class="row">
-                    <div class="col-md-6">
-                        <base-field name="installation_id" label="Instalación">
+                    <div class="col-md-6" >
+                        <base-field name="installation_id" label="Instalación" v-if="installations">
                             <field-validate
                                 as="select"
                                 class="form-control"
@@ -35,7 +35,7 @@
                                     :key="installation.key"
                                     :value="installation.id"
                                 >
-                                    {{ installation.name }}
+                                    {{ installation?.name }}
                                 </option>
                             </field-validate>
                         </base-field>
@@ -86,18 +86,18 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" :value="employee.id" v-model="model.employees_ids">
                                         <label class="form-check-label" for="flexCheckDefault">
-                                            {{employee.full_name}}
+                                            {{employee?.full_name}}
                                         </label>
                                     </div>
                                 </td>
                                 <td>
-                                    {{employee.dni}}
+                                    {{employee?.dni}}
                                 </td>
                                 <td>
-                                    {{employee.position}}
+                                    {{employee?.position}}
                                 </td>
                                 <td>
-                                    {{employee.last_formation == null ? 'SIN FORMACIÓN' : this.$functions.formatDate(employee.last_formation.formation_date)}}
+                                    {{employee?.last_formation == null ? 'SIN FORMACIÓN' : this.$functions.formatDate(employee.last_formation.formation_date)}}
                                 </td>
                             </tr>
                         </tbody>
@@ -182,8 +182,8 @@ export default {
     
                     this.$toast.success('Asignación registrada')
                     resetForm()
-                    this.$emit('close')
                     this.$emit('reload')
+                    this.$emit('close')
                 } catch (error) {
                     console.log(error);
                 }
