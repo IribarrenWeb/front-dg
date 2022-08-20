@@ -124,7 +124,7 @@
 						</tr>
 					</thead>
 					<tbody v-if="materials != null && materials.length >= 1">
-						<tr v-for="material, idx in materials" :key="material.id">
+						<tr v-for="(material, idx) in materials" :key="material.id">
 							<th>
 								#{{ idx + 1 }} -
 								{{ material.installation.name }}
@@ -226,21 +226,33 @@
 					</div>
 					<div v-if="model.has_formations">
 						<div class="row">
-							<base-field v-if="report.last_training" class="col-md-3" label="Cantidad de empleados">
+							<base-field
+								v-if="report.last_training"
+								class="col-md-3"
+								label="Cantidad de empleados"
+							>
 								<input
 									class="form-control"
 									type="text"
 									v-model="model.formation_data.employees_count"
 								/>
 							</base-field>
-							<base-field v-if="report.last_training" class="col-md-3" label="Fecha de la formación">
+							<base-field
+								v-if="report.last_training"
+								class="col-md-3"
+								label="Fecha de la formación"
+							>
 								<input
 									class="form-control"
 									type="date"
 									v-model="model.formation_data.date_formation"
 								/>
 							</base-field>
-							<base-field v-if="report.last_training" class="col-md-3" label="Hora de la formación">
+							<base-field
+								v-if="report.last_training"
+								class="col-md-3"
+								label="Hora de la formación"
+							>
 								<input
 									class="form-control"
 									type="text"
@@ -339,6 +351,16 @@
 				>Cerrar
 			</base-button>
 		</div>
+
+		<modal
+			v-if="errors"
+			v-model:show="errors"
+			action="Validaciones"
+			modalClasses="modal-xl"
+			model="informe anual"
+		>
+			<validation-errors :errors="errors" />
+		</modal>
 	</div>
 </template>
 
@@ -350,11 +372,13 @@
 
 	import _ from "lodash";
 	import { mapGetters } from "vuex";
+	import ValidationErrors from "../../components/AnnualReport/ValidationErrors.vue";
 
 	export default {
 		name: "installation-show",
 		components: {
 			VehiclesTable,
+			ValidationErrors,
 		},
 		mixins: [utils],
 		props: {
@@ -379,9 +403,10 @@
 					formation_data: {
 						employees_count: null,
 						date_formation: null,
-						time_formation: null
-					}
+						time_formation: null,
+					},
 				},
+				errors: null,
 			};
 		},
 		created() {
@@ -403,10 +428,14 @@
 
 					this.model.has_formations =
 						this.report.has_formations == 0 ? false : true;
-					this.model.formation_desc = this.report?.last_training?.formation?.content;
-					this.model.formation_data.employees_count = this.report?.last_training?.employees_count;
-					this.model.formation_data.date_formation = this.report?.last_training?.year_date;
-					this.model.formation_data.time_formation = this.report?.last_training?.time_date;
+					this.model.formation_desc =
+						this.report?.last_training?.formation?.content;
+					this.model.formation_data.employees_count =
+						this.report?.last_training?.employees_count;
+					this.model.formation_data.date_formation =
+						this.report?.last_training?.year_date;
+					this.model.formation_data.time_formation =
+						this.report?.last_training?.time_date;
 					this.model.deficiency_desc = this.report.deficiency_desc;
 					this.model.has_formations_records =
 						this.report.has_formations_records == 0 ? false : true;
@@ -465,7 +494,10 @@
 						this.$emit("close");
 						this.$emit("reload");
 					} catch (err) {
-						console.log(err);
+						const errors = err?.response?.data?.data;
+						if (errors) {
+							this.errors = errors;
+						}
 						// this.$toast.error(
 						// 	typeof err.response.data != undefined
 						// 		? err.data.message

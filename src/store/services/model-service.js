@@ -277,7 +277,11 @@ function update(model, id, data, multipart = false) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        // let data = 'Error';
+        // if (err?.response?.data) {
+        //     data = JSON.stringify(err?.response?.data);
+        // }
+        throw err
     });
 }
 
