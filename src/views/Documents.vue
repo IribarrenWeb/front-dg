@@ -4,7 +4,7 @@
 			<!--Tables-->
 			<documents-table :reload="reload" @reloaded="reload = false">
 				<template v-slot:button>
-					<div class="col text-right" v-if="$store.state.is_admin || $store.state.is_delegate">
+					<div class="col text-right" v-if="$store.state.is_admin || $store.state.is_delegate || $store.state.is_business">
 						<a
 							href="#"
 							@click.prevent="handleAdd()"

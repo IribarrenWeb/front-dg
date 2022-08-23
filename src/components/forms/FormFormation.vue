@@ -33,16 +33,20 @@
                         </field-validate>
                     </base-field>
                 </div>
-                <div class="col-lg-6" v-if="!update">
+                <div class="col-lg-6">
                     <base-field name="document" label="Documento de formación">
                         <!-- <div v-if="cert_document && !cer_update">
                             <a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{cert_document.type.name}}</a>
                             <base-button @click="cer_update = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
                         </div> -->
-                        <div>
+                        <div v-if="!update">
                             <field-validate class="form-control" type="file" name="document" rules="required|ext:pdf"
                                 label="documento de formación" v-model="model.document" />
                             <!-- <base-button v-if="update && !typeof auditor.documents[0] == undefined" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button> -->
+                        </div>
+                        <div v-else class="d-flex align-items-center">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <a class="ml-2" :href="formation.document_url" target="_blank">Documentacion de formación</a>
                         </div>
                     </base-field>
                 </div>
@@ -80,7 +84,8 @@ export default {
             types: {},
             originalModel: null,
             auditable: null,
-            formation: null
+            formation: null,
+            document_url: null
         }
     },
     mounted() {

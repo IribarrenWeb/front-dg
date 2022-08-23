@@ -4,6 +4,7 @@
 			class="form-control form-control-sm p-0"
 			@input="handleEmit"
 			v-model="value"
+			:disabled="disabled"
 		>
 			<option selected :value="0">{{ placeholder }}</option>
 			<option
@@ -39,6 +40,10 @@
 			placeholder: {
 				type: String,
 				default: "Selecciona un tipo...",
+			},
+			disabled: {
+				type:Boolean,
+				default: false
 			},
 			options: Array || Object,
 		},

@@ -27,13 +27,13 @@
 						/>
 					</base-field>
 				</div>
-				<div class="col-lg-6">
+				<div class="col-lg-6" v-if="ROLE && ROLE != 'business'">
 					<base-field name="admin_document_type_id" label="Tipo de documento">
 						<select-filter @updated="model.admin_document_type_id = $event" :options="types" label="Selecciona un tipo..." placeholder=""/>
-						<field-validate v-model="model.admin_document_type_id" label="tipo de focumento" name="admin_document_type_id" rules="required" v-show="false"/>
+						<field-validate v-model="model.admin_document_type_id" label="tipo de documento" name="admin_document_type_id" rules="required" v-show="false"/>
 					</base-field>
 				</div>
-				<div class="col-lg-6" v-if="model.admin_document_type_id == 2">
+				<div class="col-lg-6" v-if="model.admin_document_type_id == 2 && ROLE != 'business'">
 					<base-field name="business_id" label="Empresa">
 						<business-filter
 							v-model:clear="clear"
@@ -59,9 +59,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 	import service from "../../store/services/model-service";
-import BusinessFilter from '../filters/BusinessFilter.vue';
-import SelectFilter from '../filters/SelectFilter.vue';
+	import BusinessFilter from '../filters/BusinessFilter.vue';
+	import SelectFilter from '../filters/SelectFilter.vue';
+
 	export default {
 	components: { SelectFilter, BusinessFilter },
         name: "form-document",
@@ -79,8 +81,10 @@ import SelectFilter from '../filters/SelectFilter.vue';
 		},
 		mounted() {
 			console.log(this.update);
-			if (this.update) {
-				this.setModel(this.subcontractor);
+			if (this.ROLE == 'business') {
+				this.model.admin_document_type_id = 2
+				console.log(this.$store.state.profile.me.business.id);
+				this.model.business_id = this.$store.state.profile.me.business.id
 			}
 			this.getTypes();
 		},
@@ -124,5 +128,16 @@ import SelectFilter from '../filters/SelectFilter.vue';
 				this.$emit("close");
 			},
 		},
+		watch: {
+			ROLE(v) {
+				if (v == 'business') {
+					this.model.admin_document_type_id = 2
+					this.model.business_id = this.$store.profile.me.business.id
+				}
+			}
+		},
+		computed: {
+			...mapGetters(['ROLE'])
+		}
 	};
 </script>

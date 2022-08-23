@@ -52,7 +52,7 @@
 							><i class="fa-regular fa-eye"></i
 						></a> -->
 						<delete-button
-							v-if="$store.state.is_admin || $store.state.is_delegate"
+							v-if="$store.state.is_admin || $store.state.is_delegate || $store.state?.profile?.me?.id == row.item?.created_by?.id"
 							@deleted="getDocuments"
 							model="documents"
 							:id="row.item.id"
