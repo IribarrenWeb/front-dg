@@ -64,6 +64,55 @@
 								</div>
 							</base-field>
 						</div>
+						<div>
+							<base-field label="Reporte de suceso">
+								<div class="custom-control custom-switch">
+									<input
+										class="custom-control-input"
+										type="checkbox"
+										name="has_formations"
+										id="has_formations1"
+										v-model="has_accident"
+									/>
+									<label class="custom-control-label" for="has_formations1">
+										{{has_accident?'SI':'NO'}}
+									</label>
+								</div>
+							</base-field>
+							<div v-if="has_accident" class="row">
+								<div class="col-4">
+									<base-field label="Fecha de suceso">
+										<input
+											class="form-control"
+											type="date"
+											name="accident_date"
+											v-model="accident_data.date"
+										/>
+									</base-field>
+								</div>
+								<div class="col-8">
+									<base-field label="Lugar de suceso">
+										<input
+											class="form-control"
+											type="text"
+											name="accident_date"
+											v-model="accident_data.address"
+										/>
+									</base-field>
+								</div>
+								<div class="col-12">
+									<base-field label="Descripción del suceso">
+										<input
+											class="form-control"
+											type="text"
+											name="accident_date"
+											v-model="accident_data.description"
+										/>
+									</base-field>
+								</div>
+							</div>
+						</div>
+
 						<base-field
 							label="Observaciones ACCIDENTES / INCIDENTES/ INFRACCIONES GRAVES"
 						>
@@ -272,13 +321,29 @@
 				audit_id: this.$route.params.id,
 				comprobations: this.formatComp(),
 				accident_observation: this.audit.accident_observation,
+				has_accident: false,
+				accident_data: {
+					date: this.$moment().format('YYYY-MM-DD'),
+					address: null,
+					description: null
+				}
 			};
 		},
-		async mounted() {},
+		async mounted() {
+
+			if (!this.$empty(this.audit.accident_data)) {
+				this.accident_data = this.audit.accident_data
+				this.has_accident = true
+			}
+			if(this.$empty(this.accident_data.address)){
+				this.accident_data.address = this.audit?.installation?.full_address
+			}
+
+		},
 		methods: {
 			async onSubmit() {
 				try {
-					await service.update("audit", this.audit_id, {
+					let data = {
 						current_step: 8,
 						valid_step:
 							this.audit.valid_step >= this.currentStep
@@ -286,7 +351,15 @@
 								: this.currentStep,
 						comprobations: this.comprobations,
 						accident_observations: this.accident_observation,
-					});
+					}
+					
+					if (this.has_accident) {
+						data['accident_data'] = this.accident_data
+					}else{
+						data['accident_data'] = null;
+					}
+
+					await service.update("audit", this.audit_id, data);
 					this.$emit("next", 7);
 				} catch (err) {
 					let message = err.response.message

@@ -187,8 +187,44 @@
 			</div>
 		</template>
 		<!-- ------------------------------------------------------ -->
-		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == 6">
+			<div>
+				<div class="mb-1">
+					<h4>Sucesos</h4>
+				</div>
+				<div class="overflow-auto">
+					<table class="table table-bordered table-sm rounded">
+						<thead>
+							<tr>
+								<td>Fecha</td>
+								<td>Lugar</td>
+								<td>Descripción</td>
+							</tr>
+						</thead>
+						<tbody v-if="model.accidents && model.accidents?.length >= 1">
+							<tr v-for="accident, idx in model.accidents" :key="idx">
+								<th>
+									<input type="date" class="form-control" v-model="model.accidents[idx].date"/>
+								</th>
+								<th>
+									<input type="text" class="form-control" v-model="model.accidents[idx].address"/>
+								</th>
+								<th>
+									<input type="text" class="form-control" v-model="model.accidents[idx].description"/>
+								</th>
+							</tr>
+						</tbody>
+						<tbody v-else>
+							<tr>
+								<td colspan="3">No hay sucesos registrados</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</template>
+		<!-- ------------------------------------------------------ -->
+		<template v-if="currentStep == 7">
 			<div class="row">
 				<!-- formaciones -->
 				<div class="col-lg-12">
@@ -405,6 +441,7 @@
 						date_formation: null,
 						time_formation: null,
 					},
+					accidents: []
 				},
 				errors: null,
 			};
@@ -425,6 +462,7 @@
 							"&includes[]=business.operations"
 					);
 					this.report = this.$functions.copy(res.data.data);
+					this.model.accidents = this.$functions.copy(res.data.data.accidents)
 
 					this.model.has_formations =
 						this.report.has_formations == 0 ? false : true;
@@ -490,6 +528,7 @@
 				if (result) {
 					try {
 						const data = this.$functions.cleanData(this.model);
+						
 						await service.update("report", this.report_id, data);
 						this.$emit("close");
 						this.$emit("reload");
@@ -586,6 +625,7 @@
 					"Mercancías",
 					"Vehiculos",
 					"Visitas",
+					"Sucesos",
 					"Formación",
 				];
 				let count = 1;
