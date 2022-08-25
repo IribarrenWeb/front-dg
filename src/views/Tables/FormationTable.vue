@@ -13,36 +13,36 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
-			<div
-				class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center"
-			>
-				<div class="col-md-3 filter">
-					<async-select
-						placeholder="Selecciona responsable..."
-						v-model:clear="clear"
-						@updated="handleFilter('facilitable', $event.id)"
-						v-if="!$store.state.is_auditor"
-						:roles="[2, 3]"
-					></async-select>
-				</div>
-				<select-filter
-					class="col-md-3"
+		<div
+			class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center"
+		>
+			<div class="col-md-3 filter">
+				<async-select
+					placeholder="Selecciona responsable..."
 					v-model:clear="clear"
-					:options="[
-						{ label: 'Online', value: 1 },
-						{ label: 'Presencial', value: 2 },
-					]"
-					@updated="handleFilter('type', $event)"
-				/>
-				<div class="col-md-2">
-					<base-button
-						size="sm"
-						@click="(params_filter = params), index(page), (clear = true)"
-						>Borrar filtros</base-button
-					>
-				</div>
+					@updated="handleFilter('facilitable', $event.id)"
+					v-if="!$store.state.is_auditor"
+					:roles="[2, 3]"
+				></async-select>
 			</div>
+			<select-filter
+				class="col-md-3"
+				v-model:clear="clear"
+				:options="[
+					{ label: 'Online', value: 1 },
+					{ label: 'Presencial', value: 2 },
+				]"
+				@updated="handleFilter('type', $event)"
+			/>
+			<div class="col-md-2">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), index(page), (clear = true)"
+					>Borrar filtros</base-button
+				>
+			</div>
+		</div>
+		<div  class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Formación</th>

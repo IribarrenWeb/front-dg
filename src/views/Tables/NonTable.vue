@@ -16,46 +16,46 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
-			<div
-				v-if="!dash"
-				class="card-header border-0 py-3 bac-ligth row align-items-center"
-			>
-				<div class="col-md-10">
-					<div class="row align-items-center">
-						<date-filter
-							class="col-md-4 col-lg-3"
-							v-model:clear="clear"
-							@updated="handleFilter('acting_date', $event)"
-						/>
-						<installation-filter
-							class="col-md-4 col-lg-3"
-							v-model:clear="clear"
-							@updated="handleFilter('installation', $event)"
-						/>
-						<select-filter
-							class="col-md-4 col-lg-3"
-							v-model:clear="clear"
-							:options="nonTypes"
-							@updated="handleFilter('type', $event)"
-						/>
+		<div
+			v-if="!dash"
+			class="card-header border-0 py-3 bac-ligth row mx-0 align-items-center"
+		>
+			<div class="col-md-10">
+				<div class="row align-items-center">
+					<date-filter
+						class="col-md-4 col-lg-3"
+						v-model:clear="clear"
+						@updated="handleFilter('acting_date', $event)"
+					/>
+					<installation-filter
+						class="col-md-4 col-lg-3"
+						v-model:clear="clear"
+						@updated="handleFilter('installation', $event)"
+					/>
+					<select-filter
+						class="col-md-4 col-lg-3"
+						v-model:clear="clear"
+						:options="nonTypes"
+						@updated="handleFilter('type', $event)"
+					/>
 
-						<select-filter
-							class="col-md-4 col-lg-3"
-							v-model:clear="clear"
-							:options="priorities"
-							@updated="handleFilter('priority', $event)"
-						/>
-					</div>
-				</div>
-				<div class="col-md-2">
-					<base-button
-						size="sm"
-						@click="(params_filter = params), index(page), (clear = true)"
-						>Borrar filtros</base-button
-					>
+					<select-filter
+						class="col-md-4 col-lg-3"
+						v-model:clear="clear"
+						:options="priorities"
+						@updated="handleFilter('priority', $event)"
+					/>
 				</div>
 			</div>
+			<div class="col-md-2">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), index(page), (clear = true)"
+					>Borrar filtros</base-button
+				>
+			</div>
+		</div>
+		<div class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Instalación</th>

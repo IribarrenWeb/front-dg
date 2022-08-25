@@ -18,28 +18,28 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center" v-if="$store.state.is_business">
-				<installation-filter
-					class="col-md-3"
-					v-model:clear="clear"
-					@updated="handleFilter('installation', $event)"
-				></installation-filter>
-				<!-- <select-filter
-					class="col-md-3"
-					placeholder="Mercancias peligrosas"
-					v-model:clear="clear"
-					:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
-					@updated="handleFilter('adr', $event)"
-				/> -->
-				<div class="col-md-2">
-					<base-button
-						size="sm"
-						@click="(params_filter = params), getMaterials(page), (clear = true)"
-						>Borrar filtros</base-button
-					>
-				</div>
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center" v-if="$store.state.is_business">
+			<installation-filter
+				class="col-md-3"
+				v-model:clear="clear"
+				@updated="handleFilter('installation', $event)"
+			></installation-filter>
+			<!-- <select-filter
+				class="col-md-3"
+				placeholder="Mercancias peligrosas"
+				v-model:clear="clear"
+				:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
+				@updated="handleFilter('adr', $event)"
+			/> -->
+			<div class="col-md-2">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), getMaterials(page), (clear = true)"
+					>Borrar filtros</base-button
+				>
 			</div>
+		</div>
+		<div class="table-responsive">
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"

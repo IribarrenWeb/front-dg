@@ -11,57 +11,57 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
-			<div
-				class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center"
-			>
-				<div class="col-md-10">
-					<div class="row align-items-center">
-						<date-filter
-							class="col-12 col-md-4 col-lg-3"
+		<div
+			class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center"
+		>
+			<div class="col-md-10">
+				<div class="row align-items-center">
+					<date-filter
+						class="col-12 col-md-4 col-lg-3"
+						v-model:clear="clear"
+						@updated="handleFilter('date', $event)"
+					/>
+					<div class="col-12 col-md-4  mt-2 mt-md-0 col-lg-3 filter">
+						<async-select
+							placeholder="Selecciona responsable..."
 							v-model:clear="clear"
-							@updated="handleFilter('date', $event)"
-						/>
-						<div class="col-12 col-md-4  mt-2 mt-md-0 col-lg-3 filter">
-							<async-select
-								placeholder="Selecciona responsable..."
-								v-model:clear="clear"
-								@updated="handleFilter('responsible', $event.id)"
-								v-if="!$store.state.is_auditor"
-								:roles="[2, 3]"
-							></async-select>
-						</div>
-						<business-filter
-							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
-							v-model:clear="clear"
-							@updated="handleFilter('business', $event)"
-							v-if="$store.state.is_auditor || $store.state.is_delegate"
-						/>
-						<installation-filter
-							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
-							v-model:clear="clear"
-							@updated="handleFilter('installation', $event)"
-						/>
-						<!-- <select-filter
-							class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
-							v-model:clear="clear"
-							placeholder="Selecciona un estatus..."
-							:options="[
-								{ label: 'Pendiente', value: 'false' },
-								{ label: 'Completado', value: 'true' },
-							]"
-							@updated="handleFilter('status', $event)"
-						/> -->
+							@updated="handleFilter('responsible', $event.id)"
+							v-if="!$store.state.is_auditor"
+							:roles="[2, 3]"
+						></async-select>
 					</div>
-				</div>
-				<div class="col-md-2 mt-2 mt-md-0">
-					<base-button
-						size="sm"
-						@click="(params_filter = params), index(page), (clear = true)"
-						>Borrar filtros</base-button
-					>
+					<business-filter
+						class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
+						v-model:clear="clear"
+						@updated="handleFilter('business', $event)"
+						v-if="$store.state.is_auditor || $store.state.is_delegate"
+					/>
+					<installation-filter
+						class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
+						v-model:clear="clear"
+						@updated="handleFilter('installation', $event)"
+					/>
+					<!-- <select-filter
+						class="col-12 col-md-4 mt-2 mt-md-0 col-lg-3"
+						v-model:clear="clear"
+						placeholder="Selecciona un estatus..."
+						:options="[
+							{ label: 'Pendiente', value: 'false' },
+							{ label: 'Completado', value: 'true' },
+						]"
+						@updated="handleFilter('status', $event)"
+					/> -->
 				</div>
 			</div>
+			<div class="col-md-2 mt-2 mt-md-0">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), index(page), (clear = true)"
+					>Borrar filtros</base-button
+				>
+			</div>
+		</div>
+		<div class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
 					<th>Formación</th>

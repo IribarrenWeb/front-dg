@@ -6,6 +6,7 @@
     class="btn"
     :class="classes"
     :disabled="disabled"
+    target="_blank"
   >
     <span
       class="btn-inner--icon"
@@ -33,6 +34,7 @@
 <script>
 export default {
   name: "base-button",
+  inheritAttrs: true,
   props: {
     tag: {
       type: String,

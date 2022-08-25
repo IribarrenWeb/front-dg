@@ -16,17 +16,17 @@
 			</div>
 		</div>
 		<div></div>
-		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row">
-				<div class="col-md-3 filter" v-if="!byAuditableId">
-					<async-select placeholder="Selecciona auditor..." v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
-				</div>
-				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
-				<div class="col-md-3">
-					<base-button size="sm" @click="params_filter = params,getInstallations(),clear = true">Borrar filtros</base-button>
-				</div>
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row">
+			<div class="col-md-3 filter" v-if="!byAuditableId">
+				<async-select placeholder="Selecciona auditor..." v-model:clear="clear" @updated="handleFilter('auditor',$event)" v-if="!$store.state.is_auditor" :roles="[2,3]" params="&includes[]=delegate&includes[]=auditor"></async-select>
 			</div>
-			<base-table thead-classes="thead-light" :data="tableData">
+			<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+			<div class="col-md-3">
+				<base-button size="sm" @click="params_filter = params,getInstallations(),clear = true">Borrar filtros</base-button>
+			</div>
+		</div>
+		<div class="table-responsive">
+			<base-table thead-classes="thead-light" :data="tableData" >
 				<template v-slot:columns>
                     <th>#</th>
 					<th>Nombre</th>

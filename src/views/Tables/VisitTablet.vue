@@ -22,32 +22,32 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
-			<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
-				<date-filter
-					class="col-md-3"
-					v-model:clear="clear"
-					@updated="handleFilter('date', $event)"
-				/>
-				<select-filter
-					class="col-md-3"
-					v-model:clear="clear"
-					:options="[{label: 'Auditoria',value:'auditoria'},{label:'Formación',value:'formacion'}]"
-					@updated="handleFilter('type', $event)"
-				/>
-				<installation-filter
-					class="col-md-3"
-					v-model:clear="clear"
-					@updated="handleFilter('installation', $event)"
-				></installation-filter>
-				<div class="col-md-2">
-					<base-button
-						size="sm"
-						@click="(params_filter = params), getVisits(), (clear = true)"
-						>Borrar filtros</base-button
-					>
-				</div>
+		<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
+			<date-filter
+				class="col-md-3"
+				v-model:clear="clear"
+				@updated="handleFilter('date', $event)"
+			/>
+			<select-filter
+				class="col-md-3"
+				v-model:clear="clear"
+				:options="[{label: 'Auditoria',value:'auditoria'},{label:'Formación',value:'formacion'}]"
+				@updated="handleFilter('type', $event)"
+			/>
+			<installation-filter
+				class="col-md-3"
+				v-model:clear="clear"
+				@updated="handleFilter('installation', $event)"
+			></installation-filter>
+			<div class="col-md-2">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), getVisits(), (clear = true)"
+					>Borrar filtros</base-button
+				>
 			</div>
+		</div>
+		<div class="table-responsive">
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"

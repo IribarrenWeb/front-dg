@@ -11,8 +11,11 @@
 					</h3>
 				</div>
 				<div class="col text-right">
-                    <base-button type="default" size="sm" :outline="true" @click.prevent=""
+                    <base-button type="default" size="sm" :href="url+'uploads/checklist.pdf'" tag="a" :outline="true"
 						><i class="fa-solid fa-list-check"></i>Checklist</base-button
+					>
+					<base-button type="default" size="sm" :href="url+'uploads/control.pdf'" tag="a" :outline="true"
+						><i class="fa-solid fa-list-check"></i>Control proveedores</base-button
 					>
 					<base-button type="default" size="sm" @click="this.modal = true"
 						>Agregar</base-button
@@ -21,28 +24,28 @@
 			</div>
 		</div>
 
-		<div class="table-responsive">
-			<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center" v-if="false">
-				<installation-filter
-					class="col-md-3"
-					v-model:clear="clear"
-					@updated="handleFilter('installation', $event)"
-				></installation-filter>
-				<!-- <select-filter
-					class="col-md-3"
-					placeholder="Mercancias peligrosas"
-					v-model:clear="clear"
-					:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
-					@updated="handleFilter('adr', $event)"
-				/> -->
-				<div class="col-md-2">
-					<base-button
-						size="sm"
-						@click="(params_filter = params), getSubcontractors(page), (clear = true)"
-						>Borrar filtros</base-button
-					>
-				</div>
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center" v-if="false">
+			<installation-filter
+				class="col-md-3"
+				v-model:clear="clear"
+				@updated="handleFilter('installation', $event)"
+			></installation-filter>
+			<!-- <select-filter
+				class="col-md-3"
+				placeholder="Mercancias peligrosas"
+				v-model:clear="clear"
+				:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
+				@updated="handleFilter('adr', $event)"
+			/> -->
+			<div class="col-md-2">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), getSubcontractors(page), (clear = true)"
+					>Borrar filtros</base-button
+				>
 			</div>
+		</div>
+		<div class="table-responsive">
 			<base-table
 				class="table align-items-center table-flush"
 				:class="type === 'dark' ? 'table-dark' : ''"
@@ -51,13 +54,13 @@
 				:data="tableData"
 			>
 				<template v-slot:columns>
-					<th>Servicio / Producto Ofrecido</th>
 					<th>Empresa</th>
+					<th>CIF</th>
+					<th>Email</th>
+					<th>Teléfono</th>
+					<th>Servicio</th>
 					<th>Nombre</th>
 					<th>Apellido</th>
-					<th>DNI/CIF/NIF</th>
-					<th>Teléfono</th>
-					<th>Email</th>
 					<th>Fecha</th>
 					<th></th>
 					<th></th>
@@ -65,20 +68,20 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
-						{{ row.item?.service }}
-					</th>
-					<th scope="row">
 						{{ row.item?.business }}
+					</th>
+					<td>{{ row.item?.dni }}</td>
+					<td>{{ row.item?.email }}</td>
+					<td>
+						{{ row.item?.phone_number }}
+					</td>
+					<th scope="row">
+						{{ row.item?.service }}
 					</th>
 					<td class="budget">{{ row.item?.name }}</td>
                     <td class="budget">
                         {{ row.item?.last_name }}
                     </td>
-					<td>{{ row.item?.dni }}</td>
-					<td>
-						{{ row.item?.phone_number }}
-					</td>
-					<td>{{ row.item?.email }}</td>
 					<td>{{ row.item?.documents[0]?.document_date }}</td>
 					<td>
 						<a v-if="!$functions.empty(row.item?.documents)" href="#" @click.prevent="getDocument(row.item?.documents[0].id)">
@@ -157,6 +160,7 @@
 				loader: false,
 				page: 1,
 				modal: false,
+				url: process.env.VUE_APP_API_URL,
 				sub: null,
 				params: "includes[]=documents",
 				params_filter: null,

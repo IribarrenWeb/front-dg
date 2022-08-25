@@ -320,7 +320,7 @@
 				</div>
 				<div class="col-lg-12">
 					<base-field
-						label="¿Figura la formación recibida en el exprediente del personal?"
+						label="¿Figura la formación recibida en el exprediente?"
 					>
 						<div class="custom-control custom-radio">
 							<input

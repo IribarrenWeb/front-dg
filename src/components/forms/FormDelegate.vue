@@ -21,7 +21,7 @@
 					<div class="col-lg-6">
 						<base-field name="delegation_name" label="Nombre de delegación">
 							<field-validate class="form-control text-capitalize" name="delegation_name" type="text"
-								label="nombre de delegación" rules="alpha_spaces|max:30" v-model="model.delegation_name" />
+								label="nombre de delegación" rules="max:30" v-model="model.delegation_name" />
 						</base-field>
 					</div>
 					<div class="col-lg-6">

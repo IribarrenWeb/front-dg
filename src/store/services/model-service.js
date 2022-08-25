@@ -67,7 +67,7 @@ async function api(model, method = 'GET', params = null, page = null, data = nul
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });
 }
 
@@ -90,7 +90,7 @@ async function getIndex(model, page = 1, params = null) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });
 }
 
@@ -147,7 +147,7 @@ function users_select(query = null, roles = [], ext_params = null) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });
 }
 
@@ -176,7 +176,7 @@ function store(model, payload, multipart = false) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -196,7 +196,7 @@ function show(model, id, params = "") {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });
 }
 
@@ -226,7 +226,7 @@ async function destroy(model, id) {
             storage.commit('loading');
             errors(err)
             toaster.error('No se pudo eliminar el registro')
-            throw Error('Error')
+            throw err
         })
     } else {
         storage.commit('loading');
@@ -242,7 +242,7 @@ function instByBusiness(id, page = 1) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -254,7 +254,7 @@ function dashEmployee(id) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -277,10 +277,6 @@ function update(model, id, data, multipart = false) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        // let data = 'Error';
-        // if (err?.response?.data) {
-        //     data = JSON.stringify(err?.response?.data);
-        // }
         throw err
     });
 }
@@ -293,7 +289,7 @@ function getDocument(id) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -305,7 +301,7 @@ function users(params) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -318,7 +314,7 @@ function dashboard() {
         storage.commit('loading');
 
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -330,7 +326,7 @@ function instOperations(id) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -342,7 +338,7 @@ function getReport(id) {
     }).catch(err => {
         storage.commit('loading');
         errors(err)
-        throw Error('Error')
+        throw err
     });;
 }
 
@@ -378,6 +374,11 @@ function errors(err) {
         case 403:
             title = 'No estas autorizado';
             body = message != null ? message : "No tienes el rol necesario para realizar esta acción";
+            break
+
+        case 409:
+            title = 'Validaciones fallidas';
+            body = message != null ? message : "Algunas validaciones fallaron";
             break
 
         default:

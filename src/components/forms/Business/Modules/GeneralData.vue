@@ -1,10 +1,10 @@
 <template>
 	<div class="row border border-light rounded p-2">
 		<div class="col-12">
-			<h4>Datos generales representante</h4>
+			<h4>Datos representante legal</h4>
 		</div>
 		<div class="col-lg-4">
-			<base-field name="property_name" label="Nombre representante">
+			<base-field name="property_name" label="Nombre">
 				<field-validate
 					type="text"
 					class="form-control"
@@ -17,7 +17,7 @@
 			</base-field>
 		</div>
 		<div class="col-lg-4">
-			<base-field name="property_last_name" label="Apellido representante">
+			<base-field name="property_last_name" label="Apellido">
 				<field-validate
 					type="text"
 					class="form-control"

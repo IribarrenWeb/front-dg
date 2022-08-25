@@ -26,10 +26,117 @@
 				</div>
 				<div class="col-md-12 mt-md-3">
 					<h5 class="text-uppercase text-primary">
-						Mercancia adr carga y descarga
+						MERCANCÍAS Y DEPOSITOS ADR REGISTRADOS
 					</h5>
 					<h6 class="text-uppercase text-muted">
-						TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS
+						<!-- TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS -->
+					</h6>
+					<form-validate ref="form_dep" @submit="addMaterial($event, 'deposit')">
+						<div class="row">
+							<div class="col-md-11">
+								<div class="row">
+									<div class="col-md-2">
+										<base-field name="un_code" label="UN">
+											<field-validate as="select" class="form-control" name="un_code" label="un"
+												rules="required" v-model="deposit.index">
+												<option selected>UN</option>
+												<option :value="idx" v-for="(r, idx) in audit.installation.deposits"
+													:key="idx">
+													{{ r.material.un_code }}
+												</option>
+											</field-validate>
+										</base-field>
+									</div>
+									<div class="col-md-5">
+										<base-input :view="true" :modelValue="deposit.name" label="Nombre" disabled />
+									</div>
+									<div class="col-md-5">
+										<base-input :view="true" :modelValue="
+											deposit.material != null
+												? deposit.material.denomination_name
+												: ``
+										" label="Denominación" disabled />
+									</div>
+									<div class="col-md-3">
+										<base-input :view="true" :modelValue="
+											deposit.material != null
+												? deposit.material.class.code
+												: ``
+										" label="Clase" disabled />
+									</div>
+									<div class="col-md-2">
+										<base-input :view="true" :modelValue="
+											deposit.material != null
+												? deposit.material.packing.code
+												: ``
+										" label="GE" disabled />
+									</div>
+									<div class="col-md-3">
+										<base-input :view="true" :modelValue="
+											deposit.equipment != null ? deposit.equipment.name : ``
+										" label="Deposito" disabled />
+									</div>
+									<div class="col-md-4">
+										<base-field label="Volumen almacenamiento">
+											<field-validate name="quantity" type="number" class="form-control"
+												v-model="deposit.quantity" :disabled="deposit.quantity == null">
+											</field-validate>
+										</base-field>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-1 d-flex">
+								<div class="align-self-center">
+									<base-button size="sm" nativeType="submit" :outline="true">
+										<i class="fa fa-plus" aria-hidden="true"></i>
+									</base-button>
+								</div>
+							</div>
+						</div>
+					</form-validate>
+					<hr />
+					<div class="row" v-for="(dep, idx) in adr_deposits" :key="idx">
+						<div class="col-md-11 border-bottom border-primary">
+							<div class="row">
+								<div class="col-md-2">
+									<base-input :view="true" :modelValue="dep.material.un_code" disabled />
+								</div>
+								<div class="col-md-5">
+									<base-input :view="true" :modelValue="dep.name" disabled />
+								</div>
+								<div class="col-md-5">
+									<base-input :view="true" :modelValue="dep.material.denomination_name" disabled />
+								</div>
+								<div class="col-md-3">
+									<base-input :view="true" :modelValue="dep.material.class.code" disabled />
+								</div>
+								<div class="col-md-3">
+									<base-input :view="true" :modelValue="dep.material.packing.code" disabled />
+								</div>
+								<div class="col-md-3">
+									<base-input :view="true" :modelValue="dep.equipment.name" disabled />
+								</div>
+								<div class="col-md-3">
+									<base-input :view="true" :modelValue="dep.quantity" disabled />
+								</div>
+							</div>
+						</div>
+						<div class="col-md-1 d-flex">
+							<div class="align-self-center">
+								<base-button size="sm" @click="unlink(dep.id, 'deposits')" type="danger"
+									:outline="true">
+									<i class="fa fa-minus" aria-hidden="true"></i>
+								</base-button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 mt-md-3">
+					<h5 class="text-uppercase text-primary">
+						MERCANCÍAS Y DEPOSITOS ADR NO REGISTRADOS
+					</h5>
+					<h6 class="text-uppercase text-muted">
+						<!-- TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS -->
 					</h6>
 					<form-validate @submit="submitMaterial">
 						<div class="row">
@@ -92,113 +199,6 @@
 
 				<div class="col-md-12 mt-md-3">
 					<h5 class="text-uppercase text-primary">
-						DEPOSITOS MERCANCÍAS PELIGROSAS INSTALACIÓN
-					</h5>
-					<h6 class="text-uppercase text-muted">
-						TIPO PELIGROS Y GRUPOS DE EMBALA MERCANCÍAS ADR REVISADAS
-					</h6>
-					<form-validate ref="form_dep" @submit="addMaterial($event, 'deposit')">
-						<div class="row">
-							<div class="col-md-11">
-								<div class="row">
-									<div class="col-md-2">
-										<base-field name="un_code" label="UN">
-											<field-validate as="select" class="form-control" name="un_code" label="un"
-												rules="required" v-model="deposit.index">
-												<option selected>UN</option>
-												<option :value="idx" v-for="(r, idx) in audit.installation.deposits"
-													:key="idx">
-													{{ r.material.un_code }}
-												</option>
-											</field-validate>
-										</base-field>
-									</div>
-									<div class="col-md-5">
-										<base-input :view="true" :modelValue="deposit.name" label="Nombre" disabled />
-									</div>
-									<div class="col-md-5">
-										<base-input :view="true" :modelValue="
-											deposit.material != null
-												? deposit.material.denomination_name
-												: ``
-										" label="Denominación" disabled />
-									</div>
-									<div class="col-md-3">
-										<base-input :view="true" :modelValue="
-											deposit.material != null
-												? deposit.material.class.code
-												: ``
-										" label="Clase" disabled />
-									</div>
-									<div class="col-md-3">
-										<base-input :view="true" :modelValue="
-											deposit.material != null
-												? deposit.material.packing.code
-												: ``
-										" label="GE" disabled />
-									</div>
-									<div class="col-md-3">
-										<base-input :view="true" :modelValue="
-											deposit.equipment != null ? deposit.equipment.name : ``
-										" label="Deposito" disabled />
-									</div>
-									<div class="col-md-3">
-										<base-field label="Volumen almacenamiento">
-											<field-validate name="quantity" type="number" class="form-control"
-												v-model="deposit.quantity" :disabled="deposit.quantity == null">
-											</field-validate>
-										</base-field>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-1 d-flex">
-								<div class="align-self-center">
-									<base-button size="sm" nativeType="submit" :outline="true">
-										<i class="fa fa-plus" aria-hidden="true"></i>
-									</base-button>
-								</div>
-							</div>
-						</div>
-					</form-validate>
-					<hr />
-					<div class="row" v-for="(dep, idx) in adr_deposits" :key="idx">
-						<div class="col-md-11 border-bottom border-primary">
-							<div class="row">
-								<div class="col-md-2">
-									<base-input :view="true" :modelValue="dep.material.un_code" disabled />
-								</div>
-								<div class="col-md-5">
-									<base-input :view="true" :modelValue="dep.name" disabled />
-								</div>
-								<div class="col-md-5">
-									<base-input :view="true" :modelValue="dep.material.denomination_name" disabled />
-								</div>
-								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.material.class.code" disabled />
-								</div>
-								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.material.packing.code" disabled />
-								</div>
-								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.equipment.name" disabled />
-								</div>
-								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.quantity" disabled />
-								</div>
-							</div>
-						</div>
-						<div class="col-md-1 d-flex">
-							<div class="align-self-center">
-								<base-button size="sm" @click="unlink(dep.id, 'deposits')" type="danger"
-									:outline="true">
-									<i class="fa fa-minus" aria-hidden="true"></i>
-								</base-button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12 mt-md-3">
-					<h5 class="text-uppercase text-primary">
 						RESIDUOS ADR GENERADOS/ALMACENADOS INSTALACIÓN
 					</h5>
 					<h6 class="text-uppercase text-muted">
@@ -237,7 +237,7 @@
 												: ``
 										" label="Clase" disabled />
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-2">
 										<base-input :view="true" :modelValue="
 											residue.material != null
 												? residue.material.packing.code
@@ -249,7 +249,7 @@
 											residue.equipment != null ? residue.equipment.name : ``
 										" label="Deposito" disabled />
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-4">
 										<base-field label="Volumen almacenamiento">
 											<field-validate name="quantity" type="number" class="form-control"
 												v-model="residue.quantity" :disabled="residue.quantity == null">
@@ -443,8 +443,7 @@ export default {
 					this.audit.valid_step >= this.currentStep
 						? this.audit.valid_step
 						: this.currentStep;
-
-				await service.update("audit", this.audit_id, {
+				let data = {
 					current_step: 4,
 					material_observation: _.isEmpty(this.material_observations)
 						? ""
@@ -452,7 +451,11 @@ export default {
 					valid_step: valid_step,
 					audit_material_reviews: this.materials,
 					audit_materials: this.adr_residues.concat(this.adr_deposits),
-				});
+				}
+
+				data = this.$functions.cleanData(data)
+				
+				await service.update("audit", this.audit_id, data);
 			} catch (err) {
 				let message = err.response.message
 					? err.response.message
