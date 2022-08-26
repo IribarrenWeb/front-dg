@@ -66,6 +66,7 @@
 				type: Boolean,
 				default: false,
 			},
+			option_disabled: null,
 			materials: {
 				type: Boolean,
 				default: false,
@@ -109,7 +110,10 @@
 								params: props.params,
 							});
 
-							options.value = res;
+							options.value = res.map((r) => {
+								r['$isDisabled'] = props.option_disabled ? r.id == props.option_disabled : false;
+								return r;
+							});
 
 							if (props.value) {
 								content.value = options.value.find((o) => o.id == props.value)

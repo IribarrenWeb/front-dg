@@ -72,17 +72,37 @@
 			</div>
 
 			<div>
-				<profile-show :columns="colsProfile" :profile="business?.administrable" />
+				<profile-show :columns="colsProfile" :profile="business?.administrable">
+					<template #actions>
+						<base-button
+							size="sm"
+							@click="(modal = true), (template = 'delegate')"
+							>Cambiar</base-button
+						>
+					</template>
+				</profile-show>
 			</div>
 
 			<modal
 				v-if="this.modal"
 				v-model:show="this.modal"
-				modalClasses="modal-xl"
+				:modalClasses="template == 'business' ? 'modal-xl' : 'modal-md'"
 				model="empresa"
 				action="Editar"
+				@close="template = 'business'"
 			>
+				<div v-if="template == 'delegate'" style="min-height: 150px">
+					<async-select
+						@selected="selected_delegate = $event?.id"
+						:list="true"
+						:option_disabled="business?.administrable?.user?.id"
+					></async-select>
+					<div class="d-flex justify-content-end mt-4">
+						<base-button size="sm" @click="changeDelegate" :disabled="!selected_delegate">Cambiar</base-button>
+					</div>
+				</div>
 				<show-business
+					v-if="template == 'business'"
 					@close="modal = false"
 					@reload="getBusiness()"
 					:business="business"
@@ -90,6 +110,8 @@
 			</modal>
 
 			<installation-table
+				:reload="reload"
+				@reloaded="reload = false"
 				v-if="business != null"
 				:business_id="business?.id"
 				:delegate_id="business?.administrable?.id"
@@ -103,9 +125,10 @@
 	import InstallationTable from "./Tables/InstallationTable.vue";
 	import ShowBusiness from "../components/forms/Business/ShowBusiness.vue";
 	import ProfileShow from "../components/ProfileShow.vue";
+	import AsyncSelect from "../components/AsyncSelect.vue";
 
 	export default {
-		components: { InstallationTable, ShowBusiness, ProfileShow },
+		components: { InstallationTable, ShowBusiness, ProfileShow, AsyncSelect },
 		mixins: [utils],
 		data() {
 			return {
@@ -113,6 +136,7 @@
 				business: null,
 				id: "",
 				modal: false,
+				template: "business",
 				colsProfile: [
 					{
 						title: "Nombre",
@@ -132,6 +156,8 @@
 						field: "user.email",
 					},
 				],
+				reload: false,
+				selected_delegate: null
 			};
 		},
 		async created() {
@@ -154,6 +180,31 @@
 						"&includes[]=administrable.user"
 				);
 				this.business = response.data.data;
+			},
+			changeDelegate() {
+				this.$swal({
+					title: "¿Estas seguro de querer cambiar el delegado?",
+					text: "Con esta accion se cambiaran todos los auditores dependientes de este delegado para las instalaciones, auditorias y demas de esta empresa.",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonText: "Confirmar",
+					cancelButtonText: "Cancelar",
+				}).then(async (result) => {
+					if (result.isConfirmed) {
+						try {
+							await service.api('business/'+this.business.id+'/change-delegate', 'PUT',null,null,{
+								delegate_id: this.selected_delegate
+							});
+							this.$swal('Delegado actualizado', 'El delegado de esta empresa se ha actualizado', 'success')
+							this.modal = false
+							this.template = 'business'
+							this.reload = true
+							this.getBusiness()
+						} catch (err) {
+							this.$swal('No se pudo actualizar el delegado',null,'danger')
+						}
+					}
+				});
 			},
 		},
 		computed: {

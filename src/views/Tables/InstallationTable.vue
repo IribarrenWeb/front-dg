@@ -142,6 +142,10 @@
 			byAuditableType: {
 				type: String,
 				default: 'delegate_id'
+			},
+			reload: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -221,6 +225,15 @@
 				}
 			},
 		},
+		watch: {
+			reload(value) {
+				alert(value)
+				if (value) {
+					this.getInstallations();
+					this.$emit('reloaded')
+				}
+			}
+		}
 	};
 </script>
 <style>

@@ -258,7 +258,6 @@
 					<div class="col-12">
 						<base-switch
 							v-model="model.representative"
-							@change="handleRep"
 							:value="model.representative != 0 ? true : false"
 							label="Representante de la instalación"
 						></base-switch>

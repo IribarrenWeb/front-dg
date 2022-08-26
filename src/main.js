@@ -54,6 +54,14 @@ configure({
 
 setLocale("es");
 
+const options = {
+  customClass: {
+    confirmButton: 'btn btn-primary',
+    cancelButton: 'btn btn-outline-primary'
+  },
+  buttonsStyling: false
+}
+
 const appInstance = createApp(App);
 
 // define options
@@ -82,7 +90,7 @@ appInstance.config.globalProperties.$schemas = schemas;
 appInstance.component('date-picker', flatPickr);
 appInstance.use(store);
 appInstance.use(router);
-appInstance.use(VueSweetalert2);
+appInstance.use(VueSweetalert2,options);
 appInstance.use(ArgonDashboard);
 appInstance.config.errorHandler = (err, vm, info) => {
     console.log(err, 'ERRRORRR', vm, info);

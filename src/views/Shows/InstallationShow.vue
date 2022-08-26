@@ -29,7 +29,7 @@
 			<div class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2">
 				<div class="col-md-12 py-2">
 					<div class="d-flex justify-content-between">
-						<h4>Responsable de la instalación</h4>
+						<h4>Responsables de la instalación</h4>
 						<div class="">
 							<base-button v-if="responsible?.id" size="sm" @click="modal = true">Editar</base-button>
 						</div>
@@ -47,7 +47,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-if="responsible?.id">
+							<tr v-for="(responsible, index) in responsibles" :key="index">
 								<td>{{ responsible?.name }} {{ responsible?.last_name }}</td>
 								<td>{{ responsible?.dni }}</td>
 								<td>{{ responsible?.phone_number }}</td>
@@ -69,7 +69,7 @@
 									</div>
 								</td>
 							</tr>
-							<tr v-else>
+							<tr v-if="!responsibles">
 								<td colspan="5">Sin responsable</td>
 							</tr>
 						</tbody>
@@ -246,27 +246,29 @@ export default {
 					"includes[]=operations&includes[]=equipments" +
 					"&includes[]=auditable.user" +
 					"&includes[]=depositTypes" +
-					"&includes[]=responsible.firm_document" +
+					"&includes[]=responsibles.firm_document" +
 					"&includes[]=firm_document"+
 					"&includes[]=auditor_document"+
 					"&includes[]=company"
 				);
 
 				this.model = this.$functions.assignSchema('installation', res.data.data, ['address']);
-				console.log('keinher', this.model);
-				this.responsible = this.$functions.assignSchema('employee', res.data.data?.responsible);
+				this.responsibles = res.data.data?.responsibles.map((res) => {
+					let employee = this.$functions.assignSchema('employee', res)
+					let f_doc = null;
+					forEach(employee?.documents, (doc) => {
+						if (doc.type.name == "CERTIFICADO") {
+							f_doc = doc;
+						}
+					});
+					if (!isEmpty(employee)) {
+						employee.formation_document = f_doc;
+					}
+					return employee;
+				});
 				// this.model.file_document = null;
 				this.model.auditable_id = null;
 
-				let f_doc = null;
-				forEach(this.responsible?.documents, (doc) => {
-					if (doc.type.name == "CERTIFICADO") {
-						f_doc = doc;
-					}
-				});
-				if (!isEmpty(this.responsible)) {
-					this.responsible.formation_document = f_doc;
-				}
 
 				this.model.responsible = null;
 				this.model.hasTransport = this.model.hasTransport ? this.model.hasTransport : null;

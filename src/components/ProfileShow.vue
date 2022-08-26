@@ -1,8 +1,13 @@
 <template>
 	<div>
 		<div class="mt-3 card">
-			<div class="my-2 ml-md-4 ml-2">
-				<h4>{{ title }}</h4>
+			<div class="d-flex justify-content-between my-2 mx-md-4 mx-2 align-content-center">
+				<div class="d-flex align-content-center">
+					<h4>{{ title }}</h4>
+				</div>
+				<div>
+					<slot name="actions"></slot>
+				</div>
 			</div>
 			<table class="table table-bordered table-responsive-lg table-sm rounded">
 				<thead>
