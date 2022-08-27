@@ -311,6 +311,10 @@
 				type: Boolean,
 				default: false,
 			},
+			responsible: {
+				type: Boolean,
+				default: false
+			}
 		},
 		data() {
 			return {
@@ -343,6 +347,9 @@
 				this.model.installation_id = this.installation_id ?? null;
 			} else {
 				this.show();
+			}
+			if (this.responsible) {
+				this.model.representative = true;
 			}
 			this.loadPermits();
 		},

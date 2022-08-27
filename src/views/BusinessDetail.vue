@@ -75,6 +75,7 @@
 				<profile-show :columns="colsProfile" :profile="business?.administrable">
 					<template #actions>
 						<base-button
+							v-if="$store.state.is_admin"
 							size="sm"
 							@click="(modal = true), (template = 'delegate')"
 							>Cambiar</base-button
@@ -91,13 +92,14 @@
 				action="Editar"
 				@close="template = 'business'"
 			>
-				<div v-if="template == 'delegate'" style="min-height: 150px">
+				<div v-if="template == 'delegate'" style="min-height: 200px;" >
 					<async-select
+						class="w-100"
 						@selected="selected_delegate = $event?.id"
 						:list="true"
 						:option_disabled="business?.administrable?.user?.id"
 					></async-select>
-					<div class="d-flex justify-content-end mt-4">
+					<div class="d-flex justify-content-end mt-4 w-100">
 						<base-button size="sm" @click="changeDelegate" :disabled="!selected_delegate">Cambiar</base-button>
 					</div>
 				</div>

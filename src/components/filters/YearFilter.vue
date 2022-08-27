@@ -49,7 +49,6 @@
 				(val) => {
 					if (val) {
 						year.value = null;
-						alert('yearrrrr');
 						emit("update:clear", false);
 					}
 				}

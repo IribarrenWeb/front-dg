@@ -61,7 +61,7 @@
 					<th>Servicio</th>
 					<th>Nombre</th>
 					<th>Apellido</th>
-					<th>Fecha</th>
+					<th>Fecha checklist</th>
 					<th></th>
 					<th></th>
 				</template>

@@ -36,14 +36,14 @@
                     </base-field>
                 </div>
                 <div class=" col-lg-6">
-                    <base-field name="file_document_date" label="Fecha documentacion">
+                    <base-field name="file_document_date" label="Fecha checklist">
                         <field-validate type="date" class="form-control" name="file_document_date"
                             :rules="{ 'required': !$empty(model.file_document.file) }" label="fecha"
                             v-model="model.file_document_date" />
                     </base-field>
                 </div>
                 <div class=" col-lg-6">
-                    <base-field name="file_document" label="Documentacion">
+                    <base-field name="file_document" label="Documento checklist">
                         <div v-if="model.file_document.file.length >= 1 || document">
                             <span class="mr-md-4">{{ document ? document.name_document :
                                     model.file_document.file[0].name
@@ -54,7 +54,7 @@
                         <field-validate v-show="(new_doc && $empty(model.file_document.file)) || (!update && !model.file_document.file.length >= 1) || (!document && $empty(model.file_document.file))" class="form-control"
                             type="file" name="file_document"
                             :rules="!$empty(model.file_document_date) && !update ? 'required|ext:pdf' : 'ext:pdf'"
-                            :validateOnInput="true" label="documentacion" v-model="model.file_document.file" />
+                            :validateOnInput="true" label="documento checklist" v-model="model.file_document.file" />
                         <div class="mt-2">
                             <base-button v-if="update && document && new_doc" @click="handleCancel" size="sm" type="default" :outline="true">
                                 Cancelar

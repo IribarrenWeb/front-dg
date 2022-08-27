@@ -1,7 +1,7 @@
 <template>
     <div class="row border border-light rounded p-2 my-2">
         <div class="col-12">
-            <h4>Dirección</h4>
+            <h4>{{title}}</h4>
         </div>
         <div class="col">
             <div class="row">
@@ -88,6 +88,10 @@ export default {
             type: String,
             default: ''
         },
+        title: {
+            type: String,
+            default: 'Dirección'
+        }
     },
     setup(props, { emit }) {
         const street = ref()

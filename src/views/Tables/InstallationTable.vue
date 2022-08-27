@@ -227,7 +227,6 @@
 		},
 		watch: {
 			reload(value) {
-				alert(value)
 				if (value) {
 					this.getInstallations();
 					this.$emit('reloaded')

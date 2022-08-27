@@ -31,7 +31,7 @@
 					<div class="d-flex justify-content-between">
 						<h4>Responsables de la instalación</h4>
 						<div class="">
-							<base-button v-if="responsible?.id" size="sm" @click="modal = true">Editar</base-button>
+							<base-button size="sm" @click="modal = true, addResponsible = true">Agregar</base-button>
 						</div>
 					</div>
 				</div>
@@ -70,14 +70,14 @@
 								</td>
 							</tr>
 							<tr v-if="!responsibles">
-								<td colspan="5">Sin responsable</td>
+								<td colspan="5">Sin responsables</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<modal v-if="modal" v-model:show="modal" action="editar" modalClasses="modal-xl" model="empleado">
-				<form-employee @close="modal = false" @reload="index()" :employee_id="responsible?.id"></form-employee>
+			<modal v-if="modal" v-model:show="modal" :action="addResponsible ? 'agregar responsable' : 'editar'" modalClasses="modal-xl" model="empleado">
+				<form-employee @close="modal = false" :responsible="addResponsible" @reload="getInst()" :installation_id="installation_id"></form-employee>
 			</modal>
 		</template>
 		<!-- ------------------------------------------------------ -->
@@ -212,6 +212,8 @@ export default {
 				new: false,
 				base64: "",
 			},
+			modal: false,
+			addResponsible: false,
 			reload_dash_employee: false,
 			update: {
 				op: false,
@@ -222,7 +224,6 @@ export default {
 			oper: [],
 			deps: [],
 			steps: {},
-			modal: false,
 			original_model: null,
 			currentStep: 1,
 			operations: [],
