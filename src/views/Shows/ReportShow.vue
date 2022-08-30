@@ -111,8 +111,8 @@
 			<div class="mb-1">
 				<h4>Mercancías ADR</h4>
 			</div>
-			<div class="overflow-auto">
-				<table class="table table-bordered table-sm rounded">
+			<div class="overflow-auto w-100">
+				<table class="table table-bordered table-sm rounded w-100">
 					<thead>
 						<tr>
 							<td>Instalación</td>
@@ -189,16 +189,18 @@
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == 6">
 			<div>
-				<div class="mb-1">
+				<div class="mb-1 d-flex align-content-center justify-content-between">
 					<h4>Sucesos</h4>
+					<base-button size="sm" rounded icon="fa-solid fa-plus" icon-only type="primary" @click="addAccident"/>
 				</div>
-				<div class="overflow-auto">
-					<table class="table table-bordered table-sm rounded">
+				<div class="overflow-auto w-100">
+					<table class="table table-bordered table-sm rounded w-100">
 						<thead>
 							<tr>
 								<td>Fecha</td>
 								<td>Lugar</td>
 								<td>Descripción</td>
+								<td></td>
 							</tr>
 						</thead>
 						<tbody v-if="model.accidents && model.accidents?.length >= 1">
@@ -211,6 +213,9 @@
 								</th>
 								<th>
 									<input type="text" class="form-control" v-model="model.accidents[idx].description"/>
+								</th>
+								<th>
+									<base-button size="sm" rounded icon="fa-solid fa-minus" icon-only type="primary" @click="removeAccident(idx)"/>
 								</th>
 							</tr>
 						</tbody>
@@ -585,6 +590,16 @@
 			},
 			handleClose() {
 				this.$emit("close");
+			},
+			addAccident(){
+				this.model.accidents.push({
+					date: null,
+					address: null,
+					description: null
+				})
+			},
+			removeAccident(idx){
+				this.model.accidents.splice(idx,1)
 			},
 			async loadOperations() {
 				const res = await dataService.getOperations();
