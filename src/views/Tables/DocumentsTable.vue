@@ -9,6 +9,28 @@
 			</div>
 		</div>
 
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
+			<business-filter 
+				class="col-md-3"
+				v-model:clear="clear"
+				@updated="handleFilter('business_id', $event)"
+				v-if="!$store.state.is_business"
+			/>
+			<select-filter
+				class="col-md-3"
+				placeholder="Tipos"
+				v-model:clear="clear"
+				:options="[{label: 'General',value:1},{label:'Empresas',value:2}]"
+				@updated="handleFilter('type_id', $event)"
+			/>
+			<div class="col-md-2">
+				<base-button
+					size="sm"
+					@click="(params_filter = params), getDocuments(page), (clear = true)"
+					>Borrar filtros</base-button
+				>
+			</div>
+		</div>
 		<div class="table-responsive">
 			<base-table thead-classes="thead-light" :data="tableData">
 				<template v-slot:columns>
@@ -74,10 +96,12 @@
 	</div>
 </template>
 <script>
+	import BusinessFilter from '../../components/filters/BusinessFilter.vue';
+	import SelectFilter from '../../components/filters/SelectFilter.vue';
 	import DeleteButton from "../../components/Utils/DeleteButton.vue";
 	import service from "../../store/services/model-service";
 	export default {
-		components: { DeleteButton },
+		components: { DeleteButton, SelectFilter, BusinessFilter },
 		name: "documents-table",
 		props: ["reload"],
 		data() {
@@ -88,6 +112,9 @@
 				submit: false,
 				loader: false,
 				action: "Registrar",
+				params: 'includes[]=type&includes[]=business.user&includes[]=createdBy',
+				params_filter: null,
+				clear: false
 			};
 		},
 		mounted() {
@@ -95,8 +122,11 @@
 		},
 		methods: {
 			async getDocuments(page = 1) {
+				if (this.params_filter == null) {
+					this.params_filter = this.params
+				}
 				try {
-					const response = await service.getIndex("documents", page,'includes[]=type&includes[]=business.user&includes[]=createdBy');
+					const response = await service.getIndex("documents", page,this.params_filter);
 					this.tableData = response.data.data;
 					this.metaData = response.data.meta.page;
 					this.page = this.metaData.currentPage;
@@ -107,6 +137,15 @@
 			async handleChange(event) {
 				if (event != this.page) {
 					this.getDocuments(event);
+				}
+			},
+			handleFilter(type = 'delegate_id', value){
+				if (!this.$empty(value) || value >= 1) {
+					this.params_filter += `&${type}=`+value
+					this.getDocuments(this.page)
+				}else{
+					this.params_filter = this.params
+					this.getDocuments(this.page)
 				}
 			},
 		},

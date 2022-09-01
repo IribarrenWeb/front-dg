@@ -17,8 +17,13 @@
 		</div>
 		<div></div>
 		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
-			<delegate-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('delegate',$event)" v-if="$store.state.is_admin && !byAuditableId"></delegate-filter>
-			<city-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('city',$event)"></city-filter>
+			<delegate-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('delegate_id',$event)" v-if="$store.state.is_admin && !byAuditableId"></delegate-filter>
+			<city-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('city_id',$event)"></city-filter>
+			<text-filter 
+				class="col-md-4 col-lg-3"
+				v-model:clear="clear"
+				@updated="handleFilter('name', $event)"
+			/>
 			<div class="col-md-4 col-lg-3">
 				<base-button size="sm" @click="params_filter = params,getBusiness(),clear = true">Borrar filtros</base-button>
 			</div>
@@ -95,9 +100,10 @@
 	import DeleteButton from "../../../components/Utils/DeleteButton.vue";
 	import DelegateFilter from "../../../components/filters/DelegateFilter.vue";
 	import CityFilter from "../../../components/filters/CityFilter.vue";
+	import TextFilter from '../../../components/filters/TextFilter.vue';
 
 	export default {
-		components: { FormBusiness, DeleteButton, DelegateFilter, CityFilter },
+		components: { FormBusiness, DeleteButton, DelegateFilter, CityFilter, TextFilter },
 		name: "business-table",
 		props: {
 			byAuditableId: {
@@ -132,7 +138,7 @@
 			handleFilter(type = 'delegate', value){
 				console.log(value, type);
 				if (!this.$empty(value) || value >= 1) {
-					this.params_filter += `&${type}_id=`+value
+					this.params_filter += `&${type}=`+value
 					this.getBusiness(null)
 				}else{
 					this.params_filter = this.params

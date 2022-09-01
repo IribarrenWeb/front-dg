@@ -17,14 +17,18 @@
 			<installation-filter
 				class="col-md-3"
 				v-model:clear="clear"
-				@updated="handleFilter('installation', $event)"
+				@updated="handleFilter('installation_id', $event)"
 			></installation-filter>
 			<select-filter
 				class="col-md-3"
 				placeholder="Mercancias peligrosas"
 				v-model:clear="clear"
 				:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
-				@updated="handleFilter('adr', $event)"
+				@updated="handleFilter('adr_id', $event)"
+			/>
+			<text-filter 
+				v-model:clear="clear"
+				@updated="handleFilter('name', $event)"
 			/>
 			<div class="col-md-2">
 				<base-button
@@ -129,9 +133,10 @@
 	import DeleteButton from '../../components/Utils/DeleteButton.vue';
 	import InstallationFilter from '../../components/filters/InstallationFilter.vue';
 	import SelectFilter from '../../components/filters/SelectFilter.vue';
+	import TextFilter from '../../components/filters/TextFilter.vue';
 
 	export default {
-		components: { FormEmployee, DeleteButton, InstallationFilter, SelectFilter },
+		components: { FormEmployee, DeleteButton, InstallationFilter, SelectFilter, TextFilter },
 		mixins: [utils],
 		name: "employees-table",
 		props: {
@@ -217,10 +222,9 @@
 
 				this.index(event);
 			},
-			handleFilter(type = 'delegate', value){
-				console.log(value, type);
+			handleFilter(type = 'delegate_id', value){
 				if (!this.$empty(value) || value >= 1) {
-					this.params_filter += `&${type}_id=`+value
+					this.params_filter += `&${type}=`+value
 					this.index(this.page)
 				}else{
 					this.params_filter = this.params

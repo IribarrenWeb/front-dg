@@ -25,7 +25,7 @@
                 </div>
                 <div class=" col-lg-6">
                     <base-field name="email" label="Email">
-                        <field-validate type="text" class="form-control" name="email" rules="required|email"
+                        <field-validate type="email" class="form-control" name="email" rules="required|email"
                             label="email" v-model="model.email" />
                     </base-field>
                 </div>
@@ -80,9 +80,9 @@
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
-                    <base-field name="adr_dni" label="DNI">
-                        <field-validate type="text" class="form-control text-uppercase" name="adr_dni"
-                            rules="required|alpha_num" label="adr dni" v-model.trim="model.adr_dni" />
+                    <base-field name="adr_email" label="Email">
+                        <field-validate type="email" class="form-control" name="adr_email"
+                            rules="required|email" label="adr email" v-model.trim="model.adr_email" />
                     </base-field>
                 </div>
             </div>
@@ -122,7 +122,7 @@ export default {
                 name: "",
                 last_name: "",
                 dni: "",
-                adr_dni: "",
+                adr_email: "",
                 phone_number: "",
                 email: "",
                 file_document_date: "",

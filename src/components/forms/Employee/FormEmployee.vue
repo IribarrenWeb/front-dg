@@ -24,6 +24,7 @@
 					v-model:position="model.position"
 					v-model:dni="model.dni"
 					v-model:email="model.email"
+					:is-responsible="model.representative"
 				/>
 				<div class="row border rounded border-light px-4 py-2 mt-3">
 					<div class="col-12 border-bottom border-light mb-md-3">

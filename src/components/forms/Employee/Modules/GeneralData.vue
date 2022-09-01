@@ -38,12 +38,12 @@
 			</div>
 
 			<div class="col-lg-6 col-lg-4">
-				<base-field :apiName="prevName +'dni'" :name="prevName + 'dni'" label="DNI" :required="true">
+				<base-field :apiName="prevName +'dni'" :name="prevName + 'dni'" label="DNI" :required="!isResponsible">
 					<field-validate
 						type="text"
 						class="form-control"
 						:name="prevName + 'dni'"
-						rules="required|alpha_num|min:9|max:9"
+						:rules="{ required: !isResponsible, alpha_num: true ,min:9,max:9 }"
 						label="dni"
 						@input="$emit('update:dni', $event.target.value)"
 						:value="dni"
@@ -130,6 +130,10 @@
 				type: Boolean,
 				default: false,
 			},
+			isResponsible: {
+				type: Boolean,
+				default: false
+			}
 		},
 		setup(props) {
 			const store = useStore();
