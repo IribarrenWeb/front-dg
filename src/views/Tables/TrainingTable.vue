@@ -109,7 +109,7 @@
 							v-if="!row.item?.status"
 							class="dropdown audit-drop"
 							position="right"
-							direction="up"
+							:direction="row.idx == 0 || row.idx == 1 ? 'down' : 'up'"
 						>
 							<template v-slot:title>
 								<a
