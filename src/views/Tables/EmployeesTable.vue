@@ -13,13 +13,15 @@
 			</div>
 		</div>
 
-		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center" v-if="$store.state.is_business">
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
 			<installation-filter
+				v-if="$store.state.is_business"
 				class="col-md-3"
 				v-model:clear="clear"
 				@updated="handleFilter('installation_id', $event)"
 			></installation-filter>
 			<select-filter
+				v-if="$store.state.is_business"
 				class="col-md-3"
 				placeholder="Mercancias peligrosas"
 				v-model:clear="clear"
@@ -27,10 +29,11 @@
 				@updated="handleFilter('adr_id', $event)"
 			/>
 			<text-filter 
+				class="col-md-3"
 				v-model:clear="clear"
 				@updated="handleFilter('name', $event)"
 			/>
-			<div class="col-md-2">
+			<div class="col-md-3">
 				<base-button
 					size="sm"
 					@click="(params_filter = params), index(page), (clear = true)"

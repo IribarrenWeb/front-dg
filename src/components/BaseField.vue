@@ -9,6 +9,7 @@
         { 'has-label': label || $slots.label },
         { 'has-success': valid === true },
         { 'has-danger': valid === false },
+        customClases
       ]"
     >
       <slot name="label">
@@ -104,6 +105,10 @@
         description: "Form css classes",
       },
       labelClasses: {
+        type: String,
+        description: "Input label css classes",
+      },
+      customClases: {
         type: String,
         description: "Input label css classes",
       },

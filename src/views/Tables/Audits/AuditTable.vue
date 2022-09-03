@@ -32,7 +32,7 @@
 			"
 		>
 			<div class="col-md-10">
-				<div class="row align-items-center">
+				<div class="row align-items-end">
 					<date-filter
 						class="col-md-3"
 						v-model:clear="clear"

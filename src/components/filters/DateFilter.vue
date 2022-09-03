@@ -1,6 +1,6 @@
 <template>
 	<div class="filter">
-		<base-field :label="label">
+		<base-field :label="label" customClases="mb-0">
 			<input class="form-control form-control-sm" type="date" v-model="date" @input="handleEmit"/>
 		</base-field>
 	</div>
