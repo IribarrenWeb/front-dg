@@ -177,7 +177,6 @@
 				report_id: null,
 				params:
 					"includes[]=business.user" +
-					"&includes[]=business.user" +
 					"&counts[]=nonconformities" +
 					"&counts[]=installations" +
 					"&counts[]=audits" +
@@ -201,7 +200,7 @@
 				let params = this.params_filter;
 
 				if (this.$store.state.is_admin) {
-					params += "&includes[]=business.administrable.user";
+					params += "&includes[]=business.administrable.user.delegate";
 				}
 
 				if (this.dash) {
