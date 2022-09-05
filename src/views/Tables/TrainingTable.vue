@@ -106,7 +106,6 @@
 					</td>
 					<td>
 						<base-dropdown
-							v-if="!row.item?.status"
 							class="dropdown audit-drop"
 							position="right"
 							:direction="row.idx == 0 || row.idx == 1 ? 'down' : 'up'"
@@ -139,6 +138,13 @@
 							<a
 								class="dropdown-item"
 								href="#"
+								v-if="row.item?.status"
+								@click="toComplete(row.item)"
+								>Detalle</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
 								v-if="!row.item?.status"
 								@click="toComplete(row.item)"
 								>Completar</a
@@ -156,8 +162,8 @@
 			>
 			</base-pagination>
 
-			<modal v-if="this.modal" modalClasses="modal-xl" v-model:show="this.modal" model="Formación">
-				<form-complete-formation :training_id="training_id" @close="modal = false, training_id = null" @reload="index"/>
+			<modal v-if="this.modal && selected_training" modalClasses="modal-xl" :action="selected_training.status ? 'detalle' : 'completar'" v-model:show="this.modal" model="Formación">
+				<form-complete-formation :isComplete="selected_training.status" :training_id="selected_training.id" @close="modal = false, selected_training = null" @reload="index"/>
 			</modal>
 		</div>
 	</div>
@@ -191,7 +197,7 @@
 					"includes[]=installation.company&counts[]=employees&includes[]=formation.facilitable.user&includes[]=formation.type",
 				params_filter: null,
 				clear: null,
-				training_id: null
+				selected_training: null
 			};
 		},
 		mounted() {
@@ -241,13 +247,13 @@
 				this.index();
 			},
 			async toComplete(item) {
-				if (!item.can_complete) {
+				if (!item.can_complete && !item.status) {
 					this.$swal('No se puede completar esta Formación', 
 					'Esta formación no se puede completar debido a que la fecha agendada es anterior a la fecha actual.',
 					'error')
 					return;
 				}
-				this.training_id = item.id;
+				this.selected_training = item;
 				this.modal = true;
 			},
 			async generate(training) {
