@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div></div>
-		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container">
 			<delegate-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('delegate_id',$event)" v-if="$store.state.is_admin && !byAuditableId"></delegate-filter>
 			<city-filter class="col-md-4 col-lg-3" v-model:clear="clear" @updated="handleFilter('city_id',$event)"></city-filter>
 			<text-filter 

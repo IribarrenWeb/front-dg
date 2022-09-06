@@ -22,7 +22,7 @@
 			</div>
 		</div>
 
-		<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-end">
+		<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-end filter-container">
 			<date-filter
 				class="col-md-3"
 				v-model:clear="clear"

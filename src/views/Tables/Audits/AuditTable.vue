@@ -28,11 +28,12 @@
 				bac-ligth
 				mx-0
 				row
-				align-items-center
+				align-items-end
+				filter-container
 			"
 		>
 			<div class="col-md-10">
-				<div class="row align-items-end">
+				<div class="row align-items-end ">
 					<date-filter
 						class="col-md-3"
 						v-model:clear="clear"

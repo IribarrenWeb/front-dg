@@ -14,7 +14,7 @@
 		</div>
 
 		<div
-			class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center"
+			class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container"
 		>
 			<div class="col-md-3 filter">
 				<async-select

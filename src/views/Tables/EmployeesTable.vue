@@ -13,7 +13,7 @@
 			</div>
 		</div>
 
-		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center">
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container">
 			<installation-filter
 				v-if="$store.state.is_business"
 				class="col-md-3"

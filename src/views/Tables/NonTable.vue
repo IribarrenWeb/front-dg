@@ -18,7 +18,7 @@
 
 		<div
 			v-if="!dash"
-			class="card-header border-0 py-3 bac-ligth row mx-0 align-items-end"
+			class="card-header border-0 py-3 bac-ligth row mx-0 align-items-end filter-container"
 		>
 			<div class="col-md-10">
 				<div class="row align-items-center">

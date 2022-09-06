@@ -232,3 +232,7 @@
 .multiselect__spinner{
     z-index: 1;
 }
+
+.filter-container .btn{
+    height: 40px;
+}

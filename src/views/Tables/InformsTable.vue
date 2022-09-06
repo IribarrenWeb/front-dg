@@ -15,37 +15,39 @@
 
 		<div
 			v-if="!dash"
-			class="card-header border-0 py-3 bac-ligth row align-items-end mx-0"
+			class="card-header border-0 py-3 bac-ligth row align-items-end mx-0 filter-container"
 		>
-			<year-filter
-				label="Año"
-				class="col-md-3"
-				v-model:clear="clear"
-				placeholder="Año"
-				@updated="handleFilter('year', $event)"
-			/>
-			<delegate-filter
-				class="col-md-3"
-				v-model:clear="clear"
-				@updated="handleFilter('delegate', $event)"
-				v-if="$store.state.is_admin"
-			></delegate-filter>
-			<city-filter
-				class="col-md-3"
-				v-model:clear="clear"
-				@updated="handleFilter('city', $event)"
-			></city-filter>
-			<select-filter
-				class="col-md-3"
-				v-model:clear="clear"
-				:options="[
-					{ label: 'Pendiente', value: 'pendiente' },
-					{ label: 'Completado', value: 'completado' },
-					{ label: 'POR REVISAR', value: 'POR REVISAR' },
-				]"
-				placeholder="Selecciona un estado..."
-				@updated="handleFilter('status', $event)"
-			/>
+			<div class="col-md-10 row align-items-end">
+				<year-filter
+					label="Año"
+					class="col-md-3"
+					v-model:clear="clear"
+					placeholder="Año"
+					@updated="handleFilter('year', $event)"
+				/>
+				<delegate-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					@updated="handleFilter('delegate', $event)"
+					v-if="$store.state.is_admin"
+				></delegate-filter>
+				<city-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					@updated="handleFilter('city', $event)"
+				></city-filter>
+				<select-filter
+					class="col-md-3"
+					v-model:clear="clear"
+					:options="[
+						{ label: 'Pendiente', value: 'pendiente' },
+						{ label: 'Completado', value: 'completado' },
+						{ label: 'POR REVISAR', value: 'POR REVISAR' },
+					]"
+					placeholder="Selecciona un estado..."
+					@updated="handleFilter('status', $event)"
+				/>
+			</div>
 			<div class="col-md-2">
 				<base-button
 					size="sm"
