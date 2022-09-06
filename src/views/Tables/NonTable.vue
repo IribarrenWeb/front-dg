@@ -21,7 +21,7 @@
 			class="card-header border-0 py-3 bac-ligth row mx-0 align-items-end filter-container"
 		>
 			<div class="col-md-10">
-				<div class="row align-items-center">
+				<div class="row align-items-end">
 					<date-filter
 						class="col-md-4 col-lg-3"
 						v-model:clear="clear"
