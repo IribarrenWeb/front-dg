@@ -128,9 +128,9 @@
 		>
 			<form-action
 				:role="ROLE"
-				@close="modal = false"
+				@close="modal = false, selected_non = null"
 				:nonconformity="selected_non"
-				:show="ROLE != 'business' || selected_non.status == 'COMPLETADO'"
+				:show="selected_non.status != 'PENDIENTE' || ROLE != 'business'"
 				@reload="index(page)"
 			></form-action>
 		</modal>
@@ -163,7 +163,7 @@
 				page: 1,
 				modal: false,
 				selected_non: null,
-				params: "includes[]=installation&includes[]=audit",
+				params: "includes[]=installation&includes[]=audit&includes[]=action.responsible",
 				params_filter: null,
 				clear: false,
 				nonTypes: [],
@@ -184,7 +184,7 @@
 				let params = this.params_filter;
 
 				if (this.ROLE != "business" && !this.dash) {
-					params += "&includes[]=action.responsible&includes[]=installation.company.user";
+					params += "&includes[]=installation.company.user";
 				}
 
 				if (this.dash) {

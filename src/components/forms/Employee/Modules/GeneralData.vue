@@ -43,7 +43,7 @@
 						type="text"
 						class="form-control"
 						:name="prevName + 'dni'"
-						:rules="{ required: !isResponsible, alpha_num: true ,min:9,max:9 }"
+						:rules="{ 'required': !isResponsible, 'alpha_num': true ,'min':9,'max':9 }"
 						label="dni"
 						@input="$emit('update:dni', $event.target.value)"
 						:value="dni"
@@ -51,12 +51,12 @@
 				</base-field>
 			</div>
 			<div class="col-lg-6 col-lg-4">
-				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="true">
+				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="isResponsible">
 					<field-validate
 						type="text"
 						class="form-control"
 						:name="prevName + 'email'"
-						rules="email|required"
+						:rules="{ 'required': isResponsible, 'email': true}"
 						label="email"
 						@input="$emit('update:email', $event.target.value)"
 						:value="email"

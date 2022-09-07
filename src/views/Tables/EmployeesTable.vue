@@ -113,7 +113,7 @@
 			v-if="this.modal"
 			v-model:show="this.modal"
 			:action="action"
-			@close="action = 'registrar'"
+			@close="action = 'registrar', employee_id = null"
 			modalClasses="modal-xl"
 			model="empleado"
 		>
