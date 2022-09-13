@@ -91,8 +91,8 @@ export default {
         function connect() {
             echo.value = new Echo({
                 broadcaster: 'pusher',
-                key: '2fb6591fcc8e23215143',
-                cluster: 'us2',
+                key: process.env.PUSHER_APP_KEY,
+                cluster: process.env.PUSHER_APP_CLUSTER,
                 encrypted: true,
                 authEndpoint: process.env.VUE_APP_API_URL + 'broadcasting/auth',
                 auth: {
