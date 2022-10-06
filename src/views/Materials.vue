@@ -41,7 +41,7 @@
 	</div>
 </template>
 <script>
-	import MaterialTable from "./Tables/MaterialTable.vue";
+	import MaterialTable from "../components/Materials/MaterialTable.vue";
 
 	export default {
 		name: "tables",

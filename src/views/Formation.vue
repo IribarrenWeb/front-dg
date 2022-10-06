@@ -16,8 +16,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import FormationTable from './Tables/FormationTable.vue';
-import TrainingTable from './Tables/TrainingTable.vue';
+import FormationTable from '../components/Formation/FormationTable.vue';
+import TrainingTable from '../components/Training/TrainingTable.vue';
   // Charts
 
   export default {

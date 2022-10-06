@@ -236,3 +236,8 @@
 .filter-container .btn{
     height: 40px;
 }
+
+.modal-xxl{
+    width: 90vw !important;
+    max-width: 90vw !important;
+}

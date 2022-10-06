@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-	import BusinessTable from "./Tables/Business/BusinessTable.vue";
+	import BusinessTable from "../components/Business/BusinessTable.vue";
 	// Charts
 
 	export default {

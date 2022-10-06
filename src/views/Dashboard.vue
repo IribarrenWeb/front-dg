@@ -55,10 +55,10 @@
 </template>
 <script>
 	import { mapGetters } from "vuex";
-	import InformsTable from "./Tables/InformsTable.vue";
-	import NonTable from "./Tables/NonTable.vue";
+	import InformsTable from "../components/AnnualReport/InformsTable.vue";
+	import NonTable from "../components/Non/NonTable.vue";
 	import service from "@/store/services/model-service";
-	import VisitTablet from './Tables/VisitTablet.vue';
+	import VisitTablet from '../components/Visit/VisitTablet.vue';
 
 	export default {
 		components: { InformsTable, NonTable, VisitTablet },

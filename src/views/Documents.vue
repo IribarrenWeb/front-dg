@@ -21,7 +21,7 @@
 					v-model:show="this.modal"
 					model="documento"
 					:action="action"
-					modalClasses="modal-xl"
+					modalClasses="modal-xxl"
 					@close="action = 'Registrar'"
 					v-if="this.modal"
 				>
@@ -37,8 +37,8 @@
 	</div>
 </template>
 <script>
-	import FormDocument from '../components/forms/FormDocument.vue';
-	import DocumentsTable from "./Tables/DocumentsTable.vue";
+	import FormDocument from '../components/Document/FormDocument.vue';
+	import DocumentsTable from "../components/Document/DocumentsTable.vue";
 
 	export default {
 		components: { DocumentsTable, FormDocument },

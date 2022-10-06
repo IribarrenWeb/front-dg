@@ -144,10 +144,10 @@
 	import service from "../store/services/profile-service.js";
 	import { computed, onMounted, ref, watch } from "vue";
 	import functions from "../utils/functions";
-	import FormDelegate from "../components/forms/FormDelegate";
-	import FormAuditor from "../components/forms/FormAuditor";
-	import FormPassword from "../components/forms/FormPassword";
-	import ShowBusiness from "../components/forms/Business/ShowBusiness";
+	import FormDelegate from "../components/Delegate/FormDelegate";
+	import FormAuditor from "../components/Auditor/FormAuditor";
+	import FormPassword from "../components/Auth/FormPassword";
+	import ShowBusiness from "../components/Business/ShowBusiness";
 	import apiService from "../store/services/model-service.js";
 	import { useStore } from "vuex";
 	import ProfileShow from "../components/ProfileShow";

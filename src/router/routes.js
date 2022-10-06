@@ -19,7 +19,7 @@ const Installations = defineAsyncComponent(() =>
 );
 
 const InstallationDetail = defineAsyncComponent(() =>
-    import ("@/views/InstallationDetail.vue")
+    import ("../components/Installation/InstallationDetail.vue")
 );
 
 const Delegate = defineAsyncComponent(() =>
@@ -35,23 +35,23 @@ const Employees = defineAsyncComponent(() =>
 );
 
 const EmployeesTable = defineAsyncComponent(() =>
-    import ("@/views/Tables/EmployeesTable.vue")
+    import ("../components/Employee/EmployeesTable.vue")
 );
 
 const VehiclesTable = defineAsyncComponent(() =>
-    import ("@/views/Tables/VehiclesTable.vue")
+    import ("../components/Vehicle/VehiclesTable.vue")
 );
 
 const MaterialsTable = defineAsyncComponent(() =>
-    import ("@/views/Tables/MaterialTable.vue")
+    import ("../components/Materials/MaterialTable.vue")
 );
 
 const AuditsTable = defineAsyncComponent(() =>
-    import ("@/views/Tables/Audits/AuditTable.vue")
+    import ("../components/Audit/AuditTable.vue")
 );
 
 const NonTable = defineAsyncComponent(() =>
-    import ("@/views/Tables/NonTable.vue")
+    import ("../components/Non/NonTable.vue")
 );
 
 const Profile = defineAsyncComponent(() =>
@@ -75,7 +75,7 @@ const Business = defineAsyncComponent(() =>
 );
 
 const BusinessDetail = defineAsyncComponent(() =>
-    import ("@/views/BusinessDetail.vue")
+    import ("../components/Business/BusinessDetail.vue")
 );
 
 const Auditors = defineAsyncComponent(() =>

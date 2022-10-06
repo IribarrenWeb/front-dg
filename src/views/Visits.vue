@@ -10,7 +10,7 @@
 	</div>
 </template>
 <script>
-    import VisitTablet from './Tables/VisitTablet.vue';
+    import VisitTablet from '../components/Visit/VisitTablet.vue';
     
 	export default {
 		name: "tables",

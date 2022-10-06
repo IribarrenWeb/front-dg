@@ -107,7 +107,7 @@
 	</nav>
 </template>
 <script>
-	import NavbarToggleButton from "@/components/NavbarToggleButton";
+	import NavbarToggleButton from "../core_components/NavbarToggleButton";
 	import Notifications from "../Notifications.vue";
 
 	export default {

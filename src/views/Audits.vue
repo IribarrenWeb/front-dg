@@ -41,8 +41,8 @@
 	</div>
 </template>
 <script>
-	import AuditTable from "./Tables/Audits/AuditTable.vue";
-	import NonTable from "./Tables/NonTable.vue";
+	import AuditTable from "../components/Audit/AuditTable.vue";
+	import NonTable from "../components/Non/NonTable.vue";
 	export default {
 		name: "tables",
 		components: {

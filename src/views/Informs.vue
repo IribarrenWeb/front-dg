@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import InformsTable from './Tables/InformsTable.vue';
+import InformsTable from '../components/AnnualReport/InformsTable.vue';
 export default {
   name: "tables",
   components: {

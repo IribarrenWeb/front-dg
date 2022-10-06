@@ -10,7 +10,7 @@
 	</div>
 </template>
 <script>
-	import DelegateTable from "./Tables/DelegateTable.vue";
+	import DelegateTable from "../components/Delegate/DelegateTable.vue";
 	// Charts
 
 	export default {

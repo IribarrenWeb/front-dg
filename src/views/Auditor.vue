@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import AuditorsTable from './Tables/AuditorsTable.vue';
+import AuditorsTable from '../components/Auditor/AuditorsTable.vue';
   // Charts
 
   export default {

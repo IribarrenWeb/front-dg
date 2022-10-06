@@ -12,7 +12,7 @@
 	</div>
 </template>
 <script>
-	import InstallationTable from "./Tables/InstallationTable.vue";
+	import InstallationTable from "../components/Installation/InstallationTable.vue";
 	export default {
 		name: "tables",
 		components: {
