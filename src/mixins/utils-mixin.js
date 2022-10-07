@@ -40,15 +40,15 @@ export default {
         },
 
         async getCities() {
-            this.loader = true;
-            try {
-                const response = await dataService.getCities();
-                this.cities = response.data.data;
-            } catch (err) {
-                this.$swal("Error", "Error al cargar las ciudades", "error");
-                console.log(err);
-            }
-            this.loader = false;
+            // this.loader = true;
+            // try {
+            //     const response = await dataService.getCities();
+            //     this.cities = response.data.data;
+            // } catch (err) {
+            //     this.$swal("Error", "Error al cargar las ciudades", "error");
+            //     console.log(err);
+            // }
+            // this.loader = false;
         },
         async getPermits() {
             this.loader = true;
@@ -62,20 +62,20 @@ export default {
             }
             this.loader = false;
         },
-        async getProvinces($evnt = null) {
-            this.loader = true;
-            let response = {};
-            try {
-                if ($evnt == null) {
-                    response = await dataService.getProvinces();
-                } else {
-                    response = await dataService.getProvinces("city_id=" + $evnt);
-                }
-                this.provinces = response.data.data;
-            } catch (error) {
-                this.$swal("Error", "Error al cargar las provincias", "error");
-            }
-            this.loader = false;
+        async getProvinces() {
+            // this.loader = true;
+            // let response = {};
+            // try {
+            //     if ($evnt == null) {
+            //         response = await dataService.getProvinces();
+            //     } else {
+            //         response = await dataService.getProvinces("city_id=" + $evnt);
+            //     }
+            //     this.provinces = response.data.data;
+            // } catch (error) {
+            //     this.$swal("Error", "Error al cargar las provincias", "error");
+            // }
+            // this.loader = false;
         },
         formatDate(date, format = "en-US") {
             return new Date(date).toLocaleDateString(format);

@@ -76,9 +76,7 @@
 					</table>
 				</div>
 			</div>
-			<modal v-if="modal" v-model:show="modal" :action="addResponsible ? 'agregar responsable' : 'editar'" modalClasses="modal-xxl" model="empleado">
-				<form-employee @close="modal = false" :responsible="addResponsible" @reload="getInst()" :installation_id="installation_id"></form-employee>
-			</modal>
+			<responsible-modal v-model:show="modal" :installation_id="installation_id" />
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Operaciones')">
@@ -185,6 +183,7 @@ import { mapGetters } from "vuex";
 import FormEmployee from "../Employee/FormEmployee.vue";
 import AddressSelect from "../core_components/AddressSelect.vue";
 import GeneralData from "./Modules/GeneralData.vue";
+import ResponsibleModal from "../Employee/ResponsibleModal.vue";
 
 export default {
 	name: "installation-show",
@@ -194,9 +193,11 @@ export default {
     SubcontractorTable,
     EmployeesTable,
     DashboardEmployee,
+    // eslint-disable-next-line vue/no-unused-components
     FormEmployee,
     AddressSelect,
-    GeneralData
+    GeneralData,
+    ResponsibleModal
 },
 	mixins: [utils],
 	props: {
@@ -229,13 +230,14 @@ export default {
 			operations: [],
 			deposits: [],
 			equipments: [],
-			responsible: null,
+			responsibles: null,
 			show: false
 		};
 	},
 	async beforeCreate() { },
 	created() {
 		this.getInst();
+		this.getResponsibles()
 		this.formatSteps();
 	},
 	methods: {
@@ -247,26 +249,12 @@ export default {
 					"includes[]=operations&includes[]=equipments" +
 					"&includes[]=auditable.user" +
 					"&includes[]=depositTypes" +
-					"&includes[]=responsibles.firm_document" +
 					"&includes[]=firm_document"+
 					"&includes[]=auditor_document"+
 					"&includes[]=company"
 				);
 
 				this.model = this.$functions.assignSchema('installation', res.data.data, ['address']);
-				this.responsibles = res.data.data?.responsibles.map((res) => {
-					let employee = this.$functions.assignSchema('employee', res)
-					let f_doc = null;
-					forEach(employee?.documents, (doc) => {
-						if (doc.type.name == "CERTIFICADO") {
-							f_doc = doc;
-						}
-					});
-					if (!isEmpty(employee)) {
-						employee.formation_document = f_doc;
-					}
-					return employee;
-				});
 				// this.model.file_document = null;
 				this.model.auditable_id = null;
 
@@ -281,6 +269,31 @@ export default {
 			} catch (err) {
 				console.log(err);
 			}
+		},
+		formatResponsibles(employees) {
+			return employees.map((res) => {
+					let employee = this.$functions.assignSchema('employee', res)
+					let f_doc = null;
+					forEach(employee?.documents, (doc) => {
+						if (doc.type.name == "CERTIFICADO") {
+							f_doc = doc;
+						}
+					});
+					if (!isEmpty(employee)) {
+						employee.formation_document = f_doc;
+					}
+					return employee;
+				});
+		},
+		async getResponsibles(){
+			const custom_where = JSON.stringify({
+				is_representative: 1,
+				installation_id: this.installation_id
+			})
+			const res = await this.$store.dispatch('employee/get', '&with[]=formations&with[]=firm_document&custom_wheres='+custom_where)
+
+			this.responsibles = this.formatResponsibles(res.data.data)
+			console.log(res.data.data);
 		},
 		async handleNext() {
 			if (this.currentStep == 1) {
@@ -463,9 +476,6 @@ export default {
 	},
 	computed: {
 		...mapGetters(["ROLE", "CLEAN_DATA"]),
-		formation_doc() {
-			return this.$functions.filterDoc(this.responsible.documents, "CERTIFICADO");
-		},
 		isTransported() {
 			let check = false;
 			for (let i = 0; i < this.model.operations.length; i++) {
@@ -521,6 +531,11 @@ export default {
 				this.formatSteps();
 			}
 		},
+		modal(val) {
+			if (!val) {
+				this.getResponsibles()
+			}
+		}
 	},
 };
 </script>

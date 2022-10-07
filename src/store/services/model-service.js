@@ -40,7 +40,7 @@ const apis = {
     non_actions: "nonconformities-action",
     documents: "admin-docs",
     province: "provinces",
-    city: "cities",
+    // city: "cities",
 
 }
 async function api(model, method = 'GET', params = null, page = null, data = null) {

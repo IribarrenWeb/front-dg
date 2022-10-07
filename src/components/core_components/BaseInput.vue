@@ -9,6 +9,7 @@
         { 'has-label': label || $slots.label },
         { 'has-success': valid === true },
         { 'has-danger': valid === false },
+        groupClasses
       ]"
     >
       <slot name="label">
@@ -122,7 +123,7 @@
 <script>
 import { mapState } from 'vuex';
   export default {
-    inheritAttrs: false,
+    inheritAttrs: true,
     name: "base-input",
     props: {
       apiName: {
@@ -170,6 +171,10 @@ import { mapState } from 'vuex';
       inputClasses: {
         type: String,
         description: "Input css classes",
+      },
+      groupClasses: {
+        type: String,
+        description: "form group css classes",
       },
       multiple: {
         type: Boolean,

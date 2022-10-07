@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import auth from "./modules/auth";
 import reset from "./modules/reset";
 import profile from "./modules/profile-module";
+import employee from './modules/employee';
 import { axios } from '@/axios';
 import $Swal from 'sweetalert2';
 import _, { isObject, map } from 'lodash';
@@ -232,5 +233,6 @@ export const store = createStore({
         auth: auth,
         reset: reset,
         profile: profile,
+        employee: employee
     },
 });

@@ -8,7 +8,6 @@
 <script>
 	import { debounce } from "lodash";
 	import { ref, computed, watch } from "vue";
-	import service from "../../store/services/model-service";
 	// import Multiselect from "vue-multiselect";
 
 	export default {
@@ -38,15 +37,10 @@
 					};
 				});
 			});
-			async function getDelegates() {
-				const res = await service.getIndex("city", null);
-				provinces.value = res.data.data;
-			}
             
             const handleEmit = debounce(() =>{
                 emit('updated',date.value)
             }, 500)
-			getDelegates();
 
 			watch(() => props.clear, (val) => {
 				if (val) {
