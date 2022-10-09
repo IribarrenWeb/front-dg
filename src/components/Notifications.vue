@@ -58,8 +58,8 @@ export default {
     setup() {
         const store = useStore();
         const drop = ref();
-        const pusher_key = computed(() => window.location.host.includes('localhost') ? process.env.VUE_APP_PUSHER_APP_KEY_DEV : process.env.VUE_APP_PUSHER_APP_KEY_PROD)
-        const pusher_cluster = computed(() => window.location.host.includes('localhost') ? process.env.VUE_APP_PUSHER_APP_CLUSTER_DEV : process.env.VUE_APP_PUSHER_APP_CLUSTER_PROD)
+        const pusher_key = computed(() => window.location.host.includes('localhost') || window.location.host.includes('dev') ? process.env.VUE_APP_PUSHER_APP_KEY_DEV : process.env.VUE_APP_PUSHER_APP_KEY_PROD)
+        const pusher_cluster = computed(() => window.location.host.includes('localhost') || window.location.host.includes('dev') ? process.env.VUE_APP_PUSHER_APP_CLUSTER_DEV : process.env.VUE_APP_PUSHER_APP_CLUSTER_PROD)
         const audio = new Audio(process.env.VUE_APP_API_URL + 'uploads/notification.mp3')
         const notifications = computed(() => {
             return store.state.notifications
