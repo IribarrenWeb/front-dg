@@ -42,8 +42,8 @@
     data() {
       return {
         model: {
-          email: "admin@dgsoft.com",
-          password: "secret",
+          email: "",
+          password: "",
         },
       };
     },
