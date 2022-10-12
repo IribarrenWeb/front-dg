@@ -194,7 +194,7 @@
 							>
 								Delegar
 							</a>
-							<a class="dropdown-item" href="#" @click.prevent="">Historial</a>
+							<!-- <a class="dropdown-item" href="#" @click.prevent="">Historial</a> -->
 							<a
 								class="dropdown-item"
 								v-if="row.item?.status == 'COMPLETADO'"
@@ -284,7 +284,7 @@
 	import SelectFilter from "../filters/SelectFilter.vue";
 	import DateFilter from "../filters/DateFilter.vue";
 	import InitTable from './InitTable.vue';
-	import { baseUrl } from '../../axios/index';
+	import { baseUrl, apiUrl } from '../../axios/index';
 
 	export default {
 		name: "audits-table",
@@ -305,7 +305,7 @@
 				loader: false,
 				page: 1,
 				clear: false,
-				url: this.$store.state.api_url,
+				url: apiUrl,
 				toDelegate: false,
 				new_auditable: null,
 				audit: null,

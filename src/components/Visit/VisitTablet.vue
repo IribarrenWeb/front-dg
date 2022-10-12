@@ -121,6 +121,8 @@
 	import InstallationFilter from '../filters/InstallationFilter.vue';
 	import SelectFilter from '../filters/SelectFilter.vue';
 	import service from "../../store/services/model-service";
+	import { apiUrl } from '../../axios';
+	
 	export default {
 	components: { InstallationFilter, DateFilter, SelectFilter },
 		name: "audits-table",
@@ -139,7 +141,7 @@
 				metaData: {},
 				loader: false,
 				page: 1,
-                url: this.$store.state.api_url,
+                url: apiUrl,
 				clear: false,
 				params: "includes[]=visitable.installation.auditable.user"+
 					"&status=false",
