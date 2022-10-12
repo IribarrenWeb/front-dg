@@ -120,13 +120,14 @@
   </div>
 </template>
 <script>
+import { baseUrl } from '../axios';
   export default {
     name: "auth-layout",
     data() {
       return {
         year: new Date().getFullYear(),
         showMenu: false,
-        baseUrl: process.env.VUE_APP_API_URL
+        baseUrl: baseUrl
       };
     },
   };

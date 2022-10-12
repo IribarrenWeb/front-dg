@@ -3,7 +3,7 @@ import auth from "./modules/auth";
 import reset from "./modules/reset";
 import profile from "./modules/profile-module";
 import employee from './modules/employee';
-import { axios } from '@/axios';
+import { axios, apiUrl, baseUrl } from '@/axios';
 import $Swal from 'sweetalert2';
 import _, { isObject, map } from 'lodash';
 import service from './services/model-service';
@@ -42,8 +42,8 @@ export const store = createStore({
             employee_schema: schemas.employee,
             provinces: null,
             current: new Date().toISOString().split('T')[0],
-            api_url: process.env.VUE_APP_API_BASE_URL,
-            api_url_base: process.env.VUE_APP_API_URL
+            api_url: apiUrl,
+            api_url_base: baseUrl
         }
     },
     getters: {

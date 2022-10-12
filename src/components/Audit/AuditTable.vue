@@ -143,7 +143,7 @@
 						<base-dropdown
 							class="dropdown audit-drop"
 							position="right"
-							:direction="row.idx == 0 || row.idx == 1 ? 'down' : 'up'"
+							direction="custom"
 						>
 							<template v-slot:title>
 								<a
@@ -284,6 +284,7 @@
 	import SelectFilter from "../filters/SelectFilter.vue";
 	import DateFilter from "../filters/DateFilter.vue";
 	import InitTable from './InitTable.vue';
+	import { baseUrl } from '../../axios/index';
 
 	export default {
 		name: "audits-table",
@@ -300,7 +301,7 @@
 			return {
 				tableData: [],
 				metaData: {},
-				baseImage: process.env.VUE_APP_API_URL + "img/dg_logo.png",
+				baseImage: baseUrl + "img/dg_logo.png",
 				loader: false,
 				page: 1,
 				clear: false,

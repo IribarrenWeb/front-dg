@@ -19,8 +19,6 @@ const toaster = createToaster({ /* options */
     queue: true, 
 });
 
-const url = process.env.VUE_APP_API_BASE_URL;
-
 const apis = {
     auditor: "auditors",
     delegate: "delegate",
@@ -45,7 +43,7 @@ const apis = {
 }
 async function api(model, method = 'GET', params = null, page = null, data = null) {
     storage.commit('loading');
-    let url_model = `${url}/${model}?_method=${method}`;
+    let url_model = `/${model}?_method=${method}`;
 
     if (page != null) {
         url_model += `&page=${page}&`
@@ -74,7 +72,7 @@ async function api(model, method = 'GET', params = null, page = null, data = nul
 async function getIndex(model, page = 1, params = null) {
     storage.commit('loading');
     console.log(model);
-    let url_model = `${url}/${apis[model]}?`;
+    let url_model = `/${apis[model]}?`;
 
     if (page != null) {
         url_model += `page=${page}&`
@@ -168,7 +166,7 @@ function store(model, payload, multipart = false) {
     }
 
     storage.commit('loading');
-    return axios.post(`${url}/${apis[model]}`, payload, options).then((response) => {
+    return axios.post(`/${apis[model]}`, payload, options).then((response) => {
         $swal.fire('Registro completado', 'El registro se ha completado correctamente', 'success')
         storage.commit('loading');
         toaster.success(response.data.message)
@@ -190,7 +188,7 @@ function store(model, payload, multipart = false) {
 function show(model, id, params = "") {
 
     storage.commit('loading');
-    return axios.get(`${url}/${apis[model]}/${id}?${params}`).then((response) => {
+    return axios.get(`/${apis[model]}/${id}?${params}`).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -218,7 +216,7 @@ async function destroy(model, id) {
     })
 
     if (deletes) {
-        return axios.delete(`${url}/${apis[model]}/${id}`).then((response) => {
+        return axios.delete(`/${apis[model]}/${id}`).then((response) => {
             storage.commit('loading');
             toaster.success(response.data.message)
             return response
@@ -236,7 +234,7 @@ async function destroy(model, id) {
 
 function instByBusiness(id, page = 1) {
     storage.commit('loading');
-    return axios.get(`${url}/installations?page=${page}&includes[]=auditable.user&includes[]=employees&business_id=${id}`).then((response) => {
+    return axios.get(`/installations?page=${page}&includes[]=auditable.user&includes[]=employees&business_id=${id}`).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -248,7 +246,7 @@ function instByBusiness(id, page = 1) {
 
 function dashEmployee(id) {
     storage.commit('loading');
-    return axios.get(`${url}/employees/dashboard?installation_id=${id}`).then((response) => {
+    return axios.get(`/employees/dashboard?installation_id=${id}`).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -267,7 +265,7 @@ function update(model, id, data, multipart = false) {
             'content-type': 'multipart/form-data'
         }
     }
-    return axios.post(`${url}/${apis[model]}/${id}?_method=PUT`, data, options).then((response) => {
+    return axios.post(`/${apis[model]}/${id}?_method=PUT`, data, options).then((response) => {
         storage.commit('loading');
 
         let message = getMessage(response) ? response.data.message : 'Registro actualizado'
@@ -283,7 +281,7 @@ function update(model, id, data, multipart = false) {
 
 function getDocument(id) {
     storage.commit('loading');
-    return axios.get(`${url}/documents/${id}`).then((response) => {
+    return axios.get(`/documents/${id}`).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -295,7 +293,7 @@ function getDocument(id) {
 
 function users(params) {
     storage.commit('loading');
-    return axios.get(`${url}/index?${params}`).then((response) => {
+    return axios.get(`/index?${params}`).then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -307,7 +305,7 @@ function users(params) {
 
 function dashboard() {
     storage.commit('loading');
-    return axios.get(url + '/dashboard').then((response) => {
+    return axios.get('/dashboard').then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -320,7 +318,7 @@ function dashboard() {
 
 function instOperations(id) {
     storage.commit('loading');
-    return axios.get(url + '/installations/' + id + '/operations').then((response) => {
+    return axios.get('/installations/' + id + '/operations').then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {
@@ -332,7 +330,7 @@ function instOperations(id) {
 
 function getReport(id) {
     storage.commit('loading');
-    return axios.get(url + '/reports/' + id + '/generate').then((response) => {
+    return axios.get('/reports/' + id + '/generate').then((response) => {
         storage.commit('loading');
         return response
     }).catch(err => {

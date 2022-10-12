@@ -1,17 +1,16 @@
-import { axios } from '@/axios';
-
-const url = process.env.VUE_APP_API_BASE_URL;
-const tokenName = process.env.VUE_APP_USER_TOKEN_NAME
+import { axios } from "../../axios";
+import { env } from "../../boot/env";
 
 function login(user_data) {
-    return axios.post(url + '/login', user_data).then((response) => {
+    return axios.post('/login', user_data).then((response) => {
         setToken(response)
         return response
     });
 }
 
 function isAuth() {
-    var token = localStorage.getItem(tokenName);
+    
+    var token = localStorage.getItem(env.tokenName);
     if (token) { // Token is present
         if (token.split('.').length === 3) { // Token with a valid JWT format XXX.YYY.ZZZ
             try { // Could be a valid JWT or an access token with the same format
@@ -38,7 +37,7 @@ function setToken(response) {
     var token = response.data.authorization.token;
 
     if (token) {
-        localStorage.setItem(tokenName, token);
+        localStorage.setItem(env.tokenName, token);
     }
 };
 
@@ -47,12 +46,12 @@ function logout() {
         return alert('There is no currently authenticated user')
             // return new Error('There is no currently authenticated user')
     }
-    localStorage.removeItem(tokenName);
+    localStorage.removeItem(env.tokenName);
     return true
 }
 
 function getToken() {
-    return localStorage.getItem(tokenName);
+    return localStorage.getItem(env.tokenName);
 }
 
 function sendResetEmail(email) {

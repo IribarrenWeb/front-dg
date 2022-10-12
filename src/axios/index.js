@@ -1,19 +1,28 @@
 import axios from "axios";
 import { store } from "@/store";
+import { env } from "../boot/env";
 
-axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 
-const tokenName = process.env.VUE_APP_USER_TOKEN_NAME
+const host = window.location.hostname;
+var apiUrl = process.env.VUE_APP_API_BASE_URL;
+var baseUrl = process.env.VUE_APP_API_URL;
+
+if (host == 'localhost') {
+    apiUrl = process.env.VUE_APP_API_BASE_URL_DEV
+    baseUrl = process.env.VUE_APP_API_URL_DEV
+}
+
+axios.defaults.baseURL = apiUrl;
 
 axios.interceptors.request.use(function(config) {
     console.log('config', config.method);
     if (config.method == 'post') {
         store.commit('resetApiErrors')
     }
-    const token = localStorage.getItem(tokenName);
-    config.baseURL = process.env.VUE_APP_API_BASE_URL;
+    const token = localStorage.getItem(env.tokenName);
+    config.baseURL = apiUrl;
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -39,4 +48,4 @@ axios.interceptors.response.use(function(response) {
     return Promise.reject(error);
 });
 
-export { axios };
+export { axios, apiUrl, baseUrl };

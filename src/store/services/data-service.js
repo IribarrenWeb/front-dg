@@ -1,7 +1,4 @@
-import { axios } from '@/axios';
-
-const url = process.env.VUE_APP_API_BASE_URL;
-const tokenName = process.env.VUE_APP_USER_TOKEN_NAME
+import { axios, tokenName } from '@/axios';
 
 function getCities() {
     const token = localStorage.getItem(tokenName);
@@ -11,7 +8,7 @@ function getCities() {
         },
     };
 
-    return axios.get(url + '/cities', options).then((response) => {
+    return axios.get('/cities', options).then((response) => {
         return response
     });
 }
@@ -24,7 +21,7 @@ function getPermits() {
         },
     };
 
-    return axios.get(url + '/adr-permits', options).then((response) => {
+    return axios.get('/adr-permits', options).then((response) => {
         return response
     });
 }
@@ -37,7 +34,7 @@ function getEquipments() {
         },
     };
 
-    return axios.get(url + '/equipments', options).then((response) => {
+    return axios.get('/equipments', options).then((response) => {
         return response
     });
 }
@@ -50,7 +47,7 @@ function getOperations() {
         },
     };
 
-    return axios.get(url + '/operation-types', options).then((response) => {
+    return axios.get('/operation-types', options).then((response) => {
         return response
     });
 }
@@ -63,7 +60,7 @@ function getProvinces(params = '') {
         },
     };
 
-    return axios.get(url + '/provinces' + '?' + params, options).then((response) => {
+    return axios.get('/provinces' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -76,7 +73,7 @@ function getAdrMaterials(params = '') {
         },
     };
 
-    return axios.get(url + '/adr-materials' + '?' + params, options).then((response) => {
+    return axios.get('/adr-materials' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -89,7 +86,7 @@ function getDeposits(params = '') {
         },
     };
 
-    return axios.get(url + '/deposit-type' + '?' + params, options).then((response) => {
+    return axios.get('/deposit-type' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -102,7 +99,7 @@ function getVehicleTypes(params = '') {
         },
     };
 
-    return axios.get(url + '/vehicle-types' + '?' + params, options).then((response) => {
+    return axios.get('/vehicle-types' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -115,7 +112,7 @@ function getAdrDesignations(params = '') {
         },
     };
 
-    return axios.get(url + '/adr-designations' + '?' + params, options).then((response) => {
+    return axios.get('/adr-designations' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -128,7 +125,7 @@ function getAdrClass(params = '') {
         },
     };
 
-    return axios.get(url + '/adr-class' + '?' + params, options).then((response) => {
+    return axios.get('/adr-class' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -141,7 +138,7 @@ function getPacking(params = '') {
         },
     };
 
-    return axios.get(url + '/packing' + '?' + params, options).then((response) => {
+    return axios.get('/packing' + '?' + params, options).then((response) => {
         return response
     });
 }
@@ -154,7 +151,7 @@ function getFormationTypes(params = '') {
         },
     };
 
-    return axios.get(url + '/formation-types' + '?' + params, options).then((response) => {
+    return axios.get('/formation-types' + '?' + params, options).then((response) => {
         return response
     });
 }

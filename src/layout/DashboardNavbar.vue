@@ -40,6 +40,7 @@
 	</base-nav>
 </template>
 <script>
+import { baseUrl } from '../axios';
 import Notifications from '../components/Notifications.vue';
 export default {
 	components: { Notifications },
@@ -63,7 +64,7 @@ export default {
 		},
 		logo: {
 			type: String,
-			default: process.env.VUE_APP_API_URL + "img/dg_logo.png",
+			default: baseUrl + "img/dg_logo.png",
 			description: "Sidebar app logo",
 		},
 	},

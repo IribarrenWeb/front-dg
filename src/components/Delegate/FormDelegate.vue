@@ -67,7 +67,7 @@
 					<div class="col-lg-4">
 						<base-field name="last_name" label="Apellido">
 							<field-validate class="form-control text-capitalize" name="last_name" label="apellido"
-								rules="required|max:20|alpha_spaces" v-model="model.last_name" />
+								rules="required|max:50|alpha_spaces" v-model="model.last_name" />
 						</base-field>
 					</div>
 
@@ -291,7 +291,7 @@ export default {
 				}
 				this.setCurrent(data);
 				this.delegate = this.$functions.copy(data);
-				this.model = this.$functions.copy(data);
+				this.model = this.$functions.assignSchema('delegate', data,['address']);
 				this.model.name = this.model.user.name;
 				this.model.last_name = this.model.user.last_name;
 				this.model.email = this.model.user.email;

@@ -5,6 +5,8 @@
       { show: isOpen },
       { dropdown: direction === 'down' },
       { dropup: direction === 'up' },
+      { dropdown: direction == 'custom' },
+      { 'dropdown-custom': direction == 'custom' },
       dropClasses
     ]" aria-haspopup="true" :aria-expanded="isOpen" @click="toggleDropDown" v-click-outside="closeDropDown">
       <slot name="title">
@@ -26,7 +28,7 @@
 <script>
 import ClickOutsideDetection from './ClickOutsideDetection.vue';
 export default {
-	components: { ClickOutsideDetection },
+  components: { ClickOutsideDetection },
   name: "base-dropdown",
   props: {
     direction: {
@@ -99,5 +101,10 @@ export default {
 
 .dropdown .dropdown-toggle {
   cursor: pointer;
+}
+
+.dropdown-custom > .dropdown-menu {
+  top: -70px;
+  right: 60px;
 }
 </style>

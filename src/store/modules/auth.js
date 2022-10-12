@@ -1,10 +1,11 @@
 import service from '@/store/services/auth-service'
 import router from '../../router';
 import { store } from '@/store';
+import { tokenName } from '../../axios';
 export default {
     namespaced: true,
     state: {
-        isAuthenticated: service.isAuth(process.env.VUE_APP_USER_TOKEN_NAME),
+        isAuthenticated: service.isAuth(tokenName),
     },
 
     getters: {

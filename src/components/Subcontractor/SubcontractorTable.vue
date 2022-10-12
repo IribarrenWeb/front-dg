@@ -138,6 +138,7 @@
 	import FormSubcontractor from "./FormSubcontractor.vue";
 	import service from "../../store/services/model-service";
 	import utils from "@/mixins/utils-mixin";
+	import { baseUrl } from "../../axios";
 
 	export default {
 		components: { FormSubcontractor },
@@ -160,7 +161,7 @@
 				loader: false,
 				page: 1,
 				modal: false,
-				url: process.env.VUE_APP_API_URL,
+				url: baseUrl,
 				sub: null,
 				params: "includes[]=documents",
 				params_filter: null,

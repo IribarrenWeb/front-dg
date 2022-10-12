@@ -109,6 +109,7 @@
 <script>
 	import NavbarToggleButton from "../core_components/NavbarToggleButton";
 	import Notifications from "../Notifications.vue";
+	import { baseUrl } from '../../axios/index';
 
 	export default {
 		name: "sidebar",
@@ -119,7 +120,7 @@
 		props: {
 			logo: {
 				type: String,
-				default: process.env.VUE_APP_API_URL + "img/dg_logo.png",
+				default: baseUrl + "img/dg_logo.png",
 				description: "Sidebar app logo",
 			},
 			autoClose: {

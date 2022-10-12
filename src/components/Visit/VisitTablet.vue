@@ -119,7 +119,7 @@
     import { mapGetters} from 'vuex';
 	import DateFilter from '../filters/DateFilter.vue';
 	import InstallationFilter from '../filters/InstallationFilter.vue';
-import SelectFilter from '../filters/SelectFilter.vue';
+	import SelectFilter from '../filters/SelectFilter.vue';
 	import service from "../../store/services/model-service";
 	export default {
 	components: { InstallationFilter, DateFilter, SelectFilter },

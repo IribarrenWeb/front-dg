@@ -108,7 +108,7 @@
 						<base-dropdown
 							class="dropdown audit-drop"
 							position="right"
-							:direction="row.idx == 0 || row.idx == 1 ? 'down' : 'up'"
+							direction="custom"
 						>
 							<template v-slot:title>
 								<a
@@ -145,25 +145,39 @@
 							<a
 								class="dropdown-item"
 								href="#"
-								v-if="!row.item?.status"
+								v-if="!row.item?.status && row.item.can_complete"
 								@click="toComplete(row.item)"
 								>Completar</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="!row.item?.status"
+								@click="toReAssign(row.item)"
+								>Re-asignar</a
+							>
+							<a
+								class="dropdown-item"
+								href="#"
+								v-if="!row.item?.status"
+								@click="toDelete(row.item)"
+								>Eliminar</a
 							>
 						</base-dropdown>
 					</td>
 				</template>
 			</base-table>
 			<base-pagination
-				:perPage="this.metaData.perPage"
-				:value="this.page"
+				:perPage="metaData.perPage"
+				:value="page"
 				@changePage="handleChange($event)"
-				:total="this.metaData.total"
+				:total="metaData.total"
 				align="center"
 			>
 			</base-pagination>
 
-			<modal v-if="this.modal && selected_training" modalClasses="modal-xxl" :action="selected_training.status ? 'detalle' : 'completar'" v-model:show="this.modal" model="Formación">
-				<form-complete-formation :isComplete="selected_training.status" :training_id="selected_training.id" @close="modal = false, selected_training = null" @reload="index"/>
+			<modal v-if="modal && selected_training" modalClasses="modal-xxl" :action="selected_training.status ? 'detalle' : reAssign ? 're-asignar' : 'completar'" v-model:show="modal" model="Formación">
+				<form-complete-formation :toComplete="!reAssign" :installation_id="selected_training.installation_id" :reAssign="reAssign" :isComplete="selected_training.status" :training_id="selected_training.id" @close="modal = false, selected_training = null,reAssign = false" @reload="index"/>
 			</modal>
 		</div>
 	</div>
@@ -197,7 +211,8 @@
 					"includes[]=installation.company&counts[]=employees&includes[]=formation.facilitable.user&includes[]=formation.type",
 				params_filter: null,
 				clear: null,
-				selected_training: null
+				selected_training: null,
+				reAssign: false
 			};
 		},
 		mounted() {
@@ -255,6 +270,15 @@
 				}
 				this.selected_training = item;
 				this.modal = true;
+			},
+			async toReAssign(item) {
+				this.selected_training = item;
+				this.modal = true;
+				this.reAssign = true
+			},
+			async toDelete(item) {
+				await this.$store.dispatch('delete', {model: 'training',id: item.id})
+				this.index()
 			},
 			async generate(training) {
 				try {
