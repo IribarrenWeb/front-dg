@@ -1,11 +1,12 @@
 import service from '@/store/services/auth-service'
 import router from '../../router';
 import { store } from '@/store';
-import { tokenName } from '../../axios';
+import { env } from "../../boot/env";
+
 export default {
     namespaced: true,
     state: {
-        isAuthenticated: service.isAuth(tokenName),
+        isAuthenticated: service.isAuth(env.tokenName),
     },
 
     getters: {

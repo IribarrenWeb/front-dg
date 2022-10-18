@@ -14,7 +14,7 @@ const $swal = $Swal.mixin({
 
 import { createToaster } from "@meforma/vue-toaster";
 import { map } from 'lodash';
-const toaster = createToaster({ /* options */
+const toaster = createToaster({
     maxToasts: 1,
     queue: true, 
 });
@@ -92,12 +92,7 @@ async function getIndex(model, page = 1, params = null) {
     });
 }
 
-/**
- * 
- * @param {String} query User name query to search
- * @param {Array} roles Users roles ids
- * @returns Object|Any
- */
+
 function users_select(query = null, roles = [], ext_params = null) {
     storage.commit('loading');
     let params = 'users?';
@@ -149,13 +144,6 @@ function users_select(query = null, roles = [], ext_params = null) {
     });
 }
 
-/**
- * Method to store a model
- * @param {String} model Model api name
- * @param {Object} payload Payload data
- * @param {Bool} multipart If is multipart data
- * @returns Promise
- */
 function store(model, payload, multipart = false) {
     const options = {};
 
@@ -178,13 +166,6 @@ function store(model, payload, multipart = false) {
     });;
 }
 
-/**
- * 
- * @param {String} model Model api name
- * @param {Integer} id Model id
- * @param {String} params Request params
- * @returns Promise
- */
 function show(model, id, params = "") {
 
     storage.commit('loading');

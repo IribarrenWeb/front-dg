@@ -1,6 +1,6 @@
 // import axios from "axios";
 // import { store } from "@/store";
-// const url = process.env.VUE_APP_API_BASE_URL;
+// const url = import.meta.env.VITE_API_BASE_URL;
 
 const actions = {
     // async forgotPassword({ commit }, data) {

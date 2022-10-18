@@ -85,13 +85,6 @@ function filterDoc(arr, doc_name) {
     return filter(arr, function (o) { return o.type.name == doc_name })[0]
 }
 
-/**
- * 
- * @param {Object} obj Original model data to compare
- * @param {Object} newObj Actual model data to compare
- * @param {Array} ignore Index key to ignore validation
- * @returns 
- */
 function difference(obj, newObj, ignore = []) {
     let arrayIndexCounter = 0
     return transform(newObj, function (result, value, key) {

@@ -6,12 +6,12 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
 
 const host = window.location.hostname;
-var apiUrl = process.env.VUE_APP_API_BASE_URL;
-var baseUrl = process.env.VUE_APP_API_URL;
+var apiUrl = import.meta.env.VITE_API_BASE_URL;
+var baseUrl = import.meta.env.VITE_API_URL;
 
 if (host == 'localhost') {
-    apiUrl = process.env.VUE_APP_API_BASE_URL_DEV
-    baseUrl = process.env.VUE_APP_API_URL_DEV
+    apiUrl = import.meta.env.VITE_API_BASE_URL_DEV
+    baseUrl = import.meta.env.VITE_API_URL_DEV
 }
 
 axios.defaults.baseURL = apiUrl;

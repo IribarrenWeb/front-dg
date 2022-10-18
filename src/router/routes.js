@@ -305,10 +305,4 @@ const routes = [{
     // { path: "*", component: NotFound },
 ];
 
-// const router = createRouter({
-//     history: createWebHashHistory(),
-//     linkActiveClass: "active",
-//     routes,
-// });
-
 export default routes;

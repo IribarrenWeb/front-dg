@@ -33,7 +33,7 @@ export const store = createStore({
             apiErrors: {},
             stopCamera: false,
             notifications: [],
-            tokenName: process.env.VUE_APP_USER_TOKEN_NAME,
+            tokenName: import.meta.env.VITE_USER_TOKEN_NAME,
             business_schema: schemas.business,
             installation_schema: schemas.installation,
             auditor_schema: schemas.auditor,

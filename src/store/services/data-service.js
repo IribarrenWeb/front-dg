@@ -1,7 +1,8 @@
-import { axios, tokenName } from '@/axios';
+import { axios } from '@/axios';
+import { env } from '../../boot/env';
 
 function getCities() {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -14,7 +15,7 @@ function getCities() {
 }
 
 function getPermits() {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -27,7 +28,7 @@ function getPermits() {
 }
 
 function getEquipments() {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -40,7 +41,7 @@ function getEquipments() {
 }
 
 function getOperations() {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -53,7 +54,7 @@ function getOperations() {
 }
 
 function getProvinces(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -66,7 +67,7 @@ function getProvinces(params = '') {
 }
 
 function getAdrMaterials(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -79,7 +80,7 @@ function getAdrMaterials(params = '') {
 }
 
 function getDeposits(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -92,7 +93,7 @@ function getDeposits(params = '') {
 }
 
 function getVehicleTypes(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -105,7 +106,7 @@ function getVehicleTypes(params = '') {
 }
 
 function getAdrDesignations(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -118,7 +119,7 @@ function getAdrDesignations(params = '') {
 }
 
 function getAdrClass(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -131,7 +132,7 @@ function getAdrClass(params = '') {
 }
 
 function getPacking(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,
@@ -144,7 +145,7 @@ function getPacking(params = '') {
 }
 
 function getFormationTypes(params = '') {
-    const token = localStorage.getItem(tokenName);
+    const token = localStorage.getItem(env.tokenName);
     const options = {
         headers: {
             Authorization: "Bearer " + token,

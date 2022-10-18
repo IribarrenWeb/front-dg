@@ -13,7 +13,6 @@ export default {
     },
     mounted() {},
     methods: {
-        /* extract API server validation errors and assigns them to local mixin data */
         async getDocument(id) {
             this.loader = true;
             try {

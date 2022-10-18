@@ -49,6 +49,10 @@
     },
     mounted() {
         this.$store.commit('resetApiErrors')
+        if (window.location.hostname == 'localhost') {
+          this.model.email = 'admin@dgsoft.com' 
+          this.model.password = 'secret' 
+        }
     },
     methods: {
       async handleSubmit() {

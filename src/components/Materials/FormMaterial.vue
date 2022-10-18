@@ -15,7 +15,7 @@
 			<template v-if="currentStep == 1">
 				<installation-select v-model="model.installation_id"></installation-select>
 				<div class="row border rounded border-light px-4 py-2">
-					<div class="col-lg-3">
+					<div class="col-lg-2">
 						<base-field name="is_residue" label="Tipo">
 							<select v-model="model_is_residue" class="form-control" :disabled="residue != null">
 								<option value="true" selected>Residuo ADR</option>
@@ -40,7 +40,7 @@
 							</field-validate>
 						</base-field>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-4">
 						<base-field name="material" label="UN">
 							<div v-if="model_material">
 								<span class="

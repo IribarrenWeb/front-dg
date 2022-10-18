@@ -47,8 +47,9 @@ import { useStore } from 'vuex';
 import { filter, isEmpty } from 'lodash';
 import modelService from '../store/services/model-service';
 import { baseUrl } from '../axios/index'
+import Pusher from 'pusher-js'
 
-window.Pusher = require('pusher-js');
+window.Pusher = Pusher;
 
 export default {
     props: {
@@ -60,8 +61,8 @@ export default {
     setup() {
         const store = useStore();
         const drop = ref();
-        const pusher_key = computed(() => window.location.host.includes('localhost') || window.location.host.includes('dev') ? process.env.VUE_APP_PUSHER_APP_KEY_DEV : process.env.VUE_APP_PUSHER_APP_KEY_PROD)
-        const pusher_cluster = computed(() => window.location.host.includes('localhost') || window.location.host.includes('dev') ? process.env.VUE_APP_PUSHER_APP_CLUSTER_DEV : process.env.VUE_APP_PUSHER_APP_CLUSTER_PROD)
+        const pusher_key = computed(() => window.location.host.includes('localhost') || window.location.host.includes('dev') ? import.meta.env.VITE_PUSHER_APP_KEY_DEV : import.meta.env.VITE_PUSHER_APP_KEY_PROD)
+        const pusher_cluster = computed(() => window.location.host.includes('localhost') || window.location.host.includes('dev') ? import.meta.env.VITE_PUSHER_APP_CLUSTER_DEV : import.meta.env.VITE_PUSHER_APP_CLUSTER_PROD)
         const audio = new Audio(baseUrl + 'uploads/notification.mp3')
         const notifications = computed(() => {
             return store.state.notifications
@@ -72,7 +73,7 @@ export default {
         })
         const isConnected = ref(false)
         const token = computed(() => {
-            return localStorage.getItem(process.env.VUE_APP_USER_TOKEN_NAME);
+            return localStorage.getItem(import.meta.env.VITE_USER_TOKEN_NAME);
         })
         const user = computed(() => {
             return store.getters['profile/me']
