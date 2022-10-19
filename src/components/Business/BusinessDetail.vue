@@ -194,9 +194,9 @@
 				}).then(async (result) => {
 					if (result.isConfirmed) {
 						try {
-							await service.api('business/'+this.business.id+'/change-delegate', 'PUT',null,null,{
+							await service.api({url:'business/'+this.business.id+'/change-delegate',method: 'PUT',data:{
 								delegate_id: this.selected_delegate
-							});
+							}});
 							this.$swal('Delegado actualizado', 'El delegado de esta empresa se ha actualizado', 'success')
 							this.modal = false
 							this.template = 'business'

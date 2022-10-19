@@ -3,7 +3,7 @@
     <thead :class="theadClasses">
       <tr>
         <slot name="columns" :columns="columns">
-          <th v-for="column in columns" :key="column">{{ column }}</th>
+          <th v-for="column in columns" :key="column">{{ column.title }}</th>
         </slot>
       </tr>
     </thead>
@@ -16,9 +16,11 @@
       <tr v-for="(item, index) in data" :key="index">
         <slot :item="item" :idx="index">
           <td v-for="column in columns" :key="column">
-            <template v-if="hasValue(item, column)">
-              {{ itemValue(item, column) }}
-            </template>
+            <slot name="item" :column="column" :item="item">
+              <template v-if="hasValue(item, column)">
+                {{ itemValue(item, column) }}
+              </template>
+            </slot>
           </td>
         </slot>
       </tr>
@@ -76,10 +78,10 @@ export default {
   },
   methods: {
     hasValue(item, column) {
-      return item[column.toLowerCase()] !== "undefined";
+      return item[column?.field.toLowerCase()] !== "undefined";
     },
     itemValue(item, column) {
-      return item[column.toLowerCase()];
+      return item[column.field.toLowerCase()];
     },
   },
 };

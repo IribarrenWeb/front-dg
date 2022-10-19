@@ -254,7 +254,7 @@
 
 			async function updateUser(values) {
 				try {
-					await apiService.api("users", "put", null, null, values);
+					await apiService.api({url:"users",method: "put",data: values});
 				} catch (err) {
 					console.log(err);
 				}

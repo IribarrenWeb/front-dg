@@ -151,7 +151,7 @@ export default {
 
 		async function loadEmployees() {
 			try {
-				const resp = await service.api('employees', 'GET', '&installation_id=' + props.installation_id);
+				const resp = await service.api({url:'employees&installation_id=' + props.installation_id});
 				installation_employees.value = resp.data.data;
 			} catch (err) {
 				console.log(err);

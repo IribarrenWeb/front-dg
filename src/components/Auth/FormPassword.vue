@@ -76,7 +76,7 @@
 			});
 			async function changePass(values, {resetForm}) {
 				try {
-                    await service.api("update-password", "put", null, null, values);
+                    await service.api({url:"update-password", method: "put",data: values});
                     toaster.success('Contrasena actualizada')
                     resetForm()
                 } catch (error) {

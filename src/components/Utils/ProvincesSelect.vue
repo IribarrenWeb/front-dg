@@ -29,7 +29,7 @@ export default {
         const provinces = ref([])
         async function getProvinces() {
             try {
-                const res = await service.api('provinces');
+                const res = await service.api({url:'provinces'});
                 provinces.value = res.data.data
             } catch (err) {
                 console.log(err);

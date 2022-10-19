@@ -126,7 +126,7 @@ export const store = createStore({
     actions: {
         async getNotifications({commit}){
             try {
-                const res = await service.api('notifications');
+                const res = await service.api({url:'notifications'});
                 commit('setNotifications', res.data.data)
             } catch (err) {
                 console.log(err);

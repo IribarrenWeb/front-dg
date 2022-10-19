@@ -35,7 +35,7 @@ export default {
 
         async function getInstallations() {
             try {
-                const res = await service.api('installations');
+                const res = await service.api({url:'installations'});
                 installations.value = res.data.data
             } catch (err) {
                 console.log(err);

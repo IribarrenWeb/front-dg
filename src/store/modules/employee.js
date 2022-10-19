@@ -14,10 +14,10 @@ export default {
 
     actions: {
         async get(context, payload) {
-            return await service.api('employees', 'GET', payload)
+            return await service.api({url:'employees', data: payload})
         },
         async updateResponsibles(context, payload) {
-            return await service.api('employees/update-responsibles', 'PUT',null,null, payload)
+            return await service.api({url:'employees/update-responsibles', method:'PUT',data:payload})
         },
     }
 };

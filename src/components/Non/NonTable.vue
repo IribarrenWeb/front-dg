@@ -203,7 +203,7 @@
 				this.index(event);
 			},
 			async getTypes() {
-				const res = await service.api("non-types", "get", null, null);
+				const res = await service.api({url:"non-types"});
 
 				this.nonTypes = res?.data?.data.map((d) => {
 					return {
@@ -213,7 +213,7 @@
 				});
 			},
 			async getPiorities() {
-				const res = await service.api("priorities", "get", null, null);
+				const res = await service.api({url:"priorities"});
 
 				this.priorities = res?.data?.data.map((d) => {
 					return {

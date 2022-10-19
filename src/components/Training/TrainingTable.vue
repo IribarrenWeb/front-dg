@@ -282,7 +282,7 @@
 			},
 			async generate(training) {
 				try {
-					const rep = await service.api("trainings/report/" + training.id, "GET");
+					const rep = await service.api({url:"trainings/report/" + training.id});
 					const b64 = rep.data.data;
 					const fileUrl = await this.$functions.formatDoc(b64);
 					window.open(fileUrl);

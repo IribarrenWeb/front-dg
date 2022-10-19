@@ -28,9 +28,9 @@
 		},
 		setup(props, {emit}) {
 			const model = ref(null)
-			const delegates = ref({});
+			const delegates = ref([]);
 			const data = computed(() => {
-				return delegates.value.map((p) => {
+				return delegates.value?.map((p) => {
 					return {
 						label: p.user.full_name,
 						value: p.id,

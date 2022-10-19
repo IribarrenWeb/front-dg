@@ -41,17 +41,13 @@ const apis = {
     // city: "cities",
 
 }
-async function api(model, method = 'GET', params = null, page = null, data = null) {
+
+async function api({ url, method, data }) {
     storage.commit('loading');
-    let url_model = `/${model}?_method=${method}`;
 
-    if (page != null) {
-        url_model += `&page=${page}&`
-    }
+    if (!method) method = 'GET'
 
-    if (params != null) {
-        url_model += params
-    }
+    let url_model = `/${url}`;
 
     const config = {
         method: method,

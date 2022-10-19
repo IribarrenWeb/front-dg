@@ -118,7 +118,7 @@ export default {
         async function markRead(evt) {
             if (!evt && unread.value >= 1) {
                 try {
-                    const res = await modelService.api('notifications/read', 'GET')
+                    const res = await modelService.api({url: 'notifications/read'})
                     store.commit('markRead')
                     console.log(res);
                 } catch (err) {

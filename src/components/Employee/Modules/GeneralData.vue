@@ -7,6 +7,7 @@
 			<div class="col-lg-6 col-lg-4">
 				<base-field :apiName="prevName +'name'" :name="prevName + 'name'" label="Nombre" :required="true">
 					<field-validate
+						:disabled="noEdit"
 						type="text"
 						class="form-control"
 						:name="prevName + 'name'"
@@ -26,6 +27,7 @@
 					:required="true"
 				>
 					<field-validate
+						:disabled="noEdit"
 						type="text"
 						class="form-control"
 						:name="prevName + 'last_name'"
@@ -40,6 +42,7 @@
 			<div class="col-lg-6 col-lg-4">
 				<base-field :apiName="prevName +'dni'" :name="prevName + 'dni'" label="DNI">
 					<field-validate
+						:disabled="noEdit"
 						type="text"
 						class="form-control"
 						:name="prevName + 'dni'"
@@ -51,12 +54,13 @@
 				</base-field>
 			</div>
 			<div class="col-lg-6 col-lg-4">
-				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="isResponsible">
+				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="true">
 					<field-validate
+						:disabled="noEdit"
 						type="text"
 						class="form-control"
 						:name="prevName + 'email'"
-						:rules="{ 'required': isResponsible, 'email': true}"
+						:rules="{ 'required': true, 'email': true}"
 						label="email"
 						@input="$emit('update:email', $event.target.value)"
 						:value="email"
@@ -67,6 +71,7 @@
 			<div class="col-lg-6 col-lg-4">
 				<base-field :apiName="prevName +'position'" :name="prevName + 'position'" label="Cargo">
 					<field-validate
+						:disabled="noEdit"
 						type="text"
 						class="form-control"
 						:name="prevName + 'position'"
@@ -81,6 +86,7 @@
 			<div class="col-lg-6 col-lg-4">
 				<base-field :apiName="prevName +'phone_number'" label="Movil" :name="prevName + 'phone_number'">
 					<field-validate
+						:disabled="noEdit"
 						type="number"
 						class="form-control"
 						:name="prevName + 'phone_number'"
@@ -131,6 +137,10 @@
 				default: false,
 			},
 			isResponsible: {
+				type: Boolean,
+				default: false
+			},
+			noEdit: {
 				type: Boolean,
 				default: false
 			}

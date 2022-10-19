@@ -112,7 +112,7 @@ import { mapGetters } from 'vuex';
 			},
 			async getTypes(){
 				try {
-					const res = await service.api('doc-types')
+					const res = await service.api({url:'doc-types'})
 					this.types = res.data.data.map((t) => {
 						return {
 							label: t.name,
