@@ -1,19 +1,23 @@
 <template>
 	<div :class="classes">
 		<multiselect
+			:class="customClass"
 			:disabled="disabled"
 			v-model="content"
 			:placeholder="placeholder"
 			v-if="typeof options == 'object'"
-			:searchable="true"
+			searchable
 			@select="handleSelect"
 			label="label"
 			:options="options"
-			trackBy="id"
+			:trackBy="trackBy"
 			:loading="loading"
-			:close-on-select="true"
+			deselectLabel="Remover"
+			close-on-select
 			@search-change="getUsers"
 			openDirection="bottom"
+			selectLabel="Seleccionar"
+			@remove="handleSelect($event, true)"
 		></multiselect>
 	</div>
 </template>
@@ -46,6 +50,13 @@
 			},
 			classes: {
 				type: String,
+			},
+			customClass: {
+				type: String,
+			},
+			trackBy: {
+				type: String,
+				default: 'id'
 			},
 			minSearch: {
 				type: Number,
@@ -133,11 +144,11 @@
 				}
 			});
 
-			function handleSelect(evt) {
+			function handleSelect(evt, clear = false) {
 				console.log(evt);
-				emit("selected", evt?.value);
-				emit("input", evt?.value);
-				emit("updated", evt?.value);
+				emit("selected", clear ? null : evt?.value);
+				emit("input", clear ? null : evt?.value);
+				emit("updated", clear ? null : evt?.value);
 			}
 
 			watch(

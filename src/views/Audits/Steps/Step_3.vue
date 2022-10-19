@@ -2,8 +2,8 @@
 	<div class="d-flex justify-content-center" v-if="typeof audit.id == 'undefined'">
 		<div class="spinner-border" role="status"></div>
 	</div>
-	<div v-else class="row justify-content-center px-md-2">
-		<div class="col-md-10">
+	<div v-else class="row justify-content-center">
+		<div class="col-md-12">
 			<h4 class="text-uppercase">Mercancias</h4>
 			<div class="row justify-content-center">
 				<div class="col-md-6">
@@ -141,28 +141,25 @@
 					<form-validate @submit="submitMaterial">
 						<div class="row">
 							<div class="col-md-3">
+								<base-field name="un" label="UN">
+									<async-select trackBy="value" customClass="custom-form-control" @selected="discovered_material = $event" v-model:clear="clearUn" :materials="true" :list="false">
+									</async-select>
+									<field-validate type="text" class="form-control d-none" name="un" rules="required"
+										label="un" v-model="audit_materials.comment" />
+								</base-field>
+							</div>
+							<div class="col-md-2">
 								<base-field name="adr_class_id" label="Clase ADR">
-									<field-validate as="select" class="form-control" name="adr_class_id" label="clase"
-										v-model="audit_materials.adr_class_id" rules="required">
-										<option selected>CLASE ADR</option>
-										<option :value="idx" v-for="(adr, idx) in adr_classes" :key="idx">
-											{{ adr.code }}
-										</option>
-									</field-validate>
+									<base-input :view="true" :modelValue="audit_materials.adr_class_id" disabled />
+								</base-field>
+							</div>
+							<div class="col-md-2">
+								<base-field name="packing_group_id" label="GE">
+									<base-input :view="true" :modelValue="audit_materials.packing_group_id" disabled />
+									
 								</base-field>
 							</div>
 							<div class="col-md-3">
-								<base-field name="packing_group_id" label="GE">
-									<field-validate as="select" class="form-control" name="packing_group_id" label="ge"
-										v-model="audit_materials.packing_group_id" rules="required">
-										<option selected>G.E.</option>
-										<option :value="idx" v-for="(pack, idx) in packing_types" :key="idx">
-											{{ pack.code }}
-										</option>
-									</field-validate>
-								</base-field>
-							</div>
-							<div class="col-md-4">
 								<base-field name="comment" label="Comentario">
 									<field-validate type="text" class="form-control" name="comment" rules="required"
 										label="comentario" v-model="audit_materials.comment" />
@@ -179,12 +176,15 @@
 					</form-validate>
 					<div class="row" v-for="(material, idx) in materials" :key="idx">
 						<div class="col-md-3">
+							<base-input :view="true" :modelValue="material.un_code" disabled />
+						</div>
+						<div class="col-md-2">
 							<base-input :view="true" :modelValue="material.class.code" disabled />
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-2">
 							<base-input :view="true" :modelValue="material.packing.code" disabled />
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<base-input :view="true" :modelValue="material.comment" disabled />
 						</div>
 						<div class="col-md-2 d-flex justify-content-center">
@@ -307,7 +307,8 @@
 				<div class="col-md-12 my-3">
 					<base-field label="Imagenes:">
 						<div class="clearfix">
-							<div v-if="images.length >= 1" class="row overflow-auto border border-light rounded p-3 mb-3"
+							<div v-if="images.length >= 1"
+								class="row overflow-auto border border-light rounded p-3 mb-3"
 								style="max-height: 400px">
 								<div v-for="(image, id) in images" :key="id" class="
 										col-md-3
@@ -373,11 +374,13 @@ import service from "@/store/services/model-service";
 import data_service from "@/store/services/data-service";
 import _, { random } from "lodash";
 import UploadImages from "vue-upload-drop-images";
+import AsyncSelect from '../../../components/core_components/AsyncSelect.vue';
 
 export default {
 	props: ["audit", "currentStep"],
 	components: {
 		UploadImages,
+		AsyncSelect,
 	},
 	data() {
 		return {
@@ -390,6 +393,7 @@ export default {
 			installation_id: null,
 			installation: {},
 			audit_materials: {
+				un: null,
 				packing_group_id: null,
 				adr_class_id: null,
 				comment: "",
@@ -423,6 +427,8 @@ export default {
 			addImages: false,
 			images: {},
 			upBtn: false,
+			discovered_material: null,
+			clearUn: false
 		};
 	},
 	async mounted() {
@@ -454,7 +460,7 @@ export default {
 				}
 
 				data = this.$functions.cleanData(data)
-				
+
 				await service.update("audit", this.audit_id, data);
 			} catch (err) {
 				let message = err.response.message
@@ -465,17 +471,18 @@ export default {
 			this.$emit("next", 3);
 		},
 		async submitMaterial(values, { resetForm }) {
-			const c = this.adr_classes[values.adr_class_id];
-			const p = this.packing_types[values.packing_group_id];
+			const c = this.discovered_material.class;
+			const p = this.discovered_material.packing;
 			this.materials.push({
 				id: random(1, 999999),
+				un_code: this.discovered_material.un_code,
 				adr_class_id: c.id,
 				packing_group_id: p.id,
 				class: c,
 				packing: p,
 				comment: values.comment,
 			});
-			this.audit;
+			this.discovered_material = null
 			resetForm();
 		},
 		async submitImages() {
@@ -558,15 +565,15 @@ export default {
 		},
 		async loadData() {
 			try {
-				const res = await data_service.getPacking();
-				const res2 = await data_service.getAdrClass();
+				// const res = await data_service.getPacking();
+				// const res2 = await data_service.getAdrClass();
 				const res3 = await data_service.getOperations();
 				const res4 = await data_service.getEquipments();
 
 				this.equipments_data = res4.data.data;
 				this.operations_data = res3.data.data;
-				this.adr_classes = res2.data.data;
-				this.packing_types = res.data.data;
+				// this.adr_classes = res2.data.data;
+				// this.packing_types = res.data.data;
 			} catch (err) {
 				this.$toast.error("No se pudieron cargar los datos");
 			}
@@ -717,6 +724,38 @@ export default {
 				this.audit.installation.deposits[newVal].is_residue;
 			this.selected_quantity = this.$functions.copy(this.deposit.quantity)
 		},
+		discovered_material: function(newVal) {
+			if (newVal) {
+				this.audit_materials.un = newVal?.un_code
+				this.audit_materials.packing_group_id = newVal?.packing?.code
+				this.audit_materials.adr_class_id = newVal?.class?.code
+			}else{
+				this.audit_materials.un = null
+				this.audit_materials.packing_group_id = null
+				this.audit_materials.adr_class_id = null
+				this.clearUn = true
+			}
+		} 
 	},
 };
 </script>
+
+<style scope lang="scss">
+	.custom-form-control > .multiselect__tags{
+		display: block;
+		width: 100%;
+		height: calc(1.5em + 1.25rem + 2px) !important;
+		padding: 0.625rem 0.75rem;
+		font-size: 0.875rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #8898aa;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #cad1d7;
+		border-radius: 0.375rem;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+</style>
