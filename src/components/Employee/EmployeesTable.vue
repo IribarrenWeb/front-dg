@@ -3,7 +3,7 @@
 		<div class="card-header border-0">
 			<div class="row align-items-center">
 				<div class="col">
-					<h3 class="mb-0">Empleados {{ ROLE != 'business' ? "ADR" : "" }}</h3>
+					<h3 class="mb-0">Empleados</h3>
 				</div>
 				<div class="col text-right">
 					<a href="#" class="btn btn-sm btn-default" @click="handleAdd"
@@ -50,7 +50,7 @@
 					<th>Email</th>
 					<th v-if="!isClient">Móvil</th>
 					<th v-if="isClient">Cargo</th>
-					<th v-if="isClient">Mercancías peligrosas</th>
+					<th>Mercancías peligrosas</th>
 					<th>Formación</th>
 					<th></th>
 				</template>
@@ -74,7 +74,7 @@
                     <td v-if="isClient">
 						{{ row.item?.position }}
 					</td>
-                    <td v-if="isClient">
+                    <td >
 						{{ row.item?.is_dangerous_goods ? 'SI' : 'NO' }}
 					</td>
 					<td>
@@ -210,6 +210,7 @@
 					});
 					this.tableData = employees;
 					this.metaData = res.data.meta.page;
+					this.page = this.metaData.currentPage;
 					// this.page = this.metaData.currentPage;
 				} catch (err) {
 					console.log(err);
