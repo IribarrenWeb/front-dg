@@ -48,7 +48,7 @@
 					<th>Nombre</th>
 					<th>DNI</th>
 					<th>Email</th>
-					<th v-if="!isClient">Móvil</th>
+					<th v-if="isClient">Móvil</th>
 					<th v-if="isClient">Cargo</th>
 					<th>Mercancías peligrosas</th>
 					<th>Formación</th>
@@ -68,7 +68,7 @@
 					<td>
 						{{ row.item?.email }}
 					</td>
-					<td v-if="!isClient">
+					<td v-if="isClient">
 						{{ row.item?.phone_number }}
 					</td>
                     <td v-if="isClient">
