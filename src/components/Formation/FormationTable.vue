@@ -16,12 +16,11 @@
 		<div
 			class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container"
 		>
-			<div class="col-md-3 filter">
+			<div class="col-md-3 filter" v-if="!$store.state.is_auditor">
 				<async-select
 					placeholder="Selecciona responsable..."
 					v-model:clear="clear"
 					@updated="handleFilter('facilitable', $event.id)"
-					v-if="!$store.state.is_auditor"
 					:roles="[2, 3]"
 				></async-select>
 			</div>

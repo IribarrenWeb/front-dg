@@ -15,13 +15,13 @@
 			class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-end filter-container"
 		>
 			<div class="col-md-10">
-				<div class="row align-items-center">
+				<div class="row align-items-end">
 					<date-filter
 						class="col-12 col-md-4 col-lg-3"
 						v-model:clear="clear"
 						@updated="handleFilter('date', $event)"
 					/>
-					<div class="col-12 col-md-4  mt-2 mt-md-0 col-lg-3 filter">
+					<div class="col-12 col-md-4  mt-2 mt-md-0 col-lg-3 filter"  v-if="!$store.state.is_auditor">
 						<async-select
 							placeholder="Selecciona responsable..."
 							v-model:clear="clear"

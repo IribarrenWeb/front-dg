@@ -37,6 +37,12 @@
 			<div class="border rounded border-light px-3 py-2 my-2" style="overflow-x: scroll">
 				<h4 v-if="isComplete">Listado de asistentes</h4>
 				<h4 v-else-if="reAssign">Listado de empleados</h4>
+
+				<div class="row mx-0 align-items-end mb-4">
+                    <base-input groupClasses="mb-0" class="mb-0" style="width:300px" label="Buscar" placeholder="Buscar" v-model="filter" />
+                    <base-button icon="fa-solid fa-plus" class="ml-3 mb-1" outline icon-only @click="addResponsible = true" />
+                </div>
+				
 				<table class="table table-sm table-hover table-bordered">
 					<thead>
 						<tr>
