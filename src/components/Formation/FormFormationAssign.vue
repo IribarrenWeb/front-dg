@@ -68,6 +68,11 @@
 
             <template v-if="currentStep == 2">
                 <div>
+                    <div class="d-flex mx-0 align-items-end mb-4">
+                        <base-field label="Buscar">
+                            <input class="form-control" style="min-width:300px" placeholder="Buscar" v-model="filter" />
+                        </base-field>
+                    </div>
                     <table class="table table-sm table-hover">
                         <thead>
                             <tr>
@@ -78,10 +83,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="employees.length < 1">
+                            <tr v-if="employees_rows?.length < 1">
                                 <td colspan="4">No hay empleados disponibles</td>
                             </tr>
-                            <tr v-for="employee in employees" :key="employee.id">
+                            <tr v-for="employee in employees_rows" :key="employee.id">
                                 <td>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" :value="employee.id" v-model="model.employees_ids">
@@ -130,92 +135,122 @@
 
 <script>
 import service from "@/store/services/model-service";
+import { ref } from '@vue/reactivity';
+import { computed } from '@vue/runtime-core';
 
 export default {
     props: ['formation_id'],
-    data() {
-        return {
-            steps: [
-					{
-						number: 1,
-						title: "Instalación",
-						valid: false,
-					},
-					{
-						number: 2,
-						title: "Empleados",
-						valid: false,
-					},
-            ],
-            model: {
-                employees_ids: [],
-                date: "",
-                time: "",
-                customer_formation_id: this.formation_id,
-                installation_id: null
-            },
+    setup(props, {emit}) {
+        const steps = ref([
+                {
+                    number: 1,
+                    title: "Instalación",
+                    valid: false,
+                },
+                {
+                    number: 2,
+                    title: "Empleados",
+                    valid: false,
+                },
+        ])
+
+        const model = ref({
+            employees_ids: [],
             date: "",
             time: "",
-            installation_id: null,
-            employees: {},
-            installations: {},
-            currentStep: 1,
-            currentDate: "",
-        }
-    },
-    mounted() {
-        this.loadInstallations();
-        this.currentDate = new Date().toISOString().split('T')[0]
-    },
-    methods: {
-        async onSubmit(values, { resetForm }){
+            customer_formation_id: props.formation_id,
+            installation_id: null
+        })
 
-            if (this.currentStep == 1) {
-                this.loadEmployees(this.installation_id)
-                this.model.installation_id = this.installation_id
-                // this.model.date += `${values.date} ${values.time}`;
+        const date = ref("");
+        const time = ref("");
+        const installation_id = ref(null);
+        const employees = ref([]);
+        const installations = ref([]);
+        const currentStep = ref(1);
+        const currentDate = ref("");
+        const filter = ref(null);
+        const employees_rows = computed(() => {
+            return employees.value?.filter((e) => {
+                return filter.value ? e.full_name.toLowerCase().includes(filter.value) : e;
+            }) ?? []
+        })
+        currentDate.value = new Date().toISOString().split('T')[0]
+        
+
+        async function onSubmit(values, { resetForm }){
+            if (currentStep.value == 1) {
+                loadEmployees(installation_id.value)
+                model.value.installation_id = installation_id.value
+                // model.value.date += `${values.date} ${values.time}`;
             }
 
-            if (this.currentStep == 2) {
+            if (currentStep.value == 2) {
                 try {
-                    await service.store('training',this.model)
-    
-                    this.$toast.success('Asignación registrada')
+                    await service.store('training',model.value)
+                    // $toast.value.success('Asignación registrada')
                     resetForm()
-                    this.$emit('reload')
-                    this.$emit('close')
+                    emit('reload')
+                    emit('close')
                 } catch (error) {
                     console.log(error);
                 }
             }
 
-            if (this.currentStep != 2) {
-                this.currentStep++;
+            if (currentStep.value != 2) {
+                currentStep.value++;
             }
-        },
-        async loadEmployees(id){
+        }
+        
+        async function loadEmployees(id){
             try {
-                const resp = await service.getIndex('employee', null, 'installation_id=' + id + '&not_formation_id='+this.formation_id);
-                this.employees = resp.data.data;
+                console.log('peticion 1', id);
+                const resp = await service.getIndex('employee', null, 'installation_id=' + id + '&not_formation_id='+props.formation_id);
+                console.log('peticion', id, resp);
+                employees.value = resp.data.data;
             } catch (err) {
-                this.model.date = ''
+                console.err(err);
+                model.value.date = ''
             }
-        },
-        async loadInstallations(){
+        }
+        
+        async function loadInstallations(){
             try {
                 const resp = await service.getIndex('installation', null);
-                this.installations = resp.data.data;
+                installations.value = resp.data.data;
             } catch (err) {
                 console.log(err.response);
                 // this.$toast.error('No se pudieron cargar los tipos de vehiculos')
             }
-        },
-        handleClose(reset){
+        }
+
+        function handleClose(reset){
             reset()
-            this.$emit('close')
-        },
-    },
-    computed: {
+            emit('close')
+        }
+        
+
+        loadInstallations()
+
+        return {
+            date,
+            time,
+            installation_id,
+            employees,
+            installations,
+            currentStep,
+            currentDate,
+            filter,
+            steps,
+            model,
+            currentDate,
+            employees_rows,
+
+            handleClose,
+            onSubmit
+        }
+
     }
+
 }
 </script>

@@ -38,11 +38,12 @@
 				<h4 v-if="isComplete">Listado de asistentes</h4>
 				<h4 v-else-if="reAssign">Listado de empleados</h4>
 
-				<div class="row mx-0 align-items-end mb-4">
-                    <base-input groupClasses="mb-0" class="mb-0" style="width:300px" label="Buscar" placeholder="Buscar" v-model="filter" />
-                    <base-button icon="fa-solid fa-plus" class="ml-3 mb-1" outline icon-only @click="addResponsible = true" />
-                </div>
-				
+				<div class="d-flex mx-0 align-items-end mb-4">
+					<base-field class="mt-3" label="Buscar" customClases="mb-0">
+						<input class="form-control" style="min-width:300px" placeholder="Buscar" v-model="filter" />
+					</base-field>
+				</div>
+
 				<table class="table table-sm table-hover table-bordered">
 					<thead>
 						<tr>
@@ -53,14 +54,15 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr v-if="employees?.length < 1">
+						<tr v-if="employees_rows?.length < 1">
 							<td colspan="4">No hay empleados disponibles</td>
 						</tr>
-						<tr v-for="employee in employees" :key="employee.id">
+						<tr v-for="employee in employees_rows" :key="employee.id">
 							<td>
 								<div class="form-check">
-									<input v-if="!isComplete && (toComplete || employee.canCheck)" class="form-check-input" type="checkbox"
-										:value="employee.id" v-model="employees_ids" />
+									<input v-if="!isComplete && (toComplete || employee.canCheck)"
+										class="form-check-input" type="checkbox" :value="employee.id"
+										v-model="employees_ids" />
 									<label class="form-check-label" for="flexCheckDefault">
 										{{ employee.full_name }}
 									</label>
@@ -85,7 +87,8 @@
 			</div>
 
 			<div class="mt-4 float-md-right">
-				<base-button type="default" nativeType="submit" v-if="!isComplete">{{ reAssign ? 'Asignar' : 'Aceptar'}}</base-button>
+				<base-button type="default" nativeType="submit" v-if="!isComplete">{{ reAssign ? 'Asignar' : 'Aceptar'}}
+				</base-button>
 				<base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
 				</base-button>
 			</div>
@@ -121,11 +124,18 @@ export default {
 		const employees_ids = ref([])
 		const installation_employees = ref([])
 		const training = ref(null)
+		const filter = ref(null)
 		const training_employees_ids = computed(() => training.value?.employees ? training.value.employees.map(e => e.id) : [])
 		const employees = computed(() => uniqBy([...training.value?.employees, ...installation_employees.value], 'id').map(e => {
 			e.canCheck = true;
 			return e
 		}))
+
+		const employees_rows = computed(() => {
+            return employees.value?.filter((e) => {
+                return filter.value ? e.full_name.toLowerCase().includes(filter.value) : e;
+            }) ?? []
+        })
 
 		async function onSubmit(values, { resetForm }) {
 			try {
@@ -157,7 +167,7 @@ export default {
 
 		async function loadEmployees() {
 			try {
-				const resp = await service.api({url:'employees&installation_id=' + props.installation_id});
+				const resp = await service.api({ url: 'employees?installation_id=' + props.installation_id });
 				installation_employees.value = resp.data.data;
 			} catch (err) {
 				console.log(err);
@@ -182,6 +192,8 @@ export default {
 			employees_ids,
 			training,
 			employees,
+			filter,
+			employees_rows,
 
 			loadEmployees,
 			loadTraining,
