@@ -1,4 +1,6 @@
 import { createApp } from "vue";
+import { Quasar } from 'quasar'
+import quasarLang from 'quasar/lang/es'
 import App from "./App.vue";
 import router from "./router";
 import ArgonDashboard from "./plugins/argon-dashboard";
@@ -24,6 +26,20 @@ import { isEmpty, isNil } from "lodash";
 import timeago from 'vue-timeago3' // import timeago
 import { es as esp } from 'date-fns/locale' // import custom locale
 import moment from "moment"
+
+
+// Import icon libraries
+import '@quasar/extras/material-icons/material-icons.css'
+import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
+import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
+
+// Import icon libraries
+import '@quasar/extras/material-icons/material-icons.css'
+import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
+import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
+
+// Import Quasar css
+import 'quasar/src/css/index.sass'
 
 Object.keys(AllRules).forEach((rule) => {
     defineRule(rule, AllRules[rule]);
@@ -62,6 +78,23 @@ appInstance.use(Toaster, {
     maxToasts: 1,
     queue: true,
 });
+
+appInstance.use(Quasar, {
+  plugins: {}, // import Quasar plugins and add here
+  lang: quasarLang,
+  /*
+  config: {
+    brand: {
+      // primary: '#e46262',
+      // ... or all other brand colors
+    },
+    notify: {...}, // default set of options for Notify Quasar plugin
+    loading: {...}, // default set of options for Loading Quasar plugin
+    loadingBar: { ... }, // settings for LoadingBar Quasar plugin
+    // ..and many more (check Installation card on each Quasar component/directive/plugin)
+  }
+  */
+})
 
 appInstance.config.globalProperties.$functions = functions;
 appInstance.config.globalProperties.$moment = moment;

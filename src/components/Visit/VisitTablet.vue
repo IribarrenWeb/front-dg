@@ -21,8 +21,23 @@
 				</div>
 			</div>
 		</div>
-
 		<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-end filter-container">
+			<div class="col-md-3">
+				<q-select rounded outlined bottom-slots v-model="model" :options="options" label="Label" counter maxlength="12" :dense="dense" :options-dense="denseOpts">
+					<template v-slot:before>
+					<q-icon name="flight_takeoff" />
+					</template>
+
+					<template v-slot:append>
+					<q-icon v-if="model !== ''" name="close" @click.stop.prevent="model = ''" class="cursor-pointer" />
+					<q-icon name="search" @click.stop.prevent />
+					</template>
+
+					<template v-slot:hint>
+					Field hint
+					</template>
+				</q-select>
+			</div>
 			<date-filter
 				class="col-md-3"
 				v-model:clear="clear"
