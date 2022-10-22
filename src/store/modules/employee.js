@@ -14,7 +14,7 @@ export default {
 
     actions: {
         async get(context, payload) {
-            return await service.api({url:'employees', data: payload})
+            return await service.api({url:'employees?'+payload})
         },
         async updateResponsibles(context, payload) {
             return await service.api({url:'employees/update-responsibles', method:'PUT',data:payload})

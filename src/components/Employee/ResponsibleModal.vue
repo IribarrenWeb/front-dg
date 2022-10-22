@@ -70,6 +70,7 @@ import { ref } from '@vue/reactivity';
 import { useStore } from 'vuex'
 import { computed, watch } from '@vue/runtime-core';
 import FormEmployee from './FormEmployee.vue';
+import modelService from '../../store/services/model-service';
 
 export default {
 	components: { FormEmployee },
@@ -97,10 +98,10 @@ export default {
 
         async function get() {
             const custom_where = JSON.stringify({
-                // is_representative: 0
+                installation_id: props.installation_id
             })
 
-            const res = await store.dispatch('employee/get', '&installation_id=' + props.installation_id + '&custom_wheres=' + custom_where)
+            const res = await modelService.api({url:'employees?with[]=formations&with[]=firm_document&custom_wheres='+custom_where})
             employees.value = res.data.data;
         }
 

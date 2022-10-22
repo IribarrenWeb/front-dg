@@ -290,8 +290,7 @@ export default {
 				is_representative: 1,
 				installation_id: this.installation_id
 			})
-			const res = await this.$store.dispatch('employee/get', '&with[]=formations&with[]=firm_document&custom_wheres='+custom_where)
-
+            const res = await service.api({url:'employees?with[]=formations&with[]=firm_document&custom_wheres='+custom_where})
 			this.responsibles = this.formatResponsibles(res.data.data)
 			console.log(res.data.data);
 		},
