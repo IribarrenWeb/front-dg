@@ -3,13 +3,11 @@ import { Quasar } from 'quasar'
 import quasarLang from 'quasar/lang/es'
 import App from "./App.vue";
 import router from "./router";
-import ArgonDashboard from "./plugins/argon-dashboard";
 import { store } from "./store";
 import "element-plus/lib/theme-chalk/index.css";
 import VueSweetalert2 from "vue-sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import Toaster from "@meforma/vue-toaster";
-import "./assets/main.css";
 
 import { localize, setLocale } from "@vee-validate/i18n";
 import es from "@vee-validate/i18n/dist/locale/es.json";
@@ -40,6 +38,11 @@ import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 
 // Import Quasar css
 import 'quasar/src/css/index.sass'
+
+import ArgonDashboard from "./plugins/argon-dashboard";
+
+import "./assets/main.css";
+
 
 Object.keys(AllRules).forEach((rule) => {
     defineRule(rule, AllRules[rule]);

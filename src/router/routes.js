@@ -1,5 +1,6 @@
 import { defineAsyncComponent } from 'vue'
 import DashboardLayout from "@/layout/DashboardLayout";
+import DashboardLayoutV2 from "@/layout/DashboardLayoutV2";
 import AuthLayout from "@/layout/AuthLayout";
 
 const Dashboard = defineAsyncComponent(() =>
@@ -111,7 +112,7 @@ import auditInit from './routes/audit_routes';
 const routes = [{
         path: "/",
         redirect: "/dashboard",
-        component: DashboardLayout,
+        component: DashboardLayoutV2,
         children: [{
                 path: "/dashboard",
                 name: "dashboard",

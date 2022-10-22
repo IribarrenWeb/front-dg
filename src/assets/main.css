@@ -241,3 +241,10 @@
     width: 90vw !important;
     max-width: 90vw !important;
 }
+
+.row{
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 0;
+    margin-left: 0;
+}

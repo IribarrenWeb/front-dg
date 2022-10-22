@@ -1,42 +1,34 @@
 <template>
     <div>
-        <base-dropdown dorpClasses="customDrop" @change="markRead" menuClasses="drop-not" ref="drop" class="nav-item"
-            position="right">
-            <template v-slot:title>
-                <a class="nav-link nav-link-icon position-relative h2" @click="markRead"
-                    :class="{ 'text-white': !dark }" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    <i class="ni ni-bell-55"></i>
-                    <span v-if="unread >= 1"
-                        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    </span>
-                </a>
+        <q-btn-dropdown rounded dense flat>
+            <template v-slot:label>
+                <i class="ni ni-bell-55" style="font-size: 1.3rem;"></i>
+                <q-badge v-if="unread >= 1" floating color="red" rounded />
             </template>
 
-            <ul v-if="!$empty(notifications)" class="list-group list-group-flush noty-container">
-                <li v-for="notification in notifications" :key="notification.id"
-                    class="dropdown-item list-group-item d-flex">
-                    <div class="">
+            <q-list v-if="!$empty(notifications)">
+                <q-item v-for="notification in notifications" :key="notification.id" clickable v-close-popup>
+                    <q-item-section avatar>
                         <i class="fa-regular fa-circle"></i>
-                    </div>
-                    <div class="pl-1">
-                        <div class="w-100">
-                            <span class="badge bg-danger mx-1 text-white" v-if="notification.read_at == null">Nuevo</span>
-                            <span class=" font-weight-bold text-wrap" style="width: 6rem;">{{
-                                    notification.data.message
-                            }}</span>
-                        </div>
-                        <div class="h6 text-muted d-inline">
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label>
+                            <q-badge v-if="notification.read_at == null" rounded color="orange" label="Nuevo" />
+                            {{notification.data.message}}
+                        </q-item-label>
+                        <q-item-label caption>
                             <timeago :autoUpdate="true" :datetime="$functions.timeAgo(notification.created_at)" />
-                        </div>
-                    </div>
-                </li>
-            </ul>
+                        </q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-icon name="info" color="red" v-if="notification.read_at == null" />
+                    </q-item-section>
+                </q-item>
+            </q-list>
             <div class="p-2" v-else>
                 Sin notificaciones
             </div>
-
-        </base-dropdown>
+        </q-btn-dropdown>
     </div>
 </template>
 
@@ -67,7 +59,7 @@ export default {
         const notifications = computed(() => {
             return store.state.notifications
         });
-        
+
         const unread = computed(() => {
             return (filter(notifications.value, function (d) { return d.read_at == null; })).length
         })
@@ -95,7 +87,7 @@ export default {
 
         function connect() {
             console.log();
-            console.log(pusher_key.value,pusher_cluster.value);
+            console.log(pusher_key.value, pusher_cluster.value);
             echo.value = new Echo({
                 broadcaster: 'pusher',
                 key: pusher_key.value,
@@ -118,7 +110,7 @@ export default {
         async function markRead(evt) {
             if (!evt && unread.value >= 1) {
                 try {
-                    const res = await modelService.api({url: 'notifications/read'})
+                    const res = await modelService.api({ url: 'notifications/read' })
                     store.commit('markRead')
                     console.log(res);
                 } catch (err) {
@@ -134,7 +126,7 @@ export default {
             } else if (!isEmpty(echo.value)) {
                 // echo.value.disconnect()
             }
-        },{immediate: true})
+        }, { immediate: true })
 
         return {
             connect,
@@ -173,10 +165,11 @@ export default {
     border-radius: 10px;
 }
 
-.page-link{
+.page-link {
     z-index: auto !important;
 }
-.noty-container{
+
+.noty-container {
     min-width: 350px;
 }
 </style>

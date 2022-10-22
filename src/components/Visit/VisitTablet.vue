@@ -1,10 +1,6 @@
 <template>
 	<div class="card shadow" :class="type === 'dark' ? 'bg-default' : ''">
-		<div
-			
-			class="card-header border-0"
-			:class="type === 'dark' ? 'bg-transparent' : ''"
-		>
+		<div class="card-header border-0" :class="type === 'dark' ? 'bg-transparent' : ''">
 			<div class="row align-items-center">
 				<div class="col">
 					<h3 class="mb-0" :class="type === 'dark' ? 'text-white' : ''">
@@ -12,64 +8,34 @@
 					</h3>
 				</div>
 				<div class="col text-right">
-					<router-link
-						v-if="dash"
-						to="/visits"
-						class="btn btn-sm btn-default"
-						>Ver todas</router-link
-					>
+					<router-link v-if="dash" to="/visits" class="btn btn-sm btn-default">Ver todas</router-link>
 				</div>
 			</div>
 		</div>
 		<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-end filter-container">
 			<div class="col-md-3">
-				<q-select rounded outlined bottom-slots v-model="model" :options="options" label="Label" counter maxlength="12" :dense="dense" :options-dense="denseOpts">
-					<template v-slot:before>
-					<q-icon name="flight_takeoff" />
-					</template>
-
+				<q-input outlined v-model="text" :dense="dense">
 					<template v-slot:append>
-					<q-icon v-if="model !== ''" name="close" @click.stop.prevent="model = ''" class="cursor-pointer" />
-					<q-icon name="search" @click.stop.prevent />
+						<q-avatar>
+							<img src="https://cdn.quasar.dev/logo-v2/svg/logo.svg">
+						</q-avatar>
 					</template>
-
-					<template v-slot:hint>
-					Field hint
-					</template>
-				</q-select>
+				</q-input>
 			</div>
-			<date-filter
-				class="col-md-3"
-				v-model:clear="clear"
-				@updated="handleFilter('date', $event)"
-			/>
-			<select-filter
-				class="col-md-3"
-				v-model:clear="clear"
+			<date-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('date', $event)" />
+			<select-filter class="col-md-3" v-model:clear="clear"
 				:options="[{label: 'Auditoria',value:'auditoria'},{label:'Formación',value:'formacion'}]"
-				@updated="handleFilter('type', $event)"
-			/>
-			<installation-filter
-				class="col-md-3"
-				v-model:clear="clear"
-				@updated="handleFilter('installation', $event)"
-			></installation-filter>
+				@updated="handleFilter('type', $event)" />
+			<installation-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('installation', $event)">
+			</installation-filter>
 			<div class="col-md-2">
-				<base-button
-					size="sm"
-					@click="(params_filter = params), getVisits(), (clear = true)"
-					>Borrar filtros</base-button
-				>
+				<base-button size="sm" @click="(params_filter = params), getVisits(), (clear = true)">Borrar filtros
+				</base-button>
 			</div>
 		</div>
 		<div class="table-responsive">
-			<base-table
-				class="table align-items-center table-flush"
-				:class="type === 'dark' ? 'table-dark' : ''"
-				:thead-classes="type === 'dark' ? 'thead-dark' : 'thead-light'"
-				tbody-classes="list"
-				:data="tableData"
-			>
+			<base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark' : ''"
+				:thead-classes="type === 'dark' ? 'thead-dark' : 'thead-light'" tbody-classes="list" :data="tableData">
 				<template v-slot:columns>
 					<th>Nombre</th>
 					<th>Instalacion</th>
@@ -77,7 +43,7 @@
 					<th>Tipo</th>
 					<th>Fecha</th>
 					<th>Hora</th>
-                    <th>Estado</th>
+					<th>Estado</th>
 					<th></th>
 				</template>
 
@@ -89,13 +55,14 @@
 						<div class="media align-items-center">
 							<div class="media-body">
 								<span class="name mb-0 text-sm">{{
-									row.item?.visitable.installation.name
+								row.item?.visitable.installation.name
 								}}</span>
 							</div>
 						</div>
 					</th>
-                    <td class="budget">
-						{{ row.item?.visitable.installation.auditable != null ? row.item?.visitable.installation.auditable.user.full_name : 'SIN RESPONSABLE'}}
+					<td class="budget">
+						{{ row.item?.visitable.installation.auditable != null ?
+						row.item?.visitable.installation.auditable.user.full_name : 'SIN RESPONSABLE'}}
 					</td>
 					<td class="text-uppercase">
 						{{ row.item?.type }}
@@ -103,14 +70,11 @@
 					<td>
 						{{ row.item?.date_scheduled }}
 					</td>
-                    <td>
+					<td>
 						{{ row.item?.time }}
 					</td>
-                    <td>
-						<badge
-							class="badge-dot mr-4"
-							:type="setStatusType(row.item?.status)"
-						>
+					<td>
+						<badge class="badge-dot mr-4" :type="setStatusType(row.item?.status)">
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
 							<span class="status">{{ row.item?.status == 0 ? 'Pendiente' : 'Completado' }}</span>
 						</badge>
@@ -118,105 +82,101 @@
 				</template>
 			</base-table>
 
-			<base-pagination
-				v-if="!dash"
-				:perPage="this.metaData.perPage"
-				:value="this.page"
-				@changePage="handleChange($event)"
-				:total="this.metaData.total"
-				align="center"
-			>
+			<base-pagination v-if="!dash" :perPage="this.metaData.perPage" :value="this.page"
+				@changePage="handleChange($event)" :total="this.metaData.total" align="center">
 			</base-pagination>
 		</div>
 	</div>
 </template>
 <script>
-    import { mapGetters} from 'vuex';
-	import DateFilter from '../filters/DateFilter.vue';
-	import InstallationFilter from '../filters/InstallationFilter.vue';
-	import SelectFilter from '../filters/SelectFilter.vue';
-	import service from "../../store/services/model-service";
-	import { apiUrl } from '../../axios';
-	
-	export default {
+import { mapGetters } from 'vuex';
+import DateFilter from '../filters/DateFilter.vue';
+import InstallationFilter from '../filters/InstallationFilter.vue';
+import SelectFilter from '../filters/SelectFilter.vue';
+import service from "../../store/services/model-service";
+import { apiUrl } from '../../axios';
+
+export default {
 	components: { InstallationFilter, DateFilter, SelectFilter },
-		name: "audits-table",
-		props: {
-			type: {
-				type: String,
-			},
-			title: String,
-			dash: {
-				default: false
+	name: "audits-table",
+	props: {
+		type: {
+			type: String,
+		},
+		title: String,
+		dash: {
+			default: false
+		}
+	},
+	data() {
+		return {
+			tableData: [],
+			metaData: {},
+			loader: false,
+			page: 1,
+			url: apiUrl,
+			clear: false,
+			params: "includes[]=visitable.installation.auditable.user" +
+				"&status=false",
+			params_filter: null
+		};
+	},
+	mounted() {
+		this.getVisits(this.page);
+	},
+	computed: {
+		...mapGetters(['CURRENT_DATE'])
+	},
+	methods: {
+		async getVisits(page = 1) {
+
+			if (this.params_filter == null) {
+				this.params_filter = this.params
+			}
+
+			const resp = await service.getIndex(
+				"visit",
+				page,
+				this.params_filter
+			);
+			this.tableData = resp?.data?.data;
+			this.metaData = resp?.data?.meta?.page;
+			this.page = this.metaData?.currentPage;
+		},
+		handleFilter(type, value) {
+			console.log(type, value);
+			if (!this.$empty(value) || value >= 1) {
+				this.params_filter += `&${type}_id=` + value;
+				this.getVisits(this.page);
+			} else {
+				this.params_filter = this.params;
+				this.getVisits(this.page);
 			}
 		},
-		data() {
-			return {
-				tableData: [],
-				metaData: {},
-				loader: false,
-				page: 1,
-                url: apiUrl,
-				clear: false,
-				params: "includes[]=visitable.installation.auditable.user"+
-					"&status=false",
-				params_filter: null
-			};
+		async handleChange(event) {
+			if (event == this.page) {
+				return;
+			}
+			this.getVisits(event);
 		},
-		mounted() {
-			this.getVisits(this.page);
-		},
-        computed: {
-            ...mapGetters(['CURRENT_DATE'])
-        },
-		methods: {
-			async getVisits(page = 1) {
-				
-				if (this.params_filter == null) {
-					this.params_filter = this.params
-				}
+		setStatusType(status) {
+			let type = "";
+			switch (status) {
+				case 0:
+					type = "danger";
+					break;
+				case 1:
+					type = "success";
+					break;
 
-				const resp = await service.getIndex(
-					"visit",
-					page,
-					this.params_filter
-				);
-				this.tableData = resp?.data?.data;
-				this.metaData = resp?.data?.meta?.page;
-				this.page = this.metaData?.currentPage;
-			},
-			handleFilter(type, value) {
-				console.log(type,value);
-				if (!this.$empty(value) || value >= 1) {
-					this.params_filter += `&${type}_id=` + value;
-					this.getVisits(this.page);
-				} else {
-					this.params_filter = this.params;
-					this.getVisits(this.page);
-				}
-			},
-			async handleChange(event) {
-				if (event == this.page) {
-					return;
-				}
-				this.getVisits(event);
-			},
-            setStatusType(status) {
-				let type = "";
-				switch (status) {
-					case 0:
-						type = "danger";
-						break;
-					case 1:
-						type = "success";
-						break;
-
-					default:
-						break;
-				}
-				return type;
-			},
+				default:
+					break;
+			}
+			return type;
 		},
-	};
+	},
+};
 </script>
-<style></style>
+<style>
+
+</style>
