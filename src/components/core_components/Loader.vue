@@ -32,7 +32,7 @@ import { mapState } from 'vuex';
     text-align: center;
     top: 0;
     left: 0;
-    background-color: #00000038;
+    background-color: #6e6e6e2a;
     width: 100%;
     height: 100%;
     align-items: center;

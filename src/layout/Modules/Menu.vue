@@ -1,7 +1,7 @@
 <template>
-    <div class="q-py-md" style="max-width: 350px">
-        <q-list bordered>
-            <q-item clickable v-ripple v-for="menu, idx in enabled_menus" :key="idx" :to="menu.path">
+    <div class="q-py-md custom-menu" style="max-width: 350px">
+        <q-list bordered class="">
+            <q-item clickable v-ripple class="nav-link" v-for="menu, idx in enabled_menus" :key="idx" :to="menu.path">
                 <q-item-section avatar>
                     <icon :class="menu.icon" />
                 </q-item-section>
@@ -30,7 +30,7 @@ export default {
     setup(props) {
         const store = useStore()
         const user = computed(() => store.state.profile.me)
-        const role = computed(() => store.state.role)
+        const role = computed(() => store.getters.ROLE)
         const menues = ref([
             {
                 name: 'Dashboard',
@@ -130,13 +130,12 @@ export default {
             }
         ])
 
-        function validate(menu) 
-        {
+        function validate(menu) {
             let validation = true;
             if (menu.roles) {
                 if (menu.not_condition) {
                     validation = !menu.roles.includes(role.value)
-                }else{
+                } else {
                     validation = menu.roles.includes(role.value)
                 }
             }
@@ -154,3 +153,14 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.custom-menu a {
+    padding: .65rem 1.5rem;
+    display: flex;
+    align-items: center;
+    color: #00000080;
+    background-color: transparent;
+    font-size: .9rem;
+}
+</style>

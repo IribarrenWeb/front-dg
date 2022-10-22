@@ -2,6 +2,9 @@ import { defineAsyncComponent } from 'vue'
 import DashboardLayout from "@/layout/DashboardLayout";
 import DashboardLayoutV2 from "@/layout/DashboardLayoutV2";
 import AuthLayout from "@/layout/AuthLayout";
+import PageLoader from "../loaders/PageLoader.vue"
+import TableLoader from "../loaders/TableLoader.vue"
+import AuthLoader from "../loaders/AuthLoader.vue"
 
 const Dashboard = defineAsyncComponent(() =>
     import ("@/views/Dashboard.vue")
@@ -35,73 +38,38 @@ const Employees = defineAsyncComponent(() =>
     import ("@/views/Employees.vue")
 );
 
-const EmployeesTable = defineAsyncComponent(() =>
-    import ("../components/Employee/EmployeesTable.vue")
-);
+const EmployeesTable = defineAsyncComponent({ loader: () => import('../components/Employee/EmployeesTable.vue'),loadingComponent: TableLoader}); 
 
-const VehiclesTable = defineAsyncComponent(() =>
-    import ("../components/Vehicle/VehiclesTable.vue")
-);
+const VehiclesTable = defineAsyncComponent({ loader: () => import('../components/Vehicle/VehiclesTable.vue'),loadingComponent: TableLoader}); 
 
-const MaterialsTable = defineAsyncComponent(() =>
-    import ("../components/Materials/MaterialTable.vue")
-);
+const MaterialsTable = defineAsyncComponent({ loader: () => import('../components/Materials/MaterialTable.vue'),loadingComponent: TableLoader}); 
 
-const AuditsTable = defineAsyncComponent(() =>
-    import ("../components/Audit/AuditTable.vue")
-);
+const AuditsTable = defineAsyncComponent({ loader: () => import('../components/Audit/AuditTable.vue'),loadingComponent: TableLoader}); 
 
-const NonTable = defineAsyncComponent(() =>
-    import ("../components/Non/NonTable.vue")
-);
+const NonTable = defineAsyncComponent({ loader: () => import('../components/Non/NonTable.vue'),loadingComponent: TableLoader}); 
 
-const Profile = defineAsyncComponent(() =>
-    import ("@/views/UserProfile.vue")
-);
+const Profile = defineAsyncComponent({ loader: () => import('../views/UserProfile.vue'),loadingComponent: PageLoader});
 
-const Audits = defineAsyncComponent(() =>
-    import ("@/views/Audits.vue")
-);
+const Audits = defineAsyncComponent({ loader: () => import('../views/Audits.vue'),loadingComponent: PageLoader});
 
-const Informs = defineAsyncComponent(() =>
-    import ("@/views/Informs.vue")
-);
+const Informs = defineAsyncComponent({ loader: () => import('../views/Informs.vue'),loadingComponent: PageLoader}); 
 
-const Formations = defineAsyncComponent(() =>
-    import ("@/views/Formation.vue")
-);
+const Formations = defineAsyncComponent({ loader: () => import('../views/Formation.vue'),loadingComponent: PageLoader}); 
 
-const Business = defineAsyncComponent(() =>
-    import ("@/views/Business.vue")
-);
+const Business = defineAsyncComponent({ loader: () => import('../views/Business.vue'),loadingComponent: PageLoader}); 
 
-const BusinessDetail = defineAsyncComponent(() =>
-    import ("../components/Business/BusinessDetail.vue")
-);
+const BusinessDetail = defineAsyncComponent({ loader: () => import('../components/Business/BusinessDetail.vue'),loadingComponent: PageLoader}); 
 
-const Auditors = defineAsyncComponent(() =>
-    import ("@/views/Auditor.vue")
-);
+const Auditors = defineAsyncComponent({ loader: () => import('../views/Auditor.vue'),loadingComponent: PageLoader}); 
 
-const Login = defineAsyncComponent(() =>
-    import ("@/views/Auth/Login.vue")
-);
+const Login = defineAsyncComponent({ loader: () => import('../views/Auth/Login.vue'),loadingComponent: AuthLoader}); 
 
-const ResetPassword = defineAsyncComponent(() =>
-    import ("@/views/Auth/ResetPassword.vue")
-);
+const ResetPassword = defineAsyncComponent({ loader: () => import('../views/Auth/ResetPassword.vue'),loadingComponent: AuthLoader}); 
 
-const ResetPasswordRequest = defineAsyncComponent(() =>
-    import ("@/views/Auth/ResetPasswordRequest.vue")
-);
+const ResetPasswordRequest = defineAsyncComponent({ loader: () => import('../views/Auth/ResetPasswordRequest.vue'),loadingComponent: AuthLoader}); 
 
-const Visits = defineAsyncComponent(() =>
-    import ("@/views/Visits.vue"))
+const Visits = defineAsyncComponent({ loader: () => import('../views/Visits.vue'),loadingComponent: PageLoader}); 
 
-// import Icons from "../views/Icons.vue";
-// import Tables from "../views/Tables.vue";
-// import MaterialTable from "../views/Tables/MaterialTable.vue"
-// import NotFound from "../pages/NotFoundPage.vue";
 
 //import middleware
 import auth from "@/middleware/auth";

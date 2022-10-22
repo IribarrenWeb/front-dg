@@ -1,14 +1,11 @@
 <template>
-	<div>
+	<div class="mt--7">
 		<div class="container-fluid">
-			<base-steps
-				:currentStep="currentStep"
-				listClasses="mb-md-4 pb-md-2 mt-5"
-				:steps="steps"
-				:edit="true"
-				@step="currentStep = $event"
-				@navigate="currentStep = $event"
-			></base-steps>
+			<div class="container mb-4">
+				<q-tabs inline-label  v-model="currentStep" dense align="justify"  class="text-grey-3">
+					<q-tab v-for="step, idx in steps" :key="idx" :name="step.number" icon="mail" :label="step.title" />
+				</q-tabs>
+			</div>
 			<div class="row">
 				<template v-if="currentStep == 1">
 					<div class="col-12">
@@ -34,41 +31,25 @@
 									<form-validate @submit="updateUser" class="row">
 										<div class="col-md-6">
 											<base-field name="name" label="Nombre">
-												<field-validate
-													class="form-control"
-													name="name"
-													label="nombre"
-													rules="required"
-													v-model="model.name"
-												/>
+												<field-validate class="form-control" name="name" label="nombre"
+													rules="required" v-model="model.name" />
 											</base-field>
 										</div>
 										<div class="col-md-6">
 											<base-field name="last_name" label="Apellido">
-												<field-validate
-													class="form-control"
-													name="last_name"
-													label="apellido"
-													rules="required"
-													v-model="model.last_name"
-												/>
+												<field-validate class="form-control" name="last_name" label="apellido"
+													rules="required" v-model="model.last_name" />
 											</base-field>
 										</div>
 										<div class="col-md-6">
 											<base-field name="email" label="Correo">
-												<field-validate
-													class="form-control"
-													name="email"
-													label="Correo"
-													rules="required|email"
-													v-model="model.email"
-												/>
+												<field-validate class="form-control" name="email" label="Correo"
+													rules="required|email" v-model="model.email" />
 											</base-field>
 										</div>
 										<div class="col-12 d-flex">
-											<base-button class="mr-0 ml-auto" nativeType="submit"
-												>Actualizar</base-button
-											>
+											<base-button class="mr-0 ml-auto" nativeType="submit">Actualizar
+											</base-button>
 										</div>
 									</form-validate>
 								</div>
@@ -78,13 +59,8 @@
 										Informacion de perfil
 									</h6>
 									<div class="px-0">
-										<component
-											:is="component"
-											:id="roleModel.id"
-											:business="roleModel"
-											:profile="true"
-											:user="model"
-										></component>
+										<component :is="component" :id="roleModel.id" :business="roleModel"
+											:profile="true" :user="model"></component>
 									</div>
 								</div>
 							</div>
@@ -128,10 +104,12 @@
 								</div>
 							</template>
 							<div class="px-md-2 px-1 mx-xl-1">
-								<profile-show :profile="profileModel" :columns="colsProfile" :title="model.role_id == 4 ? 'Consultores ADR' : 'Delegación'" />
+								<profile-show :profile="profileModel" :columns="colsProfile"
+									:title="model.role_id == 4 ? 'Consultores ADR' : 'Delegación'" />
 							</div>
 							<div class="px-md-2 px-1 mx-xl-1" v-if="$store.state.is_business">
-								<profile-show :data="model.business.installations" :columns="colsAuditors" title="Auditores ADR" />
+								<profile-show :data="model.business.installations" :columns="colsAuditors"
+									title="Auditores ADR" />
 							</div>
 						</card>
 					</div>
@@ -141,183 +119,183 @@
 	</div>
 </template>
 <script>
-	import service from "../store/services/profile-service.js";
-	import { computed, onMounted, ref, watch } from "vue";
-	import functions from "../utils/functions";
-	import FormDelegate from "../components/Delegate/FormDelegate";
-	import FormAuditor from "../components/Auditor/FormAuditor";
-	import FormPassword from "../components/Auth/FormPassword";
-	import ShowBusiness from "../components/Business/ShowBusiness";
-	import apiService from "../store/services/model-service.js";
-	import { useStore } from "vuex";
-	import ProfileShow from "../components/ProfileShow";
+import service from "../store/services/profile-service.js";
+import { computed, onMounted, ref, watch } from "vue";
+import functions from "../utils/functions";
+import FormDelegate from "../components/Delegate/FormDelegate";
+import FormAuditor from "../components/Auditor/FormAuditor";
+import FormPassword from "../components/Auth/FormPassword";
+import ShowBusiness from "../components/Business/ShowBusiness";
+import apiService from "../store/services/model-service.js";
+import { useStore } from "vuex";
+import ProfileShow from "../components/ProfileShow";
 
-	export default {
-		name: "user-profile",
-		components: {
-			FormDelegate,
-			FormAuditor,
-			FormPassword,
-			ShowBusiness,
-			ProfileShow,
-		},
-		setup() {
-			const model = ref({
-				name: null,
-				last_name: null,
-				email: null,
-			});
-			const colsProfile = [
-				{
-					title: 'Nombre',
-					field: 'user.full_name'
-				},
-				{
-					title: 'CIF/NIF',
-					field: 'cif_nif',
-					op_field: 'dni'
-				},
-				{
-					title: 'Móvil',
-					field: 'phone_number'
-				},
-				{
-					title: 'Email',
-					field: 'user.email'
-				},
-			]
-			const colsAuditors = [
-				{
-					title: 'Instalación',
-					field: 'name'
-				},
-				{
-					title: 'Nombre',
-					field: 'auditable.user.full_name'
-				},
-				{
-					title: 'DNI',
-					field: 'auditable.dni'
-				},
-				{
-					title: 'Móvil',
-					field: 'auditable.phone_number'
-				},
-				{
-					title: 'Email',
-					field: 'auditable.user.email'
-				},
-			]
-			const store = useStore();
-			const component = computed(() => {
-				let comp = "";
-				if (role.value == "auditor" || role.value == "delegate") {
-					comp = "form-" + role.value;
-				} else {
-					comp = "show-business";
-				}
-				return comp;
-			});
+export default {
+	name: "user-profile",
+	components: {
+		FormDelegate,
+		FormAuditor,
+		FormPassword,
+		ShowBusiness,
+		ProfileShow,
+	},
+	setup() {
+		const model = ref({
+			name: null,
+			last_name: null,
+			email: null,
+		});
+		const colsProfile = [
+			{
+				title: 'Nombre',
+				field: 'user.full_name'
+			},
+			{
+				title: 'CIF/NIF',
+				field: 'cif_nif',
+				op_field: 'dni'
+			},
+			{
+				title: 'Móvil',
+				field: 'phone_number'
+			},
+			{
+				title: 'Email',
+				field: 'user.email'
+			},
+		]
+		const colsAuditors = [
+			{
+				title: 'Instalación',
+				field: 'name'
+			},
+			{
+				title: 'Nombre',
+				field: 'auditable.user.full_name'
+			},
+			{
+				title: 'DNI',
+				field: 'auditable.dni'
+			},
+			{
+				title: 'Móvil',
+				field: 'auditable.phone_number'
+			},
+			{
+				title: 'Email',
+				field: 'auditable.user.email'
+			},
+		]
+		const store = useStore();
+		const component = computed(() => {
+			let comp = "";
+			if (role.value == "auditor" || role.value == "delegate") {
+				comp = "form-" + role.value;
+			} else {
+				comp = "show-business";
+			}
+			return comp;
+		});
 
-			const currentStep = ref(1);
-			const steps = ref([
-				{
-					title: "General",
-					number: 1,
-					valid: null,
-				},
-				{
-					title: "Contraseña",
-					number: 2,
-					valid: null,
-				},
+		const currentStep = ref(1);
+		const steps = ref([
+			{
+				title: "General",
+				number: 1,
+				valid: null,
+			},
+			{
+				title: "Contraseña",
+				number: 2,
+				valid: null,
+			},
+		]);
+		const role = computed(() => {
+			return model.value?.role?.name;
+		});
+		const roleModel = computed(() => {
+			return functions.assignSchema(role.value, model.value[role.value], [
+				"address",
 			]);
-			const role = computed(() => {
-				return model.value?.role?.name;
-			});
-			const roleModel = computed(() => {
-				return functions.assignSchema(role.value, model.value[role.value], [
-					"address",
-				]);
-			});
-			const profileModel = computed(() => {
-				let profile = null;
-				if (roleModel.value) {
-					if (role.value == 'business') {
-						profile = roleModel.value.administrable
-					}else if(role.value == 'auditor'){
-						profile = roleModel.value.delegate
-					}
-				}
-				return profile;
-			})
-
-			async function updateUser(values) {
-				try {
-					await apiService.api({url:"users",method: "put",data: values});
-				} catch (err) {
-					console.log(err);
+		});
+		const profileModel = computed(() => {
+			let profile = null;
+			if (roleModel.value) {
+				if (role.value == 'business') {
+					profile = roleModel.value.administrable
+				} else if (role.value == 'auditor') {
+					profile = roleModel.value.delegate
 				}
 			}
+			return profile;
+		})
 
-			async function getUser(params = null) {
-				const data = await service.get(params);
-				model.value = data.list.user;
+		async function updateUser(values) {
+			try {
+				await apiService.api({ url: "users", method: "put", data: values });
+			} catch (err) {
+				console.log(err);
 			}
+		}
 
-			onMounted(() => {
-				// getUser();
-			});
+		async function getUser(params = null) {
+			const data = await service.get(params);
+			model.value = data.list.user;
+		}
 
-			watch(
-				() => store.state.role,
-				(v) => {
-					if (v > 0) {
-						
-						let params = '';
-						if (v == 4) {
-							params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
+		onMounted(() => {
+			// getUser();
+		});
 
-							steps.value.push({
-								title: "Consultores ADR",
-								number: 3,
-								valid: null,
-							});
-						}
+		watch(
+			() => store.state.role,
+			(v) => {
+				if (v > 0) {
 
-						if (v == 3) {
-							params = 'includes[]=delegate.user';
+					let params = '';
+					if (v == 4) {
+						params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
 
-							steps.value.push({
-								title: "Delegación",
-								number: 3,
-								valid: null,
-							});
-						}
-
-						getUser(params);
+						steps.value.push({
+							title: "Consultores ADR",
+							number: 3,
+							valid: null,
+						});
 					}
-				},
-				{ immediate: true }
-			);
 
-			return {
-				model,
-				role,
-				component,
-				roleModel,
-				colsProfile,
-				steps,
-				currentStep,
-				profileModel,
-				colsAuditors,
-				updateUser,
-			};
-		},
-	};
+					if (v == 3) {
+						params = 'includes[]=delegate.user';
+
+						steps.value.push({
+							title: "Delegación",
+							number: 3,
+							valid: null,
+						});
+					}
+
+					getUser(params);
+				}
+			},
+			{ immediate: true }
+		);
+
+		return {
+			model,
+			role,
+			component,
+			roleModel,
+			colsProfile,
+			steps,
+			currentStep,
+			profileModel,
+			colsAuditors,
+			updateUser,
+		};
+	},
+};
 </script>
 <style>
-	.bg-gradient-blue {
-		background: linear-gradient(87deg, #2d41ce 0, #0206ff 100%) !important;
-	}
+.bg-gradient-blue {
+	background: linear-gradient(87deg, #2d41ce 0, #0206ff 100%) !important;
+}
 </style>

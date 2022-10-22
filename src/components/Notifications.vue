@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-btn-dropdown rounded dense flat>
+        <q-btn-dropdown rounded dense flat class="custom-drop" @hide="markRead">
             <template v-slot:label>
                 <i class="ni ni-bell-55" style="font-size: 1.3rem;"></i>
                 <q-badge v-if="unread >= 1" floating color="red" rounded />
@@ -108,7 +108,7 @@ export default {
         })
 
         async function markRead(evt) {
-            if (!evt && unread.value >= 1) {
+            if (unread.value >= 1) {
                 try {
                     const res = await modelService.api({ url: 'notifications/read' })
                     store.commit('markRead')
@@ -140,26 +140,27 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .drop-not {
     max-height: 500px;
     overflow-y: auto;
 }
 
-/* width */
+.custom-drop .q-btn-dropdown__arrow{
+    display: none !important;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 10px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey;
     background-color: white;
     border-radius: 10px;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: rgb(24, 40, 83);
     border-radius: 10px;

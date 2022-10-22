@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content bg-gradient-primary">
+  <div class="main-content bg-gradient-primary-2">
     <!-- Navbar -->
     <base-nav
       class="navbar-top navbar-horizontal navbar-dark"
@@ -131,8 +131,8 @@ import { baseUrl } from '../axios';
     },
   };
 </script>
-<style>
-  /* .bg-white{
-    background-color: #bbb8b8;
-  } */
-</style>
+<style lang="scss">
+.bg-gradient-primary-2 {
+    background: linear-gradient(87deg, #191A4D 0, #1a194d 100%) !important;
+}
+</style>>

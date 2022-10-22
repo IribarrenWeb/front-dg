@@ -13,15 +13,6 @@
 			</div>
 		</div>
 		<div v-if="!dash" class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-end filter-container">
-			<div class="col-md-3">
-				<q-input outlined v-model="text" :dense="dense">
-					<template v-slot:append>
-						<q-avatar>
-							<img src="https://cdn.quasar.dev/logo-v2/svg/logo.svg">
-						</q-avatar>
-					</template>
-				</q-input>
-			</div>
 			<date-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('date', $event)" />
 			<select-filter class="col-md-3" v-model:clear="clear"
 				:options="[{label: 'Auditoria',value:'auditoria'},{label:'Formación',value:'formacion'}]"

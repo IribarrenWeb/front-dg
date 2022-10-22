@@ -38,6 +38,10 @@ import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 
 // Import Quasar css
 import 'quasar/src/css/index.sass'
+import '@quasar/extras/animate/fadeIn.css'
+import '@quasar/extras/animate/fadeOut.css'
+// import '@quasar/extras/animate/slideInDown.css'
+// import '@quasar/extras/animate/slideInUp.css'
 
 import ArgonDashboard from "./plugins/argon-dashboard";
 
