@@ -65,6 +65,25 @@ async function api({ url, method, data }) {
     });
 }
 
+async function apiNoLoading({ url, method, data }) {
+    if (!method) method = 'GET'
+
+    let url_model = `/${url}`;
+
+    const config = {
+        method: method,
+        url: url_model,
+        data: data
+    }
+    
+    return await axios.request(config).then((response) => {
+        return response
+    }).catch(err => {
+        errors(err)
+        throw err
+    });
+}
+
 async function getIndex(model, page = 1, params = null) {
     storage.commit('loading');
     console.log(model);
@@ -319,8 +338,11 @@ function getReport(id) {
 
 function errors(err) {
     console.log(err?.response, err);
+    const specialChars =
+        /[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~]/;
     const status = err?.response?.status;
-    const message = err?.response?.data?.message;
+    const resp_message = err?.response?.data?.message ?? null;
+    const message = resp_message && resp_message.length <= 75 && !specialChars.test(resp_message) ? resp_message : null;
     let title = '';
     let body = '';
 
@@ -388,5 +410,6 @@ export default {
     instOperations,
     getReport,
     users_select,
-    api
+    api,
+    apiNoLoading
 }

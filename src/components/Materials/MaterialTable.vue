@@ -73,6 +73,11 @@
 					<td>{{ row.item?.equipment.name }}</td>
 					<td>{{ row.item?.quantity }}</td>
 					<td class="text-right">
+						<q-btn color="primary" @click="clone(row.item?.id)" class="q-mr-sm" flat dense icon="fa-regular fa-clone">
+							<q-tooltip>
+								Clonar registro
+							</q-tooltip>
+						</q-btn>
 						<a
 							class="btn btn-primary btn-sm"
 							href="#"
@@ -127,6 +132,7 @@
 	import InstallationFilter from '../filters/InstallationFilter.vue';
 	import service from "../../store/services/model-service";
 	import MaterialShow from "./MaterialShow.vue";
+	import { Notify } from 'quasar'
 
 	export default {
 		components: { MaterialShow, InstallationFilter },
@@ -236,6 +242,36 @@
 					console.log(error);
 				}
 			},
+			async clone(id) {
+				const result = await this.$swal({
+					title: "¿Estas seguro de clonar este registro?",
+					icon: "question",
+					text: "Este registro se va a clonar.",
+					showCancelButton: true,
+					confirmButtonText: "Clonar",
+					// customClass: {
+					// 	confirmButton: "btn btn-primary",
+					// 	cancelButton: "btn btn-outline-primary",
+					// },
+				}).then(async (result) => {
+					if (result.isConfirmed) {
+						return true;
+					} else {
+						return false;
+					}
+				});
+				if (result) {
+					try {
+						await service.api({url:"materials/clone/"+id});
+						this.getMaterials()
+					} catch (err) {
+						Notify.create({
+							message: 'No se pudo clonar el registro',
+							color: 'negative'
+						})
+					}
+				}
+			}
 		},
 	};
 </script>

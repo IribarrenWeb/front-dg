@@ -265,7 +265,7 @@
 					</div>
 				</div>
 				<div class="mt-4 float-md-right">
-					<base-button v-if="update" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
+					<base-button v-if="update" type="default" nativeType="submit"
 						>Actualizar</base-button
 					>
 					<base-button v-if="!update" type="default" :disabled="!meta.valid" nativeType="submit"
@@ -346,11 +346,11 @@
 				this.model = this.$functions.schemas('employee');
 				this.model.driver = this.driver ? 1 : 0;
 				this.model.installation_id = this.installation_id ?? null;
+				if (this.responsible) {
+					this.model.representative = true;
+				}
 			} else {
 				this.show();
-			}
-			if (this.responsible) {
-				this.model.representative = true;
 			}
 			this.loadPermits();
 		},

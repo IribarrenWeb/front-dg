@@ -54,13 +54,13 @@
 				</base-field>
 			</div>
 			<div class="col-lg-6 col-lg-4">
-				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="true">
+				<base-field :apiName="prevName +'email'" :name="prevName + 'email'" label="Email" :required="isResponsible">
 					<field-validate
 						:disabled="noEdit"
 						type="text"
 						class="form-control"
 						:name="prevName + 'email'"
-						:rules="{ 'required': true, 'email': true}"
+						:rules="{ 'required': isResponsible, 'email': true}"
 						label="email"
 						@input="$emit('update:email', $event.target.value)"
 						:value="email"

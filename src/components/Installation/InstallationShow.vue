@@ -3,27 +3,15 @@
 		<base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :edit="true"
 			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
 		<template v-if="currentStep == number('Instalacion') && show">
-			<general-data 
-				v-model:file_document="model.file_document"
-				v-model:file_auditor="model.file_auditor"
-				v-model:auditable="model.auditable_id"
-				v-model:name="model.name"
-				v-model:periodicity="model.periodicity"
-				:delegate_id="queryParams"
-				:auditable_value="model.auditable?.user?.id"
-				:firm_document="model.firm_document"
-				:auditor_document="model.auditor_document"
-			/>
+			<general-data v-model:file_document="model.file_document" v-model:file_auditor="model.file_auditor"
+				v-model:auditable="model.auditable_id" v-model:name="model.name" v-model:periodicity="model.periodicity"
+				:delegate_id="queryParams" :auditable_value="model.auditable?.user?.id"
+				:firm_document="model.firm_document" :auditor_document="model.auditor_document" />
 
-			<address-select
-				v-model:address="model.address.address" 
-				v-model:city="model.address.city" 
-				v-model:code="model.address.code" 
-				v-model:country="model.address.country" 
-				v-model:province="model.address.province" 
-				v-model:comunity="model.address.comunity" 
-				v-model:street_number="model.address.street_number"
-			/>
+			<address-select v-model:address="model.address.address" v-model:city="model.address.city"
+				v-model:code="model.address.code" v-model:country="model.address.country"
+				v-model:province="model.address.province" v-model:comunity="model.address.comunity"
+				v-model:street_number="model.address.street_number" />
 			<!-- </form-validate> -->
 
 			<div class="row border rounded border-light bg-white px-1 py-1 mt-md-4 mt-2">
@@ -44,6 +32,7 @@
 								<th>MÓVIL</th>
 								<th>EMAIL</th>
 								<th>ALTA</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -64,9 +53,13 @@
 											getDocument(responsible?.firm_document?.id)
 										">
 											<i class="fa fa-file-pdf" aria-hidden="true"></i>
-											{{responsible?.firm_document?.name_document ?? 'ALTA'}}
+											{{ responsible?.firm_document?.name_document ?? 'ALTA' }}
 										</a>
 									</div>
+								</td>
+								<td>
+									<q-btn color="primary" dense flat icon="fa-regular fa-eye"
+										@click="showResponsible(responsible.id)" />
 								</td>
 							</tr>
 							<tr v-if="!responsibles">
@@ -76,7 +69,11 @@
 					</table>
 				</div>
 			</div>
-			<responsible-modal v-model:show="modal" :installation_id="installation_id" />
+			<modal v-model:show="editModal" v-if="responsible_id" action="Editar" modalClasses="modal-xxl" model="Responsable">
+				<form-employee @reload="getResponsibles" @close="editModal = false, responsible_id = null"
+					:installation_id="installation_id" :responsible="true" :employee_id="responsible_id" />
+			</modal>
+			<responsible-modal ref="responsiblesModal" v-model:show="modal" :installation_id="installation_id" />
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Operaciones')">
@@ -132,8 +129,8 @@
 		</template>
 		<!-- ------------------------------------------------------ -->
 		<template v-if="currentStep == number('Empleados')">
-			<dashboard-employee v-if="ROLE != 'business'" :reload="reload_dash_employee" @reloaded="reload_dash_employee = false"
-				:id="installation_id"></dashboard-employee>
+			<dashboard-employee v-if="ROLE != 'business'" :reload="reload_dash_employee"
+				@reloaded="reload_dash_employee = false" :id="installation_id"></dashboard-employee>
 			<employees-table :installation_id="installation_id" :adr="false" @reload_dash="reload_dash_employee = true">
 			</employees-table>
 		</template>
@@ -179,172 +176,205 @@ import utils from "@/mixins/utils-mixin";
 
 import DashboardEmployee from "../Dashs/DashboardEmployee.vue";
 import { filter, forEach, isEmpty, isEqual, isUndefined, map } from "lodash";
-import { mapGetters } from "vuex";
+import { useStore } from "vuex";
 import FormEmployee from "../Employee/FormEmployee.vue";
 import AddressSelect from "../core_components/AddressSelect.vue";
 import GeneralData from "./Modules/GeneralData.vue";
 import ResponsibleModal from "../Employee/ResponsibleModal.vue";
+import { useRouter } from 'vue-router';
+import { computed, ref, watch } from '@vue/runtime-core';
+import { toast, swal } from "../../boot/plugins";
+import functions from "../../utils/functions";
+import Modal from '../core_components/Modal.vue';
 
 export default {
 	name: "installation-show",
 	components: {
-    MaterialTable,
-    VehiclesTable,
-    SubcontractorTable,
-    EmployeesTable,
-    DashboardEmployee,
-    // eslint-disable-next-line vue/no-unused-components
-    FormEmployee,
-    AddressSelect,
-    GeneralData,
-    ResponsibleModal
-},
+		MaterialTable,
+		VehiclesTable,
+		SubcontractorTable,
+		EmployeesTable,
+		DashboardEmployee,
+		// eslint-disable-next-line vue/no-unused-components
+		FormEmployee,
+		AddressSelect,
+		GeneralData,
+		ResponsibleModal,
+		Modal
+	},
 	mixins: [utils],
 	props: {
 		installation_id: {
 			required: true,
 		},
 	},
-	data() {
-		return {
-			model: null,
-			new_document: {
-				value: null,
-				new: false,
-				base64: "",
-			},
-			modal: false,
-			addResponsible: false,
-			reload_dash_employee: false,
-			update: {
-				op: false,
-				dep: false,
-				eqp: false,
-			},
-			equips: [],
-			oper: [],
-			deps: [],
-			steps: {},
-			original_model: null,
-			currentStep: 1,
-			operations: [],
-			deposits: [],
-			equipments: [],
-			responsibles: null,
-			show: false
-		};
-	},
-	async beforeCreate() { },
-	created() {
-		this.getInst();
-		this.getResponsibles()
-		this.formatSteps();
-	},
-	methods: {
-		async getInst() {
+	setup(props, { emit }) {
+		const model = ref(null)
+		const new_document = ref({
+			value: null,
+			new: false,
+			base64: "",
+		})
+		const modal = ref(false)
+		const addResponsible = ref(false)
+		const reload_dash_employee = ref(false)
+		const update = ref({
+			op: false,
+			dep: false,
+			eqp: false,
+		})
+		const equips = ref([])
+		const oper = ref([])
+		const deps = ref([])
+		const steps = ref({})
+		const original_model = ref(null)
+		const currentStep = ref(1)
+		const operations = ref([])
+		const deposits = ref([])
+		const equipments = ref([])
+		const responsibles = ref(null)
+		const responsible_id = ref(null)
+		const editModal = ref(false)
+		const show = ref(false)
+		const responsiblesModal = ref(null)
+		const store = useStore();
+		const router = useRouter;
+		const role = computed(() => store.getters.ROLE)
+		const isTransported = computed(() => {
+			let check = false;
+			for (let i = 0; i < model.value.operations.length; i++) {
+				const op = model.value.operations[i];
+				if (op.id == 5) {
+					check = true;
+				}
+			}
+			return check;
+		})
+		const hasTransportedOper = computed(() => {
+			let has = false
+			forEach(model.value.operations, function (op) {
+				if (op.id == 5) {
+					has = true
+				}
+			});
+			return has;
+		})
+		const queryParams = computed(() => {
+			return role.value == 'admin' ? model.value?.company?.administrable_id : null
+		})
+
+		async function getInst() {
 			try {
 				const res = await service.show(
 					"installation",
-					this.installation_id,
+					props.installation_id,
 					"includes[]=operations&includes[]=equipments" +
 					"&includes[]=auditable.user" +
 					"&includes[]=depositTypes" +
-					"&includes[]=firm_document"+
-					"&includes[]=auditor_document"+
+					"&includes[]=firm_document" +
+					"&includes[]=auditor_document" +
 					"&includes[]=company"
 				);
 
-				this.model = this.$functions.assignSchema('installation', res.data.data, ['address']);
-				// this.model.file_document = null;
-				this.model.auditable_id = null;
+				model.value = functions.assignSchema('installation', res.data.data, ['address']);
+				// model.value.file_document = null;
+				model.value.auditable_id = null;
 
 
-				this.model.responsible = null;
-				this.model.hasTransport = this.model.hasTransport ? this.model.hasTransport : null;
+				model.value.responsible = null;
+				model.value.hasTransport = model.value.hasTransport ? model.value.hasTransport : null;
 
-				this.original_model = this.$functions.copy(this.model);
+				original_model.value = functions.copy(model.value);
 
-				this.show = true
-				this.$emit("installation", this.model);
+				show.value = true
+				emit("installation", model.value);
 			} catch (err) {
 				console.log(err);
 			}
-		},
-		formatResponsibles(employees) {
+		}
+
+		function showResponsible(id) {
+			editModal.value = true
+			responsible_id.value = id
+		}
+
+		function formatResponsibles(employees) {
 			return employees.map((res) => {
-					let employee = this.$functions.assignSchema('employee', res)
-					let f_doc = null;
-					forEach(employee?.documents, (doc) => {
-						if (doc.type.name == "CERTIFICADO") {
-							f_doc = doc;
-						}
-					});
-					if (!isEmpty(employee)) {
-						employee.formation_document = f_doc;
+				let employee = functions.assignSchema('employee', res)
+				let f_doc = null;
+				forEach(employee?.documents, (doc) => {
+					if (doc.type.name == "CERTIFICADO") {
+						f_doc = doc;
 					}
-					return employee;
 				});
-		},
-		async getResponsibles(){
+				if (!isEmpty(employee)) {
+					employee.formation_document = f_doc;
+				}
+				return employee;
+			});
+		}
+
+		async function getResponsibles() {
 			const custom_where = JSON.stringify({
 				is_representative: 1,
-				installation_id: this.installation_id
+				installation_id: props.installation_id
 			})
-            const res = await service.api({url:'employees?with[]=formations&with[]=firm_document&custom_wheres='+custom_where})
-			this.responsibles = this.formatResponsibles(res.data.data)
+			const res = await service.api({ url: 'employees?with[]=formations&with[]=firm_document&custom_wheres=' + custom_where })
+			responsibles.value = formatResponsibles(res.data.data)
 			console.log(res.data.data);
-		},
-		async handleNext() {
-			if (this.currentStep == 1) {
+		}
+
+		async function handleNext() {
+			if (currentStep.value == 1) {
 				let data = {
-					name: this.model.name,
-					address: this.model.address,
-					periodicity: this.model.periodicity,
-					province_id: this.model.province_id
+					name: model.value.name,
+					address: model.value.address,
+					periodicity: model.value.periodicity,
+					province_id: model.value.province_id
 				};
-				if (!isEmpty(this.model.file_document.base64)) {
-					data.file_document = this.model.file_document;
+				if (!isEmpty(model.value.file_document.base64)) {
+					data.file_document = model.value.file_document;
 				}
-				
-				if (this.model.auditable_id || (this.model.auditable && !this.model.auditor_document)) {
-					data.auditable_id = this.model.auditable_id ? this.model.auditable_id : this.model.auditable.user.id;
-					if (!isEmpty(this.model.file_auditor.base64)) {
-						data.file_auditor = this.model.file_auditor;
+
+				if (model.value.auditable_id || (model.value.auditable && !model.value.auditor_document)) {
+					data.auditable_id = model.value.auditable_id ? model.value.auditable_id : model.value.auditable.user.id;
+					if (!isEmpty(model.value.file_auditor.base64)) {
+						data.file_auditor = model.value.file_auditor;
 					}
 				}
 
-				if (!isEqual(this.model, this.original_model)) {
+				if (!isEqual(model.value, original_model.value)) {
 					try {
-						data = this.$functions.cleanData(data)
-						await service.update("installation", this.installation_id, data);
-						this.$emit("reload");
-						await this.getInst();
+						data = functions.cleanData(data)
+						await service.update("installation", props.installation_id, data);
+						emit("reload");
+						await getInst();
 					} catch (err) {
-						this.$toast.error("No se pudieron guardar los cambios.");
+						toast.error("No se pudieron guardar los cambios.");
 						return;
 					}
 				}
 			}
 
-			if (this.currentStep == 2) {
+			if (currentStep.value == 2) {
 				let data = {};
 
-				if (this.update.op) {
-					data.operation_types_ids = this.oper;
+				if (update.value.op) {
+					data.operation_types_ids = oper.value;
 
 
 				}
-				if (this.update.eqp) {
-					data.equipments_ids = this.equips;
+				if (update.value.eqp) {
+					data.equipments_ids = equips.value;
 				}
-				if (this.update.dep) {
-					data.deposit_types_ids = this.deps;
+				if (update.value.dep) {
+					data.deposit_types_ids = deps.value;
 				}
 
-				if (this.update.op || this.update.eqp || this.update.dep) {
+				if (update.value.op || update.value.eqp || update.value.dep) {
 					let result = true
-					if (this.hasTransportedOper && !this.oper.includes(5)) {
-						result = await this.$swal({
+					if (hasTransportedOper.value && !oper.value.includes(5)) {
+						result = await swal({
 							title: "¿Esta seguro?",
 							icon: 'question',
 							text: "Si deselecciona la operación de transporte se eliminaran los vehiculos asociados a esta instalación, ¿esta seguro?",
@@ -359,78 +389,83 @@ export default {
 					}
 					try {
 						if (result) {
-							await service.update("installation", this.installation_id, data);
-							this.$emit("reload");
-							await this.getInst();
-							this.update.op = false;
-							this.update.eqp = false;
-							this.update.dep = false;
+							await service.update("installation", props.installation_id, data);
+							emit("reload");
+							await getInst();
+							update.value.op = false;
+							update.value.eqp = false;
+							update.value.dep = false;
 						}
 					} catch (err) {
-						this.$toast.error("No se pudieron guardar los cambios.");
+						toast.error("No se pudieron guardar los cambios.");
 						return;
 					}
 				}
 			}
 
-			this.currentStep++;
-		},
-		handleClose() {
-			if (this.$store.state.is_business) {
-				this.$router.back()
-			}else{
-				this.$emit("close");
+			currentStep.value++;
+		}
+
+		function handleClose() {
+			if (store.state.is_business) {
+				router.back()
+			} else {
+				emit("close");
 			}
-		},
-		async loadOperations() {
+		}
+
+		async function loadOperations() {
 			const res = await dataService.getOperations();
 			const data = res.data.data;
 			let ids = [];
-			let operations = map(data, (operation) => {
+			let operations_data = map(data, (operation) => {
 				let checked = false;
 				return { value: operation.id, label: operation.name, checked: checked };
 			});
-			for (let i = 0; i < this.model.operations.length; i++) {
-				const op = this.model.operations[i];
+			for (let i = 0; i < model.value.operations.length; i++) {
+				const op = model.value.operations[i];
 				ids.push(op.id);
 			}
-			this.oper = ids;
-			this.operations = operations;
+			oper.value = ids;
+			operations.value = operations_data;
 			return;
-		},
-		async loadDeposits() {
+		}
+
+		async function loadDeposits() {
 			const res = await dataService.getDeposits();
 			const data = res.data.data;
 			let ids = [];
-			let deposits = map(data, (deposit) => {
+			let deposits_data = map(data, (deposit) => {
 				let checked = false;
 				return { value: deposit.id, label: deposit.name, checked: checked };
 			});
-			for (let i = 0; i < this.model.deposit_types.length; i++) {
-				const op = this.model.deposit_types[i];
+			for (let i = 0; i < model.value.deposit_types.length; i++) {
+				const op = model.value.deposit_types[i];
 				ids.push(op.id);
 			}
-			this.deps = ids;
-			this.deposits = deposits;
+			deps.value = ids;
+			deposits.value = deposits_data;
 			return;
-		},
-		async loadEquipments() {
+		}
+
+		async function loadEquipments() {
 			const res = await dataService.getEquipments();
 			const data = res.data.data;
 			let ids = [];
-			let equipments = map(data, (equipment) => {
+			let equipments_data = map(data, (equipment) => {
 				return { value: equipment.id, label: equipment.name, checked: false };
 			});
-			for (let i = 0; i < this.model.equipments.length; i++) {
-				const eq = this.model.equipments[i];
+			for (let i = 0; i < model.value.equipments.length; i++) {
+				const eq = model.value.equipments[i];
 				ids.push(eq.id);
 			}
-			this.equips = ids;
-			this.equipments = equipments;
+			equips.value = ids;
+			equipments.value = equipments_data;
 			return;
-		},
-		formatSteps() {
-			let steps = [
+		}
+
+		function formatSteps() {
+			let steps_data = [
 				"Instalacion",
 				"Operaciones",
 				"Empleados",
@@ -440,10 +475,9 @@ export default {
 			];
 			let format_steps = [];
 			let count = 1;
-			const $this = this;
-			forEach(steps, function (s) {
+			forEach(steps_data, function (s) {
 				if (
-					$this.ROLE == "business"
+					role.value == "business"
 					// &&
 					// s != "Empleados" &&
 					// s != "Materiales" &&
@@ -455,7 +489,7 @@ export default {
 						valid: false,
 					});
 					count++;
-				} else if ($this.ROLE != "business") {
+				} else if (role.value != "business") {
 					format_steps.push({
 						number: count,
 						title: s,
@@ -464,77 +498,91 @@ export default {
 					count++;
 				}
 			});
-			this.steps = format_steps;
-		},
-		number(query) {
-			const step = filter(this.steps, function (s) {
+			steps.value = format_steps;
+		}
+
+		function number(query) {
+			const step = filter(steps.value, function (s) {
 				return s.title == query;
 			});
 			return isUndefined(step[0]) ? 0 : step[0].number;
-		},
-	},
-	computed: {
-		...mapGetters(["ROLE", "CLEAN_DATA"]),
-		isTransported() {
-			let check = false;
-			for (let i = 0; i < this.model.operations.length; i++) {
-				const op = this.model.operations[i];
-				if (op.id == 5) {
-					check = true;
-				}
-			}
-			return check;
-		},
-		hasTransportedOper() {
-			let has = false
-			forEach(this.model.operations, function (op) {
-				if (op.id == 5) {
-					has = true
-				}
-			});
-			return has;
-		},
-		queryParams() {
-			return this.ROLE == 'admin' ? this.model?.company?.administrable_id : null
 		}
-	},
-	watch: {
-		oper() {
-			let oper_ids = this.$functions.pluck(this.model.operations, "id");
-			this.update.op = !isEqual(this.oper, oper_ids);
-		},
-		equips() {
-			let equip_ids = this.$functions.pluck(this.model.equipments, "id");
-			this.update.eqp = !isEqual(this.equips, equip_ids);
-		},
-		deps() {
-			let deps_ids = this.$functions.pluck(this.model.deposit_types, "id");
-			this.update.dep = !isEqual(this.deps, deps_ids);
-		},
-		"new_auditable.value": {
-			handler(newValue) {
-				if (!isUndefined(newValue.id)) {
-					this.model.auditable_id = newValue.id;
-				}
-			},
-		},
-		currentStep(newVal) {
-			if (newVal == 2) {
-				this.loadOperations();
-				this.loadEquipments();
-				this.loadDeposits();
+
+		getInst();
+		getResponsibles()
+		formatSteps();
+
+
+		watch(() => oper.value, (v) => {
+			let oper_ids = functions.pluck(model.value.operations, "id");
+			update.value.op = !isEqual(v, oper_ids);
+		})
+
+		watch(() => equips.value, (v) => {
+			let equip_ids = functions.pluck(model.value.equipments, "id");
+			update.value.eqp = !isEqual(v, equip_ids);
+		})
+		watch(() => deps.value, (v) => {
+			let deps_ids = functions.pluck(model.value.deposit_types, "id");
+			update.value.dep = !isEqual(v, deps_ids);
+		})
+		// watch(() => new_auditable.value, (v) => {
+		// 	if (!isUndefined(v.id)) {
+		// 		model.value.auditable_id = v.id;
+		// 	}
+		// })
+		watch(() => currentStep.value, (v) => {
+			console.log(v);
+			if (v == 2) {
+				loadOperations();
+				loadEquipments();
+				loadDeposits();
 			}
-		},
-		ROLE(newVal) {
-			if (newVal != false) {
-				this.formatSteps();
+		})
+		watch(() => role.value, (v) => {
+			if (v != false) {
+				formatSteps();
 			}
-		},
-		modal(val) {
-			if (!val) {
-				this.getResponsibles()
+		})
+		watch(() => modal.value, (v) => {
+			if (!v) {
+				getResponsibles()
 			}
-		}
-	},
+		})
+
+		return {
+			model,
+			new_document,
+			update,
+			modal,
+			addResponsible,
+			reload_dash_employee,
+			equips,
+			oper,
+			deps,
+			steps,
+			original_model,
+			currentStep,
+			operations,
+			deposits,
+			equipments,
+			responsibles,
+			show,
+			responsiblesModal,
+			isTransported,
+			queryParams,
+			role,
+			editModal,
+			responsible_id,
+
+			handleClose,
+			showResponsible,
+			number,
+			loadEquipments,
+			loadDeposits,
+			loadOperations,
+			handleNext
+		};
+	}
 };
 </script>

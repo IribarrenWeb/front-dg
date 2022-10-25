@@ -120,16 +120,16 @@
 								label="Cantidad de compra" v-model="model.buy" />
 						</base-field>
 					</div>
-					<div class="col-lg-3" v-else-if="model.operation_type_id == 5">
-						<base-field name="transported" label="Transportada anual">
-							<field-validate type="number" class="form-control" name="transported" rules="required"
-								label="Cantidad transportada" v-model="model.transported" />
-						</base-field>
-					</div>
-					<div class="col-lg-3" v-else>
+					<div class="col-lg-3" v-else-if="model.operation_type_id <= 3">
 						<base-field name="sell" label="Venta anual">
 							<field-validate type="number" class="form-control" name="sell" rules="required"
 								label="Cantidad de venta" v-model="model.sell" />
+						</base-field>
+					</div>
+					<div class="col-lg-3" v-else>
+						<base-field name="transported" label="Transportada anual">
+							<field-validate type="number" class="form-control" name="transported" rules="required"
+								label="Cantidad transportada" v-model="model.transported" />
 						</base-field>
 					</div>
 					<div class="col-lg-6">
