@@ -42,21 +42,9 @@
 					</div>
 					<div class="col-lg-4">
 						<base-field name="material" label="UN">
-							<div v-if="model_material">
-								<span class="
-										mr-md-4
-										text-uppercase text-text-truncate
-										d-inline-block
-									">{{ model_material.un_code }} -
-									{{ model_material.denomination_name }}</span>
-								<base-button @click="resetMaterial" size="sm" type="default" :outline="true"><i
-										class="fa-solid fa-pencil"></i></base-button>
-							</div>
-							<div v-else>
-								<field-validate name="material" label="mercancia adr" rules="required">
-									<async-select @selected="adr_material = $event" :materials="true" :list="false">
-									</async-select>
-								</field-validate>
+							<material-selector v-model="adr_material" :valueSelect="model_material" @edit="resetMaterial"/>
+							<div v-if="!model_material">
+								<field-validate v-show="false" name="material" label="mercancia adr" rules="required" v-model="adr_material" />
 							</div>
 						</base-field>
 					</div>
@@ -163,6 +151,7 @@ import { isEmpty, isEqual } from "lodash";
 import { mapGetters } from "vuex";
 import AsyncSelect from '../core_components/AsyncSelect.vue';
 import InstallationSelect from '../Utils/InstallationSelect.vue';
+import MaterialSelector from './Modules/MaterialSelector.vue';
 
 export default {
 	mixins: [utils],
@@ -187,7 +176,7 @@ export default {
 			default: null
 		}
 	},
-	components: { AsyncSelect, InstallationSelect },
+	components: { AsyncSelect, InstallationSelect, MaterialSelector },
 	data() {
 		return {
 			steps: [

@@ -183,7 +183,7 @@
 
 				let params = this.params_filter;
 
-				if (this.ROLE != "business" && !this.dash) {
+				if (this.ROLE != "business") {
 					params += "&includes[]=installation.company.user";
 				}
 

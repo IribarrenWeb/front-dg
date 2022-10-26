@@ -171,6 +171,7 @@
 	import _ from "lodash";
 	import service from "../../store/services/model-service";
 	import utils from "@/mixins/utils-mixin";
+	import { baseUrl } from '../../axios/index'
 
 	export default {
         mixins: [utils],
@@ -206,7 +207,7 @@
                 return _.isEmpty(this.material.documents) ? false : this.material.documents[0]
             },
             dangerous_label(){
-                return this.$store.state.api_url_base + '/labels/is_dangerous.jpg'
+                return baseUrl + '/labels/is_dangerous.jpg'
             }
 		},
 		watch: {

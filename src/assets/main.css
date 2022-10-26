@@ -248,3 +248,16 @@
     margin-right: 0;
     margin-left: 0;
 }
+
+.col {
+    padding-right: 1px;
+    padding-left: 1px;
+}
+
+.truncate-250 {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 250px;
+    overflow: hidden;
+    display: block;
+}
