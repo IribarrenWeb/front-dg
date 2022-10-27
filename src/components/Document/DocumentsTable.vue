@@ -40,6 +40,7 @@
 					<th>Extension</th>
 					<th>Tamaño</th>
 					<th>Fecha</th>
+					<th>Instalación</th>
 					<th>Subido por</th>
 					<th></th>
 				</template>
@@ -62,6 +63,9 @@
 					<td>{{ row.item?.size }} kB</td>
 					<td>
 						{{ row.item?.created_date }}
+					</td>
+					<td>
+						{{ row.item?.installation?.name }}
 					</td>
 					<td>
 						{{ row.item?.created_by?.full_name }}
@@ -112,7 +116,7 @@
 				submit: false,
 				loader: false,
 				action: "Registrar",
-				params: 'includes[]=type&includes[]=business.user&includes[]=createdBy',
+				params: 'includes[]=type&includes[]=business.user&includes[]=createdBy&includes[]=installation',
 				params_filter: null,
 				clear: false
 			};

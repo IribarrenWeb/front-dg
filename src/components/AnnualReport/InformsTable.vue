@@ -78,7 +78,7 @@
 					<td>
 						{{ row.item?.business?.address?.city }}
 					</td>
-					<td>
+					<td class="text-center">
 						{{ row.item?.audits_completed_count }}/{{ row.item?.audits_count }}
 					</td>
 					<th>

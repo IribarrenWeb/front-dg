@@ -27,13 +27,13 @@
 						/>
 					</base-field>
 				</div>
-				<div class="col-lg-6" v-if="ROLE && ROLE != 'business'">
+				<div class="col-lg-4" v-if="ROLE && ROLE != 'business'">
 					<base-field name="admin_document_type_id" label="Tipo de documento">
 						<select-filter @updated="model.admin_document_type_id = $event" :options="types" label="Selecciona un tipo..." placeholder=""/>
 						<field-validate v-model="model.admin_document_type_id" label="tipo de documento" name="admin_document_type_id" rules="required" v-show="false"/>
 					</base-field>
 				</div>
-				<div class="col-lg-6" v-if="model.admin_document_type_id == 2 && ROLE != 'business'">
+				<div class="col-lg-4" v-if="model.admin_document_type_id == 2 && ROLE != 'business'">
 					<base-field name="business_id" label="Empresa">
 						<business-filter
 							v-model:clear="clear"
@@ -41,6 +41,9 @@
 						/>
 						<field-validate v-model="model.business_id" rules="required" name="business_id" v-show="false"/>
 					</base-field>
+				</div>
+				<div class="col-lg-4" v-if="model.business_id">
+					<installation-selector v-model="model.installation_id" :business_id="model.business_id"/>
 				</div>
 			</div>
 
@@ -59,13 +62,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+	import { mapGetters } from 'vuex';
 	import service from "../../store/services/model-service";
 	import BusinessFilter from '../filters/BusinessFilter.vue';
 	import SelectFilter from '../filters/SelectFilter.vue';
-
+	import InstallationSelector from '../Installation/Modules/InstallationSelector.vue';
+	
 	export default {
-	components: { SelectFilter, BusinessFilter },
+	components: { SelectFilter, BusinessFilter, InstallationSelector },
         name: "form-document",
 		data() {
 			return {
@@ -73,7 +77,8 @@ import { mapGetters } from 'vuex';
 					name: null,
 					file: null,
 					admin_document_type_id: null,
-					business_id: null
+					business_id: null,
+					installation_id: null,
 				},
 				loader: false,
 				types: [],
@@ -99,6 +104,7 @@ import { mapGetters } from 'vuex';
 
 					if (parseInt(this.model.admin_document_type_id) == 2) {
 						data.append('business_id', this.model.business_id);
+						if (this.model.installation_id) data.append('installation_id', this.model.installation_id);
 					}
                     await service.store("documents", data,true);
                     this.$toast.success("Documento registrado");

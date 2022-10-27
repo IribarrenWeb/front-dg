@@ -37,13 +37,27 @@
 								<div class="row">
 									<div class="col-md-2">
 										<base-field name="un_code" label="UN">
-											<field-validate as="select" class="form-control" name="un_code" label="un"
-												rules="required" v-model="deposit.index">
-												<option selected>UN</option>
-												<option :value="idx" v-for="(r, idx) in audit.installation.deposits"
-													:key="idx">
-													{{ r.material.un_code }}
-												</option>
+											<q-select class="bg-white" outlined v-model="deposit.index" map-options
+												emit-value input-debounce="0" :options="depositsOptions"
+												@filter="filterDeposits" use-input hide-selected fill-input>
+												<template v-slot:no-option>
+													<q-item>
+														<q-item-section class="text-grey">
+															Sin resultados
+														</q-item-section>
+													</q-item>
+												</template>
+												<template v-slot:option="scope">
+													<q-item v-bind="scope.itemProps">
+														<q-item-section>
+															<q-item-label>{{ scope.opt.query }}</q-item-label>
+															<q-item-label caption class="truncate-250">{{ scope.opt.material.material.denomination_name }}</q-item-label>
+														</q-item-section>
+													</q-item>
+												</template>
+											</q-select>
+											<field-validate v-show="false" class="form-control" name="un_code"
+												label="un" rules="required" v-model="deposit.index">
 											</field-validate>
 										</base-field>
 									</div>
@@ -142,7 +156,9 @@
 						<div class="row">
 							<div class="col-md-3">
 								<base-field name="un" label="UN">
-									<async-select trackBy="value" customClass="custom-form-control" @selected="discovered_material = $event" v-model:clear="clearUn" :materials="true" :list="false">
+									<async-select trackBy="value" customClass="custom-form-control"
+										@selected="discovered_material = $event" v-model:clear="clearUn"
+										:materials="true" :list="false">
 									</async-select>
 									<field-validate type="text" class="form-control d-none" name="un" rules="required"
 										label="un" v-model="audit_materials.comment" />
@@ -156,7 +172,7 @@
 							<div class="col-md-2">
 								<base-field name="packing_group_id" label="GE">
 									<base-input :view="true" :modelValue="audit_materials.packing_group_id" disabled />
-									
+
 								</base-field>
 							</div>
 							<div class="col-md-3">
@@ -210,13 +226,27 @@
 								<div class="row">
 									<div class="col-md-2">
 										<base-field name="un_code" label="UN">
-											<field-validate as="select" class="form-control" name="un_code" label="un"
+											<q-select class="bg-white" outlined v-model="residue.index" map-options
+												emit-value input-debounce="0" :options="residuesOptions"
+												@filter="filterResidues" use-input hide-selected fill-input>
+												<template v-slot:no-option>
+													<q-item>
+														<q-item-section class="text-grey">
+															Sin resultados
+														</q-item-section>
+													</q-item>
+												</template>
+												<template v-slot:option="scope">
+													<q-item v-bind="scope.itemProps">
+														<q-item-section>
+															<q-item-label>{{ scope.opt.query }}</q-item-label>
+															<q-item-label caption class="truncate-250">{{ scope.opt.material.material.denomination_name }}</q-item-label>
+														</q-item-section>
+													</q-item>
+												</template>
+											</q-select>
+											<field-validate v-show="false" class="form-control" name="un_code" label="un"
 												rules="required" v-model="residue.index">
-												<option selected>UN</option>
-												<option :value="idx" v-for="(r, idx) in audit.installation.residues"
-													:key="idx">
-													{{ r.material.un_code }}
-												</option>
 											</field-validate>
 										</base-field>
 									</div>
@@ -326,7 +356,7 @@
 							</div>
 							<div class="">
 								<base-button type="primary" @click="addImages = !addImages" size="sm">{{
-								!addImages ? "Agregar imagenes" : "Cancelar"
+										!addImages ? "Agregar imagenes" : "Cancelar"
 								}}</base-button>
 							</div>
 						</div>
@@ -428,7 +458,11 @@ export default {
 			images: {},
 			upBtn: false,
 			discovered_material: null,
-			clearUn: false
+			clearUn: false,
+			residues: [],
+			deposits: [],
+			residuesOptions: [],
+			depositsOptions: [],
 		};
 	},
 	async mounted() {
@@ -439,6 +473,24 @@ export default {
 		this.material_observations = this.audit.material_observation;
 		this.adr_deposits = this.formatMaterials(this.audit.materials, false);
 		this.installation = this.audit.installation
+		this.residues = this.audit.installation.residues.map((r, idx) => {
+			return {
+				label: r.material.un_code,
+				value: idx,
+				query: r.material.un_code + ' - ' + r.name,
+				material: r
+			}
+		})
+		this.deposits = this.audit.installation.deposits.map((d, idx) => {
+			return {
+				label: d.material.un_code,
+				value: idx,
+				query: d.material.un_code + ' - ' + d.name,
+				material: d
+			}
+		})
+		this.residuesOptions = this.residues;
+		this.depositsOptions = this.deposits;
 		this.loadData();
 		this.loadImages();
 	},
@@ -666,6 +718,31 @@ export default {
 				console.log(err);
 			}
 		},
+		filterDeposits(val, update) {
+			if (val === '') {
+				update(() => {
+					this.depositsOptions = this.deposits
+				})
+				return
+			}
+			update(() => {
+				const needle = val.toLowerCase()
+				this.depositsOptions = this.deposits.filter(v => v.query.toLowerCase().includes(needle))
+			})
+		},
+		filterResidues(val, update) {
+			if (val === '') {
+				update(() => {
+					this.residuesOptions = this.residues
+				})
+				return
+			}
+
+			update(() => {
+				const needle = val.toLowerCase()
+				this.residuesOptions = this.residues.filter(v => v.query.toLowerCase().includes(needle))
+			})
+		}
 	},
 	computed: {
 		operations() {
@@ -724,38 +801,38 @@ export default {
 				this.audit.installation.deposits[newVal].is_residue;
 			this.selected_quantity = this.$functions.copy(this.deposit.quantity)
 		},
-		discovered_material: function(newVal) {
+		discovered_material: function (newVal) {
 			if (newVal) {
 				this.audit_materials.un = newVal?.un_code
 				this.audit_materials.packing_group_id = newVal?.packing?.code
 				this.audit_materials.adr_class_id = newVal?.class?.code
-			}else{
+			} else {
 				this.audit_materials.un = null
 				this.audit_materials.packing_group_id = null
 				this.audit_materials.adr_class_id = null
 				this.clearUn = true
 			}
-		} 
+		}
 	},
 };
 </script>
 
 <style scope lang="scss">
-	.custom-form-control > .multiselect__tags{
-		display: block;
-		width: 100%;
-		height: calc(1.5em + 1.25rem + 2px) !important;
-		padding: 0.625rem 0.75rem;
-		font-size: 0.875rem;
-		font-weight: 400;
-		line-height: 1.5;
-		color: #8898aa;
-		background-color: #fff;
-		background-clip: padding-box;
-		border: 1px solid #cad1d7;
-		border-radius: 0.375rem;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
-	}
+.custom-form-control>.multiselect__tags {
+	display: block;
+	width: 100%;
+	height: calc(1.5em + 1.25rem + 2px) !important;
+	padding: 0.625rem 0.75rem;
+	font-size: 0.875rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #8898aa;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #cad1d7;
+	border-radius: 0.375rem;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
 </style>
