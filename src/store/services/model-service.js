@@ -339,7 +339,7 @@ function getReport(id) {
 function errors(err) {
     console.log(err?.response, err);
     const specialChars =
-        /[`!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?~]/;
+        /[`!@#$%^&*()_+\-=\[\]{};'"\\|<>\/?~]/;
     const status = err?.response?.status;
     const resp_message = err?.response?.data?.message ?? null;
     const message = resp_message && resp_message.length <= 75 && !specialChars.test(resp_message) ? resp_message : null;
@@ -376,6 +376,11 @@ function errors(err) {
         case 409:
             title = 'Validaciones fallidas';
             body = message != null ? message : "Algunas validaciones fallaron";
+            break
+
+        case 400:
+            title = 'Ocurio un problema';
+            body = message != null ? message : "No pudimos procesar la petición";
             break
 
         default:
