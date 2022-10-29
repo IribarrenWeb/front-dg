@@ -1,53 +1,101 @@
 <template>
     <div>
-        <form-validate @submit="onSubmit" v-slot="{ resetForm }">
+        <FormLoader v-if="!model?.hasOwnProperty('duration')" />
+        <form-validate ref="form" v-else @submit="onSubmit" v-slot="{ resetForm }">
             <div class="row border rounded border-light px-3 py-2">
-                <div class=" col-lg-4">
+                <div class=" col-lg-3">
                     <base-field name="name" label="Nombre">
                         <field-validate type="text" class="form-control text-uppercase" name="name" rules="required"
                             label="nombre" v-model="model.name" />
                     </base-field>
                 </div>
-                <div class=" col-lg-4">
+                <div class=" col-lg-3">
                     <base-field name="formation_type_id" label="Modalidad">
                         <field-validate as="select" class="form-control" name="formation_type_id" rules="required"
                             label="Modalidad" v-model="model.formation_type_id">
-                            <option v-for="type in types" :key="type.key" :value="type.id">
-                                {{ type.name }}
-                            </option>
-
+                            <option :value="type.id" v-for="type, idx in types" :key="idx">{{ type.name }}</option>
                         </field-validate>
                     </base-field>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <base-field name="duration" label="Duración">
                         <field-validate type="text" class="form-control text-uppercase" name="duration" rules="required"
                             label="Duración" v-model="model.duration" />
                     </base-field>
                 </div>
-                <div class=" col-lg-6" v-if="!$store.state.is_auditor">
+                <div class=" col-lg-3" v-if="!$store.state.is_auditor">
                     <base-field name="auditor_id" label="Responsable">
-                        <field-validate name="auditor_id" label="Responsable" rules="required" v-model="model.facilitable_id">
-                            <async-select :roles="[2,3]" @selected="auditable = $event" :value="formation?.facilitable_data?.value?.id" :list="true">
+                        <field-validate name="auditor_id" label="Responsable" rules="required"
+                            v-model="model.facilitable_id">
+                            <async-select :roles="[2, 3]" @selected="auditable = $event"
+                                :value="formation?.facilitable_data?.value?.id" :list="true">
                             </async-select>
                         </field-validate>
                     </base-field>
                 </div>
-                <div class="col-lg-6">
-                    <base-field name="document" label="Documento de formación">
-                        <!-- <div v-if="cert_document && !cer_update">
-                            <a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{cert_document.type.name}}</a>
-                            <base-button @click="cer_update = true" size="sm" type="default" :outline="true"><i class="fa-solid fa-pencil"></i></base-button>
-                        </div> -->
-                        <div v-if="!update">
-                            <field-validate class="form-control" type="file" name="document" rules="required|ext:pdf"
-                                label="documento de formación" v-model="model.document" />
-                            <!-- <base-button v-if="update && !typeof auditor.documents[0] == undefined" @click="reset('file_cer')" size="sm" type="default" :outline="true"><i class="fa-solid fa-rotate-left"></i></base-button> -->
+                <div
+                    :class="{ 'col-lg-10': model.documents.length >= 3, 'col-lg-6': model.documents.length <= 1, 'col-lg-8': model.documents.length == 2 }">
+                    <base-field name="document" label="Documentos de formación">
+                        <div class="row">
+                            <div class="col row q-gutter-sm" v-if="model.documents && !addFile">
+                                <div class="col" v-for="document, idx in model.documents" :key="idx">
+                                    <q-item clickable style="max-width: 400px;">
+                                        <q-item-section top avatar>
+                                            <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" />
+                                        </q-item-section>
+                                        <q-item-section @click="open(document?.public_url)">
+                                            <q-item-label>{{ document.name_document }}</q-item-label>
+                                            <q-item-label caption lines="2" v-if="document?.size">{{ document.size /
+                                                    1000
+                                            }}
+                                                KB</q-item-label>
+                                        </q-item-section>
+                                        <q-item-section side>
+                                            <q-btn :loading="loading" color="primary" icon="fa-solid fa-xmark" flat
+                                                @click="remove(document)" />
+                                        </q-item-section>
+                                    </q-item>
+                                </div>
+                            </div>
+                            <div class="col" v-else>
+                                <div v-if="addFile || !model.documents">
+                                    <!-- <q-separator spaced="1rem" v-if="model.documents?.length >= 1" /> -->
+                                    <div class="flex">
+                                        <q-file :loading="loading" counter :max-files="available_files_upload"
+                                            class="col q-mt-sm" v-model="new_documents" outlined use-chips multiple
+                                            accept=".pdf">
+                                            <template v-slot:prepend>
+                                                <q-icon name="attach_file" />
+                                            </template>
+                                        </q-file>
+                                        <div v-if="new_documents?.length >= 1 && addFile" class="col-2 flex column q-mt-lg">
+                                            <q-btn flat dense color="primary"
+                                                 icon="fa-solid fa-upload"
+                                                @click="submit_btn.click()">
+                                                <q-tooltip>
+                                                    Subir Archivos
+                                                </q-tooltip>
+                                            </q-btn>
+                                        </div>
+                                    </div>
+                                    <field-validate class="form-control" v-show="false" type="file" name="document"
+                                        :rules="{ 'required': !update || model.documents < 1, ext: ['pdf'] }"
+                                        label="documento de formación" v-model="new_documents" />
+                                </div>
+                            </div>
+                            <div class="flex justify-start"
+                                :class="{ 'col': model.documents.length <= 1, 'col-lg-2': model.documents.length >= 2 }">
+                                <q-btn :loading="loading" color="primary"
+                                    v-if="update && (available_files_upload > 0 || (available_files_upload == 0 && addFile))"
+                                    flat :icon="!addFile ? 'fa-solid fa-plus' : 'fa-solid fa-ban'"
+                                    @click="addFile = !addFile">
+                                    <q-tooltip>
+                                        {{ !addFile ? 'Agregar documento' : 'Cancelar' }}
+                                    </q-tooltip>
+                                </q-btn>
+                            </div>
                         </div>
-                        <div v-else class="d-flex align-items-center">
-                            <i class="fa-solid fa-file-pdf"></i>
-                            <a class="ml-2" :href="formation.document_url" target="_blank">Documentacion de formación</a>
-                        </div>
+
                     </base-field>
                 </div>
                 <div class=" col-lg-12">
@@ -59,7 +107,8 @@
 
             <div class="mt-4 float-md-right">
                 <base-button type="default" nativeType="submit" v-if="!update">Aceptar</base-button>
-                <base-button type="default" nativeType="submit" v-if="update && canUpdate">Actualizar</base-button>
+                <base-button type="default" nativeType="submit" v-if="update && canUpdate" ref="submit_btn">Actualizar
+                </base-button>
                 <base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
                 </base-button>
             </div>
@@ -70,113 +119,204 @@
 
 <script>
 import dataService from "../../store/services/data-service";
-import service from "@/store/services/model-service";
+import service from "../../store/services/model-service";
 import AsyncSelect from '../core_components/AsyncSelect.vue';
+import functions from '../../utils/functions'
+import { ref } from '@vue/reactivity';
+import { useStore } from 'vuex';
+import { toast } from '../../boot/plugins';
+import { isEmpty } from "lodash";
+import { computed, onBeforeMount, watch } from '@vue/runtime-core';
+import FormLoader from '../../loaders/FormLoader.vue'
+import { useQuasar } from 'quasar';
 
 export default {
     components: {
-        AsyncSelect
+        AsyncSelect,
+        FormLoader
     },
     props: ['formation_id'],
-    data() {
-        return {
-            model: this.$functions.schemas('formation'),
-            types: {},
-            originalModel: null,
-            auditable: null,
-            formation: null,
-            document_url: null
-        }
-    },
-    mounted() {
-        this.loadTypes();
-    },
-    methods: {
-        async onSubmit(values, { resetForm }) {
+    setup(props, { emit }) {
+        const store = useStore();
+        const model = ref({});
+        const types = ref({});
+        const originalModel = ref(null);
+        const auditable = ref(null);
+        const formation = ref(null);
+        const document_url = ref(null);
+        const new_documents = ref([]);
+        const total_files = computed(() => (model.value?.documents?.length + new_documents.value?.length) ?? 0)
+        const available_files_upload = computed(() => 3 - total_files.value)
+        const update = computed(() => {
+            return props.formation_id != null;
+        })
+        const addFile = ref(false)
+        const loading = ref(false)
+        const $q = useQuasar()
+        const canUpdate = computed(() => {
+            let valid = false
+            if (addFile.value && new_documents.value?.length >= 1) valid = true
+            else if (model.value.hasOwnProperty('duration') && update.value && originalModel.value) valid = !isEmpty(functions.difference(originalModel.value, model.value))
+            return valid
+        })
+        const model_documents = computed(() => model.value?.documents)
+
+        onBeforeMount(() => {
+            model.value = functions.schemas('formation')
+        })
+
+        async function onSubmit(values, { resetForm }) {
             try {
                 let data = new FormData()
-                if (this.update) {
-                    let data = this.$functions.difference(this.originalModel,this.model);
-                    data = this.$functions.toFormData(data, ['facilitable_id']);
-                    if (!this.$store.state.is_auditor && this.auditable != null ) {
-                        data.append('facilitable_id', this.auditable.id)
+                loading.value = true
+                if (update.value) {
+                    let data = functions.difference(originalModel.value, model.value);
+                    data = functions.toFormData(data, ['facilitable_id']);
+                    if (new_documents.value) {
+                        new_documents.value.forEach(document => {
+                            data.append('documents[]', document)
+                        });
                     }
-                    await service.update('formation',this.formation_id, data, true)
-                    this.$toast.success('Formación actualizada')
-                }else{
-                    data.append('document', this.model.document[0])
-                    data.append('name', this.model.name)
-                    data.append('content', this.model.content)
-
-                    if (!this.$store.state.is_auditor) {
-                        data.append('facilitable_id', this.auditable.id)
+                    if (!store.state.is_auditor && auditable.value != null) {
+                        data.append('facilitable_id', auditable.value.id)
                     }
-                    data.append('duration', this.model.duration)
-                    data.append('formation_type_id', this.model.formation_type_id)
+                    await service.update('formation', props.formation_id, data, true)
+                    toast.success('Formación actualizada')
+                    getFormation()
+                } else {
+                    new_documents.value.forEach(document => {
+                        data.append('documents[]', document)
+                    });
 
+                    data.append('name', model.value.name)
+                    data.append('content', model.value.content)
+
+                    if (!store.state.is_auditor) {
+                        data.append('facilitable_id', auditable.value.id)
+                    }
+                    data.append('duration', model.value.duration)
+                    data.append('formation_type_id', model.value.formation_type_id)
+                    console.log(data);
                     await service.store('formation', data, true)
 
-                    this.$toast.success('Formación registrada')
+                    toast.success('Formación registrada')
                     resetForm()
-                    this.$emit('close')
+                    emit('close')
                 }
-                this.$emit('reload')
+                loading.value = false
+
+                emit('reload')
             } catch (error) {
+                loading.value = false
                 console.log(error);
             }
 
-        },
-        async loadTypes() {
+        }
+
+        async function loadTypes() {
             try {
                 const resp = await dataService.getFormationTypes();
-                this.types = resp.data.data;
+                types.value = resp.data.data;
             } catch (err) {
                 console.log(err.response);
-                // this.$toast.error('No se pudieron cargar los tipos de vehiculos')
+                // toast.error('No se pudieron cargar los tipos de vehiculos')
             }
-        },
-        handleClose(reset) {
+        }
+
+        function handleClose(reset) {
             reset()
-            this.$emit('close')
-        },
-        async getFormation(){
+            emit('close')
+        }
+
+        async function getFormation() {
             try {
-                const resp = await service.show('formation',this.formation_id);
-                this.formation = resp.data.data;
-                this.setModel()
+                const resp = await service.show('formation', props.formation_id);
+                formation.value = resp.data.data;
+                setModel()
             } catch (err) {
                 console.log(err.response);
-                // this.$toast.error('No se pudieron cargar los tipos de vehiculos')
+                // toast.error('No se pudieron cargar los tipos de vehiculos')
             }
-        },
-        setModel(){
-            this.model.name = this.formation.name;
-            this.model.formation_type_id = this.formation.formation_type_id;
-            this.model.facilitable_id = this.formation.facilitable.user.id;
-            this.model.duration = this.formation.duration;
-            this.model.content = this.formation.content;
-            this.originalModel = this.$functions.copy(this.model);
         }
-    },
-    watch: {
-        auditable(val){
-            this.model.facilitable_id = val.id ?? null
-        },
-        update: {
-            handler(val) {
-                if (val) {
-                    this.getFormation();
-                }
-            },
-            immediate: true
+
+
+        function setModel() {
+            model.value = functions.assignSchema('formation', formation.value)
+            // model.value.name = formation.value.name;
+            // model.value.formation_type_id = formation.value.formation_type_id;
+            // model.value.facilitable_id = formation.value.facilitable.user.id;
+            // model.value.duration = formation.value.duration;
+            // model.value.content = formation.value.content;
+            originalModel.value = functions.copy(model.value);
+            new_documents.value = []
+            addFile.value = false
         }
-    },
-    computed: {
-        update(){
-            return this.formation_id != null;
-        },
-        canUpdate() {
-            return !this.$empty(this.$functions.difference(this.originalModel,this.model))
+
+        function open(url) {
+            window.open(url, '_blank').focus();
+        }
+
+        function remove(document) {
+            try {
+                $q.dialog({
+                    title: 'Eliminar archivo',
+                    message: '¿Esta seguro de eliminar este archivo?',
+                    cancel: true,
+                    persistent: true,
+                }).onOk(async () => {
+                    loading.value = true
+                    await service.apiNoLoading({ url: 'documents/' + document.id, method: 'DELETE' })
+                    loading.value = false
+                    getFormation()
+                })
+            } catch (err) {
+                $q.notify({
+                    message: 'No se pudo eliminar',
+                    color: 'negative'
+                })
+            }
+        }
+
+        loadTypes()
+
+        watch(() => auditable.value, (v) => {
+            model.value.facilitable_id = v.id ?? null
+        })
+
+        watch(() => addFile.value, (v) => {
+            if (!v) {
+                new_documents.value = []
+            }
+        })
+
+        watch(() => update.value, (v) => {
+            if (v) {
+                getFormation();
+            }
+        }, { immediate: true })
+
+        return {
+            model,
+            types,
+            originalModel,
+            auditable,
+            formation,
+            canUpdate,
+            update,
+            document_url,
+            model_documents,
+            new_documents,
+            addFile,
+            loading,
+            submit_btn: ref(null),
+            available_files_upload,
+            total_files,
+            handleClose,
+            onSubmit,
+            getFormation,
+            loadTypes,
+            open,
+            remove
         }
     }
 }

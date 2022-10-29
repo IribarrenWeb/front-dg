@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { Quasar } from 'quasar'
+import { Quasar, Notify, Dialog } from 'quasar'
 import quasarLang from 'quasar/lang/es'
 import App from "./App.vue";
 import router from "./router";
@@ -49,13 +49,13 @@ import "./assets/main.css";
 
 
 Object.keys(AllRules).forEach((rule) => {
-    defineRule(rule, AllRules[rule]);
+  defineRule(rule, AllRules[rule]);
 });
 
 configure({
-    generateMessage: localize({
-        es
-    }),
+  generateMessage: localize({
+    es
+  }),
 });
 
 setLocale("es");
@@ -73,21 +73,21 @@ const appInstance = createApp(App);
 // define options
 const timeagoOptions = {
   converterOptions: {
-      includeSeconds: true,
+    includeSeconds: true,
   },
   locale: esp,
 }
 
-appInstance.use(timeago,  timeagoOptions)
+appInstance.use(timeago, timeagoOptions)
 // appInstance.use(VeeValidate);
 appInstance.use(Toaster, {
-    // One of the options
-    maxToasts: 1,
-    queue: true,
+  // One of the options
+  maxToasts: 1,
+  queue: true,
 });
 
 appInstance.use(Quasar, {
-  plugins: {}, // import Quasar plugins and add here
+  plugins: { Notify, Dialog }, // import Quasar plugins and add here
   lang: quasarLang,
   /*
   config: {
@@ -106,16 +106,16 @@ appInstance.use(Quasar, {
 appInstance.config.globalProperties.$functions = functions;
 appInstance.config.globalProperties.$moment = moment;
 appInstance.config.globalProperties.$empty = (val) => {
-    return isEmpty(val) || isNil(val)
+  return isEmpty(val) || isNil(val)
 };
 appInstance.config.globalProperties.$schemas = schemas;
 
 appInstance.component('date-picker', flatPickr);
 appInstance.use(store);
 appInstance.use(router);
-appInstance.use(VueSweetalert2,options);
+appInstance.use(VueSweetalert2, options);
 appInstance.use(ArgonDashboard);
 appInstance.config.errorHandler = (err, vm, info) => {
-    console.log(err, 'ERRRORRR', vm, info);
+  console.error(err, 'MAIN ERROR', vm, info);
 }
 appInstance.mount("#app");

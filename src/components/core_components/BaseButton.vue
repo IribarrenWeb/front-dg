@@ -6,6 +6,7 @@
     class="btn"
     :class="classes"
     :disabled="disabled"
+    ref="button"
     target="_blank"
   >
     <span
@@ -129,6 +130,9 @@ export default {
       
       this.$emit("clicked", evt);
     },
+    click() {
+      this.$refs.button.click()
+    }
   },
 };
 </script>
