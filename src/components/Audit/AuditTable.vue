@@ -68,7 +68,7 @@
 				<template v-slot:default="row">
 					<th scope="row">
 						<span class="name mb-0 text-sm">{{
-						row.item?.installation.company.user.full_name
+								row.item?.installation.company.user.full_name
 						}}</span>
 					</th>
 					<td>
@@ -95,40 +95,101 @@
 							target="_blank">Imprimir</a>
 					</td>
 					<td class="text-right" v-if="ROLE != 'business'">
-						<base-dropdown class="dropdown audit-drop" position="right" direction="custom">
-							<template v-slot:title>
-								<a class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">
-									<i class="fas fa-ellipsis-v"></i>
-								</a>
-							</template>
-							<a class="dropdown-item" href="#" v-if="row.item?.status == 'PENDIENTE'"
-								@click.prevent="toSchedule(row.item?.id)">{{
-								row.item?.scheduled_date != null ? "Re-agendar" : "Agendar"
-								}}</a>
-							<a href="#" class="dropdown-item" @click="handleInit(row.item)" v-if="
-								row.item?.status != 'COMPLETADO' &&
-								row.item?.scheduled_date != null
-							">
-								{{ row.item?.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
-							</a>
-							<router-link class="dropdown-item" v-if="row.item?.status == 'COMPLETADO'"
-								to="/audits/nonconformities">
-								No conformidades
-							</router-link>
-							<a class="dropdown-item" href="#" @click.prevent="handleDelegate(row.item)" v-if="
-								row.item?.status != 'COMPLETADO' && !$store.state.is_auditor
-							" :disabled="row.item?.status != 'PENDIENTE'">
-								Delegar
-							</a>
-							<!-- <a class="dropdown-item" href="#" @click.prevent="">Historial</a> -->
-							<a class="dropdown-item" v-if="row.item?.status == 'COMPLETADO'"
-								:href="url + '/audits/report/' + row.item?.id" target="_blank">Imprimir</a>
-							<!-- <a class="dropdown-item" href="#" @click.prevent="">Eliminar</a> -->
-						</base-dropdown>
+						<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
+							color="grey-7">
+							<q-list bordered>
+								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+									@click="toSchedule(row.item?.id)">
+									<q-item-section>
+										<q-item-label>{{
+												row.item?.scheduled_date != null ? "Re-agendar" : "Agendar"
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+									@click="handleInit(row.item)" v-if="
+										row.item?.status != 'COMPLETADO' &&
+										row.item?.scheduled_date != null
+									">
+									<q-item-section>
+										<q-item-label>{{ row.item?.status == "PENDIENTE" ? "Iniciar" : "Completar" }}
+										</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item style="min-width: 200px;text-align: center;" to="/audits/nonconformities"
+									clickable v-close-popup v-if="row.item?.status == 'COMPLETADO'">
+									<q-item-section>
+										<q-item-label>No conformidades</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+									@click.prevent="handleDelegate(row.item)" v-if="
+										row.item?.status != 'COMPLETADO' && !$store.state.is_auditor
+									" :disabled="row.item?.status != 'PENDIENTE'">
+									<q-item-section>
+										<q-item-label>Delegar</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+									v-if="row.item?.status == 'COMPLETADO'"
+									:href="url + '/audits/report/' + row.item?.id" target="_blank">
+									<q-item-section>
+										<q-item-label>Imprimir</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item @click="handleDocs(row.item.id)" style="min-width: 200px;text-align: center;" clickable
+									v-close-popup v-if="row.item?.status == 'COMPLETADO'">
+									<q-item-section>
+										<q-item-label>Documentos</q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</q-btn-dropdown>
 					</td>
 				</template>
 			</base-table>
+
+			<q-dialog v-model="showDocs">
+				<q-card style="min-width: 500px;">
+					<q-card-section>
+						<div class="text-h6">Documentos</div>
+					</q-card-section>
+
+					<q-separator />
+
+					<q-card-section style="max-height: 50vh" class="scroll">
+						<docs-loader v-if="loadingDocs" />
+						<div v-else>
+							<div v-if="docs?.length < 1 || !docs">No se adjuntaron documentos a esta auditoria</div>
+							<div v-for="file, idx in docs" :key="idx">
+								<q-item clickable style="width: 100%;">
+									<q-item-section top avatar>
+										<q-img
+											src="/icons/pdf.png"
+											spinner-color="primary"
+											spinner-size="82px"
+										/>
+										<!-- <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" /> -->
+									</q-item-section>
+									<q-item-section @click="open(file?.public_url)">
+										<q-item-label>{{ file.file_name }}</q-item-label>
+										<q-item-label caption lines="2" v-if="file?.size">{{ file.size /
+												1000
+										}}
+											KB</q-item-label>
+									</q-item-section>
+								</q-item>
+							</div>
+						</div>
+					</q-card-section>
+
+					<q-separator />
+
+					<q-card-actions align="right">
+						<q-btn flat label="Cerrar" color="primary" v-close-popup />
+					</q-card-actions>
+				</q-card>
+			</q-dialog>
 			<!-- <loader v-if="loader"></loader> -->
 
 			<base-pagination :perPage="this.metaData.perPage" :value="this.page" @changePage="handleChange($event)"
@@ -173,6 +234,8 @@ import SelectFilter from "../filters/SelectFilter.vue";
 import DateFilter from "../filters/DateFilter.vue";
 import InitTable from './InitTable.vue';
 import { baseUrl, apiUrl } from '../../axios/index';
+import DocsLoader from '../../loaders/DocsLoader.vue'
+import { Notify } from 'quasar';
 
 export default {
 	name: "audits-table",
@@ -204,6 +267,9 @@ export default {
 				"&order_direction=asc",
 			params_filter: null,
 			toInit: false,
+			showDocs: false,
+			docs: [],
+			loadingDocs: false
 		};
 	},
 	mounted() {
@@ -233,6 +299,24 @@ export default {
 				this.page = this.metaData.currentPage;
 			}
 		},
+		open(url) {
+			window.open(url, '_blank').focus();
+		},
+		async handleDocs(id) {
+			try {
+				this.showDocs = true
+				this.loadingDocs = true
+				const res = await service.apiNoLoading({ url: 'audit-images?type=GENERAL_FILES&audit_id=' + id })
+				this.docs = res.data.data ?? []
+				this.loadingDocs = false
+			} catch (err) {
+				this.loadingDocs = false
+				Notify.create({
+					message: 'Ocurrio un error al cargar las imagenes',
+					color: 'negative'
+				})
+			}
+		},
 		handleFilter(type, value) {
 			if (!this.$empty(value) || value >= 1) {
 				this.params_filter += `&${type}_id=` + value;
@@ -244,7 +328,7 @@ export default {
 		},
 		handleInit(item) {
 			const link = `/audit-init/${item.id}`;
-			if (item.can_init == null ) {
+			if (item.can_init == null) {
 				let msg =
 					"Esta auditoria no se puede iniciar ya que no esta programada";
 				if (item.can_init == false) {
@@ -329,9 +413,12 @@ export default {
 		SelectFilter,
 		DateFilter,
 		InitTable,
+		DocsLoader
 	},
 };
 </script>
-<style>
-
+<style lang="scss">
+.custom-drop .q-btn-dropdown__arrow {
+	display: none;
+}
 </style>

@@ -34,41 +34,21 @@
                     </base-field>
                 </div>
                 <div
-                    :class="{ 'col-lg-10': model.documents.length >= 3, 'col-lg-6': model.documents.length <= 1, 'col-lg-8': model.documents.length == 2 }">
+                    class="col-lg-12">
                     <base-field name="document" label="Documentos de formación">
-                        <div class="row">
-                            <div class="col row q-gutter-sm" v-if="model.documents && !addFile">
-                                <div class="col" v-for="document, idx in model.documents" :key="idx">
-                                    <q-item clickable style="max-width: 400px;">
-                                        <q-item-section top avatar>
-                                            <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" />
-                                        </q-item-section>
-                                        <q-item-section @click="open(document?.public_url)">
-                                            <q-item-label>{{ document.name_document }}</q-item-label>
-                                            <q-item-label caption lines="2" v-if="document?.size">{{ document.size /
-                                                    1000
-                                            }}
-                                                KB</q-item-label>
-                                        </q-item-section>
-                                        <q-item-section side>
-                                            <q-btn :loading="loading" color="primary" icon="fa-solid fa-xmark" flat
-                                                @click="remove(document)" />
-                                        </q-item-section>
-                                    </q-item>
-                                </div>
-                            </div>
-                            <div class="col" v-else>
-                                <div v-if="addFile || !model.documents">
+                        <div class="row q-gutter-md">
+                            <div class="col">
+                                <div>
                                     <!-- <q-separator spaced="1rem" v-if="model.documents?.length >= 1" /> -->
                                     <div class="flex">
-                                        <q-file :loading="loading" counter :max-files="available_files_upload"
+                                        <q-file :disable="model.documents?.length >=3" :filled="model.documents?.length >=3" :loading="loading" counter :max-files="available_files_upload"
                                             class="col q-mt-sm" v-model="new_documents" outlined use-chips multiple
                                             accept=".pdf">
                                             <template v-slot:prepend>
                                                 <q-icon name="attach_file" />
                                             </template>
                                         </q-file>
-                                        <div v-if="new_documents?.length >= 1 && addFile" class="col-2 flex column q-mt-lg">
+                                        <div v-if="new_documents?.length >= 1 && model?.documents?.length >= 1" class="col-2 flex column q-mt-lg">
                                             <q-btn flat dense color="primary"
                                                  icon="fa-solid fa-upload"
                                                 @click="submit_btn.click()">
@@ -83,7 +63,27 @@
                                         label="documento de formación" v-model="new_documents" />
                                 </div>
                             </div>
-                            <div class="flex justify-start"
+                            <div class="col">
+                                <div v-for="document, idx in model.documents" :key="idx">
+                                    <q-item clickable style="max-width: 500px; margin-left: auto;">
+                                        <q-item-section top avatar>
+                                            <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" />
+                                        </q-item-section>
+                                        <q-item-section @click="open(document?.public_url)">
+                                            <q-item-label>{{ document.name_document }}</q-item-label>
+                                            <q-item-label caption lines="2" v-if="document?.size">{{ document.size /
+                                                    1000
+                                            }}
+                                                KB</q-item-label>
+                                        </q-item-section>
+                                        <q-item-section side>
+                                            <q-btn :loading="loading" v-if="model.documents?.length > 1" color="primary" icon="fa-solid fa-xmark" flat
+                                                @click="remove(document)" />
+                                        </q-item-section>
+                                    </q-item>
+                                </div>
+                            </div>
+                            <!-- <div class="flex justify-start"
                                 :class="{ 'col': model.documents.length <= 1, 'col-lg-2': model.documents.length >= 2 }">
                                 <q-btn :loading="loading" color="primary"
                                     v-if="update && (available_files_upload > 0 || (available_files_upload == 0 && addFile))"
@@ -93,7 +93,7 @@
                                         {{ !addFile ? 'Agregar documento' : 'Cancelar' }}
                                     </q-tooltip>
                                 </q-btn>
-                            </div>
+                            </div> -->
                         </div>
 
                     </base-field>
@@ -107,7 +107,7 @@
 
             <div class="mt-4 float-md-right">
                 <base-button type="default" nativeType="submit" v-if="!update">Aceptar</base-button>
-                <base-button type="default" nativeType="submit" v-if="update && canUpdate" ref="submit_btn">Actualizar
+                <base-button type="default" nativeType="submit" v-show="update && canUpdate" ref="submit_btn">Actualizar
                 </base-button>
                 <base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
                 </base-button>

@@ -59,7 +59,8 @@
 								<base-input :view="true" :modelValue="non.priority.name" disabled />
 							</div>
 							<div class="col-md-4">
-								<base-input :view="true" :modelValue="non.description" disabled />
+								<!-- <base-input :view="true" :modelValue="non.description" disabled /> -->
+								<q-input filled :disable="true" :model-value="non.description" type="textarea" />
 							</div>
 							<div class="col-md-2 d-flex">
 								<div class="align-self-center">

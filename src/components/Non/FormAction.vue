@@ -37,16 +37,16 @@
                         disabled
                     />
                 </div>
-                <div class=" col-lg-6">
+                <div class=" col-12">
                     <base-field label="Razón y medidas">
                         <q-input filled :model-value="nonconformity?.description" disable type="textarea" />
                     </base-field>
                 </div>
-                <div class=" col-lg-6">
+                <!-- <div class=" col-lg-6">
                     <base-field label="Observaciones generales">
                         <q-input filled :model-value="nonconformity?.audit?.general_observations" disable type="textarea" />
                     </base-field>
-                </div>
+                </div> -->
             </div>
             <div class="row border rounded border-light px-4 py-2">
                 <div class="col-12">
