@@ -165,7 +165,7 @@
 								<q-item clickable style="width: 100%;">
 									<q-item-section top avatar>
 										<q-img
-											src="/icons/pdf.png"
+											src="/img/icons/pdf.png"
 											spinner-color="primary"
 											spinner-size="82px"
 										/>
