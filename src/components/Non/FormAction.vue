@@ -54,7 +54,8 @@
                 </div>
                 <div class=" col-lg-8">
                     <base-field   name="comment" label="Acciones llevadas a cabo">
-                        <field-validate :disabled="show" type="text" class="form-control text-uppercase" name="comment" rules="required" label="acciones" v-model="model.comment"/>
+                        <q-input :filled="show" :class="{'bg-white': !show}" v-model="model.comment" :disable="show" type="textarea" />
+                        <field-validate v-show="false" :disabled="show" type="text" class="form-control text-uppercase" name="comment" rules="required" label="acciones" v-model="model.comment"/>
                     </base-field>
                 </div>
                 <div class=" col-lg-4">
