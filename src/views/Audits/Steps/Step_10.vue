@@ -75,22 +75,7 @@
 					<div class="col-md-12 my-3">
 						<base-field label="Imagenes:">
 							<div class="clearfix">
-								<div v-if="images.length >= 1" class="row overflow-auto border border-light rounded p-3 mb-3"
-									style="max-height: 400px">
-									<div v-for="(image, id) in images" :key="id" class="
-											col-md-3
-											d-flex
-											justify-content-center
-											position-relative
-											my-1
-										">
-										<img :src="image.url" alt="" class="img-thumbnail" width="100" />
-										<a class="text-danger position-absolute" style="right: 10%; top: 1%"
-											@click.prevent="deleteImg(image.id)">
-											<i class="fa-solid fa-circle-xmark"></i>
-										</a>
-									</div>
-								</div>
+								<audit-images-module :images="images" @delete="deleteImg"/>
 								<div class="">
 									<base-button type="primary" @click="addImages = !addImages" size="sm">{{
 											!addImages ? "Agregar imagenes" : "Cancelar"
@@ -143,10 +128,12 @@
 import UploadImages from "vue-upload-drop-images";
 import service from "@/store/services/model-service";
 import _ from "lodash";
+import AuditImagesModule from '../../../components/Audit/Modules/AuditImagesModule.vue';
 export default {
 	props: ["audit", "currentStep"],
 	components: {
 		UploadImages,
+		AuditImagesModule,
 	},
 	data() {
 		return {

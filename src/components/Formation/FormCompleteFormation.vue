@@ -42,6 +42,8 @@
 					<base-field class="mt-3" label="Buscar" customClases="mb-0">
 						<input class="form-control" style="min-width:300px" placeholder="Buscar" v-model="filter" />
 					</base-field>
+					<base-field class="mt-3" label="Buscar" customClases="mb-0">
+					</base-field>
 				</div>
 
 				<table class="table table-sm table-hover table-bordered">
@@ -125,6 +127,7 @@ export default {
 		const installation_employees = ref([])
 		const training = ref(null)
 		const filter = ref(null)
+		const filter_date = ref(null)
 		const training_employees_ids = computed(() => training.value?.employees ? training.value.employees.map(e => e.id) : [])
 		const employees = computed(() => uniqBy([...training.value?.employees, ...installation_employees.value], 'id').map(e => {
 			e.canCheck = true;
