@@ -2,6 +2,10 @@
 	<div>
 		<base-steps :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="steps" :edit="true"
 			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
+		
+		<div v-if="!show">
+			<form-section-loader :repeat="2" />
+		</div>
 		<template v-if="currentStep == number('Instalacion') && show">
 			<general-data v-model:file_document="model.file_document" v-model:file_auditor="model.file_auditor"
 				v-model:auditable="model.auditable_id" v-model:name="model.name" v-model:periodicity="model.periodicity"
@@ -44,10 +48,10 @@
 								<td>
 									<div v-if="responsible?.firm_document != null">
 										<span class="d-block">{{
-												this.formatDate(
-													responsible.firm_document.document_date,
-													"GB"
-												)
+										this.formatDate(
+										responsible.firm_document.document_date,
+										"GB"
+										)
 										}}</span>
 										<a href="#" class="text-uppercase d-block" @click.prevent="
 											getDocument(responsible?.firm_document?.id)
@@ -69,10 +73,20 @@
 					</table>
 				</div>
 			</div>
-			<modal v-model:show="editModal" v-if="responsible_id" action="Editar" modalClasses="modal-xxl" model="Responsable">
+
+			<q-dialog v-model="editModal" v-if="responsible_id">
+				<q-card style="min-width: 80vw;" class="q-pb-lg">
+					<q-card-section class="items-center q-pa-xl">
+						<form-employee @reload="getResponsibles" @close="editModal = false, responsible_id = null"
+							:installation_id="installation_id" :responsible="true" :employee_id="responsible_id" />
+					</q-card-section>
+				</q-card>
+			</q-dialog>
+			<!-- <modal v-model:show="editModal" v-if="responsible_id" action="Editar" modalClasses="modal-xxl"
+				model="Responsable">
 				<form-employee @reload="getResponsibles" @close="editModal = false, responsible_id = null"
 					:installation_id="installation_id" :responsible="true" :employee_id="responsible_id" />
-			</modal>
+			</modal> -->
 			<responsible-modal ref="responsiblesModal" v-model:show="modal" :installation_id="installation_id" />
 		</template>
 		<!-- ------------------------------------------------------ -->
@@ -186,6 +200,7 @@ import { computed, ref, watch } from '@vue/runtime-core';
 import { toast, swal } from "../../boot/plugins";
 import functions from "../../utils/functions";
 import Modal from '../core_components/Modal.vue';
+import FormSectionLoader from '../../loaders/FormSectionLoader.vue';
 
 export default {
 	name: "installation-show",
@@ -200,7 +215,8 @@ export default {
 		AddressSelect,
 		GeneralData,
 		ResponsibleModal,
-		Modal
+		Modal,
+		FormSectionLoader
 	},
 	mixins: [utils],
 	props: {

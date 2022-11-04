@@ -125,6 +125,7 @@
 			v-model:show="this.modal"
 			modalClasses="modal-xxl"
 			model="actuación de no conformidad"
+			@close="selected_non = null"
 		>
 			<form-action
 				:role="ROLE"
