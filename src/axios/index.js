@@ -40,7 +40,7 @@ axios.interceptors.response.use(function(response) {
     const status = error.response.status;
     if (status == 401) {
         store.dispatch('logout');
-    } else if (status == 422) {
+    } else if (status == 422 && error?.response?.data?.errors) {
         store.commit('setErrors', error.response.data.errors)
     }
     // Any status codes that falls outside the range of 2xx cause this function to trigger

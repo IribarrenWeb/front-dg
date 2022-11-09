@@ -5,15 +5,17 @@
             :class="{'audit': inAudit}">
             <div class="flex">
                 <q-toolbar class="col" :class="{'col-3':mobile}">
-                    <q-btn dense flat round icon="menu" color="grey-3" v-if="!inAudit" @click="toggleLeftDrawer" />
-                    <q-btn flat icon="arrow_back_ios" color="grey-3" v-else to="/audits">REGRESAR</q-btn>
+                    <div class="q-ml-md">
+                        <q-btn dense flat round icon="menu" color="grey-3" v-if="!inAudit" @click="toggleLeftDrawer" />
+                        <q-btn flat icon="arrow_back_ios" color="grey-3" v-else to="/audits">REGRESAR</q-btn>
+                    </div>
                     <q-toolbar-title v-if="!mobile && !inAudit" class="text-uppercase">
                         {{$route.name}}
                     </q-toolbar-title>
                 </q-toolbar>
                 <div class="col flex justify-end items-center">
                     <Notifications :dark="false"></Notifications>
-                    <dashboard-navbar-v-2 :me="me"></dashboard-navbar-v-2>
+                    <dashboard-navbar-v-2 class="q-mx-md" :me="me"></dashboard-navbar-v-2>
                 </div>
             </div>
         </q-header>

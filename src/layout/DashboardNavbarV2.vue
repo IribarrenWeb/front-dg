@@ -1,5 +1,5 @@
 <template>
-	<q-btn-dropdown flat>
+	<q-btn-dropdown flat :menu-offset="[0,15]">
 		<template v-slot:label>
 			<div class="row items-center no-wrap">
 				<q-avatar size="2rem" class="bg-grey-3" >

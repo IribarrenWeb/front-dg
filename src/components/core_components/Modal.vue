@@ -71,7 +71,7 @@
         </div>
       </div>
     </div>
-    <loader></loader>
+    <!-- <loader></loader> -->
   </div>
 </template>
 <script>

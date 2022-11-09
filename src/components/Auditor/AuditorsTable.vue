@@ -31,6 +31,7 @@
 					<th>Móvil</th>
 					<th>Ciudad</th>
 					<th>Delegado</th>
+					<th>PSICS</th>
 					<th>Acciones</th>
 				</template>
 
@@ -49,6 +50,9 @@
 					</td>
 					<td>
 						{{ row.item?.delegate.user.full_name }}
+					</td>
+					<td>
+						{{ row.item?.psics_number }}
 					</td>
 					<td class="d-flex">
 						<a

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-btn-dropdown rounded dense flat class="custom-drop" @hide="markRead">
+        <q-btn-dropdown rounded :menu-offset="[0,15]" dense flat class="custom-drop" @hide="markRead">
             <template v-slot:label>
                 <i class="ni ni-bell-55" style="font-size: 1.3rem;"></i>
                 <q-badge v-if="unread >= 1" floating color="red" rounded />
@@ -110,7 +110,7 @@ export default {
         async function markRead(evt) {
             if (unread.value >= 1) {
                 try {
-                    const res = await modelService.api({ url: 'notifications/read' })
+                    const res = await modelService.apiNoLoading({ url: 'notifications/read' })
                     store.commit('markRead')
                     console.log(res);
                 } catch (err) {
