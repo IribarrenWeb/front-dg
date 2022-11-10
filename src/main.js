@@ -46,6 +46,7 @@ import '@quasar/extras/animate/fadeOut.css'
 import ArgonDashboard from "./plugins/argon-dashboard";
 
 import "./assets/main.css";
+import "./assets/custom_quasar.scss";
 
 
 Object.keys(AllRules).forEach((rule) => {

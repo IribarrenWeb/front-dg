@@ -5,6 +5,7 @@ import auditor from "./auditor";
 import delegate from "./delegate";
 import formation from "./formation";
 import address from "./address";
+import cartage from "./cartage";
 
 const schemas = {
     business,
@@ -13,7 +14,8 @@ const schemas = {
     auditor,
     delegate,
     formation,
-    address
+    address,
+    cartage
 }
 
 export default schemas

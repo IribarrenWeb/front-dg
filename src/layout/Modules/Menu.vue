@@ -47,6 +47,13 @@ export default {
                 not_condition: true
             },
             {
+                name: 'Cartas de porte',
+                icon: 'fa-solid fa-building-columns text-default',
+                path: '/cartage-letters',
+                roles: null,
+                not_condition: false
+            },
+            {
                 name: 'Instalaciones',
                 icon: 'ni ni-shop text-default',
                 path: '/installations',

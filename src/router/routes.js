@@ -70,6 +70,8 @@ const ResetPasswordRequest = defineAsyncComponent({ loader: () => import('../vie
 
 const Visits = defineAsyncComponent({ loader: () => import('../views/Visits.vue'),loadingComponent: PageLoader}); 
 
+const Cartage = defineAsyncComponent({ loader: () => import('../views/CartageLetters.vue'),loadingComponent: PageLoader}); 
+
 
 //import middleware
 import auth from "@/middleware/auth";
@@ -167,6 +169,12 @@ const routes = [{
 
                     },
                 ]
+            },
+            {
+                path: "/cartage-letters",
+                name: "cartas de porte",
+                components: { default: Cartage },
+                meta: { middleware: auth }
             },
             {
                 path: "/vehicles",
