@@ -1,6 +1,7 @@
 import { createToaster } from '@meforma/vue-toaster';
 import Swal from 'sweetalert2'
 import "sweetalert2/dist/sweetalert2.min.css";
+import moment from "moment"
 
 const toast = createToaster({
     maxToasts: 1,
@@ -18,5 +19,6 @@ const swal = Swal.mixin({
 
 export {
     swal,
-    toast
+    toast,
+    moment
 }

@@ -23,7 +23,7 @@ import schemas from './schemas';
 import { isEmpty, isNil } from "lodash";
 import timeago from 'vue-timeago3' // import timeago
 import { es as esp } from 'date-fns/locale' // import custom locale
-import moment from "moment"
+import {moment} from  './boot/plugins'
 
 
 // Import icon libraries
@@ -47,7 +47,7 @@ import ArgonDashboard from "./plugins/argon-dashboard";
 
 import "./assets/main.css";
 import "./assets/custom_quasar.scss";
-
+import rules from '../src/utils/rules'
 
 Object.keys(AllRules).forEach((rule) => {
   defineRule(rule, AllRules[rule]);
@@ -105,6 +105,7 @@ appInstance.use(Quasar, {
 })
 
 appInstance.config.globalProperties.$functions = functions;
+appInstance.config.globalProperties.$rules = rules;
 appInstance.config.globalProperties.$moment = moment;
 appInstance.config.globalProperties.$empty = (val) => {
   return isEmpty(val) || isNil(val)

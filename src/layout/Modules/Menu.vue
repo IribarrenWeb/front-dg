@@ -48,7 +48,7 @@ export default {
             },
             {
                 name: 'Cartas de porte',
-                icon: 'fa-solid fa-building-columns text-default',
+                icon: 'fa-solid fa-envelope-open-text text-default',
                 path: '/cartage-letters',
                 roles: null,
                 not_condition: false

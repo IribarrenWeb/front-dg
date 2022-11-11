@@ -34,12 +34,12 @@ export const store = createStore({
             stopCamera: false,
             notifications: [],
             tokenName: import.meta.env.VITE_USER_TOKEN_NAME,
-            business_schema: schemas.business,
-            installation_schema: schemas.installation,
-            auditor_schema: schemas.auditor,
-            delegate_schema: schemas.delegate,
-            formation_schema: schemas.formation,
-            employee_schema: schemas.employee,
+            // business_schema: schemas.business,
+            // installation_schema: schemas.installation,
+            // auditor_schema: schemas.auditor,
+            // delegate_schema: schemas.delegate,
+            // formation_schema: schemas.formation,
+            // employee_schema: schemas.employee,
             provinces: null,
             current: new Date().toISOString().split('T')[0],
             api_url: apiUrl,
@@ -99,6 +99,11 @@ export const store = createStore({
         },
         setErrors(state, payload) {
             state.apiErrors = payload
+        },
+        clearError(state, index) {
+            if (index in state.apiErrors) {
+                delete state.apiErrors[index] 
+            }
         },
         setRole(state, payload) {
             state.role = payload

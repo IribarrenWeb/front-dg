@@ -79,7 +79,7 @@ async function apiNoLoading({ url, method, data }) {
     return await axios.request(config).then((response) => {
         return response
     }).catch(err => {
-        errors(err)
+        // errors(err)
         throw err
     });
 }
