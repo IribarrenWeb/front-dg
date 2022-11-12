@@ -23,7 +23,7 @@ import schemas from './schemas';
 import { isEmpty, isNil } from "lodash";
 import timeago from 'vue-timeago3' // import timeago
 import { es as esp } from 'date-fns/locale' // import custom locale
-import {moment} from  './boot/plugins'
+import { moment } from './boot/plugins'
 
 
 // Import icon libraries
@@ -79,6 +79,10 @@ const timeagoOptions = {
   locale: esp,
 }
 
+const open = (url) => {
+  window.open(url, '_blank').focus();
+}
+
 appInstance.use(timeago, timeagoOptions)
 // appInstance.use(VeeValidate);
 appInstance.use(Toaster, {
@@ -106,6 +110,7 @@ appInstance.use(Quasar, {
 
 appInstance.config.globalProperties.$functions = functions;
 appInstance.config.globalProperties.$rules = rules;
+appInstance.config.globalProperties.$open = open;
 appInstance.config.globalProperties.$moment = moment;
 appInstance.config.globalProperties.$empty = (val) => {
   return isEmpty(val) || isNil(val)

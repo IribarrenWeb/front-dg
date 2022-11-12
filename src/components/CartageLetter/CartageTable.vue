@@ -6,7 +6,12 @@
             <q-btn v-if="role == 'business'" color="primary" label="Agregar" @click="showAdd = true" />
         </table-header>
         <q-table :loading="loading" table-class="table" table-header-class="thead-light" :rows="data" :columns="columns"
-            row-key="name">
+            row-key="id">
+            <template v-slot:body-cell-status="props">
+                <q-td :props="props">
+                    <q-badge class="text-capitalize" rounded :color="getStatusColor(props.row.status)" v-if="props.row.status" :label="props.row.status" />
+                </q-td>
+            </template>
             <template v-slot:body-cell-actions="props">
                 <q-td :props="props">
                     <q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
@@ -16,6 +21,18 @@
                                 @click="toDelete(props.row.id)" v-if="role == 'business'">
                                 <q-item-section>
                                     <q-item-label>Eliminar</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+                                @click="toReview(props.row.id)" v-if="role == 'business' && !props.row.review">
+                                <q-item-section>
+                                    <q-item-label>{{ reviewText }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+                                @click="toReviewDetail(props.row.id)" v-if="props.row.review">
+                                <q-item-section>
+                                    <q-item-label>Detalle</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
@@ -38,6 +55,8 @@
                 </q-card-section>
             </q-card>
         </q-dialog>
+
+        <cartage-review v-if="showDetail" @reload="getData()" :cartage_review_id="cartage_review_id" v-model="showDetail"/>
     </div>
 </template>
 <script>
@@ -50,9 +69,10 @@ import CartageForm from './CartageForm.vue'
 import { Notify } from 'quasar'
 import { moment } from '../../boot/plugins'
 import { useStore } from 'vuex'
+import CartageReview from './CartageReview.vue'
 
 export default {
-    components: { TableHeader, CartageForm },
+    components: { TableHeader, CartageForm, CartageReview },
     props: {
         type_for: {
             type: String,
@@ -68,6 +88,9 @@ export default {
         const role = computed(() => {
             return store.getters.ROLE;
         });
+        const showDetail = ref(false)
+        const cartage_review_id = ref(null)
+        const reviewText = computed(() => props.type_for == 'maritima' ? 'Asesor IATA' : 'Asesor IMO')
         const showAdd = ref(false);
         const columns = [
             {
@@ -103,10 +126,38 @@ export default {
                 sortable: true
             },
             {
+                name: 'status',
+                label: 'Estado',
+                align: 'left',
+                field: row => row.status,
+                // format: val => `${val}`,
+                sortable: true
+            },
+            {
                 name: 'actions',
             },
         ]
         const loading = ref(false)
+
+        function getStatusColor(status) {
+            let color = null;
+            switch (status.toLowerCase()) {
+                case 'en revision':
+                    color = 'yellow-10'
+                    break;
+                case 'rechazada':
+                    color = 'red-10'
+                    break;
+                case 'aprobada':
+                    color = 'green-10'
+                    break;
+
+                default:
+                    color = 'primary'
+                    break;
+            }
+            return color;
+        }
 
         async function getData() {
             loading.value = true
@@ -118,7 +169,8 @@ export default {
                 })
                 const includes = JSON.stringify([
                     'document',
-                    'installation'
+                    'installation',
+                    'review'
                 ])
                 const res = await modelService.apiNoLoading({ url: `cartage-letter?wheres=${where}&includes=${includes}` })
                 data.value = res.data?.data;
@@ -137,6 +189,11 @@ export default {
             window.open(generateUrl.value, '_blank').focus();
         }
 
+        function toReviewDetail(id = null) {
+            showDetail.value = true
+            cartage_review_id.value = id
+        }
+
         function open(url) {
             window.open(url, '_blank').focus();
         }
@@ -144,10 +201,31 @@ export default {
         async function toDelete(id) {
             loading.value = true
             try {
-                await modelService.apiNoLoading({ url: `cartage-letter/${id}`, method:'delete' })
+                await modelService.apiNoLoading({ url: `cartage-letter/${id}`, method: 'delete' })
                 getData()
             } catch (err) {
                 console.log('aqui', err.response);
+                const message = err?.response?.data?.message ?? 'No pudimos eliminar el registro';
+                Notify.create({
+                    message: message,
+                    color: 'negative'
+                })
+            }
+            loading.value = false
+        }
+
+        async function toReview(id) {
+            loading.value = true
+            try {
+                const data = {
+                    cartage_letter_id: id,
+                }
+
+                await modelService.apiNoLoading({ url: `cartage-review`, method: 'post', data })
+
+                getData()
+            } catch (err) {
+                console.log('aqui', err?.response);
                 const message = err?.response?.data?.message ?? 'No pudimos eliminar el registro';
                 Notify.create({
                     message: message,
@@ -167,11 +245,17 @@ export default {
             baseUrl,
             showAdd,
             role,
+            reviewText,
+            showDetail,
+            cartage_review_id,
 
+            getStatusColor,
             generate,
             getData,
             open,
-            toDelete
+            toDelete,
+            toReview,
+            toReviewDetail
         }
     }
 }

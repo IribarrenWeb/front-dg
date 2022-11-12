@@ -65,21 +65,26 @@ async function api({ url, method, data }) {
     });
 }
 
-async function apiNoLoading({ url, method, data }) {
+async function apiNoLoading({ url, method, data, multipart }) {
     if (!method) method = 'GET'
 
     let url_model = `/${url}`;
 
-    const config = {
+
+    let config = {
         method: method,
         url: url_model,
         data: data
+    }
+
+    if (multipart) {
+        config.url += '?_method=PUT'
+        config.method = 'POST'
     }
     
     return await axios.request(config).then((response) => {
         return response
     }).catch(err => {
-        // errors(err)
         throw err
     });
 }
