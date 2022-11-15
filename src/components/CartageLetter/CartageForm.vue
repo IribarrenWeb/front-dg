@@ -9,9 +9,6 @@
                 <qu-input-validation apiName="name" class="col-md-6 col-12" :loading="loading" :rules="[$rules.required()]" outlined
                     v-model="model.name" type="text" label="Nombre" />
 
-                <qu-input-validation apiName="description" class="col-md-6 col-12" :loading="loading" :rules="[$rules.required()]"
-                    outlined v-model="model.description" type="text" label="Descripción" />
-
                 <qu-input-date-validation apiName="date" class="col-md-6 col-12" :loading="loading" outlined v-model="model.date"
                     mask="####-##-##" label="Fecha" :rules="[$rules.required]">
                     <q-date today-btn v-model="model.date" mask="YYYY-MM-DD">
@@ -20,6 +17,19 @@
                         </div>
                     </q-date>
                 </qu-input-date-validation>
+
+                <installation-selector-v-2 class="col-md-6 col-12" v-model="model.installation_id" />
+
+                <q-file class="col-md-6 col-12" label="Documento (carta de porte)" :rules="[$rules.required]"
+                    :loading="loading" v-model="model.document" outlined accept=".pdf">
+                    <template v-slot:prepend>
+                        <q-icon name="attach_file" />
+                    </template>
+                </q-file>
+
+                <qu-input-validation type="textarea" apiName="description" class="col-12" :loading="loading" :rules="[$rules.required()]"
+                    outlined v-model="model.description" label="Descripción" />
+
                 <!-- <q-input class="col-md-6 col-12" :loading="loading" outlined v-model="model.date" mask="##/##/####"
                     label="Fecha" :rules="[$rules.required]">
                     <template v-slot:append>
@@ -38,14 +48,6 @@
                     </template>
                 </q-input> -->
 
-                <installation-selector-v-2 class="col-md-6 col-12" v-model="model.installation_id" />
-
-                <q-file class="col-md-6 col-12" label="Documento (carta de porte)" :rules="[$rules.required]"
-                    :loading="loading" v-model="model.document" outlined accept=".pdf">
-                    <template v-slot:prepend>
-                        <q-icon name="attach_file" />
-                    </template>
-                </q-file>
                 <!-- <q-input class="col-md-6 col-12" outlined v-model="model.installation_id" type="text"
                     label="Instalación" /> -->
             </div>
