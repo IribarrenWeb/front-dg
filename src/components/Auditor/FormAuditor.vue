@@ -17,6 +17,7 @@
 						<h4>
 							Datos generales
 						</h4>
+						<span v-if="id">Numero Psics: <b>{{psics_number}}</b></span>
 						<hr>
 					</div>
 					<div class="col-lg-4">
@@ -201,6 +202,7 @@ export default {
 			prov_update: null,
 			delegate: null,
 			new_delegate: false,
+			psics_number: null,
 			currentStep: 1,
 			steps: [
 				{
@@ -274,6 +276,7 @@ export default {
 				this.model.name = this.model.user.name;
 				this.model.last_name = this.model.user.last_name;
 				this.model.email = this.model.user.email;
+				this.psics_number = data?.psics_number;
 			} catch (err) {
 				this.$emit('closeModal')
 				console.log(err);

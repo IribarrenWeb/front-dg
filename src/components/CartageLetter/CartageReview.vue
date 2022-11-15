@@ -42,7 +42,7 @@
                                         KB</q-item-label>
                                 </q-item-section>
                                 <q-item-section side>
-                                    <q-btn :loading="loading" v-if="cartage.status == 'RECHAZADA'" color="primary"
+                                    <q-btn :loading="loading" v-if="cartage.status == 'RECHAZADA' && role === 'business'" color="primary"
                                         icon="fa-regular fa-pen-to-square" flat @click="toChange = true" />
                                 </q-item-section>
                             </q-item>

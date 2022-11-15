@@ -9,7 +9,7 @@
             row-key="id">
             <template v-slot:body-cell-status="props">
                 <q-td :props="props">
-                    <q-badge class="text-capitalize" rounded :color="getStatusColor(props.row.status)" v-if="props.row.status" :label="props.row.status" />
+                    <q-badge class="text-capitalize" rounded :color="getStatusColor(props.row.status)" v-if="props.row.status" :label="role != 'business' && props.row.status == 'EN REVISION' ? 'PENDIENTE' : props.row.status" />
                 </q-td>
             </template>
             <template v-slot:body-cell-actions="props">
@@ -32,7 +32,7 @@
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="toReviewDetail(props.row.id)" v-if="props.row.review">
                                 <q-item-section>
-                                    <q-item-label>Detalle</q-item-label>
+                                    <q-item-label>{{role != 'business' ? reviewText : 'Detalle revisión'}}</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
@@ -76,7 +76,7 @@ export default {
     props: {
         type_for: {
             type: String,
-            default: 'maritima'
+            default: 'maritimas'
         }
     },
     setup(props) {
@@ -90,7 +90,8 @@ export default {
         });
         const showDetail = ref(false)
         const cartage_review_id = ref(null)
-        const reviewText = computed(() => props.type_for == 'maritima' ? 'Asesor IATA' : 'Asesor IMO')
+        const prefix_review_text = computed(() => role.value == 'business' ? 'Asesor' : 'Revisión')
+        const reviewText = computed(() => props.type_for == 'maritimas' ? prefix_review_text.value + ' IMO' : prefix_review_text.value + ' IATA')
         const showAdd = ref(false);
         const columns = [
             {
@@ -143,6 +144,9 @@ export default {
             let color = null;
             switch (status.toLowerCase()) {
                 case 'en revision':
+                    color = 'yellow-10'
+                    break;
+                case 'pendiente':
                     color = 'yellow-10'
                     break;
                 case 'rechazada':

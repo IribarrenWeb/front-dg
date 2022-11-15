@@ -24,21 +24,21 @@
 											rules="required" :disabled="!check" v-model="vehicle.index">
 											<option selected>Matricula</option>
 											<option :value="idx" v-for="(veh, idx) in inst_vehicles" :key="idx">
-												{{ veh.registration_number }}
+												{{ veh.registration_number ?? 'N/A' }} 
 											</option>
 										</field-validate>
 									</base-field>
 								</div>
 								<div class="col-md-2">
-									<base-input :view="true" :modelValue="vehicle.fleet != null ? vehicle.fleet : ``"
+									<base-input :view="true" :modelValue="vehicle?.fleet != null ? vehicle?.fleet : ``"
 										label="Flota" disabled />
 								</div>
 								<div class="col-md-2">
-									<base-input :view="true" :modelValue="vehicle.type != null ? vehicle.type.name : ``"
+									<base-input :view="true" :modelValue="vehicle?.type != null ? vehicle?.type?.name : ``"
 										label="Tipo" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="vehicle.adr != null ? vehicle.adr.code : ``"
+									<base-input :view="true" :modelValue="vehicle?.adr != null ? vehicle?.adr?.code : ``"
 										label="Designación" disabled />
 								</div>
 								<div class="col-md-2 d-flex">
@@ -52,16 +52,16 @@
 						</form-validate>
 						<div class="row" v-for="(veh, idx) in vehicles" :key="idx">
 							<div class="col-md-3">
-								<base-input :view="true" :modelValue="veh.registration_number" disabled />
+								<base-input :view="true" :modelValue="veh?.registration_number ?? 'N/A'" disabled />
 							</div>
 							<div class="col-md-2">
-								<base-input :view="true" :modelValue="veh.fleet" disabled />
+								<base-input :view="true" :modelValue="veh?.fleet ?? 'N/A'" disabled />
 							</div>
 							<div class="col-md-2">
-								<base-input :view="true" :modelValue="veh.type.name" disabled />
+								<base-input :view="true" :modelValue="veh?.type?.name ?? 'N/A'" disabled />
 							</div>
 							<div class="col-md-3">
-								<base-input :view="true" :modelValue="veh.adr.code" disabled />
+								<base-input :view="true" :modelValue="veh?.adr?.code ?? 'N/A'" disabled />
 							</div>
 							<div class="col-md-2 d-flex">
 								<div class="align-self-center">
@@ -203,10 +203,10 @@ export default {
 			let vehicle = this.inst_vehicles[this.vehicle.index];
 			this.vehicles.push({
 				id: vehicle.id,
-				registration_number: vehicle.registration_number,
-				type: vehicle.type,
-				fleet: vehicle.fleet,
-				adr: vehicle.adr,
+				registration_number: vehicle?.registration_number,
+				type: vehicle?.type,
+				fleet: vehicle?.fleet,
+				adr: vehicle?.adr,
 			});
 			this.vehicle = {
 				index: null,
