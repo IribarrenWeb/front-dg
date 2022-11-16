@@ -17,7 +17,7 @@
 						<h4>
 							Datos generales
 						</h4>
-						<span v-if="id">Numero Psics: <b>{{psics_number}}</b></span>
+						<!-- <span v-if="id">Numero Psics: <b>{{psics_number}}</b></span> -->
 						<hr>
 					</div>
 					<div class="col-lg-4">
@@ -70,6 +70,11 @@
 						<base-field name="email" label="Email">
 							<field-validate class="form-control" name="email" label="email" rules="required|email"
 								v-model="model.email" />
+						</base-field>
+					</div>
+					<div class="col-lg-4" v-if="id">
+						<base-field label="Numero Psics">
+							<q-input :model-value="psics_number" type="text" readonly outlined />
 						</base-field>
 					</div>
 				</div>

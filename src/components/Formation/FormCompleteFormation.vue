@@ -42,8 +42,8 @@
 					<base-field class="mt-3" label="Buscar" customClases="mb-0">
 						<input class="form-control" style="min-width:300px" placeholder="Buscar" v-model="filter" />
 					</base-field>
-					<base-field class="mt-3" label="Buscar" customClases="mb-0">
-					</base-field>
+					<!-- <base-field class="mt-3" label="Buscar" customClases="mb-0">
+					</base-field> -->
 				</div>
 
 				<table class="table table-sm table-hover table-bordered">

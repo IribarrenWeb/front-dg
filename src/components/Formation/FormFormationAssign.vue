@@ -49,11 +49,12 @@
                             <input class="form-control" style="min-width:300px" placeholder="Buscar" v-model="filter" />
                         </base-field>
                         <base-field label="Ultima formación">
-                            <q-input outlined v-model="filter_date" mask="date">
+                            <q-input outlined v-model="filter_date" mask="####-##-##">
                                 <template v-slot:append>
+                                    <q-icon name="fa-solid fa-xmark" class="q-mr-sm" style="cursor:pointer" v-if="filter_date" @click="filter_date = null" />
                                     <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy style="height: 400px;" cover transition-show="scale" transition-hide="scale">
-                                            <q-date v-model="date">
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date landscape mask="YYYY-MM-DD" v-model="filter_date" >
                                                 <div class="row items-center justify-end">
                                                     <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
@@ -154,9 +155,12 @@ export default {
         const currentStep = ref(1);
         const currentDate = ref("");
         const filter = ref(null);
+        const filter_date = ref(null);
         const employees_rows = computed(() => {
             return employees.value?.filter((e) => {
-                return filter.value ? e.full_name.toLowerCase().includes(filter.value) : e;
+                const val1 = filter.value ? e.full_name.toLowerCase().includes(filter.value) : e;
+                const val2 = filter_date.value ? e.last_formation?.formation_date && e.last_formation?.formation_date == filter_date.value : e;
+                return val1 && val2
             }) ?? []
         })
         currentDate.value = new Date().toISOString().split('T')[0]
@@ -229,6 +233,7 @@ export default {
             model,
             currentDate,
             employees_rows,
+            filter_date,
 
             handleClose,
             onSubmit

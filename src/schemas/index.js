@@ -6,6 +6,7 @@ import delegate from "./delegate";
 import formation from "./formation";
 import address from "./address";
 import cartage from "./cartage";
+import cartage_road from "./cartage_road";
 
 const schemas = {
     business,
@@ -15,7 +16,8 @@ const schemas = {
     delegate,
     formation,
     address,
-    cartage
+    cartage,
+    cartage_road
 }
 
 export default schemas

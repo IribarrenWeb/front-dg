@@ -48,7 +48,7 @@
         </q-table>
 
         <q-dialog v-model="showAdd" persistent>
-            <q-card style="min-width: 700px;">
+            <q-card :style="{'min-width': type_for == 'carretera' ? '1000px' :'700px'}">
                 <q-card-section>
                     <cartage-form :tab="type_for" :modalMode="true" @close="showAdd = false"
                         @saved="showAdd = false, getData()" />

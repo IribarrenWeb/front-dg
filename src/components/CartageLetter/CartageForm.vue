@@ -1,60 +1,23 @@
 <template>
     <div>
-        <q-form @submit="onSubmit" class="q-px-md">
+        <q-form ref="form_ref" @submit="onSubmit" class="q-px-md">
             <div>
                 <h3>Agregar carta de porte</h3>
             </div>
             <q-separator spaced="15px" />
-            <div class="row">
-                <qu-input-validation apiName="name" class="col-md-6 col-12" :loading="loading" :rules="[$rules.required()]" outlined
-                    v-model="model.name" type="text" label="Nombre" />
-
-                <qu-input-date-validation apiName="date" class="col-md-6 col-12" :loading="loading" outlined v-model="model.date"
-                    mask="####-##-##" label="Fecha" :rules="[$rules.required]">
-                    <q-date today-btn v-model="model.date" mask="YYYY-MM-DD">
-                        <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                        </div>
-                    </q-date>
-                </qu-input-date-validation>
-
-                <installation-selector-v-2 class="col-md-6 col-12" v-model="model.installation_id" />
-
-                <q-file class="col-md-6 col-12" label="Documento (carta de porte)" :rules="[$rules.required]"
-                    :loading="loading" v-model="model.document" outlined accept=".pdf">
-                    <template v-slot:prepend>
-                        <q-icon name="attach_file" />
-                    </template>
-                </q-file>
-
-                <qu-input-validation type="textarea" apiName="description" class="col-12" :loading="loading" :rules="[$rules.required()]"
-                    outlined v-model="model.description" label="Descripción" />
-
-                <!-- <q-input class="col-md-6 col-12" :loading="loading" outlined v-model="model.date" mask="##/##/####"
-                    label="Fecha" :rules="[$rules.required]">
-                    <template v-slot:append>
-                        <q-icon name="event" class="cursor-pointer">
-                            <q-popup-proxy transition-show="scale" transition-hide="scale">
-                                <q-date v-model="model.date" mask="DD/MM/YYYY">
-                                    <div class="row items-center justify-end">
-                                        <q-btn v-close-popup label="Close" color="primary" flat />
-                                    </div>
-                                </q-date>
-                            </q-popup-proxy>
-                        </q-icon>
-                    </template>
-                    <template v-slot:error>
-                        <server-error-handler name="date" />
-                    </template>
-                </q-input> -->
-
-                <!-- <q-input class="col-md-6 col-12" outlined v-model="model.installation_id" type="text"
-                    label="Instalación" /> -->
+            <div v-if="['aereas', 'maritimas'].includes(tab)">
+                <cartage-regular-form :loading="loading" v-model:date="model.date" v-model:name="model.name"
+                    v-model:document="model.document" v-model:description="model.description"
+                    v-model:installation_id="model.installation_id" />
             </div>
-            <div class="q-gutter-md flex justify-end">
+            <div v-else>
+                <cartage-road-form @save="form_ref.submit()" :loading="loading" v-model:date="model.date" v-model:name="model.name"
+                    v-model:description="model.description" v-model:installation_id="model.installation_id" />
+            </div>
+            <div class="q-gutter-md flex justify-end q-mt-md">
                 <q-btn label="Cancelar" :loading="loading" outline v-if="modalMode" type="reset" color="primary"
                     @click="$emit('close', true)" />
-                <q-btn label="Guardar" :loading="loading" type="submit" color="primary" />
+                <q-btn label="Guardar" v-if="tab != 'carretera'" :loading="loading" type="submit" color="primary" />
             </div>
         </q-form>
     </div>
@@ -62,16 +25,15 @@
 <script>
 import { ref } from '@vue/reactivity'
 import functions from '../../utils/functions'
-import InstallationSelectorV2 from '../Installation/Modules/InstallationSelectorV2.vue'
-import ServerErrorHandler from '../core_components/ServerErrorHandler.vue'
 import modelService from '../../store/services/model-service'
 import { Notify } from 'quasar'
-import QuInputValidation from '../core_components/FormQuasar/QuInputValidation.vue'
-import QuInputDateValidation from '../core_components/FormQuasar/QuInputDateValidation.vue'
 import { moment } from '../../boot/plugins'
+import CartageRegularForm from './Forms/CartageRegularForm.vue'
+import { computed, watch } from '@vue/runtime-core'
+import CartageRoadForm from './Forms/CartageRoadForm.vue'
 
 export default {
-    components: { InstallationSelectorV2, ServerErrorHandler, QuInputValidation, QuInputDateValidation },
+    components: { CartageRegularForm, CartageRoadForm },
     props: {
         modalMode: {
             type: Boolean,
@@ -82,12 +44,13 @@ export default {
     setup(props, { emit }) {
         const model = ref({})
         const loading = ref(false)
-
+        const form_ref = ref(null)
+        const schema_name = computed(() => props.tab == 'carretera' ? 'cartage_road' : 'cartage')
         async function onSubmit() {
             loading.value = true
             try {
                 const data = new FormData()
-                const type = props.tab ? props.tab?.replace('s','') : null
+                const type = props.tab ? props.tab?.replace('s', '') : null
                 data.append('name', model.value.name)
                 data.append('description', model.value.description)
                 data.append('date', moment(model.value.date).format('YYYY-MM-DD'))
@@ -108,11 +71,14 @@ export default {
             loading.value = false
         }
 
-        model.value = functions.schemas('cartage')
+        model.value = functions.schemas(schema_name.value)
+
+        watch(() => schema_name.value, (v) => model.value = functions.schemas(v))
 
         return {
             model,
             loading,
+            form_ref,
             onSubmit
         }
     }

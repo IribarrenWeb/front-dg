@@ -3,7 +3,7 @@ export default {
     description: "",
     date: "",
     installation_id: "",
-    document: "",
+    document: [],
 
     // Relations
     installation: ""

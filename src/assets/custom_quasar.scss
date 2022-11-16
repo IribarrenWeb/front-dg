@@ -114,3 +114,9 @@
 .no-wrap {
     flex-wrap: nowrap !important;
 }
+
+.q-field.q-field--outlined .q-field__control{
+    // border: 1px solid #cad1d7;
+    border-color: #cad1d7;
+    border-radius: 0.375rem;
+}
