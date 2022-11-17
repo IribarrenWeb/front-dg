@@ -11,8 +11,14 @@
                     v-model:installation_id="model.installation_id" />
             </div>
             <div v-else>
-                <cartage-road-form @save="form_ref.submit()" :loading="loading" v-model:date="model.date" v-model:name="model.name"
-                    v-model:description="model.description" v-model:installation_id="model.installation_id" />
+                <cartage-road-form @save="form_ref.submit()" :loading="loading" v-model:date="model.date"
+                    v-model:name="model.name" v-model:description="model.description"
+                    v-model:installation_id="model.installation_id" v-model:same_loader="model.same_loader"
+                    v-model:cartage_loader_id="model.cartage_loader_id"
+                    v-model:cartage_destinatary_id="model.cartage_destinatary_id"
+                    v-model:cartage_carrier_id="model.cartage_carrier_id" v-model:materials_ids="model.materials_ids"
+                    v-model:destinatary_data="model.destinatary_data" v-model:carrier_data="model.carrier_data"
+                    v-model:loader_data="model.loader_data" />
             </div>
             <div class="q-gutter-md flex justify-end q-mt-md">
                 <q-btn label="Cancelar" :loading="loading" outline v-if="modalMode" type="reset" color="primary"
