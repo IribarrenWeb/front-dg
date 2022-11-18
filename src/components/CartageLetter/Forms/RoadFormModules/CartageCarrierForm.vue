@@ -1,26 +1,38 @@
 <template>
     <div class="row">
-        <div class="col-12 q-mb-md">
-            <q-toggle size="lg" label="Es el mismo expedidor" :model-value="same_loader"
-                @update:model-value="$emit('update:same_loader', $event)" color="primary" />
-        </div>
-
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="name"
+        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled" apiName="carrier_data.name"
             class="col-md-6 col-12" :model-value="name" map-options :options="options" @filter="filterFn" outlined
             emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Nombre" hide-selected />
 
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="last_name" class="col-md-6 col-12"
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.last_name" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="last_name"
             @update:model-value="$emit('update:last_name', $event)" type="text" label="Apellido" />
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="nif" class="col-md-6 col-12"
+
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.nif" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
             @update:model-value="$emit('update:nif', $event)" type="text" label="NIF" />
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="phone_number" class="col-md-6 col-12"
+
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.phone_number" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="phone_number"
             @update:model-value="$emit('update:phone_number', $event)" type="text" label="Numero de telefono" />
 
-        <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled"
-            v-model:address="address_model.address" v-model:city="address_model.city" v-model:code="address_model.code"
+        <!-- <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="driver_name" class="col-md-6 col-12"
+            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="driver_name"
+            @update:model-value="$emit('update:driver_name', $event)" type="text" label="Nombre Conductor" />
+
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="driver_dni" class="col-md-6 col-12"
+            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="driver_dni"
+            @update:model-value="$emit('update:driver_dni', $event)" type="text" label="DNI conductor" />
+
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="driver_registration_number"
+            class="col-md-6 col-12" :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined
+            :model-value="driver_registration_number"
+            @update:model-value="$emit('update:driver_registration_number', $event)" type="text"
+            label="Placa conductor" /> -->
+
+
+        <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled" v-model:address="address_model.address"
+            v-model:city="address_model.city" v-model:code="address_model.code"
             v-model:comunity="address_model.comunity" v-model:country="address_model.country"
             v-model:street_number="address_model.street_number" v-model:province="address_model.province" />
     </div>
@@ -64,7 +76,19 @@ export default {
             type: String,
             default: ''
         },
-        loader_id: {
+        driver_name: {
+            type: String,
+            default: ''
+        },
+        driver_dni: {
+            type: [String, Number],
+            default: ''
+        },
+        driver_registration_number: {
+            type: [String, Number],
+            default: ''
+        },
+        carrier_id: {
             type: Number || String,
             default: null
         },
@@ -74,16 +98,16 @@ export default {
         },
     },
     setup(props, { emit }) {
-        const loader_selected = ref(null)
+        const delivery_selected = ref(null)
         const address_model = ref({})
         const data_options = ref([])
         const options = ref([])
         // const name_value = ref([])
-        const isDisabled = computed(() => props.same_loader || loader_selected.value ? true : false)
+        const isDisabled = computed(() => delivery_selected.value ? true : false)
 
         async function getLoaders() {
             try {
-                const res = await modelService.apiNoLoading({ url: `cartage-loader` });
+                const res = await modelService.apiNoLoading({ url: `cartage-carrier` });
                 console.log(res);
                 data_options.value = res?.data?.data ? res.data.data.map(op => {
                     return {
@@ -102,17 +126,17 @@ export default {
             const needle = val ? val?.toLowerCase() : '';
             console.log(needle);
             const index = data_options.value.findIndex(op => op.label.toLowerCase() == needle)
-            if (index >= 0) loader_selected.value = data_options.value[index]
+            if (index >= 0) delivery_selected.value = data_options.value[index]
             else {
                 emit('update:name', val)
                 // name_value.value = val
-                loader_selected.value = null
+                delivery_selected.value = null
             }
         }
 
         function resetSelected() {
-            const k = ['last_name','nif','phone_number','address']
-            console.log(k, loader_selected.value);
+            const k = ['last_name', 'nif', 'phone_number', 'address']
+            console.log(k, delivery_selected.value);
             k.forEach(k => {
                 emit('update:' + k, null)
             });
@@ -125,10 +149,10 @@ export default {
         }
 
         function setSelected() {
-            const k = keys(loader_selected.value?.value)
-            console.log(k, loader_selected.value);
+            const k = keys(delivery_selected.value?.value)
+            console.log(k, delivery_selected.value);
             k.forEach(k => {
-                emit('update:' + k, loader_selected.value?.value[k])
+                emit('update:' + k, delivery_selected.value?.value[k])
             });
         }
 
@@ -142,23 +166,24 @@ export default {
 
         watch(() => props.same_loader, (v) => {
 
-            if(v) {
+            if (v) {
                 resetSelected()
-                emit('update:loader_id', null)
+                emit('update:carrier_id', null)
             }
 
         }, { deep: true, immediate: true })
 
-        watch(() => loader_selected.value, (v) => {
+        watch(() => delivery_selected.value, (v) => {
 
             if (v) setSelected()
             else resetSelected()
 
-            emit('update:loader_id', v?.id ?? null)
+            emit('update:carrier_id', v?.id ?? null)
         }, { deep: true, immediate: true })
 
         onActivated(() => {
             // if (props.formRef) {
+            //     props.formRef.resetValidation()
             // }
         })
 
@@ -166,11 +191,11 @@ export default {
             if (v) {
                 v.reset()
             }
-        }, {immediate: true})
-        
+        }, { immediate: true })
+
         return {
             address_model,
-            loader_selected,
+            delivery_selected,
             options,
             isDisabled,
             // name_value,

@@ -1,11 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-12 q-mb-md">
-            <q-toggle size="lg" label="Es el mismo expedidor" :model-value="same_loader"
-                @update:model-value="$emit('update:same_loader', $event)" color="primary" />
-        </div>
-
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="name"
+        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled" apiName="name"
             class="col-md-6 col-12" :model-value="name" map-options :options="options" @filter="filterFn" outlined
             emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Nombre" hide-selected />
 
@@ -19,8 +14,8 @@
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="phone_number"
             @update:model-value="$emit('update:phone_number', $event)" type="text" label="Numero de telefono" />
 
-        <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled"
-            v-model:address="address_model.address" v-model:city="address_model.city" v-model:code="address_model.code"
+        <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled" v-model:address="address_model.address"
+            v-model:city="address_model.city" v-model:code="address_model.code"
             v-model:comunity="address_model.comunity" v-model:country="address_model.country"
             v-model:street_number="address_model.street_number" v-model:province="address_model.province" />
     </div>
@@ -64,7 +59,7 @@ export default {
             type: String,
             default: ''
         },
-        loader_id: {
+        destinatary_id: {
             type: Number || String,
             default: null
         },
@@ -74,16 +69,16 @@ export default {
         },
     },
     setup(props, { emit }) {
-        const loader_selected = ref(null)
+        const destinatary_selected = ref(null)
         const address_model = ref({})
         const data_options = ref([])
         const options = ref([])
         // const name_value = ref([])
-        const isDisabled = computed(() => props.same_loader || loader_selected.value ? true : false)
+        const isDisabled = computed(() => destinatary_selected.value ? true : false)
 
         async function getLoaders() {
             try {
-                const res = await modelService.apiNoLoading({ url: `cartage-loader` });
+                const res = await modelService.apiNoLoading({ url: `cartage-destinatary` });
                 console.log(res);
                 data_options.value = res?.data?.data ? res.data.data.map(op => {
                     return {
@@ -102,17 +97,17 @@ export default {
             const needle = val ? val?.toLowerCase() : '';
             console.log(needle);
             const index = data_options.value.findIndex(op => op.label.toLowerCase() == needle)
-            if (index >= 0) loader_selected.value = data_options.value[index]
+            if (index >= 0) destinatary_selected.value = data_options.value[index]
             else {
                 emit('update:name', val)
                 // name_value.value = val
-                loader_selected.value = null
+                destinatary_selected.value = null
             }
         }
 
         function resetSelected() {
-            const k = ['last_name','nif','phone_number','address']
-            console.log(k, loader_selected.value);
+            const k = ['last_name', 'nif', 'phone_number', 'address']
+            console.log(k, destinatary_selected.value);
             k.forEach(k => {
                 emit('update:' + k, null)
             });
@@ -125,10 +120,10 @@ export default {
         }
 
         function setSelected() {
-            const k = keys(loader_selected.value?.value)
-            console.log(k, loader_selected.value);
+            const k = keys(destinatary_selected.value?.value)
+            console.log(k, destinatary_selected.value);
             k.forEach(k => {
-                emit('update:' + k, loader_selected.value?.value[k])
+                emit('update:' + k, destinatary_selected.value?.value[k])
             });
         }
 
@@ -142,23 +137,24 @@ export default {
 
         watch(() => props.same_loader, (v) => {
 
-            if(v) {
+            if (v) {
                 resetSelected()
-                emit('update:loader_id', null)
+                emit('update:destinatary_id', null)
             }
 
         }, { deep: true, immediate: true })
 
-        watch(() => loader_selected.value, (v) => {
+        watch(() => destinatary_selected.value, (v) => {
 
             if (v) setSelected()
             else resetSelected()
 
-            emit('update:loader_id', v?.id ?? null)
+            emit('update:destinatary_id', v?.id ?? null)
         }, { deep: true, immediate: true })
 
         onActivated(() => {
             // if (props.formRef) {
+            //     props.formRef.resetValidation()
             // }
         })
 
@@ -166,11 +162,11 @@ export default {
             if (v) {
                 v.reset()
             }
-        }, {immediate: true})
-        
+        }, { immediate: true })
+
         return {
             address_model,
-            loader_selected,
+            destinatary_selected,
             options,
             isDisabled,
             // name_value,

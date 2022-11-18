@@ -5,7 +5,7 @@
                 @click="generate" />
             <q-btn v-if="role == 'business'" color="primary" label="Agregar" @click="showAdd = true" />
         </table-header>
-        <q-table :loading="loading" table-class="table" table-header-class="thead-light" :rows="data" :columns="columns"
+        <q-table :visible-columns="visibleColumns" :loading="loading" table-class="table" table-header-class="thead-light" :rows="data" :columns="columns"
             row-key="id">
             <template v-slot:body-cell-status="props">
                 <q-td :props="props">
@@ -24,19 +24,19 @@
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReview(props.row.id)" v-if="role == 'business' && !props.row.review">
+                                @click="toReview(props.row.id)" v-if="role == 'business' && !props.row.review && type_for != 'carretera'">
                                 <q-item-section>
                                     <q-item-label>{{ reviewText }}</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReviewDetail(props.row.id)" v-if="props.row.review">
+                                @click="toReviewDetail(props.row.id)" v-if="props.row.review && type_for != 'carretera'">
                                 <q-item-section>
                                     <q-item-label>{{role != 'business' ? reviewText : 'Detalle revisión'}}</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="open(props.row?.document?.public_url)">
+                                @click="open(props.row?.document?.public_url)" v-if="type_for != 'carretera'">
                                 <q-item-section>
                                     <q-item-label>Ver</q-item-label>
                                 </q-item-section>
@@ -48,7 +48,7 @@
         </q-table>
 
         <q-dialog v-model="showAdd" persistent>
-            <q-card :style="{'min-width': type_for == 'carretera' ? '1000px' :'700px'}">
+            <q-card :style="{'min-width': type_for == 'carretera' ? '80vw' :'60vw'}">
                 <q-card-section>
                     <cartage-form :tab="type_for" :modalMode="true" @close="showAdd = false"
                         @saved="showAdd = false, getData()" />
@@ -111,18 +111,50 @@ export default {
                 sortable: false
             },
             {
-                name: 'date',
-                label: 'Fecha',
-                align: 'left',
-                field: row => moment(row.date).format('DD/MM/YYYY'),
-                // format: val => `${val}`,
-                sortable: true
-            },
-            {
                 name: 'installation',
                 label: 'Instalación',
                 align: 'left',
                 field: row => row.installation.name,
+                // format: val => `${val}`,
+                sortable: true
+            },
+            {
+                name: 'business',
+                label: 'Empresa',
+                align: 'left',
+                field: row => row?.business?.user?.full_name,
+                // format: val => `${val}`,
+                sortable: true
+            },
+            {
+                name: 'destinatary',
+                label: 'Destinatario',
+                align: 'left',
+                field: row => row?.destinatary?.name,
+                // format: val => `${val}`,
+                sortable: false
+            },
+            {
+                name: 'carrier',
+                label: 'Transportista',
+                align: 'left',
+                field: row => row?.carrier?.name,
+                // format: val => `${val}`,
+                sortable: false
+            },
+            {
+                name: 'loader',
+                label: 'Cargador',
+                align: 'left',
+                field: row => row.same_loader ? row?.business?.user?.full_name : row?.loader?.name,
+                // format: val => `${val}`,
+                sortable: false
+            },
+            {
+                name: 'date',
+                label: 'Fecha',
+                align: 'left',
+                field: row => moment(row.date).format('DD/MM/YYYY'),
                 // format: val => `${val}`,
                 sortable: true
             },
@@ -138,6 +170,31 @@ export default {
                 name: 'actions',
             },
         ]
+        const visibleColumns = computed(() => {
+            const all = [
+                'name',
+                'description',
+                'installation',
+                'business',
+                'destinatary',
+                'carrier',
+                'loader',
+                'date',
+                'status',
+                'actions'
+            ]
+            let visible = [];
+            if (role.value == 'business') {
+                visible = all.filter(a => !['business'].includes(a))
+            }
+
+            if (props.type_for == 'carretera') {
+                visible = visible.filter(a => !['description','date','status'].includes(a))
+            }else{
+                visible = visible.filter(a => !['destinatary','carrier','loader'].includes(a))
+            }
+            return visible;
+        })
         const loading = ref(false)
 
         function getStatusColor(status) {
@@ -174,7 +231,11 @@ export default {
                 const includes = JSON.stringify([
                     'document',
                     'installation',
-                    'review'
+                    'business.user',
+                    'review',
+                    'destinatary',
+                    'loader',
+                    'carrier'
                 ])
                 const res = await modelService.apiNoLoading({ url: `cartage-letter?wheres=${where}&includes=${includes}` })
                 data.value = res.data?.data;
@@ -252,6 +313,7 @@ export default {
             reviewText,
             showDetail,
             cartage_review_id,
+            visibleColumns,
 
             getStatusColor,
             generate,

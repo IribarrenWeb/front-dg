@@ -5,7 +5,7 @@ export default {
     address: {...address},
     nif: "",
     phone_number: "",
-    driver_name: "",
-    driver_dni: "",
-    driver_registration_number: "",
+    // driver_name: "",
+    // driver_dni: "",
+    // driver_registration_number: "",
 }

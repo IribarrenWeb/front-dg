@@ -18,7 +18,8 @@
                     v-model:cartage_destinatary_id="model.cartage_destinatary_id"
                     v-model:cartage_carrier_id="model.cartage_carrier_id" v-model:materials_ids="model.materials_ids"
                     v-model:destinatary_data="model.destinatary_data" v-model:carrier_data="model.carrier_data"
-                    v-model:loader_data="model.loader_data" />
+                    v-model:loader_data="model.loader_data" 
+                    />
             </div>
             <div class="q-gutter-md flex justify-end q-mt-md">
                 <q-btn label="Cancelar" :loading="loading" outline v-if="modalMode" type="reset" color="primary"
@@ -55,14 +56,22 @@ export default {
         async function onSubmit() {
             loading.value = true
             try {
-                const data = new FormData()
                 const type = props.tab ? props.tab?.replace('s', '') : null
-                data.append('name', model.value.name)
-                data.append('description', model.value.description)
-                data.append('date', moment(model.value.date).format('YYYY-MM-DD'))
-                data.append('installation_id', model.value.installation_id)
-                data.append('document', model.value.document)
-                data.append('type', type)
+                let data = {}
+                if (type == 'carretera') {
+                    data = {
+                        ...model.value,
+                        type: type
+                    }
+                }else{
+                    data = new FormData()
+                    data.append('name', model.value.name)
+                    data.append('description', model.value.description)
+                    data.append('date', moment(model.value.date).format('YYYY-MM-DD'))
+                    data.append('installation_id', model.value.installation_id)
+                    data.append('document', model.value.document)
+                    data.append('type', type)
+                }
 
                 const res = await modelService.apiNoLoading({ url: 'cartage-letter', method: 'POST', data: data })
                 if (props.modalMode) {
