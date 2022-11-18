@@ -186,6 +186,8 @@ export default {
             let visible = [];
             if (role.value == 'business') {
                 visible = all.filter(a => !['business'].includes(a))
+            }else{
+                visible = all
             }
 
             if (props.type_for == 'carretera') {
