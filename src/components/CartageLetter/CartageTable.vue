@@ -41,6 +41,12 @@
                                     <q-item-label>Ver</q-item-label>
                                 </q-item-section>
                             </q-item>
+                            <q-item disable style="min-width: 200px;text-align: center;" clickable v-close-popup
+                                @click="openRoad()" v-else>
+                                <q-item-section>
+                                    <q-item-label>Ver</q-item-label>
+                                </q-item-section>
+                            </q-item>
                         </q-list>
                     </q-btn-dropdown>
                 </q-td>
@@ -159,6 +165,14 @@ export default {
                 sortable: true
             },
             {
+                name: 'materials_count',
+                label: 'Materiales involucrados',
+                align: 'center',
+                field: row => row?.materials_count ?? 0,
+                // format: val => `${val}`,
+                sortable: true
+            },
+            {
                 name: 'status',
                 label: 'Estado',
                 align: 'left',
@@ -181,6 +195,7 @@ export default {
                 'loader',
                 'date',
                 'status',
+                'materials_count',
                 'actions'
             ]
             let visible = [];
@@ -193,7 +208,7 @@ export default {
             if (props.type_for == 'carretera') {
                 visible = visible.filter(a => !['description','date','status'].includes(a))
             }else{
-                visible = visible.filter(a => !['destinatary','carrier','loader'].includes(a))
+                visible = visible.filter(a => !['destinatary','carrier','loader','materials_count'].includes(a))
             }
             return visible;
         })
@@ -230,6 +245,9 @@ export default {
                     type: type,
                     // installation_id: props.installation_id
                 })
+                const includes_count = JSON.stringify([
+                    'materials',
+                ])
                 const includes = JSON.stringify([
                     'document',
                     'installation',
@@ -239,7 +257,7 @@ export default {
                     'loader',
                     'carrier'
                 ])
-                const res = await modelService.apiNoLoading({ url: `cartage-letter?wheres=${where}&includes=${includes}` })
+                const res = await modelService.apiNoLoading({ url: `cartage-letter?wheres=${where}&includes=${includes}&includes_count=${includes_count}` })
                 data.value = res.data?.data;
             } catch (err) {
                 console.log('aqui', err.response);

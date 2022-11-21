@@ -59,7 +59,7 @@ export default {
             type: String,
             default: ''
         },
-        destinatary_id: {
+        cartage_destinatary_id: {
             type: Number || String,
             default: null
         },
@@ -75,6 +75,8 @@ export default {
         const options = ref([])
         // const name_value = ref([])
         const isDisabled = computed(() => destinatary_selected.value ? true : false)
+
+        address_model.value = functions.schemas('address')
 
         async function getLoaders() {
             try {
@@ -121,15 +123,20 @@ export default {
 
         function setSelected() {
             const k = keys(destinatary_selected.value?.value)
-            console.log(k, destinatary_selected.value);
             k.forEach(k => {
+                console.log(destinatary_selected.value?.value?.address);
+                if (k == 'address' && destinatary_selected.value?.value?.address) {
+                    const k_ad = keys(destinatary_selected.value?.value?.address)
+                    k_ad.forEach(ad_k => {
+                        address_model.value[ad_k] = destinatary_selected.value?.value?.address[ad_k]
+                    });
+                }
                 emit('update:' + k, destinatary_selected.value?.value[k])
             });
         }
 
         getLoaders()
 
-        address_model.value = functions.schemas('address')
 
         watch(() => address_model.value, (v) => {
             emit('update:address', v)
@@ -139,7 +146,7 @@ export default {
 
             if (v) {
                 resetSelected()
-                emit('update:destinatary_id', null)
+                emit('update:cartage_destinatary_id', null)
             }
 
         }, { deep: true, immediate: true })
@@ -149,7 +156,7 @@ export default {
             if (v) setSelected()
             else resetSelected()
 
-            emit('update:destinatary_id', v?.id ?? null)
+            emit('update:cartage_destinatary_id', v?.id)
         }, { deep: true, immediate: true })
 
         onActivated(() => {

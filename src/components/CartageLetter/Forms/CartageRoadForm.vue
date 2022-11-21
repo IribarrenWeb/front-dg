@@ -19,17 +19,12 @@
         <q-step :name="2" title="Datos cargador" caption="Optional" icon="create_new_folder" :done="step > 2">
             <q-form ref="loader_form" class="row q-py-md" @submit="step += 1">
 
-                <cartage-loader-form 
-                    :form-ref="loader_form"
-                    v-model:address="loader_model.address"
-                    v-model:last_name="loader_model.last_name"
-                    v-model:loader_id="cartage_loader_id"
-                    v-model:loading="loading"
-                    v-model:name="loader_model.name"
-                    v-model:nif="loader_model.nif"
-                    v-model:same_loader="same_loader"
-                    v-model:phone_number="loader_model.phone_number"
-                />
+                <cartage-loader-form :form-ref="loader_form" v-model:address="loader_model.address"
+                    v-model:last_name="loader_model.last_name" v-model:name="loader_model.name"
+                    v-model:nif="loader_model.nif" v-model:phone_number="loader_model.phone_number" :loading="loading"
+                    @update:loading="$emit('update:loading', $event)" :cartage_loader_id="cartage_loader_id"
+                    @update:cartage_loader_id="$emit('update:cartage_loader_id', $event)" :same_loader="same_loader"
+                    @update:same_loader="$emit('update:same_loader', $event)" />
 
                 <q-stepper-navigation class="col-12 flex q-gutter-md">
                     <q-btn flat @click="step -= 1" color="primary" label="Atras" class="q-ml-sm" />
@@ -41,16 +36,12 @@
         <q-step :name="3" title="Datos destinatario" icon="create_new_folder" :done="step > 3">
             <q-form ref="destinatary_form" class="row q-py-md" @submit="step += 1">
 
-                <cartage-destinatary-form
-                    :form-ref="destinatary_form"
-                    v-model:address="destinatary_model.address"
-                    v-model:last_name="destinatary_model.last_name"
-                    v-model:destinatary="cartage_destinatary_id"
-                    v-model:loading="loading"
-                    v-model:name="destinatary_model.name"
-                    v-model:nif="destinatary_model.nif"
+                <cartage-destinatary-form :form-ref="destinatary_form" v-model:address="destinatary_model.address"
+                    v-model:last_name="destinatary_model.last_name" v-model:loading="loading"
+                    v-model:name="destinatary_model.name" v-model:nif="destinatary_model.nif"
                     v-model:phone_number="destinatary_model.phone_number"
-                />
+                    :cartage_destinatary_id="cartage_destinatary_id"
+                    @update:cartage_destinatary_id="$emit('update:cartage_destinatary_id', $event)" />
 
                 <q-stepper-navigation class="col-12 flex q-gutter-md">
                     <q-btn flat @click="step -= 1" color="primary" label="Atras" class="q-ml-sm" />
@@ -59,23 +50,31 @@
             </q-form>
         </q-step>
 
-        <q-step :name="4" title="Datos transportista" icon="add_comment">
-            <q-form ref="carrier_form" class="row q-py-md" @submit="$emit('save', true)">
-            
-                <cartage-carrier-form 
-                    :form-ref="carrier_form"
-                    v-model:address="carrier_model.address"
-                    v-model:last_name="carrier_model.last_name"
-                    v-model:carrier_id="cartage_carrier_id"
-                    v-model:loading="loading"
-                    v-model:name="carrier_model.name"
-                    v-model:nif="carrier_model.nif"
-                    v-model:phone_number="carrier_model.phone_number"
-                />
+        <q-step :name="4" title="Datos transportista" icon="add_comment" :done="step > 4">
+            <q-form ref="carrier_form" class="row q-py-md" @submit="step += 1">
+
+                <cartage-carrier-form :form-ref="carrier_form" v-model:address="carrier_model.address"
+                    v-model:last_name="carrier_model.last_name" v-model:loading="loading"
+                    v-model:name="carrier_model.name" v-model:nif="carrier_model.nif"
+                    v-model:phone_number="carrier_model.phone_number" :cartage_carrier_id="cartage_carrier_id"
+                    @update:cartage_carrier_id="$emit('update:cartage_carrier_id', $event)" />
 
                 <q-stepper-navigation>
                     <q-btn flat @click="step -= 1" color="primary" label="Atras" class="q-ml-sm" />
-                    <q-btn type="submit" color="primary" label="Guardar"/>
+                    <q-btn type="submit" color="primary" label="Siguiente" />
+                </q-stepper-navigation>
+            </q-form>
+        </q-step>
+
+        <q-step :name="5" title="Materiales involucrados" icon="add_comment">
+            <q-form ref="carrier_form" class="row q-py-md" @submit="$emit('save', true)">
+
+                <cartage-materials :installation_id="installation_id" :materials_ids="materials_ids"
+                    @update:materials_ids="$emit('update:materials_ids', $event)" />
+
+                <q-stepper-navigation>
+                    <q-btn flat @click="step -= 1" color="primary" label="Atras" class="q-ml-sm" />
+                    <q-btn type="submit" color="primary" label="Guardar" />
                 </q-stepper-navigation>
             </q-form>
         </q-step>
@@ -90,15 +89,16 @@ import functions from '../../../utils/functions'
 import CartageLoaderForm from './RoadFormModules/CartageLoaderForm.vue'
 import CartageCarrierForm from './RoadFormModules/CartageCarrierForm.vue'
 import CartageDestinataryForm from './RoadFormModules/CartageDestinataryForm.vue'
+import CartageMaterials from './RoadFormModules/CartageMaterials.vue'
 export default {
-    components: { QuInputValidation, InstallationSelectorV2, CartageLoaderForm, CartageCarrierForm, CartageDestinataryForm },
+    components: { QuInputValidation, InstallationSelectorV2, CartageLoaderForm, CartageCarrierForm, CartageDestinataryForm, CartageMaterials },
     props: {
         description: {
             type: String,
             default: null
         },
         installation_id: {
-            type: [String,Number],
+            type: [String, Number],
             default: null
         },
         name: {
@@ -129,7 +129,7 @@ export default {
             type: Array
         },
     },
-    setup(props, {emit}) {
+    setup(props, { emit }) {
         const destinatary_model = ref({})
         const carrier_model = ref({})
         const loader_model = ref({})
@@ -139,16 +139,16 @@ export default {
         loader_model.value = functions.schemas('cartage_loader')
 
         watch(() => destinatary_model.value, (v) => {
-            emit('update:destinatary_data',v)
-        },{deep:true, immediate: true})
+            emit('update:destinatary_data', v)
+        }, { deep: true, immediate: true })
 
         watch(() => carrier_model.value, (v) => {
-            emit('update:carrier_data',v)
-        },{deep:true, immediate: true})
+            emit('update:carrier_data', v)
+        }, { deep: true, immediate: true })
 
         watch(() => loader_model.value, (v) => {
-            emit('update:loader_data',v)
-        },{deep:true, immediate: true})
+            emit('update:loader_data', v)
+        }, { deep: true, immediate: true })
 
         return {
             destinatary_model,

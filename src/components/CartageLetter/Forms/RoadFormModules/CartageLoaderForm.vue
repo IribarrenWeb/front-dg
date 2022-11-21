@@ -64,7 +64,7 @@ export default {
             type: String,
             default: ''
         },
-        loader_id: {
+        cartage_loader_id: {
             type: Number || String,
             default: null
         },
@@ -128,6 +128,12 @@ export default {
             const k = keys(loader_selected.value?.value)
             console.log(k, loader_selected.value);
             k.forEach(k => {
+                if (k == 'address' && loader_selected.value?.value.address) {
+                    const k_ad = keys(loader_selected.value?.value.address)
+                    k_ad.forEach(ad_k => {
+                        address_model.value[ad_k] = loader_selected.value.value.address[ad_k]
+                    });
+                }
                 emit('update:' + k, loader_selected.value?.value[k])
             });
         }
@@ -144,7 +150,7 @@ export default {
 
             if(v) {
                 resetSelected()
-                emit('update:loader_id', null)
+                emit('update:cartage_loader_id', null)
             }
 
         }, { deep: true, immediate: true })
@@ -154,7 +160,7 @@ export default {
             if (v) setSelected()
             else resetSelected()
 
-            emit('update:loader_id', v?.id ?? null)
+            emit('update:cartage_loader_id', v?.id ?? null)
         }, { deep: true, immediate: true })
 
         onActivated(() => {
