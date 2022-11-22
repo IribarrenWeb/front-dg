@@ -51,7 +51,7 @@
 					<div class="col-lg-12">
 						<div class="row">
 							<div class="col-md-3">
-								<base-field name="operation_type" label="Tipo de operación"
+								<base-field name="operation_type_id" label="Tipo de operación"
 									v-if="(update && operations != null) || !update">
 									<field-validate as="select" class="form-control" name="operation_type_id"
 										rules="required" label="tipo de operación" v-model="model.operation_type_id">
@@ -126,6 +126,11 @@
 								label="volumen del Almacenamiento" v-model="model.quantity" />
 						</base-field>
 					</div>
+					<div class="col-lg-6">
+						<base-field name="quantity" label="Empaque de material">
+							<material-packing-selector v-model="model.material_packing_id"/>
+						</base-field>
+					</div>
 				</div>
 			</template>
 
@@ -152,6 +157,7 @@ import { mapGetters } from "vuex";
 import AsyncSelect from '../core_components/AsyncSelect.vue';
 import InstallationSelect from '../Utils/InstallationSelect.vue';
 import MaterialSelector from './Modules/MaterialSelector.vue';
+import MaterialPackingSelector from './Modules/MaterialPackingSelector.vue';
 
 export default {
 	mixins: [utils],
@@ -176,7 +182,7 @@ export default {
 			default: null
 		}
 	},
-	components: { AsyncSelect, InstallationSelect, MaterialSelector },
+	components: { AsyncSelect, InstallationSelect, MaterialSelector, MaterialPackingSelector },
 	data() {
 		return {
 			steps: [
@@ -205,6 +211,7 @@ export default {
 				unit: 'TONELADAS',
 				is_residue: null,
 				is_dangerous: false,
+				material_packing_id: null,
 				file_document: {
 					file: [],
 					base64: null,

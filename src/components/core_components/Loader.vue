@@ -30,6 +30,7 @@ import { mapState } from 'vuex';
   #loader {
     position: fixed;
     text-align: center;
+    z-index: 10000000000000;
     top: 0;
     left: 0;
     background-color: #6e6e6e2a;

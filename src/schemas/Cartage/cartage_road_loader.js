@@ -1,7 +1,7 @@
 import address from "../address"
 
 export default {
-    name: "",
+    business_name: "",
     address: {...address},
     nif: "",
     phone_number: "",

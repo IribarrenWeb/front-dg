@@ -1,17 +1,14 @@
 <template>
     <div class="row">
         <div class="col-12 q-mb-md">
-            <q-toggle size="lg" label="Es el mismo expedidor" :model-value="same_loader"
+            <q-toggle size="lg" label="Usar datos de expedidor" :model-value="same_loader"
                 @update:model-value="$emit('update:same_loader', $event)" color="primary" />
         </div>
 
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="name"
-            class="col-md-6 col-12" :model-value="name" map-options :options="options" @filter="filterFn" outlined
-            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Nombre" hide-selected />
+        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="business_name"
+            class="col-md-6 col-12" :model-value="business_name" map-options :options="options" @filter="filterFn" outlined
+            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
 
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="last_name" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="last_name"
-            @update:model-value="$emit('update:last_name', $event)" type="text" label="Apellido" />
         <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="nif" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
             @update:model-value="$emit('update:nif', $event)" type="text" label="NIF" />
@@ -40,11 +37,7 @@ export default {
     components: { AddressSelectV2, QuInputValidation, QuSelectValidation },
     props: {
         formRef: {},
-        name: {
-            type: String,
-            default: null
-        },
-        last_name: {
+        business_name: {
             type: String,
             default: null
         },
@@ -88,7 +81,7 @@ export default {
                 data_options.value = res?.data?.data ? res.data.data.map(op => {
                     return {
                         value: op,
-                        label: op.name,
+                        label: op.business_name ?? '',
                         id: op.id
                     }
                 }) : [];
@@ -104,14 +97,14 @@ export default {
             const index = data_options.value.findIndex(op => op.label.toLowerCase() == needle)
             if (index >= 0) loader_selected.value = data_options.value[index]
             else {
-                emit('update:name', val)
+                emit('update:business_name', val)
                 // name_value.value = val
                 loader_selected.value = null
             }
         }
 
         function resetSelected() {
-            const k = ['last_name','nif','phone_number','address']
+            const k = ['nif','phone_number','address']
             console.log(k, loader_selected.value);
             k.forEach(k => {
                 emit('update:' + k, null)
@@ -120,7 +113,7 @@ export default {
         async function filterFn(val, update, abort) {
             update(() => {
                 const needle = val.toLocaleLowerCase()
-                options.value = data_options.value.filter(v => v.label.toLowerCase().includes(needle))
+                options.value = data_options.value?.length ? data_options.value.filter(v => v.label.toLowerCase().includes(needle)) : []
             })
         }
 

@@ -136,7 +136,7 @@ export default {
                 name: 'destinatary',
                 label: 'Destinatario',
                 align: 'left',
-                field: row => row?.destinatary?.name,
+                field: row => row?.destinatary?.business_name,
                 // format: val => `${val}`,
                 sortable: false
             },
@@ -144,7 +144,7 @@ export default {
                 name: 'carrier',
                 label: 'Transportista',
                 align: 'left',
-                field: row => row?.carrier?.name,
+                field: row => row?.carrier?.business_name,
                 // format: val => `${val}`,
                 sortable: false
             },
@@ -152,7 +152,7 @@ export default {
                 name: 'loader',
                 label: 'Cargador',
                 align: 'left',
-                field: row => row.same_loader ? row?.business?.user?.full_name : row?.loader?.name,
+                field: row => row.same_loader ? row?.business?.user?.full_name : row?.loader?.business_name,
                 // format: val => `${val}`,
                 sortable: false
             },
@@ -166,9 +166,10 @@ export default {
             },
             {
                 name: 'materials_count',
-                label: 'Materiales involucrados',
+                label: 'Mercancías peligrosas',
                 align: 'center',
-                field: row => row?.materials_count ?? 0,
+                field: row => (row?.materials.map(m=>m.name)).join(', ') ?? '',
+                // field: row => row?.materials_count ?? 0,
                 // format: val => `${val}`,
                 sortable: true
             },
@@ -255,7 +256,8 @@ export default {
                     'review',
                     'destinatary',
                     'loader',
-                    'carrier'
+                    'carrier',
+                    'materials'
                 ])
                 const res = await modelService.apiNoLoading({ url: `cartage-letter?wheres=${where}&includes=${includes}&includes_count=${includes_count}` })
                 data.value = res.data?.data;

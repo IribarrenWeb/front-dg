@@ -20,6 +20,12 @@
                     </q-item-label>
                     <q-item-label caption lines="2">Grupo de embalaje: {{material?.material?.packing?.code}}</q-item-label>
                 </q-item-section>
+                <q-item-section>
+                    <div class="row">
+                        <qu-input-validation class="col" :rules="[$rules.required()]" v-model="material.number" dense label="Numero de bultos" type="number" mask="##"/>
+                        <qu-input-validation class="col" :rules="[$rules.required()]" v-model="material.quantity" dense label="Cantidad por bulto" type="number" mask="##"/>
+                    </div>
+                </q-item-section>
             </q-item>
         </div>
     </div>
@@ -28,13 +34,12 @@
 <script>
 import { ref } from '@vue/reactivity';
 import modelService from '../../../../store/services/model-service';
-import AddressSelectV2 from '../../../core_components/AddressSelectV2.vue';
 import { computed, watch } from '@vue/runtime-core';
 import QuSelectValidation from '../../../core_components/FormQuasar/QuSelectValidation.vue';
-import { find, keys } from 'lodash';
+import QuInputValidation from '../../../core_components/FormQuasar/QuInputValidation.vue';
 
 export default {
-    components: { QuSelectValidation },
+    components: { QuSelectValidation, QuInputValidation },
     props: {
         formRef: {},
         materials_ids: {
@@ -93,11 +98,20 @@ export default {
             let materials = []
             local_material_ids.value.forEach(id => {
                 let find = options.value.find(m=>m?.value == id)
-                
-                if (find) materials.push(find.model)          
+                const model_selected = find && materials_selected.value.length ? materials_selected.value.find(m=>m.id == find?.model?.id) : null
+                if (find && !model_selected) materials.push({
+                    ...find.model,
+                    number: 1,
+                    quantity: 0
+                })
+                else if(model_selected) materials.push(model_selected)         
             });
 
             materials_selected.value = materials
+        }
+
+        function formatModel(){
+            return materials_selected.value?.length ? materials_selected.value.map(m => ({installation_material_id:m.id,number_of_packages:m.number,quantity_of_packages:m.quantity})) : []      
         }
 
         getMaterials()
@@ -107,11 +121,11 @@ export default {
         }, { immediate: true })
 
         watch(() => local_material_ids.value, (v) => {
-            emit('update:materials_ids',v)
-            console.log('aqui',v?.length);
-            if(v?.length >= 1) setSelected()
-
-        }, { immediate: true })
+            setSelected()
+        })
+        watch(() => materials_selected.value, (v) => {
+            emit('update:materials_ids',formatModel())
+        }, { immediate: true, deep: true })
 
         return {
             options,

@@ -1,12 +1,8 @@
 <template>
     <div class="row">
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled" apiName="carrier_data.name"
-            class="col-md-6 col-12" :model-value="name" map-options :options="options" @filter="filterFn" outlined
-            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Nombre" hide-selected />
-
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.last_name" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="last_name"
-            @update:model-value="$emit('update:last_name', $event)" type="text" label="Apellido" />
+        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled" apiName="carrier_data.business_name"
+            class="col-md-6 col-12" :model-value="business_name" map-options :options="options" @filter="filterFn" outlined
+            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
 
         <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.nif" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
@@ -52,11 +48,7 @@ export default {
     components: { AddressSelectV2, QuInputValidation, QuSelectValidation },
     props: {
         formRef: {},
-        name: {
-            type: String,
-            default: null
-        },
-        last_name: {
+        business_name: {
             type: String,
             default: null
         },
@@ -112,7 +104,7 @@ export default {
                 data_options.value = res?.data?.data ? res.data.data.map(op => {
                     return {
                         value: op,
-                        label: op.name,
+                        label: op.business_name ?? '',
                         id: op.id
                     }
                 }) : [];
@@ -128,14 +120,14 @@ export default {
             const index = data_options.value.findIndex(op => op.label.toLowerCase() == needle)
             if (index >= 0) delivery_selected.value = data_options.value[index]
             else {
-                emit('update:name', val)
+                emit('update:business_name', val)
                 // name_value.value = val
                 delivery_selected.value = null
             }
         }
 
         function resetSelected() {
-            const k = ['last_name', 'nif', 'phone_number', 'address']
+            const k = ['nif', 'phone_number', 'address']
             console.log(k, delivery_selected.value);
             k.forEach(k => {
                 emit('update:' + k, null)
