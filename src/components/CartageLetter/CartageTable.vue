@@ -5,11 +5,13 @@
                 @click="generate" />
             <q-btn v-if="role == 'business'" color="primary" label="Agregar" @click="showAdd = true" />
         </table-header>
-        <q-table :visible-columns="visibleColumns" :loading="loading" table-class="table" table-header-class="thead-light" :rows="data" :columns="columns"
-            row-key="id">
+        <q-table :visible-columns="visibleColumns" :loading="loading" table-class="table"
+            table-header-class="thead-light" :rows="data" :columns="columns" row-key="id">
             <template v-slot:body-cell-status="props">
                 <q-td :props="props">
-                    <q-badge class="text-capitalize" rounded :color="getStatusColor(props.row.status)" v-if="props.row.status" :label="role != 'business' && props.row.status == 'EN REVISION' ? 'PENDIENTE' : props.row.status" />
+                    <q-badge class="text-capitalize" rounded :color="getStatusColor(props.row.status)"
+                        v-if="props.row.status"
+                        :label="role != 'business' && props.row.status == 'EN REVISION' ? 'PENDIENTE' : props.row.status" />
                 </q-td>
             </template>
             <template v-slot:body-cell-actions="props">
@@ -24,15 +26,18 @@
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReview(props.row.id)" v-if="role == 'business' && !props.row.review && type_for != 'carretera'">
+                                @click="toReview(props.row.id)"
+                                v-if="role == 'business' && !props.row.review && type_for != 'carretera'">
                                 <q-item-section>
                                     <q-item-label>{{ reviewText }}</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReviewDetail(props.row.id)" v-if="props.row.review && type_for != 'carretera'">
+                                @click="toReviewDetail(props.row.id)"
+                                v-if="props.row.review && type_for != 'carretera'">
                                 <q-item-section>
-                                    <q-item-label>{{role != 'business' ? reviewText : 'Detalle revisión'}}</q-item-label>
+                                    <q-item-label>{{ role != 'business' ? reviewText : 'Detalle revisión' }}
+                                    </q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
@@ -41,10 +46,10 @@
                                     <q-item-label>Ver</q-item-label>
                                 </q-item-section>
                             </q-item>
-                            <q-item disable style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="openRoad()" v-else>
+                            <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+                                @click="generateRoad(props.row?.print_url)" v-else-if="role == 'business'">
                                 <q-item-section>
-                                    <q-item-label>Ver</q-item-label>
+                                    <q-item-label>Generar PDF</q-item-label>
                                 </q-item-section>
                             </q-item>
                         </q-list>
@@ -54,7 +59,7 @@
         </q-table>
 
         <q-dialog v-model="showAdd" persistent>
-            <q-card :style="{'min-width': type_for == 'carretera' ? '80vw' :'60vw'}">
+            <q-card :style="{ 'min-width': type_for == 'carretera' ? '80vw' : '60vw' }">
                 <q-card-section>
                     <cartage-form :tab="type_for" :modalMode="true" @close="showAdd = false"
                         @saved="showAdd = false, getData()" />
@@ -62,7 +67,8 @@
             </q-card>
         </q-dialog>
 
-        <cartage-review v-if="showDetail" @reload="getData()" :cartage_review_id="cartage_review_id" v-model="showDetail"/>
+        <cartage-review v-if="showDetail" @reload="getData()" :cartage_review_id="cartage_review_id"
+            v-model="showDetail" />
     </div>
 </template>
 <script>
@@ -76,6 +82,7 @@ import { Notify } from 'quasar'
 import { moment } from '../../boot/plugins'
 import { useStore } from 'vuex'
 import CartageReview from './CartageReview.vue'
+import functions from '../../utils/functions'
 
 export default {
     components: { TableHeader, CartageForm, CartageReview },
@@ -168,7 +175,7 @@ export default {
                 name: 'materials_count',
                 label: 'Mercancías peligrosas',
                 align: 'center',
-                field: row => (row?.materials.map(m=>m.name)).join(', ') ?? '',
+                field: row => (row?.materials.map(m => m.name)).join(', ') ?? '',
                 // field: row => row?.materials_count ?? 0,
                 // format: val => `${val}`,
                 sortable: true
@@ -202,14 +209,14 @@ export default {
             let visible = [];
             if (role.value == 'business') {
                 visible = all.filter(a => !['business'].includes(a))
-            }else{
+            } else {
                 visible = all
             }
 
             if (props.type_for == 'carretera') {
-                visible = visible.filter(a => !['description','date','status'].includes(a))
-            }else{
-                visible = visible.filter(a => !['destinatary','carrier','loader','materials_count'].includes(a))
+                visible = visible.filter(a => !['description', 'date', 'status'].includes(a))
+            } else {
+                visible = visible.filter(a => !['destinatary', 'carrier', 'loader', 'materials_count'].includes(a))
             }
             return visible;
         })
@@ -276,6 +283,21 @@ export default {
             window.open(generateUrl.value, '_blank').focus();
         }
 
+        async function generateRoad(url) {
+            try {
+                const rep = await modelService.api({ url });
+                const b64 = rep.data.data;
+                const fileUrl = await functions.formatDoc(b64);
+                window.open(fileUrl);
+            } catch (err) {
+                console.error(err);
+                Notify.create({
+                    message: 'Ocurrio un error al generar el pdf',
+                    color: 'negative'
+                })
+            }
+        }
+
         function toReviewDetail(id = null) {
             showDetail.value = true
             cartage_review_id.value = id
@@ -337,6 +359,7 @@ export default {
             cartage_review_id,
             visibleColumns,
 
+            generateRoad,
             getStatusColor,
             generate,
             getData,
