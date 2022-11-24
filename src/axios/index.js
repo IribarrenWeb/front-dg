@@ -37,7 +37,7 @@ axios.interceptors.response.use(function(response) {
     // Do something with response data
     return response;
 }, function(error) {
-    const status = error.response.status;
+    const status = error.response?.status;
     if (status == 401) {
         store.dispatch('logout');
     } else if (status == 422 && error?.response?.data?.errors) {
