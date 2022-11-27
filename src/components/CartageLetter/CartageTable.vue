@@ -53,7 +53,7 @@
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="generateRoad(props.row?.print_url)" v-if="role == 'business'">
+                                @click="generateRoad(props.row?.print_url)" v-if="role == 'business' && type_for == 'carretera'">
                                 <q-item-section>
                                     <q-item-label>Generar PDF</q-item-label>
                                 </q-item-section>
