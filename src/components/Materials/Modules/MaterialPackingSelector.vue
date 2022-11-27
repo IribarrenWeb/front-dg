@@ -15,7 +15,6 @@ export default {
             description: "Input value",
             default: '',
         },
-
     },
     setup(props) {
         const options = ref([])

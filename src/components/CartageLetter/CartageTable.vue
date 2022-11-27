@@ -27,27 +27,33 @@
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="toReview(props.row.id)"
-                                v-if="role == 'business' && !props.row.review && type_for != 'carretera'">
+                                v-if="role == 'business' && !props.row.review && props.row?.document?.public_url">
                                 <q-item-section>
-                                    <q-item-label>{{ reviewText }}</q-item-label>
+                                    <q-item-label>{{ type_for == 'carretera' ? 'Solicitar revisión' : reviewText }}</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="toReviewDetail(props.row.id)"
-                                v-if="props.row.review && type_for != 'carretera'">
+                                v-if="props.row.review">
                                 <q-item-section>
-                                    <q-item-label>{{ role != 'business' ? reviewText : 'Detalle revisión' }}
+                                    <q-item-label>{{ role != 'business' ? type_for == 'carretera' ? 'Revisión' : reviewText : 'Detalle revisión' }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="open(props.row?.document?.public_url)" v-if="type_for != 'carretera'">
+                                @click="open(props.row?.document?.public_url)" v-if="props.row?.document?.public_url">
                                 <q-item-section>
-                                    <q-item-label>Ver</q-item-label>
+                                    <q-item-label>Ver documento</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="generateRoad(props.row?.print_url)" v-else-if="role == 'business'">
+                                @click="toLoadDocument(props.row?.id)" v-if="role == 'business' && !props.row?.document?.public_url && type_for == 'carretera'">
+                                <q-item-section>
+                                    <q-item-label>Cargar documento</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                            <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+                                @click="generateRoad(props.row?.print_url)" v-if="role == 'business'">
                                 <q-item-section>
                                     <q-item-label>Generar PDF</q-item-label>
                                 </q-item-section>
@@ -69,6 +75,9 @@
 
         <cartage-review v-if="showDetail" @reload="getData()" :cartage_review_id="cartage_review_id"
             v-model="showDetail" />
+
+        <cartage-road-document-form v-if="showDocumentRoad" v-model:show="showDocumentRoad" 
+            :cartage_id="cartage_letter_id" @reload="cartage_letter_id = null, getData()"/>
     </div>
 </template>
 <script>
@@ -83,9 +92,10 @@ import { moment } from '../../boot/plugins'
 import { useStore } from 'vuex'
 import CartageReview from './CartageReview.vue'
 import functions from '../../utils/functions'
+import CartageRoadDocumentForm from './Forms/CartageRoadDocumentForm.vue'
 
 export default {
-    components: { TableHeader, CartageForm, CartageReview },
+    components: { TableHeader, CartageForm, CartageReview, CartageRoadDocumentForm },
     props: {
         type_for: {
             type: String,
@@ -102,7 +112,10 @@ export default {
             return store.getters.ROLE;
         });
         const showDetail = ref(false)
+        const showDocumentRoad = ref(false)
         const cartage_review_id = ref(null)
+        const cartage_letter_id = ref(null)
+        const document_review = ref({})
         const prefix_review_text = computed(() => role.value == 'business' ? 'Asesor' : 'Revisión')
         const reviewText = computed(() => props.type_for == 'maritimas' ? prefix_review_text.value + ' IMO' : prefix_review_text.value + ' IATA')
         const showAdd = ref(false);
@@ -214,7 +227,7 @@ export default {
             }
 
             if (props.type_for == 'carretera') {
-                visible = visible.filter(a => !['description', 'date', 'status'].includes(a))
+                visible = visible.filter(a => !['description', 'date'].includes(a))
             } else {
                 visible = visible.filter(a => !['destinatary', 'carrier', 'loader', 'materials_count'].includes(a))
             }
@@ -303,6 +316,11 @@ export default {
             cartage_review_id.value = id
         }
 
+        function toLoadDocument(id) {
+            showDocumentRoad.value = true
+            cartage_letter_id.value = id
+        }
+
         function open(url) {
             window.open(url, '_blank').focus();
         }
@@ -323,11 +341,18 @@ export default {
             loading.value = false
         }
 
-        async function toReview(id) {
+        async function toReview(id, isRoad = false) {
             loading.value = true
             try {
-                const data = {
-                    cartage_letter_id: id,
+                let data = new FormData();
+                data.append('cartage_letter_id', id)
+                if (document_review.value && isRoad) data.append('document',document_review.value)
+                else if(isRoad) {
+                    Notify.create({
+                        message: 'El documento es requerido',
+                        color: 'negative'
+                    })
+                    return
                 }
 
                 await modelService.apiNoLoading({ url: `cartage-review`, method: 'post', data })
@@ -358,7 +383,11 @@ export default {
             showDetail,
             cartage_review_id,
             visibleColumns,
+            document_review,
+            cartage_letter_id,
+            showDocumentRoad,
 
+            toLoadDocument,
             generateRoad,
             getStatusColor,
             generate,

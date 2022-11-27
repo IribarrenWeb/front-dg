@@ -153,6 +153,7 @@
 					<employee-general-data
 						:form_id="id"
 						custom_key="responsible"
+						:isResponsible="true"
 						v-model:name="installations[id].responsible.name"
 						v-model:last_name="installations[id].responsible.last_name"
 						v-model:phone_number="installations[id].responsible.phone_number"

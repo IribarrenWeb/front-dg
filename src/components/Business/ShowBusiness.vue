@@ -99,7 +99,7 @@
 				</div>
 			</template>
             <div class="row mx-0 justify-content-end">
-                <base-button v-if="canUpdate || profile" type="default" :disabled="!meta.valid || !canUpdate" nativeType="submit"
+                <base-button v-if="canUpdate || profile" type="default" nativeType="submit"
 					>Actualizar</base-button
 				>
                 <base-button class="ml-2" type="default" @click="currentStep++" v-if="currentStep !== 2 && !canUpdate && !profile" 

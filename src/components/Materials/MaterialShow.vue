@@ -29,7 +29,8 @@
 					data-bs-placement="top"
 					:title="material.material.denomination_name"
 				>
-					{{ denomination }}
+					<!-- {{ denomination }} -->
+					{{ material.material.denomination_name }}
 				</span>
 			</div>
 		</div>
@@ -75,9 +76,10 @@
 								<span
 									data-bs-toggle="tooltip"
 									data-bs-placement="top"
-									:title="material.material.denomination_name"
+									:title="material?.material?.denomination_name"
 								>
 									{{ denomination }}
+									<!-- {{ material.material?.denomination_name }} -->
 								</span>
 							</td>
 							<td>{{ material.material.class.code }}</td>

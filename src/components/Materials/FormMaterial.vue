@@ -126,11 +126,11 @@
 								label="volumen del Almacenamiento" v-model="model.quantity" />
 						</base-field>
 					</div>
-					<div class="col-lg-6">
+					<!-- <div class="col-lg-6">
 						<base-field name="quantity" label="Empaque de material">
 							<material-packing-selector v-model="model.material_packing_id"/>
 						</base-field>
-					</div>
+					</div> -->
 				</div>
 			</template>
 

@@ -85,8 +85,8 @@
                     <div class="q-px-md q-gutter-md">
                         <q-btn :loading="loading" padding="10px 20px" flat label="Cancelar" type="reset" color="primary"
                             v-close-popup />
-                        <q-btn :loading="loading" v-if="role !== 'business' && cartage?.status == 'EN REVISION'"
-                            padding="10px 20px" outline @click="action(0)" label="Rechazar" color="primary" />
+                        <!-- <q-btn :loading="loading" v-if="role !== 'business' && cartage.type != 'carretera' && cartage?.status == 'EN REVISION'"
+                            padding="10px 20px" outline @click="action(0)" label="Rechazar" color="primary" /> -->
                         <q-btn :loading="loading" v-if="role !== 'business' && cartage?.status == 'EN REVISION'"
                             padding="10px 20px" label="Aceptar" @click="action(1)" color="primary" />
                         <q-btn :loading="loading" v-if="role == 'business' && cartage?.status == 'RECHAZADA'"
