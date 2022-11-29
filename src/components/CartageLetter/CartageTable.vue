@@ -4,6 +4,7 @@
             <q-btn v-if="type_for != 'carretera' && role == 'business'" outline color="primary" label="Generar"
                 @click="generate" />
             <q-btn v-if="role == 'business'" color="primary" label="Agregar" @click="showAdd = true" />
+            <q-btn v-if="role == 'business'" color="primary" label="Registros C/D/T" @click="showRecords = true" />
         </table-header>
         <q-table :visible-columns="visibleColumns" :loading="loading" table-class="table"
             table-header-class="thead-light" :rows="data" :columns="columns" row-key="id">
@@ -27,7 +28,7 @@
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="toReview(props.row.id)"
-                                v-if="role == 'business' && !props.row.review && props.row?.document?.public_url">
+                                v-if="role == 'business' && !props.row.review">
                                 <q-item-section>
                                     <q-item-label>{{ type_for == 'carretera' ? 'Solicitar revisión' : reviewText }}</q-item-label>
                                 </q-item-section>
@@ -78,6 +79,8 @@
 
         <cartage-road-document-form v-if="showDocumentRoad" v-model:show="showDocumentRoad" 
             :cartage_id="cartage_letter_id" @reload="cartage_letter_id = null, getData()"/>
+
+        <cartage-records-modal v-if="showRecords" v-model="showRecords" />
     </div>
 </template>
 <script>
@@ -93,9 +96,10 @@ import { useStore } from 'vuex'
 import CartageReview from './CartageReview.vue'
 import functions from '../../utils/functions'
 import CartageRoadDocumentForm from './Forms/CartageRoadDocumentForm.vue'
+import CartageRecordsModal from './CartageRecordsModal.vue'
 
 export default {
-    components: { TableHeader, CartageForm, CartageReview, CartageRoadDocumentForm },
+    components: { TableHeader, CartageForm, CartageReview, CartageRoadDocumentForm, CartageRecordsModal },
     props: {
         type_for: {
             type: String,
@@ -112,6 +116,7 @@ export default {
             return store.getters.ROLE;
         });
         const showDetail = ref(false)
+        const showRecords = ref(false)
         const showDocumentRoad = ref(false)
         const cartage_review_id = ref(null)
         const cartage_letter_id = ref(null)
@@ -375,6 +380,7 @@ export default {
             data,
             columns,
             loading,
+            showRecords,
             generateUrl,
             baseUrl,
             showAdd,

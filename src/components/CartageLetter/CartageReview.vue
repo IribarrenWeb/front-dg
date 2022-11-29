@@ -42,7 +42,7 @@
                                         KB</q-item-label>
                                 </q-item-section>
                                 <q-item-section side>
-                                    <q-btn :loading="loading" v-if="cartage.status == 'RECHAZADA' && role === 'business'" color="primary"
+                                    <q-btn :loading="loading" v-if="(cartage.status == 'RECHAZADA' && role === 'business') || (cartage.status == 'EN REVISION' && role !== 'business')" color="primary"
                                         icon="fa-regular fa-pen-to-square" flat @click="toChange = true" />
                                 </q-item-section>
                             </q-item>
@@ -58,6 +58,15 @@
                                 </template>
                             </q-file>
                         </div>
+                        <q-file v-else label="Documento (carta de porte)" :rules="[$rules.required]"
+                            :loading="loading" v-model="model.document" outlined accept=".pdf">
+                            <template v-slot:prepend>
+                                <q-icon name="attach_file" />
+                            </template>
+                            <template v-slot:after>
+                                <q-btn round dense v-if="model.document" @click="changeDoc" flat icon="upload" />
+                            </template>
+                        </q-file>
                     </div>
                 </q-card-section>
                 <q-separator spaced />
