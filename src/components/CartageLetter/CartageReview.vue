@@ -47,25 +47,25 @@
                                 </q-item-section>
                             </q-item>
                             <q-file v-else label="Documento (carta de porte)" :rules="[$rules.required]"
-                                :loading="loading" v-model="model.document" outlined accept=".pdf">
+                                :loading="loading" @update:model-value="changeDoc" v-model="model.document" outlined accept=".pdf">
                                 <template v-slot:prepend>
                                     <q-icon name="attach_file" />
                                 </template>
                                 <template v-slot:after>
-                                    <q-btn round dense v-if="model.document" @click="changeDoc" flat icon="upload" />
+                                    <!-- <q-btn round dense v-if="model.document" @click="changeDoc" flat icon="upload" /> -->
                                     <q-btn round dense @click="model.document = false, toChange = false" flat
                                         icon="fa-solid fa-xmark" />
                                 </template>
                             </q-file>
                         </div>
                         <q-file v-else label="Documento (carta de porte)" :rules="[$rules.required]"
-                            :loading="loading" v-model="model.document" outlined accept=".pdf">
+                            :loading="loading" @update:model-value="changeDoc" v-model="model.document" outlined accept=".pdf">
                             <template v-slot:prepend>
                                 <q-icon name="attach_file" />
                             </template>
-                            <template v-slot:after>
+                            <!-- <template v-slot:after>
                                 <q-btn round dense v-if="model.document" @click="changeDoc" flat icon="upload" />
-                            </template>
+                            </template> -->
                         </q-file>
                     </div>
                 </q-card-section>
@@ -188,15 +188,15 @@ export default {
             loading.value = false
         }
 
-        async function changeDoc() {
+        async function changeDoc(doc) {
             loading.value = true
             try {
                 const data = new FormData();
-                data.append('document',model.value.document)
+                data.append('document',doc)
                 
                 const res = await modelService.apiNoLoading({ url: `cartage-letter/${props.cartage_review_id}`, method: 'put', data, multipart: true })
                 cartage.value = res.data.data
-                model.value.document = null
+                doc = null
                 toChange.value = false
             } catch (err) {
                 console.log(err.response);

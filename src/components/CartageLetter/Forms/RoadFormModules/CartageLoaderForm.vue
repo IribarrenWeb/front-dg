@@ -1,13 +1,17 @@
 <template>
     <div class="row">
-        <div class="col-12 q-mb-md">
+        <div v-if="selectMode" class="col-12 q-mb-md">
             <q-toggle size="lg" label="Usar datos de expedidor" :model-value="same_loader"
                 @update:model-value="$emit('update:same_loader', $event)" color="primary" />
         </div>
 
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="business_name"
+        <qu-select-validation v-if="selectMode" :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="business_name"
             class="col-md-6 col-12" :model-value="business_name" map-options :options="options" @filter="filterFn" outlined
             emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
+
+        <qu-input-validation v-else :readonly="isDisabled" :filled="isDisabled" apiName="business_name" class="col-md-6 col-12"
+            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="business_name"
+            @update:model-value="$emit('update:business_name', $event)" type="text" label="Razón Social" />
 
         <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="nif" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
@@ -37,6 +41,10 @@ export default {
     components: { AddressSelectV2, QuInputValidation, QuSelectValidation },
     props: {
         formRef: {},
+        selectMode: {
+            type: Boolean,
+            default: true,
+        },
         business_name: {
             type: String,
             default: null
@@ -122,10 +130,11 @@ export default {
             console.log(k, loader_selected.value);
             k.forEach(k => {
                 if (k == 'address' && loader_selected.value?.value.address) {
-                    const k_ad = keys(loader_selected.value?.value.address)
-                    k_ad.forEach(ad_k => {
-                        address_model.value[ad_k] = loader_selected.value.value.address[ad_k]
-                    });
+                    setAddress(loader_selected.value?.value?.address)
+                    // const k_ad = keys(loader_selected.value?.value.address)
+                    // k_ad.forEach(ad_k => {
+                    //     address_model.value[ad_k] = loader_selected.value.value.address[ad_k]
+                    // });
                 }
                 emit('update:' + k, loader_selected.value?.value[k])
             });
@@ -134,6 +143,15 @@ export default {
         getLoaders()
 
         address_model.value = functions.schemas('address')
+
+        function setAddress(model) {
+            const k_ad = keys(address_model.value)
+            k_ad.forEach(ad_k => {
+                if (ad_k in model) {
+                    address_model.value[ad_k] = model[ad_k]
+                }
+            });
+        }
 
         watch(() => address_model.value, (v) => {
             emit('update:address', v)
@@ -149,6 +167,7 @@ export default {
         }, { deep: true, immediate: true })
 
         watch(() => loader_selected.value, (v) => {
+            if (!props.selectMode) return
 
             if (v) setSelected()
             else resetSelected()
@@ -166,6 +185,18 @@ export default {
                 v.reset()
             }
         }, {immediate: true})
+
+        watch(() => props.selectMode, (v) => {
+            if (v) {
+                getLoaders()
+            }
+        }, { immediate: true })
+
+        watch(() => props.address, (v) => {
+            if (v && !props.selectMode) {
+                setAddress(v)
+            }
+        }, { immediate: true })
         
         return {
             address_model,

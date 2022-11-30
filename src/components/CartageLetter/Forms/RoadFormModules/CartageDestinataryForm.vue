@@ -1,8 +1,14 @@
 <template>
     <div class="row">
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled" apiName="business_name"
-            class="col-md-6 col-12" :model-value="business_name" map-options :options="options" @filter="filterFn" outlined
-            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
+        <qu-select-validation v-if="selectMode" :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled"
+            apiName="business_name" class="col-md-6 col-12" :model-value="business_name" map-options :options="options"
+            @filter="filterFn" outlined emit-value use-input fill-input :loading="loading" @input-value="setModel"
+            label="Razón Social" hide-selected />
+
+        <qu-input-validation v-else :readonly="isDisabled" :filled="isDisabled" apiName="business_name"
+            class="col-md-6 col-12" :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined
+            :model-value="business_name" @update:model-value="$emit('update:business_name', $event)" type="text"
+            label="Razón Social" />
 
         <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="nif" class="col-md-6 col-12"
             :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
@@ -32,6 +38,10 @@ export default {
     components: { AddressSelectV2, QuInputValidation, QuSelectValidation },
     props: {
         formRef: {},
+        selectMode: {
+            type: Boolean,
+            default: true,
+        },
         business_name: {
             type: String,
             default: null
@@ -71,7 +81,7 @@ export default {
 
         address_model.value = functions.schemas('address')
 
-        async function getLoaders() {
+        async function getData() {
             try {
                 const res = await modelService.apiNoLoading({ url: `cartage-destinatary` });
                 console.log(res);
@@ -119,17 +129,24 @@ export default {
             k.forEach(k => {
                 console.log(destinatary_selected.value?.value?.address);
                 if (k == 'address' && destinatary_selected.value?.value?.address) {
-                    const k_ad = keys(destinatary_selected.value?.value?.address)
-                    k_ad.forEach(ad_k => {
-                        address_model.value[ad_k] = destinatary_selected.value?.value?.address[ad_k]
-                    });
+                    setAddress(destinatary_selected.value?.value?.address)
+                    // const k_ad = keys(destinatary_selected.value?.value?.address)
+                    // k_ad.forEach(ad_k => {
+                    //     address_model.value[ad_k] = destinatary_selected.value?.value?.address[ad_k]
+                    // });
                 }
-                emit('update:' + k, destinatary_selected.value?.value[k])
+                // emit('update:' + k, destinatary_selected.value?.value[k])
             });
         }
 
-        getLoaders()
-
+        function setAddress(model) {
+            const k_ad = keys(address_model.value)
+            k_ad.forEach(ad_k => {
+                if (ad_k in model) {
+                    address_model.value[ad_k] = model[ad_k]
+                }
+            });
+        }
 
         watch(() => address_model.value, (v) => {
             emit('update:address', v)
@@ -146,6 +163,8 @@ export default {
 
         watch(() => destinatary_selected.value, (v) => {
 
+            if (!props.selectMode) return
+
             if (v) setSelected()
             else resetSelected()
 
@@ -161,6 +180,19 @@ export default {
         watch(() => props.formRef, (v) => {
             if (v) {
                 v.reset()
+            }
+        }, { immediate: true })
+
+
+        watch(() => props.selectMode, (v) => {
+            if (v) {
+                getData()
+            }
+        }, { immediate: true })
+
+        watch(() => props.address, (v) => {
+            if (v && !props.selectMode) {
+                setAddress(v)
             }
         }, { immediate: true })
 

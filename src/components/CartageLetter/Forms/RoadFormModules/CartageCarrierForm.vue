@@ -1,31 +1,22 @@
 <template>
     <div class="row">
-        <qu-select-validation :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled" apiName="carrier_data.business_name"
-            class="col-md-6 col-12" :model-value="business_name" map-options :options="options" @filter="filterFn" outlined
-            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
+        <qu-select-validation v-if="selectMode" :rules="[!isDisabled ? $rules.required() : true]" :filled="isDisabled"
+            apiName="carrier_data.business_name" class="col-md-6 col-12" :model-value="business_name" map-options
+            :options="options" @filter="filterFn" outlined emit-value use-input fill-input :loading="loading"
+            @input-value="setModel" label="Razón Social" hide-selected />
 
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.nif" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
-            @update:model-value="$emit('update:nif', $event)" type="text" label="NIF" />
-
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.phone_number" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="phone_number"
-            @update:model-value="$emit('update:phone_number', $event)" type="text" label="Numero de telefono" />
-
-        <!-- <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="driver_name" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="driver_name"
-            @update:model-value="$emit('update:driver_name', $event)" type="text" label="Nombre Conductor" />
-
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="driver_dni" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="driver_dni"
-            @update:model-value="$emit('update:driver_dni', $event)" type="text" label="DNI conductor" />
-
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="driver_registration_number"
+        <qu-input-validation v-else :readonly="isDisabled" :filled="isDisabled" apiName="business_name"
             class="col-md-6 col-12" :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined
-            :model-value="driver_registration_number"
-            @update:model-value="$emit('update:driver_registration_number', $event)" type="text"
-            label="Placa conductor" /> -->
+            :model-value="business_name" @update:model-value="$emit('update:business_name', $event)" type="text"
+            label="Razón Social" />
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.nif"
+            class="col-md-6 col-12" :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined
+            :model-value="nif" @update:model-value="$emit('update:nif', $event)" type="text" label="NIF" />
 
+        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="carrier_data.phone_number"
+            class="col-md-6 col-12" :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined
+            :model-value="phone_number" @update:model-value="$emit('update:phone_number', $event)" type="text"
+            label="Numero de telefono" />
 
         <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled" v-model:address="address_model.address"
             v-model:city="address_model.city" v-model:code="address_model.code"
@@ -48,6 +39,10 @@ export default {
     components: { AddressSelectV2, QuInputValidation, QuSelectValidation },
     props: {
         formRef: {},
+        selectMode: {
+            type: Boolean,
+            default: false,
+        },
         business_name: {
             type: String,
             default: null
@@ -97,7 +92,7 @@ export default {
         // const name_value = ref([])
         const isDisabled = computed(() => delivery_selected.value ? true : false)
 
-        async function getLoaders() {
+        async function getData() {
             try {
                 const res = await modelService.apiNoLoading({ url: `cartage-carrier` });
                 console.log(res);
@@ -145,18 +140,27 @@ export default {
             console.log(k, delivery_selected.value);
             k.forEach(k => {
                 if (k == 'address' && delivery_selected.value?.value?.address) {
-                    const k_ad = keys(delivery_selected.value?.value?.address)
-                    k_ad.forEach(ad_k => {
-                        address_model.value[ad_k] = delivery_selected.value.value?.address[ad_k]
-                    });
+                    setAddress(delivery_selected.value?.value?.address)
+                    // const k_ad = keys(delivery_selected.value?.value?.address)
+                    // k_ad.forEach(ad_k => {
+                    //     address_model.value[ad_k] = delivery_selected.value.value?.address[ad_k]
+                    // });
                 }
                 emit('update:' + k, delivery_selected.value?.value[k])
             });
         }
 
-        getLoaders()
-
         address_model.value = functions.schemas('address')
+
+        function setAddress(model) {
+            const k_ad = keys(address_model.value)
+            k_ad.forEach(ad_k => {
+                if (ad_k in model) {
+                    address_model.value[ad_k] = model[ad_k]
+                }
+            });
+        }
+
 
         watch(() => address_model.value, (v) => {
             emit('update:address', v)
@@ -172,6 +176,7 @@ export default {
         }, { deep: true, immediate: true })
 
         watch(() => delivery_selected.value, (v) => {
+            if (!props.selectMode) return
 
             if (v) setSelected()
             else resetSelected()
@@ -188,6 +193,18 @@ export default {
         watch(() => props.formRef, (v) => {
             if (v) {
                 v.reset()
+            }
+        }, { immediate: true })
+
+        watch(() => props.selectMode, (v) => {
+            if (v) {
+                getData()
+            }
+        }, { immediate: true })
+
+        watch(() => props.address, (v) => {
+            if (v && !props.selectMode) {
+                setAddress(v)
             }
         }, { immediate: true })
 
