@@ -1,13 +1,29 @@
 <template>
-    <div>
+    <div class="custom-table">
         <table-header :title="type_for">
             <q-btn v-if="type_for != 'carretera' && role == 'business'" outline color="primary" label="Generar"
                 @click="generate" />
             <q-btn v-if="role == 'business'" color="primary" label="Agregar" @click="showAdd = true" />
-            <q-btn v-if="role == 'business'" color="primary" label="Registros C/D/T" @click="showRecords = true" />
+            <q-btn v-if="(role == 'business' && type_for == 'carretera')" color="primary" label="Registros C/D/T"
+                @click="showRecords = true" />
         </table-header>
         <q-table :visible-columns="visibleColumns" :loading="loading" table-class="table"
             table-header-class="thead-light" :rows="data" :columns="columns" row-key="id">
+            <template v-slot:top>
+                <!-- <div class="row"> -->
+                <installation-filter-v-2 v-model="filters.installation_id" class="col q-mb-none" />
+                <business-filter-v-2 v-if="role != 'business'" v-model="filters.business_id" class="col q-mb-none" />
+                <cargate-filter-v-2 v-if="type_for == 'carretera'" label="Destinatario"
+                    v-model="filters.cartage_destinatary_id" class="col q-mb-none" />
+                <!-- </div> -->
+                <q-space class="d-none d-md-block" />
+                <q-btn color="primary" label="Limpiar" @click="clearFilters" />
+                <!-- <q-input borderless dense debounce="300" color="primary" v-model="filter">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                </q-input> -->
+            </template>
             <template v-slot:body-cell-status="props">
                 <q-td :props="props">
                     <q-badge class="text-capitalize" rounded :color="getStatusColor(props.row.status)"
@@ -27,17 +43,18 @@
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReview(props.row.id)"
-                                v-if="role == 'business' && !props.row.review">
+                                @click="toReview(props.row.id)" v-if="role == 'business' && !props.row.review">
                                 <q-item-section>
-                                    <q-item-label>{{ type_for == 'carretera' ? 'Solicitar revisión' : reviewText }}</q-item-label>
+                                    <q-item-label>{{ type_for == 'carretera' ? 'Solicitar revisión' : reviewText
+                                    }}</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReviewDetail(props.row.id)"
-                                v-if="props.row.review">
+                                @click="toReviewDetail(props.row.id)" v-if="props.row.review">
                                 <q-item-section>
-                                    <q-item-label>{{ role != 'business' ? type_for == 'carretera' ? 'Revisión' : reviewText : 'Detalle revisión' }}
+                                    <q-item-label>{{ role != 'business' ? type_for == 'carretera' ? 'Revisión' :
+                                            reviewText : 'Detalle revisión'
+                                    }}
                                     </q-item-label>
                                 </q-item-section>
                             </q-item>
@@ -48,13 +65,15 @@
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toLoadDocument(props.row?.id)" v-if="role == 'business' && !props.row?.document?.public_url && type_for == 'carretera'">
+                                @click="toLoadDocument(props.row?.id)"
+                                v-if="role == 'business' && !props.row?.document?.public_url && type_for == 'carretera'">
                                 <q-item-section>
                                     <q-item-label>Cargar documento</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="generateRoad(props.row?.print_url)" v-if="role == 'business' && type_for == 'carretera'">
+                                @click="generateRoad(props.row?.print_url)"
+                                v-if="role == 'business' && type_for == 'carretera'">
                                 <q-item-section>
                                     <q-item-label>Generar PDF</q-item-label>
                                 </q-item-section>
@@ -77,8 +96,8 @@
         <cartage-review v-if="showDetail" @reload="getData()" :cartage_review_id="cartage_review_id"
             v-model="showDetail" />
 
-        <cartage-road-document-form v-if="showDocumentRoad" v-model:show="showDocumentRoad" 
-            :cartage_id="cartage_letter_id" @reload="cartage_letter_id = null, getData()"/>
+        <cartage-road-document-form v-if="showDocumentRoad" v-model:show="showDocumentRoad"
+            :cartage_id="cartage_letter_id" @reload="cartage_letter_id = null, getData()" />
 
         <cartage-records-modal v-if="showRecords" v-model="showRecords" />
     </div>
@@ -88,7 +107,7 @@ import { ref } from '@vue/reactivity'
 import modelService from '../../store/services/model-service'
 import TableHeader from '../Utils/TableHeader.vue'
 import { baseUrl } from '../../axios'
-import { computed } from '@vue/runtime-core'
+import { computed, watch } from '@vue/runtime-core'
 import CartageForm from './CartageForm.vue'
 import { Notify } from 'quasar'
 import { moment } from '../../boot/plugins'
@@ -97,9 +116,13 @@ import CartageReview from './CartageReview.vue'
 import functions from '../../utils/functions'
 import CartageRoadDocumentForm from './Forms/CartageRoadDocumentForm.vue'
 import CartageRecordsModal from './CartageRecordsModal.vue'
+import InstallationFilterV2 from '../filters/InstallationFilterV2.vue'
+import { forEach, map } from 'lodash'
+import CargateFilterV2 from '../filters/CargateFilterV2.vue'
+import BusinessFilterV2 from '../filters/BusinessFilterV2.vue'
 
 export default {
-    components: { TableHeader, CartageForm, CartageReview, CartageRoadDocumentForm, CartageRecordsModal },
+    components: { TableHeader, CartageForm, CartageReview, CartageRoadDocumentForm, CartageRecordsModal, InstallationFilterV2, CargateFilterV2, BusinessFilterV2 },
     props: {
         type_for: {
             type: String,
@@ -121,6 +144,12 @@ export default {
         const cartage_review_id = ref(null)
         const cartage_letter_id = ref(null)
         const document_review = ref({})
+        const filters = ref({
+            installation_id: null,
+            business_id: null,
+            cartage_destinatary_id: null,
+            cartage_carrier_id: null
+        })
         const prefix_review_text = computed(() => role.value == 'business' ? 'Asesor' : 'Revisión')
         const reviewText = computed(() => props.type_for == 'maritimas' ? prefix_review_text.value + ' IMO' : prefix_review_text.value + ' IATA')
         const showAdd = ref(false);
@@ -267,8 +296,15 @@ export default {
             loading.value = true
             try {
                 const type = props.type_for ? props.type_for?.replace('s', '') : null
+
+                let dataFilters = [];
+
+                forEach(filters.value, (v, k) => {
+                    if (v) dataFilters[k] = v;
+                })
                 const where = JSON.stringify({
                     type: type,
+                    ...dataFilters
                     // installation_id: props.installation_id
                 })
                 const includes_count = JSON.stringify([
@@ -346,13 +382,22 @@ export default {
             loading.value = false
         }
 
+        function clearFilters() {
+            filters.value = {
+                installation_id: null,
+                business_id: null,
+                cartage_destinatary_id: null,
+                cartage_carrier_id: null
+            }
+        }
+
         async function toReview(id, isRoad = false) {
             loading.value = true
             try {
                 let data = new FormData();
                 data.append('cartage_letter_id', id)
-                if (document_review.value && isRoad) data.append('document',document_review.value)
-                else if(isRoad) {
+                if (document_review.value && isRoad) data.append('document', document_review.value)
+                else if (isRoad) {
                     Notify.create({
                         message: 'El documento es requerido',
                         color: 'negative'
@@ -376,6 +421,8 @@ export default {
 
         getData();
 
+        watch(() => filters.value, (v) => getData(), { deep: true })
+
         return {
             data,
             columns,
@@ -392,6 +439,8 @@ export default {
             document_review,
             cartage_letter_id,
             showDocumentRoad,
+            filters,
+            clearFilters,
 
             toLoadDocument,
             generateRoad,
@@ -406,3 +455,10 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.custom-table .q-table__top {
+    background-color: #f6f9fc;
+    color: #8898aa;
+}
+</style>

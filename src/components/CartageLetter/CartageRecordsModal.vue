@@ -9,13 +9,32 @@
                 </q-tabs>
                 <q-separator spaced />
                 <!-- <pre>{{records_models[tab]}}</pre> -->
-                <q-btn color="primary" v-if="record_id" class="q-ml-md" flat icon="fa-solid fa-arrow-left" label="Volver" @click="reset"/>
-                <q-btn color="primary" v-if="(!newRecord && !record_id)" class="q-ml-auto" flat icon="fa-solid fa-plus" label="Agregar" @click="handleAdd"/>
-                <q-table class="record-table" :loading="loading" v-if="(!record_id && !newRecord)" :rows="data" :columns="columns"
-                    row-key="id">
+                <q-btn color="primary" v-if="record_id" class="q-ml-md" flat icon="fa-solid fa-arrow-left"
+                    label="Volver" @click="reset" />
+
+                <q-table class="record-table" :loading="loading" v-if="(!record_id && !newRecord)" :rows="data"
+                    :columns="columns" row-key="id">
+                    <template v-slot:top>
+                        <q-space />
+                        <q-btn color="primary" v-if="(!newRecord && !record_id)" class="q-ml-auto" flat
+                            icon="fa-solid fa-plus" label="Agregar" @click="handleAdd" />
+                    </template>
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props">
-                            <q-btn color="primary" flat dense icon="fa-regular fa-pen-to-square" @click="handleSelect(props.row.id)" />
+
+                            <q-btn color="primary" flat dense icon="fa-regular fa-pen-to-square"
+                                @click="handleSelect(props.row.id)">
+                                <q-tooltip>
+                                    Editar
+                                </q-tooltip>
+                            </q-btn>
+
+                            <q-btn color="primary" outline flat dense icon="fa-regular fa-trash-can"
+                                @click="destroy(props.row.id)">
+                                <q-tooltip>
+                                    Eliminar
+                                </q-tooltip>
+                            </q-btn>
                         </q-td>
                     </template>
                 </q-table>
@@ -48,7 +67,7 @@
             </q-card-section>
             <q-card-actions align="right">
                 <q-btn flat label="Cerrar" color="primary" v-close-popup />
-                <q-btn flat label="Guardar" color="primary" @click="saveChanges" />
+                <q-btn flat label="Guardar" v-if="(record_data?.id || newRecord)" color="primary" @click="saveChanges" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -57,7 +76,7 @@
 <script>
 import { ref } from '@vue/reactivity'
 import modelService from '../../store/services/model-service'
-import { Notify } from 'quasar'
+import { Dialog, Notify } from 'quasar'
 import { computed, watch } from '@vue/runtime-core'
 import functions from '../../utils/functions'
 import { keys } from 'lodash'
@@ -158,7 +177,7 @@ export default {
         async function saveChanges() {
             loading.value = true
             try {
-                const method = newRecord.value && !record_id.value ? 'POST' : 'PUT' 
+                const method = newRecord.value && !record_id.value ? 'POST' : 'PUT'
                 let url = `${endpoint.value}`
 
                 if (method == 'PUT') {
@@ -178,7 +197,39 @@ export default {
             loading.value = false
         }
 
-        function handleAdd(){
+        async function destroy(id) {
+
+            Dialog.create({
+                title: 'Esta seguro de eliminar el registro',
+                ok: {
+                    label: 'Eliminar',
+                },
+                cancel: {
+                    label: 'Cancelar'
+                }
+            })
+                .onOk(async () => {
+                    loading.value = true
+                    try {
+                        let url = `${endpoint.value}/${id}`
+                        await modelService.apiNoLoading({ url: url, method: 'DELETE' })
+                        // reset()
+                        getRecords()
+                    } catch (err) {
+                        loading.value = false
+                        console.log(err?.response, err);
+                        const message = err?.response?.data?.message ?? 'No se pudo eliminar el registro'
+                        Notify.create({
+                            message: message,
+                            color: 'negative'
+                        })
+                    }
+                    loading.value = false
+                })
+
+        }
+
+        function handleAdd() {
             newRecord.value = true
         }
 
@@ -235,12 +286,14 @@ export default {
             data,
             record_id,
             records_models,
+            record_data,
+            newRecord,
+
             handleSelect,
             saveChanges,
             reset,
-            record_data,
-            newRecord,
-            handleAdd
+            handleAdd,
+            destroy
         }
     }
 }
