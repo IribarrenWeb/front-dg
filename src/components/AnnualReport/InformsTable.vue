@@ -128,19 +128,13 @@
 			>
 			</base-pagination>
 
-			<modal
-				v-if="this.modal"
-				v-model:show="this.modal"
-				action="generar"
-				modalClasses="modal-xxl"
-				model="informe anual"
-			>
-				<report-show
-					@reload="index(page)"
-					@close="modal = false"
-					:report_id="report_id"
-				></report-show>
-			</modal>
+			<report-show
+				v-if="modal"
+				v-model="modal"
+				@reload="index(page)"
+				@close="modal = false"
+				:report_id="report_id"
+			></report-show>
 		</div>
 	</div>
 </template>

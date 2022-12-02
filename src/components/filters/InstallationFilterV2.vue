@@ -19,8 +19,9 @@ export default {
 		modelValue: {}
 	},
 	setup(props, { emit }) {
-		const installations = ref({});
+		const installations = ref([]);
 		const data = computed(() => {
+			if (installations.value?.length < 1) return 
 			return installations.value.map((p) => {
 				return {
 					label: p.name,

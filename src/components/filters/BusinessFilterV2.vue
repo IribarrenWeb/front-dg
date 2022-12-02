@@ -10,6 +10,7 @@
 <script>
 import { ref, computed } from "vue";
 import service from "../../store/services/model-service";
+import { map } from 'lodash';
 
 export default {
 	inheritAttrs: true,
@@ -21,7 +22,9 @@ export default {
 	setup(props, { emit }) {
 		const business = ref({});
 		const data = computed(() => {
-			return business.value.map((p) => {
+			if (business.value?.length < 1) return 
+
+			return map(business.value,(p) => {
 				return {
 					label: p.user?.full_name,
 					value: p.id,

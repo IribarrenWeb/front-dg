@@ -8,6 +8,7 @@
 	</q-select>
 </template>
 <script>
+import { map } from "lodash";
 import { ref, computed } from "vue";
 import service from "../../store/services/model-service";
 
@@ -28,7 +29,9 @@ export default {
 			return `cartage-${props.type_for}`;
 		})
 		const data = computed(() => {
-			return datas.value.map((p) => {
+			if (datas.value?.length < 1) return 
+
+			return map(datas.value,(p) => {
 				return {
 					label: p.business_name,
 					value: p.id,
