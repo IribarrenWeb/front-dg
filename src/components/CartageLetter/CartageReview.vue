@@ -6,7 +6,7 @@
                     <div class="q-px-md">
                         <span class="h3">Carta de porte
                             <!-- <span class="text-uppercase q-mr-sm">{{ cartage?.name }}</span> -->
-                            <q-chip :label="cartage?.status ?? 'Revision'" />
+                            <q-chip v-if="cartage?.status" :label="cartage?.status ?? 'Revision'" />
                         </span>
                     </div>
                 </q-card-section>
@@ -42,24 +42,27 @@
                                         KB</q-item-label>
                                 </q-item-section>
                                 <q-item-section side>
-                                    <q-btn :loading="loading" v-if="(cartage.status == 'RECHAZADA' && role === 'business') || (cartage.status == 'EN REVISION' && role !== 'business')" color="primary"
-                                        icon="fa-regular fa-pen-to-square" flat @click="toChange = true" />
+                                    <q-btn :loading="loading"
+                                        v-if="(cartage.status == 'RECHAZADA' && role === 'business') || (cartage.status == 'EN REVISION' && role !== 'business')"
+                                        color="primary" icon="fa-regular fa-pen-to-square" flat
+                                        @click="toChange = true" />
                                 </q-item-section>
                             </q-item>
                             <q-file v-else label="Documento (carta de porte)" :rules="[$rules.required]"
-                                :loading="loading" @update:model-value="changeDoc" v-model="model.document" outlined accept=".pdf">
+                                :loading="loading" @update:model-value="changeDoc" v-model="model.document" outlined
+                                accept=".pdf">
                                 <template v-slot:prepend>
                                     <q-icon name="attach_file" />
                                 </template>
                                 <template v-slot:after>
                                     <!-- <q-btn round dense v-if="model.document" @click="changeDoc" flat icon="upload" /> -->
-                                    <q-btn round dense @click="model.document = false, toChange = false" flat
+                                    <q-btn round v-if="(cartage.status != 'APROBADA')" dense @click="model.document = false, toChange = false" flat
                                         icon="fa-solid fa-xmark" />
                                 </template>
                             </q-file>
                         </div>
-                        <q-file v-else label="Documento (carta de porte)" :rules="[$rules.required]"
-                            :loading="loading" @update:model-value="changeDoc" v-model="model.document" outlined accept=".pdf">
+                        <q-file v-else-if="cartage.status != 'APROBADA'" label="Documento (carta de porte)"  :rules="[$rules.required]" :loading="loading"
+                            @update:model-value="changeDoc" v-model="model.document" outlined accept=".pdf">
                             <template v-slot:prepend>
                                 <q-icon name="attach_file" />
                             </template>
@@ -70,8 +73,12 @@
                     </div>
                 </q-card-section>
                 <q-separator spaced />
-                <q-card-section>
-                    <div class="q-px-md">
+                <q-card-section v-if="cartage.type == 'carretera'">
+                    <cartage-road-details-module class="q-px-md" :cartage="cartage" />
+                </q-card-section>
+                <q-separator spaced v-if="(cartage?.review?.id && cartage?.status != 'APROBADA')"/>
+                <q-card-section v-if="(cartage?.review?.id && cartage?.status != 'APROBADA')">
+                    <div class="q-px-md" >
                         <span class="h4">Observaciones</span>
                         <div v-if="role != 'business' && cartage?.status == 'EN REVISION'">
                             <q-editor class="q-mt-sm" v-model="model.observation" min-height="5rem" />
@@ -114,8 +121,9 @@ import QuInputValidation from '../core_components/FormQuasar/QuInputValidation.v
 import { Notify } from 'quasar'
 import { computed, watch } from '@vue/runtime-core'
 import { useStore } from 'vuex'
+import CartageRoadDetailsModule from './Modules/CartageRoadDetailsModule.vue'
 export default {
-    components: { QuInputValidation },
+    components: { QuInputValidation, CartageRoadDetailsModule },
     inheritAttrs: true,
     props: {
         cartage_review_id: {
@@ -145,6 +153,7 @@ export default {
                     'installation',
                     'document',
                     'business.user',
+                    'materials',
                     'review'
                 ])
                 const res = await modelService.apiNoLoading({ url: `cartage-letter/${props.cartage_review_id}?includes=${includes}` })
@@ -192,8 +201,8 @@ export default {
             loading.value = true
             try {
                 const data = new FormData();
-                data.append('document',doc)
-                
+                data.append('document', doc)
+
                 const res = await modelService.apiNoLoading({ url: `cartage-letter/${props.cartage_review_id}`, method: 'put', data, multipart: true })
                 cartage.value = res.data.data
                 doc = null

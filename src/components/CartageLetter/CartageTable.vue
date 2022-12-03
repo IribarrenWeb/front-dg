@@ -50,12 +50,14 @@
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
-                                @click="toReviewDetail(props.row.id)" v-if="props.row.review">
+                                @click="toReviewDetail(props.row.id)">
                                 <q-item-section>
-                                    <q-item-label>{{ role != 'business' ? type_for == 'carretera' ? 'Revisión' :
+                                    <!-- <q-item-label>{{ role != 'business' ? type_for == 'carretera' ? 'Revisión' :
                                             reviewText : 'Detalle revisión'
                                     }}
-                                    </q-item-label>
+                                    </q-item-label> -->
+
+                                    <q-item-label>Detalle</q-item-label>
                                 </q-item-section>
                             </q-item>
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
@@ -64,13 +66,13 @@
                                     <q-item-label>Ver documento</q-item-label>
                                 </q-item-section>
                             </q-item>
-                            <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+                            <!-- <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="toLoadDocument(props.row?.id)"
                                 v-if="role == 'business' && !props.row?.document?.public_url && type_for == 'carretera'">
                                 <q-item-section>
                                     <q-item-label>Cargar documento</q-item-label>
                                 </q-item-section>
-                            </q-item>
+                            </q-item> -->
                             <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="generateRoad(props.row?.print_url)"
                                 v-if="role == 'business' && type_for == 'carretera'">

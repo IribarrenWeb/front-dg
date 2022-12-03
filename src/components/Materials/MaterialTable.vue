@@ -8,15 +8,14 @@
 					</h3>
 				</div>
 				<div class="col text-right">
-					<base-button type="default" size="sm" @click="this.modal = true">Agregar</base-button>
+					<base-button type="default" size="sm" @click="modal = true">Agregar</base-button>
 				</div>
 			</div>
 		</div>
 
 		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container"
 			v-if="$store.state.is_business">
-			<installation-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('installation', $event)">
-			</installation-filter>
+			<installation-filter-v-2 v-model="filters.installation_id" class="col-4 q-mb-none" />
 			<!-- <select-filter
 				class="col-md-3"
 				placeholder="Mercancias peligrosas"
@@ -25,15 +24,14 @@
 				@updated="handleFilter('adr', $event)"
 			/> -->
 			<div class="col-md-2">
-				<base-button size="sm" @click="(params_filter = params), getMaterials(page), (clear = true)">Borrar
-					filtros</base-button>
+				<q-btn color="primary" label="Limpiar" @click="clearFilters" />
 			</div>
 		</div>
 		<div class="table-responsive">
 			<base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark' : ''"
 				:thead-classes="type === 'dark' ? 'thead-dark' : 'thead-light'" tbody-classes="list" :data="tableData">
 				<template v-slot:columns>
-					<th v-if="ROLE == 'business'">Instalación</th>
+					<th v-if="role == 'business'">Instalación</th>
 					<th>UN</th>
 					<th>Nombre</th>
 					<th>Operación</th>
@@ -46,7 +44,7 @@
 				</template>
 
 				<template v-slot:default="row">
-					<td v-if="ROLE == 'business'">{{ row.item?.installation.name }}</td>
+					<td v-if="role == 'business'">{{ row.item?.installation.name }}</td>
 					<td>
 						{{ row.item?.material.un_code }}
 					</td>
@@ -82,12 +80,12 @@
 				</template>
 			</base-table>
 
-			<base-pagination :perPage="this.metaData.perPage" :value="this.page" @changePage="handleChange($event)"
-				:total="this.metaData.total" align="center">
+			<base-pagination :perPage="metaData?.perPage" :value="page" @changePage="handleChange($event)"
+				:total="metaData.total" align="center">
 			</base-pagination>
 		</div>
 
-		<modal v-if="this.modal" modalClasses="modal-xxl" v-model:show="this.modal" model="mercancías">
+		<modal v-if="modal" modalClasses="modal-xxl" v-model:show="modal" model="mercancías">
 			<material-show @close="handleClose" :id="material_id" v-if="material_id != null"></material-show>
 			<form-material v-else :material="material" @close="handleClose"
 				@reload="getMaterials(page, installation_id)" :installation_id="installation_id" :residue="residue">
@@ -96,14 +94,19 @@
 	</div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { useStore } from 'vuex';
 import InstallationFilter from '../filters/InstallationFilter.vue';
 import service from "../../store/services/model-service";
 import MaterialShow from "./MaterialShow.vue";
 import { Notify } from 'quasar'
+import { ref } from '@vue/reactivity';
+import { computed } from '@vue/runtime-core';
+import { forEach, isEmpty } from 'lodash';
+import { swal } from '../../boot/plugins';
+import InstallationFilterV2 from '../filters/InstallationFilterV2.vue';
 
 export default {
-	components: { MaterialShow, InstallationFilter },
+	components: { MaterialShow, InstallationFilter, InstallationFilterV2 },
 	name: "material-table",
 	props: {
 		type: {
@@ -130,88 +133,117 @@ export default {
 			default: null
 		}
 	},
-	data() {
-		return {
-			material_id: null,
-			tableData: [],
-			metaData: {},
-			page: 1,
-			modal: false,
-			material: null,
-			params: "includes[]=material.class&includes[]=equipment&includes[]=material.packing&includes[]=documents&includes[]=installation&includes[]=operation",
-			params_filter: null,
-			clear: false
-		};
-	},
-	mounted() {
-		this.getMaterials(this.page, this.installation_id);
-	},
-	computed: {
-		...mapGetters(['ROLE'])
-	},
-	methods: {
-		async getMaterials(page = 1, id = null) {
+	setup(props) {
+		const store = useStore();
+		const role = computed(() => {
+			return store.getters.role;
+		});
+		const material_id = ref(null)
+		const tableData = ref([])
+		const metaData = ref({})
+		const page = ref(1)
+		const modal = ref(false)
+		const material = ref(null)
+		const clear = ref(false)
+		const filters = ref({
+			installation_id: null,
+			business_id: null,
+			is_residue: null
+		})
 
-			if (this.params_filter == null) {
-				this.params_filter = this.params
+		async function getMaterials(num_page = 1) {
+
+			const includes = JSON.stringify([
+				'material.class',
+				'equipment',
+				'material.packing',
+				'documents',
+				'installation',
+				'operation',
+			])
+
+			if (props.installation_id) {
+				filters.value.installation_id = props.installation_id
 			}
 
-			let params = this.params_filter;
-
-			if (id != null) {
-				params += "&installation_id=" + id;
-			}
-
-			if (this.residue == "false") {
-				params += "&is_residue=false";
+			if (props.residue == "false") {
+				filters.value.is_residue = 0
 			} else {
-				params += "&is_residue=true";
+				filters.value.is_residue = 1
 			}
 
-			const resp = await service.getIndex("material", page, params);
+			let dataFilters = [];
 
-			this.tableData = resp?.data?.data;
-			this.metaData = resp?.data?.meta?.page;
-			this.page = this?.metaData?.currentPage;
-		},
-		async handleChange(event) {
-			if (event == this.page) {
+			forEach(filters.value, (v, k) => {
+				if (v || v == 0) dataFilters[k] = v;
+			})
+
+			let where = JSON.stringify({
+				...dataFilters
+				// installation_id: props.installation_id
+			})
+
+			// const resp = await service.getIndex("material", num_page, params);
+			const res = await service.apiNoLoading({ url: `materials?page=${num_page}&wheres=${where}&includes_json=${includes}` })
+
+			tableData.value = res?.data?.data;
+			metaData.value = res?.data?.meta?.page;
+			page.value = metaData.value?.currentPage;
+		}
+
+		async function handleChange(event) {
+			if (event == page.value) {
 				return;
 			}
-			this.getMaterials(event, this.installation_id);
-		},
-		handleFilter(type = 'delegate', value) {
-			console.log(value, type);
-			if (!this.$empty(value) || value >= 1) {
-				this.params_filter += `&${type}_id=` + value
-				this.getMaterials(this.page)
-			} else {
-				this.params_filter = this.params
-				this.getMaterials(this.page)
+			getMaterials(event);
+		}
+
+		function clearFilters() {
+			filters.value = {
+				installation_id: null,
+				business_id: null,
+				cartage_destinatary_id: null,
+				cartage_carrier_id: null
 			}
-		},
-		handleView(id) {
-			(this.material_id = id), (this.modal = true);
-		},
-		handleEdit(material) {
-			this.material = material;
-			this.modal = true
-		},
-		handleClose() {
-			this.modal = false;
-			this.material_id = null;
-			this.material = null
-		},
-		async destroy(id) {
+		}
+
+		function handleFilter(type = 'delegate', value) {
+			console.log(value, type);
+			if (!isEmpty(value) || value >= 1) {
+				params_filter.value += `&${type}_id=` + value
+				getMaterials(page.value)
+			} else {
+				params_filter.value = params.value
+				getMaterials(page.value)
+			}
+		}
+
+		function handleView(id) {
+			(props.material_id = id), (modal.value = true);
+		}
+
+		function handleEdit(material) {
+			material.value = material;
+			modal.value = true
+		}
+
+		function handleClose() {
+			modal.value = false;
+			props.material_id = null;
+			material.value = null
+		}
+
+		async function destroy(id) {
 			try {
 				await service.destroy("material", id);
-				this.getMaterials(this.page, this.installation_id);
+				getMaterials(page.value, props.installation_id);
 			} catch (error) {
 				console.log(error);
 			}
-		},
-		async clone(id) {
-			const result = await this.$swal({
+		}
+
+		async function clone(id) {
+			const result = await new swal({
 				title: "¿Estas seguro de clonar este registro?",
 				icon: "question",
 				text: "Este registro se va a clonar.",
@@ -231,7 +263,7 @@ export default {
 			if (result) {
 				try {
 					await service.api({ url: "materials/clone/" + id });
-					this.getMaterials()
+					getMaterials()
 				} catch (err) {
 					Notify.create({
 						message: 'No se pudo clonar el registro',
@@ -240,6 +272,30 @@ export default {
 				}
 			}
 		}
+
+		getMaterials()
+
+		return {
+			material_id,
+			tableData,
+			metaData,
+			page,
+			modal,
+			material,
+			clear,
+			role,
+			filters,
+
+			getMaterials,
+			handleChange,
+			handleFilter,
+			handleView,
+			handleEdit,
+			handleClose,
+			destroy,
+			clearFilters,
+			clone,
+		};
 	},
 };
 </script>
