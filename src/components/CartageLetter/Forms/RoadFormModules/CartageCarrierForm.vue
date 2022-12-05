@@ -41,7 +41,7 @@ export default {
         formRef: {},
         selectMode: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         business_name: {
             type: String,

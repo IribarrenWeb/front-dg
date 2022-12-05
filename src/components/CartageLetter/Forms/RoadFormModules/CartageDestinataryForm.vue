@@ -135,7 +135,7 @@ export default {
                     //     address_model.value[ad_k] = destinatary_selected.value?.value?.address[ad_k]
                     // });
                 }
-                // emit('update:' + k, destinatary_selected.value?.value[k])
+                emit('update:' + k, destinatary_selected.value?.value[k])
             });
         }
 
