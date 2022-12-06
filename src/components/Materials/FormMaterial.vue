@@ -15,7 +15,7 @@
 			<template v-if="currentStep == 1">
 				<installation-select v-model="model.installation_id"></installation-select>
 				<div class="row border rounded border-light px-4 py-2">
-					<div class="col-lg-2">
+					<div class="col-lg-4">
 						<base-field name="is_residue" label="Tipo">
 							<select v-model="model_is_residue" class="form-control" :disabled="residue != null">
 								<option value="true" selected>Residuo ADR</option>
@@ -23,13 +23,13 @@
 							</select>
 						</base-field>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-4">
 						<base-field name="name" label="Nombre">
 							<field-validate type="text" class="form-control" name="name" rules="required" label="Nombre"
 								v-model="model.name" />
 						</base-field>
 					</div>
-					<div class="col-lg-3">
+					<div class="col-lg-4">
 						<base-field name="equipment_type_id" label="Depósito"
 							v-if="(update && equipments != null) || !update">
 							<field-validate as="select" class="form-control" name="equipment_type_id" rules="required"
@@ -40,7 +40,12 @@
 							</field-validate>
 						</base-field>
 					</div>
-					<div class="col-lg-4">
+					<div class="col-lg-4 flex items-center">
+						<!-- <base-field name="is_chemical" label="Es un material quimico"> -->
+							<q-checkbox :true-value="1" :false-value="0" :disable="update" v-model="model.is_chemical" label="Es un material químico" />
+						<!-- </base-field> -->
+					</div>
+					<div class="col-lg-8" v-if="!model.is_chemical">
 						<base-field name="material" label="UN">
 							<material-selector v-model="adr_material" :valueSelect="model_material" @edit="resetMaterial"/>
 							<div v-if="!model_material">
@@ -48,8 +53,8 @@
 							</div>
 						</base-field>
 					</div>
-					<div class="col-lg-12">
-						<div class="row">
+					<div class="col-lg-12 px-0">
+						<div class="row mx-0 px-0">
 							<div class="col-md-3">
 								<base-field name="operation_type_id" label="Tipo de operación"
 									v-if="(update && operations != null) || !update">
@@ -160,6 +165,7 @@ import MaterialSelector from './Modules/MaterialSelector.vue';
 import MaterialPackingSelector from './Modules/MaterialPackingSelector.vue';
 
 export default {
+	inheritAttrs: true,
 	mixins: [utils],
 	props: {
 		installation_id: {
@@ -209,6 +215,7 @@ export default {
 				quantity: "",
 				transported: "",
 				unit: 'TONELADAS',
+				is_chemical: 0,
 				is_residue: null,
 				is_dangerous: false,
 				material_packing_id: null,
@@ -236,7 +243,8 @@ export default {
 				base64: null,
 				file_name: null
 			};
-			this.original_material.adr_material_id = this.original_material.material.id
+
+			this.original_material.adr_material_id = this.original_material?.material?.id ?? null
 
 			this.model = this.$functions.copy(this.original_material)
 		}
@@ -337,7 +345,10 @@ export default {
 				if (this.update) {
 					await this.toUpdate()
 				} else if (this.currentStep === 2) {
-					const data = this.$functions.cleanData(this.model, ["material"], ["is_residue"]);
+					const data = this.$functions.cleanData(this.model, ["material"], ["is_residue","is_chemical"]);
+					
+					if (data.is_chemical) delete data.adr_material_id
+
 					await service.store("material", data);
 					resetForm();
 					this.$emit("close");

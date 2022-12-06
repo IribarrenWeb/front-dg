@@ -7,9 +7,9 @@
 					alt="is dangerous material"
 					width="75"
 				/>
-			<div class="d-flex align-content-center justify-center">
+			<div v-if="material?.material?.labels" class="d-flex align-content-center justify-center">
 				<img
-					v-for="label in material.material.labels"
+					v-for="label in material?.material?.labels"
 					:key="label.id"
 					class="rounded"
 					:src="label.url"
@@ -24,13 +24,14 @@
 					</h3>
 				</div>
 				<span
+					v-if="material.material?.denomination_name"
 					class="text-muted font-weight-light h6 col-12"
 					data-bs-toggle="tooltip"
 					data-bs-placement="top"
-					:title="material.material.denomination_name"
+					:title="material?.material?.denomination_name"
 				>
 					<!-- {{ denomination }} -->
-					{{ material.material.denomination_name }}
+					{{ material.material?.denomination_name }}
 				</span>
 			</div>
 		</div>
@@ -71,7 +72,7 @@
 							<th colspan="2" scope="row">GE</th>
 						</tr>
 						<tr>
-							<td>{{ material.material.un_code }}</td>
+							<td>{{ material?.material?.un_code ?? 'MATERIAL QUÍMICO' }}</td>
 							<td>
 								<span
 									data-bs-toggle="tooltip"
@@ -82,8 +83,8 @@
 									<!-- {{ material.material?.denomination_name }} -->
 								</span>
 							</td>
-							<td>{{ material.material.class.code }}</td>
-							<td colspan="2">{{ material.material.packing.code }}</td>
+							<td>{{ material.material?.class.code }}</td>
+							<td colspan="2">{{ material.material?.packing.code }}</td>
 						</tr>
 						<tr class="text-uppercase">
 							<th scope="row">Disposiciones</th>
@@ -92,10 +93,10 @@
 							<th colspan="2" scope="row">Peligro</th>
 						</tr>
 						<tr>
-							<td>{{ material.material.dispositions }}</td>
-							<td>{{ material.material.limited_quantities }}</td>
-							<td>{{ material.material.category_tunnel }}</td>
-							<td colspan="2">{{ material.material.danger }}</td>
+							<td>{{ material?.material?.dispositions }}</td>
+							<td>{{ material?.material?.limited_quantities }}</td>
+							<td>{{ material?.material?.category_tunnel }}</td>
+							<td colspan="2">{{ material?.material?.danger }}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -201,12 +202,12 @@
 		},
 		computed: {
 			denomination() {
-				return _.truncate(this.material.material.denomination_name, {
+				return _.truncate(this.material?.material?.denomination_name, {
 					length: 25,
 				});
 			},
             document(){
-                return _.isEmpty(this.material.documents) ? false : this.material.documents[0]
+                return _.isEmpty(this.material?.documents) ? false : this.material.documents[0]
             },
             dangerous_label(){
                 return baseUrl + '/labels/is_dangerous.jpg'

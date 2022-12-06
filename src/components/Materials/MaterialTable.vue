@@ -46,20 +46,20 @@
 				<template v-slot:default="row">
 					<td v-if="role == 'business'">{{ row.item?.installation.name }}</td>
 					<td>
-						{{ row.item?.material.un_code }}
+						{{ row.item?.material?.un_code ?? 'MATERIAL QUíMICO' }}
 					</td>
 					<td>{{ row.item?.name }}</td>
 					<td>{{ row.item?.operation?.name }}</td>
 					<td>
 						<span class="truncate-250">
-							{{ row.item?.material.denomination_name }}
+							{{ row.item?.material?.denomination_name ?? 'MATERIAL QUíMICO' }}
 						</span>
-						<q-tooltip>
+						<q-tooltip v-if="row.item?.material?.denomination_name">
 							{{ row.item?.material.denomination_name }}
 						</q-tooltip>
 					</td>
-					<td>{{ row.item?.material.class.code }}</td>
-					<td>{{ row.item?.material.packing.code }}</td>
+					<td>{{ row.item?.material?.class?.code }}</td>
+					<td>{{ row.item?.material?.packing?.code }}</td>
 					<td>{{ row.item?.equipment.name }}</td>
 					<td>{{ row.item?.quantity }}</td>
 					<td class="text-right">
@@ -85,12 +85,17 @@
 			</base-pagination>
 		</div>
 
-		<modal v-if="modal" modalClasses="modal-xxl" v-model:show="modal" model="mercancías">
-			<material-show @close="handleClose" :id="material_id" v-if="material_id != null"></material-show>
-			<form-material v-else :material="material" @close="handleClose"
-				@reload="getMaterials(page, installation_id)" :installation_id="installation_id" :residue="residue">
-			</form-material>
-		</modal>
+		<q-dialog v-model="modal" persistent full-width>
+			<q-card class="q-pa-lg full-width">
+				<q-card-section>
+					<material-show @close="handleClose" :id="material_id" v-if="material_id != null"></material-show>
+					<form-material class="pb-5" v-else :material="material" @close="handleClose"
+						@reload="getMaterials(page, installation_id)" :installation_id="installation_id"
+						:residue="residue">
+					</form-material>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
 	</div>
 </template>
 <script>
@@ -219,17 +224,18 @@ export default {
 		}
 
 		function handleView(id) {
-			(props.material_id = id), (modal.value = true);
+			material_id.value = id
+			modal.value = true;
 		}
 
-		function handleEdit(material) {
-			material.value = material;
+		function handleEdit(data) {
+			material.value = data;
 			modal.value = true
 		}
 
 		function handleClose() {
 			modal.value = false;
-			props.material_id = null;
+			material_id.value = null;
 			material.value = null
 		}
 
