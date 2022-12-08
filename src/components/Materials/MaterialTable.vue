@@ -13,19 +13,15 @@
 			</div>
 		</div>
 
-		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container"
-			v-if="$store.state.is_business">
-			<installation-filter-v-2 v-model="filters.installation_id" class="col-4 q-mb-none" />
-			<!-- <select-filter
-				class="col-md-3"
-				placeholder="Mercancias peligrosas"
-				v-model:clear="clear"
-				:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
-				@updated="handleFilter('adr', $event)"
-			/> -->
-			<div class="col-md-2">
-				<q-btn color="primary" label="Limpiar" @click="clearFilters" />
-			</div>
+		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row items-center q-col-gutter-sm filter-container">
+			<installation-filter-v-2 v-model="filters.installation_id" class="col q-mb-none"
+				v-if="$store.state.is_business" />
+			<text-filter-v-2 debounce="1000" outlined dense :loading="loading" type="number" class="col q-mb-none"
+				v-model="customFilters.un_code" label="UN" />
+			<text-filter-v-2 debounce="1000" outlined dense :loading="loading" type="text" class="col q-mb-none"
+				v-model="customFilters.name" label="Nombre" />
+			<q-space class="d-none d-md-block" />
+			<q-btn color="primary" label="Borrar" @click="clearFilters" />
 		</div>
 		<div class="table-responsive">
 			<base-table class="table align-items-center table-flush" :class="type === 'dark' ? 'table-dark' : ''"
@@ -105,13 +101,14 @@ import service from "../../store/services/model-service";
 import MaterialShow from "./MaterialShow.vue";
 import { Notify } from 'quasar'
 import { ref } from '@vue/reactivity';
-import { computed } from '@vue/runtime-core';
-import { forEach, isEmpty } from 'lodash';
+import { computed, watch } from '@vue/runtime-core';
+import { forEach, isEmpty, keys } from 'lodash';
 import { swal } from '../../boot/plugins';
 import InstallationFilterV2 from '../filters/InstallationFilterV2.vue';
+import TextFilterV2 from '../filters/TextFilterV2.vue';
 
 export default {
-	components: { MaterialShow, InstallationFilter, InstallationFilterV2 },
+	components: { MaterialShow, InstallationFilter, InstallationFilterV2, TextFilterV2 },
 	name: "material-table",
 	props: {
 		type: {
@@ -150,10 +147,16 @@ export default {
 		const modal = ref(false)
 		const material = ref(null)
 		const clear = ref(false)
+		const loading = ref(false)
 		const filters = ref({
 			installation_id: null,
 			business_id: null,
-			is_residue: null
+			is_residue: null,
+			name: null,
+		})
+		const customFilters = ref({
+			un_code: null,
+			name: null,
 		})
 
 		async function getMaterials(num_page = 1) {
@@ -188,9 +191,18 @@ export default {
 				// installation_id: props.installation_id
 			})
 
-			// const resp = await service.getIndex("material", num_page, params);
-			const res = await service.apiNoLoading({ url: `materials?page=${num_page}&wheres=${where}&includes_json=${includes}` })
+			let url = `materials?page=${num_page}&wheres=${where}&includes_json=${includes}`
 
+			forEach(customFilters.value, (v, k) => {
+				if (v || v == 0) url += `&${k}=${v}`;
+			})
+
+			loading.value = true
+
+			// const resp = await service.getIndex("material", num_page, params);
+			const res = await service.apiNoLoading({ url })
+
+			loading.value = false
 			tableData.value = res?.data?.data;
 			metaData.value = res?.data?.meta?.page;
 			page.value = metaData.value?.currentPage;
@@ -209,6 +221,10 @@ export default {
 				business_id: null,
 				cartage_destinatary_id: null,
 				cartage_carrier_id: null
+			}
+			customFilters.value = {
+				un_code: null,
+				name: null,
 			}
 		}
 
@@ -281,6 +297,9 @@ export default {
 
 		getMaterials()
 
+		watch(() => filters.value, (v) => getMaterials(), { deep: true })
+		watch(() => customFilters.value, (v) => getMaterials(), { deep: true })
+
 		return {
 			material_id,
 			tableData,
@@ -291,6 +310,8 @@ export default {
 			clear,
 			role,
 			filters,
+			customFilters,
+			loading,
 
 			getMaterials,
 			handleChange,

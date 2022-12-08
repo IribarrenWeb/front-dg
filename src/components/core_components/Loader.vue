@@ -1,15 +1,11 @@
 <template>
-<div v-if="loading || isLoading">
-  <Transition name="fade">
-    <div class="d-flex justify-content-center" id="loader">
-      <div class="spinner-border text-primary" role="status"></div>
-      {{msg}}
-    </div>
-  </Transition>
-</div>
+  <q-inner-loading dark label="Cargando..." :showing="(loader || isLoading)">
+    <q-spinner-gears size="50px" color="primary" />
+  </q-inner-loading>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { computed } from '@vue/runtime-core';
+import { mapState, useStore } from 'vuex';
   export default {
     props: {
       isLoading: { //for manual loading
@@ -20,10 +16,15 @@ import { mapState } from 'vuex';
         type: String,
         default: "Cargando..."
       } 
-    }, 
-    computed: mapState({
-      loading: state => state.loader
-    })
+    },
+    setup(props) {
+      const store = useStore()
+      const loader = computed(() => store.state.loader)
+
+      return {
+        loader
+      }
+    }
   };
 </script>
 <style>
@@ -37,5 +38,9 @@ import { mapState } from 'vuex';
     width: 100%;
     height: 100%;
     align-items: center;
+  }
+
+  .q-inner-loading{
+    background-color: #6e6e6e2a !important;
   }
 </style>
