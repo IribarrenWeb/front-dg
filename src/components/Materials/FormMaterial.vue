@@ -155,7 +155,7 @@
 <script>
 import utils from "@/mixins/utils-mixin";
 import dataService from "@/store/services/data-service";
-import service from "@/store/services/model-service";
+import service from "../../store/services/model-service";
 
 import { isEmpty, isEqual } from "lodash";
 import { mapGetters } from "vuex";
@@ -372,7 +372,7 @@ export default {
 		},
 		async loadEquipments() {
 			try {
-				const resp = await dataService.getEquipments();
+				const resp = await service.apiNoLoading({url: 'equipments'});
 				this.equipments = resp.data.data;
 			} catch (err) {
 				console.log(err.response);
@@ -409,7 +409,7 @@ export default {
 					inst_id = this.installation_id;
 				}
 
-				const resp = await service.instOperations(inst_id);
+				const resp = await service.apiNoLoading({ url: 'installations/' + inst_id + '/operations' });
 				this.operations = resp.data.data;
 				if (this.operations.length < 1) {
 					this.$swal(

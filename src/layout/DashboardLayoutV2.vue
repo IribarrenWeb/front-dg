@@ -32,10 +32,10 @@
         <q-page-container style="margin-top: -3rem !important;">
             <router-view v-slot="{ Component }">
                 <component :is="Component"></component>
-                <transition :duration="{ enter: 300, leave: 500 }" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                    <loader ></loader>
-                </transition>
             </router-view>
+            <transition :duration="{ enter: 300, leave: 500 }" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                <loader ></loader>
+            </transition>
         </q-page-container>
 
         <q-footer class="text-grey-7 transparent mt-4">

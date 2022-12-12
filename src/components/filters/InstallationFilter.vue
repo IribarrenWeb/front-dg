@@ -32,12 +32,12 @@
 			const model = ref(null)
 			const installations = ref({});
 			const data = computed(() => {
-				return installations.value.map((p) => {
+				return installations.value?.length ? installations.value.map((p) => {
 					return {
 						label: p.name,
 						value: p.id,
 					};
-				});
+				}) : [];
 			});
 
 			async function getInstallation() {

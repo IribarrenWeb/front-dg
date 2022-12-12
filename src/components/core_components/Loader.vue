@@ -22,7 +22,8 @@ import { mapState, useStore } from 'vuex';
       const loader = computed(() => store.state.loader)
 
       return {
-        loader
+        loader,
+        store
       }
     }
   };
