@@ -16,7 +16,7 @@
 			</template>
 
 		</q-select>
-		<document-folder-create-modal v-if="addFolder" @created="getFolders" v-model="addFolder" />
+		<document-folder-create-modal v-if="addFolder" @created="handleCreated" v-model="addFolder" />
 	</div>
 </template>
 <script>
@@ -51,6 +51,11 @@ export default {
 			});
 		});
 
+		function handleCreated() {
+			emit('new-folder', true)
+
+			getFolders()
+		}
 		async function getFolders() {
 			const res = await service.api({ url: 'document-folder' });
 			folders.value = res?.data?.data ?? [];
@@ -68,8 +73,10 @@ export default {
 		return {
 			data,
 			folder_id,
+			addFolder,
+			
+			handleCreated,
 			getFolders,
-			addFolder
 		};
 	},
 };

@@ -20,7 +20,7 @@
 						:options="[{ label: 'General', value: 1 }, { label: 'Empresas', value: 2 }]"
 						@updated="filters.type_id = $event" />
 
-					<folder-filter-v-2 v-model:clear="clear" v-model="filters.folder_id" class="col-md-3" />
+					<folder-filter-v-2 @new-folder="manualRequest" v-model:clear="clear" v-model="filters.folder_id" class="col-md-3" />
 
 					<div class="col-md-2">
 						<base-button size="sm" @click="clearFilters">Borrar
@@ -28,18 +28,31 @@
 					</div>
 				</template>
 
+				<template v-slot:top-row v-if="filters.folder_id">
+					<q-tr>
+						<q-td colspan="100%">
+							<q-btn color="grey-7" flat dense icon="fa-solid fa-ellipsis" @click="filters.folder_id = null">
+								<q-tooltip>
+									Volver
+								</q-tooltip>
+							</q-btn>
+						</q-td>
+					</q-tr>
+				</template>
+
 				<template v-slot:body-cell-name="props">
-					<q-td :props="props">
+					<q-td :props="props" @click="handleOpen(props.row)">
 						<q-img class="q-mr-md" :src="getExtIcon(props.row.extension)" spinner-color="primary"
 							height="30px" width="30px" spinner-size="10px" />
-						{{ `${props.row.doc_name}.${props.row.extension}` }}
+						<span :style="{ cursor: props.row.is_folder ? 'pointer' : '' }">{{ props.value }}</span>
+						<!-- {{ `${props.row.doc_name}.${props.row.extension}` }} -->
 					</q-td>
 				</template>
 
 				<template v-slot:body-cell-actions="props">
 					<q-td>
-						<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
-							color="grey-7">
+						<q-btn-dropdown v-if="!props.row?.is_folder" class="custom-drop" flat rounded
+							icon="fa-solid fa-ellipsis-vertical" color="grey-7">
 							<q-list bordered>
 								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
 									@click="addFolder = true, selected_document_id = props.row.id">
@@ -84,15 +97,15 @@ import service from "../../store/services/model-service";
 import DocumentFolderModal from '../DocumentFolder/DocumentFolderModal.vue';
 import FolderFilterV2 from '../filters/FolderFilterV2.vue';
 import { ref } from '@vue/reactivity';
-import { forEach, isEmpty } from 'lodash';
-import { watch } from '@vue/runtime-core';
+import { forEach, isEmpty, map } from 'lodash';
+import { computed, watch } from '@vue/runtime-core';
 
 export default {
 	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2 },
 	name: "documents-table",
 	props: ["reload"],
 	setup(props, { emit }) {
-		const tableData = ref([])
+
 		const metaData = ref([])
 		const page = ref(1)
 		const submit = ref(false)
@@ -112,15 +125,27 @@ export default {
 			rowsNumber: 10
 		})
 		const tableRef = ref(null)
-
+		const folders = ref([])
+		const documents = ref([])
 		const selected_document_id = ref(null)
+		const tableData = computed(() => {
+			let data = []
+			data = [
+				...folders.value,
+				...documents.value
+			];
+			return data
+		})
+		// const tableData = computed(() => {
+		// 	return []
+		// })
 		const columns = [
 			{
 				name: 'name',
 				label: 'Nombre',
 				align: 'left',
-				field: row => row.doc_name,
-				format: val => `${val}.${row.extension}`,
+				field: row => row?.is_folder ? row?.name : row?.doc_name,
+				// format: val => `${val}.${row.extension}`,
 				// sortable: true
 			},
 			{
@@ -152,7 +177,7 @@ export default {
 				label: 'Tamaño',
 				align: 'left',
 				field: row => row?.size,
-				format: val => `${val} kB`,
+				format: val => val ? `${val} kB` : '',
 				// sortable: false
 			},
 			{
@@ -165,7 +190,7 @@ export default {
 				sortable: false
 			},
 			{
-				name: 'loader',
+				name: 'installation',
 				label: 'Instalación',
 				align: 'left',
 				field: row => row.installation?.name,
@@ -176,7 +201,7 @@ export default {
 				name: 'created_by',
 				label: 'Subido por',
 				align: 'left',
-				field: row => row.created_by,
+				field: row => !row.is_folder ? row.created_by : '',
 				// format: val => `${val}`,
 				// sortable: true
 			},
@@ -188,26 +213,9 @@ export default {
 		function getExtIcon(ext) {
 			let url = `/icons/`
 
-			if (['pdf', 'xls', 'csv'].includes(ext)) url += `${ext}.png`
+			if (['pdf', 'xls', 'csv', 'folder'].includes(ext)) url += `${ext}.png`
 			else url += 'file.png'
 			return url
-		}
-
-		async function getDocuments(p = 1) {
-			try {
-				let url = `admin-docs?principal=1&includes[]=type&includes[]=business.user&includes[]=createdBy&includes[]=installation&page=${p}`
-
-				forEach(filters.value, (v, k) => {
-					if (v || v == 0) url += `&${k}=${v}`;
-				})
-
-				const response = await service.api({ url });
-				tableData.value = response.data.data;
-				metaData.value = response.data.meta.page;
-				page.value = metaData.value.currentPage;
-			} catch (err) {
-				console.log(err);
-			}
 		}
 
 		async function handleChange(event) {
@@ -231,9 +239,35 @@ export default {
 			clear.value = true
 		}
 
+		function handleOpen(row) {
+			if (row?.is_folder) {
+				filters.value.folder_id = row?.id
+			}
+		}
+
+		async function getFolders() {
+			try {
+				const res = await service.api({ url: 'document-folder' })
+				// folders.value = res?.data?.data ?? []
+				return res?.data?.data?.length ? map(res?.data?.data, (f) => {
+					return {
+						...f,
+						extension: 'folder',
+						size: null,
+
+						is_folder: true
+					}
+				}) : [];
+			} catch (error) {
+
+			}
+		}
+
 		async function onRequest(props) {
 			const { page, rowsPerPage, sortBy, descending } = props.pagination
 			loading.value = true
+
+			const folders_data = !filters.value?.folder_id ? await getFolders() : []
 
 			try {
 				const take = rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage;
@@ -244,7 +278,15 @@ export default {
 				})
 
 				const response = await service.api({ url });
-				tableData.value = response.data.data
+				// documents.value = response?.data?.data ?? []
+				documents.value = response?.data?.data?.length ? map(response?.data?.data, (d) => {
+					return {
+						...d,
+						is_folder: false
+					}
+				}) : []
+
+				folders.value = folders_data ?? []
 				pagination.value.page = response.data.meta?.page?.currentPage;
 				pagination.value.rowsNumber = response.data?.meta?.page?.total;
 
@@ -272,6 +314,7 @@ export default {
 
 		return {
 			tableData,
+			documents,
 			metaData,
 			page,
 			submit,
@@ -283,12 +326,12 @@ export default {
 			tableRef,
 			columns,
 			pagination,
-			getExtIcon,
 
+			handleOpen,
+			getExtIcon,
 			onRequest,
 			manualRequest,
 			clearFilters,
-			getDocuments,
 			handleChange,
 		};
 	},
