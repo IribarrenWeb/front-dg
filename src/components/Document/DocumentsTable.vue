@@ -9,90 +9,70 @@
 			</div>
 		</div>
 
-		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container">
-			<business-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('business_id', $event)"
-				v-if="!$store.state.is_business" />
-			<select-filter class="col-md-3" placeholder="Tipos" v-model:clear="clear"
-				:options="[{ label: 'General', value: 1 }, { label: 'Empresas', value: 2 }]"
-				@updated="handleFilter('type_id', $event)" />
+		<div class="custom-table">
+			<q-table hide-pagination ref="tableRef" @request="onRequest" v-model:pagination="pagination"
+				:loading="loading" table-class="table" table-header-class="thead-light" :rows="tableData"
+				:columns="columns" row-key="id">
+				<template v-slot:top>
+					<business-filter class="col-md-3" v-model:clear="clear" @updated="filters.business_id = $event"
+						v-if="!$store.state.is_business" />
+					<select-filter class="col-md-3" placeholder="Tipos" v-model:clear="clear"
+						:options="[{ label: 'General', value: 1 }, { label: 'Empresas', value: 2 }]"
+						@updated="filters.type_id = $event" />
 
-			<folder-filter-v-2 v-model:clear="clear" @update:model-value="handleFilter('folder_id', $event)"
-				class="col-md-3" />
+					<folder-filter-v-2 v-model:clear="clear" v-model="filters.folder_id" class="col-md-3" />
 
-			<div class="col-md-2">
-				<base-button size="sm" @click="(params_filter = params), getDocuments(page), (clear = true)">Borrar
-					filtros</base-button>
-			</div>
-		</div>
-		<div class="table-responsive">
-			<base-table thead-classes="thead-light" :data="tableData">
-				<template v-slot:columns>
-					<th>Nombre</th>
-					<th>Tipo</th>
-					<th>Empresa</th>
-					<th>Extension</th>
-					<th>Tamaño</th>
-					<th>Fecha</th>
-					<th>Instalación</th>
-					<th>Carpeta</th>
-					<th>Subido por</th>
-					<th></th>
+					<div class="col-md-2">
+						<base-button size="sm" @click="clearFilters">Borrar
+							filtros</base-button>
+					</div>
 				</template>
 
-				<template v-slot:default="row">
-					<th scope="row">
-						<a :href="row.item.link" target="_blank">{{
-								row.item?.doc_name
-						}}</a>
-					</th>
-					<td>
-						{{ row.item?.type?.name }}
-					</td>
-					<td>
-						{{ row.item?.business?.user?.full_name }}
-					</td>
-					<td>
-						{{ row.item?.extension }}
-					</td>
-					<td>{{ row.item?.size }} kB</td>
-					<td>
-						{{ row.item?.created_date }}
-					</td>
-					<td>
-						{{ row.item?.installation?.name }}
-					</td>
-					<td>
-						{{ row.item?.current_folder?.name }}
-					</td>
-					<td>
-						{{ row.item?.created_by?.full_name }}
-					</td>
-					<td class="d-flex">
-						<!-- <a
-							href="#"
-							@click.prevent="handleView(row.item?.id)"
-							class="btn btn-sm btn-default"
-							><i class="fa-regular fa-eye"></i
-						></a> -->
-						<q-btn color="primary" icon="fa-solid fa-folder-plus"
-							@click="addFolder = true, selected_document_id = row.item.id">
-							<q-tooltip>
-								Agregar carpeta
-							</q-tooltip>
-						</q-btn>
-						<delete-button
-							v-if="$store.state.is_admin || $store.state.is_delegate || $store.state?.profile?.me?.id == row.item?.created_by?.id"
-							@deleted="getDocuments" model="documents" :id="row.item.id"></delete-button>
-					</td>
+				<template v-slot:body-cell-name="props">
+					<q-td :props="props">
+						<q-img class="q-mr-md" :src="getExtIcon(props.row.extension)" spinner-color="primary"
+							height="30px" width="30px" spinner-size="10px" />
+						{{ `${props.row.doc_name}.${props.row.extension}` }}
+					</q-td>
 				</template>
-			</base-table>
-			<div v-if="tableData.length >= 1">
-				<base-pagination :perPage="this.metaData.perPage" :value="this.page" @changePage="handleChange($event)"
-					:total="this.metaData.total" align="center"></base-pagination>
-			</div>
-			<loader v-if="loader"></loader>
+
+				<template v-slot:body-cell-actions="props">
+					<q-td>
+						<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
+							color="grey-7">
+							<q-list bordered>
+								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+									@click="addFolder = true, selected_document_id = props.row.id">
+									<q-item-section>
+										<q-item-label>Agregar carpeta</q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</q-btn-dropdown>
+						<!-- <div class="flex items-center justify-center">
+							<q-btn dense color="primary" class="mr-2" icon="fa-solid fa-folder-plus"
+								@click="addFolder = true, selected_document_id = props.row.id">
+								<q-tooltip>
+									Agregar carpeta
+								</q-tooltip>
+							</q-btn>
+							<delete-button
+								v-if="$store.state.is_admin || $store.state.is_delegate || $store.state?.profile?.me?.id == props.row?.created_by?.id"
+								@deleted="manualRequest" model="documents" :id="props.row.id"></delete-button>
+						</div> -->
+					</q-td>
+				</template>
+
+
+				<template v-slot:bottom class="items-center justify-center">
+					<base-pagination :perPage="pagination?.rowsPerPage" :value="pagination.page"
+						@changePage="manualRequest($event)" :total="pagination.rowsNumber"
+						align="center"></base-pagination>
+				</template>
+			</q-table>
 		</div>
-		<document-folder-modal @update="getDocuments" v-if="addFolder" v-model="addFolder"
+
+		<document-folder-modal @update="manualRequest" v-if="addFolder" v-model="addFolder"
 			:document_id="selected_document_id" />
 	</div>
 </template>
@@ -103,73 +83,224 @@ import DeleteButton from "../Utils/DeleteButton.vue";
 import service from "../../store/services/model-service";
 import DocumentFolderModal from '../DocumentFolder/DocumentFolderModal.vue';
 import FolderFilterV2 from '../filters/FolderFilterV2.vue';
+import { ref } from '@vue/reactivity';
+import { forEach, isEmpty } from 'lodash';
+import { watch } from '@vue/runtime-core';
 
 export default {
 	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2 },
 	name: "documents-table",
 	props: ["reload"],
-	data() {
-		return {
-			tableData: {},
-			metaData: {},
+	setup(props, { emit }) {
+		const tableData = ref([])
+		const metaData = ref([])
+		const page = ref(1)
+		const submit = ref(false)
+		const loading = ref(false)
+		const clear = ref(false)
+		const addFolder = ref(false)
+		const filters = ref({
+			folder_id: null,
+			type_id: null,
+			business_id: null
+		})
+		const pagination = ref({
+			sortBy: 'desc',
+			descending: false,
 			page: 1,
-			submit: false,
-			loader: false,
-			action: "Registrar",
-			params: 'includes[]=type&includes[]=business.user&includes[]=createdBy&includes[]=installation',
-			params_filter: null,
-			clear: false,
-			addFolder: false,
-			selected_document_id: null
-		};
-	},
-	mounted() {
-		this.getDocuments(this.page);
-	},
-	methods: {
-		async getDocuments(page = 1) {
-			if (this.params_filter == null) {
-				this.params_filter = this.params
-			}
+			rowsPerPage: 15,
+			rowsNumber: 10
+		})
+		const tableRef = ref(null)
+
+		const selected_document_id = ref(null)
+		const columns = [
+			{
+				name: 'name',
+				label: 'Nombre',
+				align: 'left',
+				field: row => row.doc_name,
+				format: val => `${val}.${row.extension}`,
+				// sortable: true
+			},
+			{
+				name: 'type',
+				label: 'Tipo',
+				align: 'left',
+				field: row => row.type?.name,
+				// format: val => `${val}`,
+				// sortable: false
+			},
+			{
+				name: 'business',
+				label: 'Empresa',
+				align: 'left',
+				field: row => row.business?.user?.full_name,
+				// format: val => `${val}`,
+				// sortable: true
+			},
+			// {
+			// 	name: 'extension',
+			// 	label: 'Extensión',
+			// 	align: 'left',
+			// 	field: row => row?.extension,
+			// 	// format: val => `${val}`,
+			// 	// sortable: true
+			// },
+			{
+				name: 'size',
+				label: 'Tamaño',
+				align: 'left',
+				field: row => row?.size,
+				format: val => `${val} kB`,
+				// sortable: false
+			},
+			{
+				name: 'created_date',
+				label: 'Fecha',
+				align: 'left',
+				field: row => row?.created_date,
+				// field: row => moment(row.date).format('DD/MM/YYYY'),
+				// format: val => `${val}`,
+				sortable: false
+			},
+			{
+				name: 'loader',
+				label: 'Instalación',
+				align: 'left',
+				field: row => row.installation?.name,
+				// format: val => `${val}`,
+				sortable: false
+			},
+			{
+				name: 'created_by',
+				label: 'Subido por',
+				align: 'left',
+				field: row => row.created_by,
+				// format: val => `${val}`,
+				// sortable: true
+			},
+			{
+				name: 'actions',
+			},
+		]
+
+		function getExtIcon(ext) {
+			let url = `/icons/`
+
+			if (['pdf', 'xls', 'csv'].includes(ext)) url += `${ext}.png`
+			else url += 'file.png'
+			return url
+		}
+
+		async function getDocuments(p = 1) {
 			try {
-				const response = await service.getIndex("documents", page, this.params_filter);
-				this.tableData = response.data.data;
-				this.metaData = response.data.meta.page;
-				this.page = this.metaData.currentPage;
+				let url = `admin-docs?principal=1&includes[]=type&includes[]=business.user&includes[]=createdBy&includes[]=installation&page=${p}`
+
+				forEach(filters.value, (v, k) => {
+					if (v || v == 0) url += `&${k}=${v}`;
+				})
+
+				const response = await service.api({ url });
+				tableData.value = response.data.data;
+				metaData.value = response.data.meta.page;
+				page.value = metaData.value.currentPage;
 			} catch (err) {
 				console.log(err);
 			}
-		},
-		async handleChange(event) {
-			if (event != this.page) {
-				this.getDocuments(event);
+		}
+
+		async function handleChange(event) {
+			if (event != page.value) {
+				manualRequest(event);
 			}
-		},
-		handleFilter(type = 'delegate_id', value) {
-			if (!this.$empty(value) || value >= 1) {
-				this.params_filter += `&${type}=` + value
-				this.getDocuments(this.page)
-			} else {
-				this.params_filter = this.params
-				this.getDocuments(this.page)
+		}
+
+		function manualRequest(page = 1) {
+			// if (page == pagination.value.page) return
+			pagination.value.page = page
+			tableRef.value.requestServerInteraction()
+		}
+
+		function clearFilters() {
+			filters.value = {
+				folder_id: null,
+				type_id: null,
+				business_id: null
 			}
-		},
-	},
-	watch: {
-		modal(newVal) {
-			if (!newVal) {
-				this.action = "Registrar";
+			clear.value = true
+		}
+
+		async function onRequest(props) {
+			const { page, rowsPerPage, sortBy, descending } = props.pagination
+			loading.value = true
+
+			try {
+				const take = rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage;
+				let url = `admin-docs?principal=1&with_folders=1&includes[]=type&includes[]=business.user&includes[]=createdBy&includes[]=installation&take=${take}&page=${page}`
+
+				forEach(filters.value, (v, k) => {
+					if (v || v == 0) url += `&${k}=${v}`;
+				})
+
+				const response = await service.api({ url });
+				tableData.value = response.data.data
+				pagination.value.page = response.data.meta?.page?.currentPage;
+				pagination.value.rowsNumber = response.data?.meta?.page?.total;
+
+				loading.value = false
+
+			} catch (error) {
+				loading.value = false
 			}
-		},
-		reload(val) {
-			if (val) {
-				this.getDocuments(this.page);
-				this.$emit("reloaded");
+		}
+
+		watch(() => tableRef.value, (v) => {
+			if (v) manualRequest()
+		}, { immediate: true })
+
+		watch(() => props.reload, (v) => {
+			if (v) {
+				manualRequest();
+				emit("reloaded");
 			}
-		},
+		})
+
+		watch(() => filters.value, (v) => {
+			manualRequest()
+		}, { deep: true })
+
+		return {
+			tableData,
+			metaData,
+			page,
+			submit,
+			loading,
+			clear,
+			addFolder,
+			filters,
+			selected_document_id,
+			tableRef,
+			columns,
+			pagination,
+			getExtIcon,
+
+			onRequest,
+			manualRequest,
+			clearFilters,
+			getDocuments,
+			handleChange,
+		};
 	},
 };
 </script>
-<style>
+<style lang="scss">
+.custom-table .q-table__bottom {
+	justify-content: center;
+}
 
+.custom-table .q-table__top {
+	background-color: #f6f9fc;
+	color: #8898aa;
+}
 </style>
