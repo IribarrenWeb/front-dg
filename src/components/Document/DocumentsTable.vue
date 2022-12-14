@@ -99,6 +99,7 @@ import FolderFilterV2 from '../filters/FolderFilterV2.vue';
 import { ref } from '@vue/reactivity';
 import { forEach, isEmpty, map } from 'lodash';
 import { computed, watch } from '@vue/runtime-core';
+import { baseUrl } from '../../axios';
 
 export default {
 	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2 },
@@ -211,7 +212,7 @@ export default {
 		]
 
 		function getExtIcon(ext) {
-			let url = `/icons/`
+			let url = baseUrl + `img/icons/`
 
 			if (['pdf', 'xls', 'csv', 'folder'].includes(ext)) url += `${ext}.png`
 			else url += 'file.png'
