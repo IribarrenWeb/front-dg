@@ -55,8 +55,14 @@
 				/>
 			</base-field>
 		</div>
-
 		<slot></slot>
+
+		<div class="col-lg-4 flex items-end custom-check" v-if="!update">
+			<base-field name="business_phone">
+				<q-checkbox :model-value="no_adr" @update:model-value="$emit('update:no_adr', $event)" label="Empresa no ADR" />
+			</base-field>
+		</div>
+
 	</div>
 </template>
 <script>
@@ -65,6 +71,10 @@
 	export default {
 		inheritAttrs: true,
 		props: {
+			update: {
+				type: Boolean,
+				default: false
+			},
 			name: {
 				type: String,
 			},
@@ -76,6 +86,10 @@
 			},
 			business_phone: {
 				type: String,
+			},
+			no_adr: {
+				type: Boolean,
+				default: false
 			},
 		},
 		setup() {

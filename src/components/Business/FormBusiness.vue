@@ -14,21 +14,15 @@
 			></base-steps>
 			<template v-if="currentStep === 1">
 				<div>
-					<general-data
-						v-model:property_name="model.property_name"
-						v-model:property_last_name="model.property_last_name"
-						v-model:property_dni="model.property_dni"
-						v-model:property_phone="model.property_phone"
-						v-model:property_email="model.property_email"
-					/>
 					<business-data
 						class="mt-2"
 						v-model:name="model.name"
 						v-model:email="model.email"
 						v-model:business_nif="model.business_nif"
 						v-model:business_phone="model.business_phone"
+						v-model:no_adr="model.no_adr"
 					>
-						<div class="col-lg-8" v-if="ROLE == 'admin'">
+						<div class="col" v-if="ROLE == 'admin'">
 							<base-field name="delegate_id" label="Delegado" :required="true">
 								<div v-if="delegate != null">
 									<span class="mr-md-4 text-uppercase">{{
@@ -49,6 +43,7 @@
 										rules="required"
 									>
 										<async-select
+											customClass="custom-multiselect"
 											@selected="delegate = $event"
 											params="&includes[]=delegate"
 										>
@@ -58,6 +53,14 @@
 							</base-field>
 						</div>
 					</business-data>
+
+					<general-data
+						v-model:property_name="model.property_name"
+						v-model:property_last_name="model.property_last_name"
+						v-model:property_dni="model.property_dni"
+						v-model:property_phone="model.property_phone"
+						v-model:property_email="model.property_email"
+					/>
 					
 					<address-select
 						title="Dirección fiscal"
@@ -427,8 +430,8 @@
 	import DocumentData from "./Modules/DocumentData.vue";
 	import InstallationGeneralData from "../Installation/Modules/GeneralData.vue";
 	import EmployeeGeneralData from "../Employee/Modules/GeneralData.vue";
-import BusinessData from './Modules/BusinessData.vue';
-import ResponsibleData from './Modules/ResponsibleData.vue';
+	import BusinessData from './Modules/BusinessData.vue';
+	import ResponsibleData from './Modules/ResponsibleData.vue';
 
 	export default {
 		components: {

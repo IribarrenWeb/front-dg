@@ -27,4 +27,5 @@ export default {
     responsible_dni: null,
     responsible_phone_number: null,
     responsible_email: null,
+    no_adr: false,
 }

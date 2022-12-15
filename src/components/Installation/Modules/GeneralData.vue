@@ -36,8 +36,10 @@
 						label="Auditor"
 						rules=""
 						:value="auditable"
+						
 					>
 						<async-select
+							customClass="custom-multiselect"
 							@selected="$emit('update:auditable', $event.id)"
 							:roles="[2, 3]"
 							:value="auditable_id"

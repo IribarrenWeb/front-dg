@@ -28,7 +28,7 @@
 					</div>
 				</template>
 
-				<template v-slot:top-row v-if="filters.folder_id">
+				<template v-slot:top-row v-if="filters.folder_id && !loading">
 					<q-tr>
 						<q-td colspan="100%">
 							<q-btn color="grey-7" flat dense icon="fa-solid fa-ellipsis" @click="filters.folder_id = null">
@@ -44,7 +44,7 @@
 					<q-td :props="props" @click="handleOpen(props.row)">
 						<q-img class="q-mr-md" :src="getExtIcon(props.row.extension)" spinner-color="primary"
 							height="30px" width="30px" spinner-size="10px" />
-						<span :style="{ cursor: props.row.is_folder ? 'pointer' : '' }">{{ props.value }}</span>
+						<span :style="{ cursor: 'pointer' }">{{ props.value }}</span>
 						<!-- {{ `${props.row.doc_name}.${props.row.extension}` }} -->
 					</q-td>
 				</template>
@@ -145,7 +145,7 @@ export default {
 				name: 'name',
 				label: 'Nombre',
 				align: 'left',
-				field: row => row?.is_folder ? row?.name : row?.doc_name,
+				field: row => row?.is_folder ? row?.name : `${row?.doc_name}.${row.extension}`,
 				// format: val => `${val}.${row.extension}`,
 				// sortable: true
 			},
@@ -243,6 +243,8 @@ export default {
 		function handleOpen(row) {
 			if (row?.is_folder) {
 				filters.value.folder_id = row?.id
+			}else{
+				window.open(row.link, '_blank').focus();
 			}
 		}
 

@@ -28,18 +28,13 @@ export const store = createStore({
             is_delegate: false,
             is_auditor: false,
             is_business: false,
+            is_bussines_no_adr: false,
             is_mobile: window.innerWidth <= 760,
             loader: false,
             apiErrors: {},
             stopCamera: false,
             notifications: [],
             tokenName: import.meta.env.VITE_USER_TOKEN_NAME,
-            // business_schema: schemas.business,
-            // installation_schema: schemas.installation,
-            // auditor_schema: schemas.auditor,
-            // delegate_schema: schemas.delegate,
-            // formation_schema: schemas.formation,
-            // employee_schema: schemas.employee,
             provinces: null,
             current: new Date().toISOString().split('T')[0],
             api_url: apiUrl,
@@ -111,6 +106,7 @@ export const store = createStore({
             state.is_delegate = payload == 2;
             state.is_auditor = payload == 3;
             state.is_business = payload == 4;
+            state.is_bussines_no_adr = payload == 6;
         },
         stopedCamera(state, payload = null) {
             state.stopCamera = payload != null ? payload : !state.stopCamera

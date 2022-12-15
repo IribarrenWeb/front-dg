@@ -13,6 +13,15 @@
 			></base-steps>
 			<template v-if="currentStep === 1 || profile">
 				<div>
+					<business-data
+						v-model:name="model.name"
+						v-model:email="model.email"
+						v-model:business_nif="model.business_nif"
+						v-model:business_phone="model.business_phone"
+						v-model:no_adr="model.no_adr"
+						:update="true"
+					/>
+
 					<general-data
 						class="mb-2"
 						v-model:property_name="model.property_name"
@@ -22,12 +31,6 @@
 						v-model:property_email="model.property_email"
 					/>
 
-					<business-data
-						v-model:name="model.name"
-						v-model:email="model.email"
-						v-model:business_nif="model.business_nif"
-						v-model:business_phone="model.business_phone"
-					/>
 					
 					<AddressSelect 
 						title="Dirección fiscal"
