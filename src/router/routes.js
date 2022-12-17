@@ -1,5 +1,4 @@
 import { defineAsyncComponent } from 'vue'
-import DashboardLayout from "@/layout/DashboardLayout";
 import DashboardLayoutV2 from "@/layout/DashboardLayoutV2";
 import AuthLayout from "@/layout/AuthLayout";
 import PageLoader from "../loaders/PageLoader.vue"
@@ -71,6 +70,8 @@ const ResetPasswordRequest = defineAsyncComponent({ loader: () => import('../vie
 const Visits = defineAsyncComponent({ loader: () => import('../views/Visits.vue'),loadingComponent: PageLoader}); 
 
 const Cartage = defineAsyncComponent({ loader: () => import('../views/CartageLetters.vue'),loadingComponent: PageLoader}); 
+
+const Aplication = defineAsyncComponent({ loader: () => import('../views/BusinessAplication.vue'),loadingComponent: PageLoader}); 
 
 
 //import middleware
@@ -174,6 +175,12 @@ const routes = [{
                 path: "/cartage-letters",
                 name: "cartas de porte",
                 components: { default: Cartage },
+                meta: { middleware: auth }
+            },
+            {
+                path: "/business-aplication",
+                name: "solicitudes",
+                components: { default: Aplication },
                 meta: { middleware: auth }
             },
             {

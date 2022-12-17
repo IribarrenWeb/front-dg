@@ -37,96 +37,117 @@ export default {
                 icon: 'ni ni-tv-2 text-default',
                 path: '/dashboard',
                 roles: null,
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Empresas',
                 icon: 'fa-solid fa-building-columns text-default',
                 path: '/business',
-                roles: ['business'],
-                not_condition: true
+                roles: ['business','business_no_adr'],
+                not_condition: true,
+                no_adr: false,
             },
             {
                 name: 'Cartas de porte',
                 icon: 'fa-solid fa-envelope-open-text text-default',
                 path: '/cartage-letters',
                 roles: null,
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Instalaciones',
                 icon: 'ni ni-shop text-default',
                 path: '/installations',
-                roles: ['business'],
-                not_condition: false
+                roles: ['business','business_no_adr'],
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Empleados',
                 icon: 'fa-solid fa-briefcase text-default',
                 path: '/employees',
-                roles: ['business'],
-                not_condition: false
+                roles: ['business','business_no_adr'],
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Mercancías',
                 icon: 'fa-solid fa-atom text-default',
                 path: '/materials',
-                roles: ['business'],
-                not_condition: false
+                roles: ['business','business_no_adr'],
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Vehiculos',
                 icon: 'fa-solid fa-truck text-default',
                 path: '/vehicles',
                 roles: 'business',
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Auditorias',
                 icon: 'fa-solid fa-clipboard-list text-default',
                 path: '/audits',
                 roles: null,
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Informes',
                 icon: 'ni ni-book-bookmark text-default',
                 path: '/informs',
                 roles: null,
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Delegación',
                 icon: 'ni ni-single-02 text-default',
                 path: '/delegates',
                 roles: ['admin'],
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Auditores',
                 icon: 'ni ni-hat-3 text-default',
                 path: '/auditors',
                 roles: ['admin', 'delegate'],
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Formaciones',
                 icon: 'fa-solid fa-book-bookmark text-default',
                 path: '/formations',
                 roles: ['delegate', 'auditor'],
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
             },
             {
                 name: 'Visitas',
                 icon: 'fa-regular fa-calendar-check text-default',
                 path: '/visits',
                 roles: null,
-                not_condition: false
+                not_condition: false,
+                no_adr: false,
+            },
+            {
+                name: 'Solicitudes',
+                icon: 'fa-solid fa-bell-concierge text-default',
+                path: '/business-aplication',
+                roles: null,
+                not_condition: false,
+                no_adr: true,
             }
         ])
 
         const enabled_menus = computed(() => menues.value.filter((m) => validate(m)))
-
+        
         const system_menues = ref([
             {
                 name: 'Documentación',
@@ -146,6 +167,10 @@ export default {
                     validation = menu.roles.includes(role.value)
                 }
             }
+            if (validation && menu.no_adr) {
+                validation = store.state.is_bussines_no_adr
+            } 
+
             return validation;
         }
 

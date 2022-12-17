@@ -105,7 +105,7 @@ export const store = createStore({
             state.is_admin = payload == 1;
             state.is_delegate = payload == 2;
             state.is_auditor = payload == 3;
-            state.is_business = payload == 4;
+            state.is_business = payload == 4 || payload == 6;
             state.is_bussines_no_adr = payload == 6;
         },
         stopedCamera(state, payload = null) {

@@ -211,7 +211,7 @@ export default {
 			},
 		]);
 		const role = computed(() => {
-			return model.value?.role?.name;
+			return model.value?.role?.name == 'business_no_adr' ? 'business' : model.value?.role?.name;
 		});
 		const roleModel = computed(() => {
 			return functions.assignSchema(role.value, model.value[role.value], [
@@ -253,7 +253,7 @@ export default {
 				if (v > 0) {
 
 					let params = '';
-					if (v == 4) {
+					if (v == 4 || 6) {
 						params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
 
 						steps.value.push({

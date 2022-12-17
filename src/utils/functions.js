@@ -55,9 +55,11 @@ function pruneData(object, excludes = []) {
     return object;
 }
 function copy(data) {
+    if (!data) return
     return JSON.parse(JSON.stringify(data))
 }
 function rolename(role) {
+    console.log(role);
     switch (role) {
         case 1:
             role = 'admin';
@@ -69,6 +71,14 @@ function rolename(role) {
             role = 'auditor';
             break;
         case 4:
+            role = 'business';
+            break;
+
+        case 5:
+            role = 'superuser';
+            break;
+
+        case 6:
             role = 'business';
             break;
 

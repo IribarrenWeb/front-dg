@@ -137,33 +137,24 @@ export default {
 			];
 			return data
 		})
-		// const tableData = computed(() => {
-		// 	return []
-		// })
 		const columns = [
 			{
 				name: 'name',
 				label: 'Nombre',
 				align: 'left',
 				field: row => row?.is_folder ? row?.name : `${row?.doc_name}.${row.extension}`,
-				// format: val => `${val}.${row.extension}`,
-				// sortable: true
 			},
 			{
 				name: 'type',
 				label: 'Tipo',
 				align: 'left',
 				field: row => row.type?.name,
-				// format: val => `${val}`,
-				// sortable: false
 			},
 			{
 				name: 'business',
 				label: 'Empresa',
 				align: 'left',
 				field: row => row.business?.user?.full_name,
-				// format: val => `${val}`,
-				// sortable: true
 			},
 			// {
 			// 	name: 'extension',
@@ -203,8 +194,6 @@ export default {
 				label: 'Subido por',
 				align: 'left',
 				field: row => !row.is_folder ? row.created_by : '',
-				// format: val => `${val}`,
-				// sortable: true
 			},
 			{
 				name: 'actions',
