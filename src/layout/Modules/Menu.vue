@@ -140,7 +140,7 @@ export default {
                 name: 'Solicitudes',
                 icon: 'fa-solid fa-bell-concierge text-default',
                 path: '/business-aplication',
-                roles: null,
+                roles: ['delegate','auditor','business'],
                 not_condition: false,
                 no_adr: true,
             }
@@ -167,7 +167,7 @@ export default {
                     validation = menu.roles.includes(role.value)
                 }
             }
-            if (validation && menu.no_adr) {
+            if (validation && menu.no_adr && role.value == 'business') {
                 validation = store.state.is_bussines_no_adr
             } 
 
