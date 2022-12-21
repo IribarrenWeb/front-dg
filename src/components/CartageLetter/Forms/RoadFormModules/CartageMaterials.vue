@@ -24,9 +24,9 @@
                 <q-item-section>
                     <div class="row">
                         <qu-input-validation class="col" :rules="[$rules.required()]" v-model="material.number" dense
-                            label="Numero de bultos" type="number" mask="##" />
+                            label="Numero de bultos" type="text" mask="##" />
                         <qu-input-validation class="col" :rules="[$rules.required()]" v-model="material.quantity" dense
-                            label="Cantidad por bulto" type="number" mask="##" />
+                            label="Cantidad por bulto" type="text" mask="##.#" />
                         <material-packing-selector dense class="col" :rules="[$rules.required()]" option-value="label"
                             label="Empaque" v-model="material.packing_name" />
                     </div>

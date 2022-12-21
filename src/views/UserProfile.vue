@@ -253,7 +253,7 @@ export default {
 				if (v > 0) {
 
 					let params = '';
-					if (v == 4 || 6) {
+					if (v == 4 || v == 6) {
 						params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
 
 						steps.value.push({
