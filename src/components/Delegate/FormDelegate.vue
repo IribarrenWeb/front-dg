@@ -271,6 +271,7 @@ export default {
 						this.show(this.delegate.id);
 					}
 					this.$emit("resetTable");
+					this.$emit("saved");
 				}
 			} catch (err) {
 				console.log(err);

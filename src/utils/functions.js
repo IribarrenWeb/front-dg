@@ -75,7 +75,7 @@ function rolename(role) {
             break;
 
         case 5:
-            role = 'superuser';
+            role = 'superadmin';
             break;
 
         case 6:

@@ -73,6 +73,8 @@ const Cartage = defineAsyncComponent({ loader: () => import('../views/CartageLet
 
 const Aplication = defineAsyncComponent({ loader: () => import('../views/BusinessAplication.vue'),loadingComponent: PageLoader}); 
 
+const Users = defineAsyncComponent({ loader: () => import('../views/Users.vue'),loadingComponent: PageLoader}); 
+
 
 //import middleware
 import auth from "@/middleware/auth";
@@ -100,6 +102,12 @@ const routes = [{
                 path: "/business",
                 name: "empresas",
                 components: { default: Business },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/users",
+                name: "usuarios",
+                components: { default: Users },
                 meta: { middleware: auth },
             },
             {
