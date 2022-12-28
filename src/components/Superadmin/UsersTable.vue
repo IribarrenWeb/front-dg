@@ -32,8 +32,10 @@
 			</template>
 		</q-table>
 
-		<q-dialog v-model="showAdd" :full-height="typeUser != 'consulting'" :full-width="typeUser != 'consulting'">
-			<q-card :style="{minWidth: typeUser == 'consulting' ? '500px' : '100%'}">
+		<!-- <q-dialog v-model="showAdd" :full-height="typeUser != 'consulting'" :full-width="typeUser != 'consulting'"> -->
+		<q-dialog v-model="showAdd" :full-height="typeUser != 'consulting'" full-width>
+			<!-- <q-card :style="{minWidth: typeUser == 'consulting' ? '500px' : '100%'}"> -->
+			<q-card :style="{minWidth: '100%'}">
 				<q-card-section class="q-pa-lg">
 					<form-delegate v-if="typeUser == 'delegate'" @closeModal="showAdd = false" @saved="getUsers()"/>
 					<form-consulting v-else-if="typeUser == 'consulting'" @cancel="showAdd = false" @saved="getUsers()"/>
