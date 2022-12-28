@@ -1,5 +1,5 @@
 <template>
-  <q-inner-loading dark label="Cargando..." :showing="(loader || isLoading)">
+  <q-inner-loading style="z-index: 10000;height: 110vh;" dark label="Cargando..." :showing="(loader || isLoading)">
     <q-spinner-gears size="50px" color="primary" />
   </q-inner-loading>
 </template>

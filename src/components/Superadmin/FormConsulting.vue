@@ -103,6 +103,7 @@ export default {
             }
         })
         const loading = ref(false)
+        const consultancy_data = ref(null)
 
         async function submit() {
             try {
@@ -125,6 +126,26 @@ export default {
                 })
             }
         }
+
+        async function getConsulting(){
+            try {
+                
+            } catch (error) {
+                const serverMessage = error?.request?.response ? JSON.parse(error?.request?.response) : null
+                const message = serverMessage?.message ?? 'Ocurrio un error al registrar la consultoria';
+                loading.value = false
+                Notify.create({
+                    message: message,
+                    color: 'negative'
+                })
+            }
+        }
+
+        watch(() => props.consultingId, (v) => {
+            if (condition) {
+                
+            }
+        })
 
 
 

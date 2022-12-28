@@ -260,6 +260,7 @@ export default {
 					} else {
 						this.show(this.auditor.id)
 					}
+					this.$emit("saved");
 					this.$emit("resetTable");
 				}
 			} catch (err) {

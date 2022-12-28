@@ -4,7 +4,7 @@
 			<q-tabs v-model="tab" class="text-white" content-class="custom-q-tabs" align="left"
 				indicator-color="transparent">
 				<q-tab name="consulting" content-class="q-tab-custom" label="Consultorias" />
-				<q-tab name="delegate" label="Auditores" content-class="q-tab-custom" />
+				<q-tab name="auditors" label="Auditores" content-class="q-tab-custom" />
 				<q-tab name="business" label="Empresas" content-class="q-tab-custom" />
 			</q-tabs>
 			<q-tab-panels class="card shadow card-header border-radius-top-0 px-0 custom-tabpanel" v-model="tab" animated>
@@ -12,7 +12,7 @@
 					<!--  -->
 					<users-table :typeUser="tab" />
 				</q-tab-panel>
-				<q-tab-panel name="delegate">
+				<q-tab-panel name="auditors">
 					<!--  -->
 					<users-table :typeUser="tab" />
 

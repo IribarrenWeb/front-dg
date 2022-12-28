@@ -37,7 +37,7 @@
 			<!-- <q-card :style="{minWidth: typeUser == 'consulting' ? '500px' : '100%'}"> -->
 			<q-card :style="{minWidth: '100%'}">
 				<q-card-section class="q-pa-lg">
-					<form-delegate v-if="typeUser == 'delegate'" @closeModal="showAdd = false" @saved="getUsers()"/>
+					<form-auditor v-if="typeUser == 'auditors'" @closeModal="showAdd = false" @saved="getUsers()"/>
 					<form-consulting v-else-if="typeUser == 'consulting'" @cancel="showAdd = false" @saved="getUsers()"/>
 				</q-card-section>
 			</q-card>
@@ -55,9 +55,10 @@ import { moment } from '../../boot/plugins'
 import FormDelegate from '../Delegate/FormDelegate.vue'
 import FormConsulting from './FormConsulting.vue'
 import { Dialog, Notify } from 'quasar'
+import FormAuditor from '../Auditor/FormAuditor.vue'
 
 export default {
-	components: { TableHeader, FormDelegate, FormConsulting },
+	components: { TableHeader, FormDelegate, FormConsulting, FormAuditor },
 	props: {
 		typeUser: {
 			type: String,
@@ -99,7 +100,7 @@ export default {
 					return 'consultoria'
 					break;
 
-				case 'delegate':
+				case 'auditors':
 					return 'auditores'
 					break;
 
@@ -116,13 +117,6 @@ export default {
 			try {
 				showAdd.value = false
 				loading.value = true
-				const wheres = JSON.stringify({
-					type: props.typeUser
-				})
-
-				const includes = JSON.stringify([
-					'user'
-				])
 
 				let url = `${props.typeUser}`
 
