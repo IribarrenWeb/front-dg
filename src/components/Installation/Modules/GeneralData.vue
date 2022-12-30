@@ -26,7 +26,7 @@
 					/>
 				</base-field>
 			</div>
-			<div class="col-lg-4" v-if="role != 'auditor' && role != 'business'">
+			<div class="col-lg-4" v-if="role != 'auditor' && role != 'business' && role != 'superadmin'">
 				<base-field
 					:name="form_id ? `installarions[${form_id}].` : '' + 'auditable'"
 					label="Auditor"
@@ -110,7 +110,7 @@
 					</field-validate>
 				</base-field>
 			</div>
-			<div class="col-lg-6">
+			<div :class="{'col-lg-6':role != 'superadmin', 'col-lg-4':role == 'superadmin'}">
 				<base-field
 					name="file_document.base64"
 					label="Documentación de la instalación"

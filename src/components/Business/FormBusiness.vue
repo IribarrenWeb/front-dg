@@ -548,6 +548,7 @@
 						resetForm();
 						this.$emit("close");
 						this.$emit("reload");
+						this.$emit("saved");
 					} catch (err) {
 						console.log(err);
 					}

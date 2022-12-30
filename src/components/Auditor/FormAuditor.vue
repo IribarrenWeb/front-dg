@@ -153,7 +153,7 @@
 				</div>
 
 				<div class="d-flex justify-content-lg-end mt-2">
-					<base-button type="default" nativeType="submit" size="sm" v-if="!update" :disabled="!meta.valid">
+					<base-button type="default" nativeType="submit" size="sm" v-if="!update">
 						Aceptar
 					</base-button>
 					<base-button type="default" nativeType="submit" size="sm" v-if="update"

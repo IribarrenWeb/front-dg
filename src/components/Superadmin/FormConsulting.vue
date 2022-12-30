@@ -4,43 +4,44 @@
         <q-separator spaced="20px" />
         <q-form @submit.prevent="submit" class="q-col-gutter-md">
 
-            <form-block title="Datos generales">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
-                        type="text" label="Nombre consultoria" />
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.email" :rules="[val => val?.length || 'El email es requerido']" outlined
-                        type="text" label="Email" />
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.dni" mask="#########" :rules="[val => val?.length || 'El DNI es requerido']" outlined
-                        type="text" label="DNI" />
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.phone_number" mask="#########" :rules="[val => val?.length || 'El movil es requerido']" outlined
-                        type="text" label="Movil" />
-                </div>
-            </form-block>
-
             <form-block title="Datos de consultoria">
                 <div class="col-12 col-md-6 col-lg-4">
                     <q-input v-model="model.consultancy_name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
-                        type="text" label="Nombre empresa" />
+                        type="text" label="Nombre" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
                     <q-input v-model="model.consultancy_email" :rules="[val => val?.length || 'El email es requerido']" outlined
                         type="text" label="Email" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.cif_nif" mask="#########" :rules="[val => val?.length || 'El DNI es requerido']" outlined
+                    <q-input v-model="model.cif_nif" mask="XXXXXXXXX" :rules="[val => val?.length || 'El DNI es requerido']" outlined
                         type="text" label="CIF/DNI" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.consultancy_phone" mask="#########" :rules="[val => val?.length || 'El movil es requerido']" outlined
+                    <q-input v-model="model.consultancy_phone" mask="XXXXXXXXX" :rules="[val => val?.length || 'El movil es requerido']" outlined
                         type="text" label="Movil" />
                 </div>
             </form-block>
+
+            <form-block title="Datos representante legal">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <q-input v-model="model.name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
+                        type="text" label="Nombre" />
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <q-input v-model="model.email" :rules="[val => val?.length || 'El email es requerido']" outlined
+                        type="text" label="Email" />
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <q-input v-model="model.dni" mask="XXXXXXXXX" :rules="[val => val?.length || 'El DNI es requerido']" outlined
+                        type="text" label="DNI" />
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <q-input v-model="model.phone_number" mask="XXXXXXXXX" :rules="[val => val?.length || 'El movil es requerido']" outlined
+                        type="text" label="Movil" />
+                </div>
+            </form-block>
+
            
             <form-block title="Dirección">
                 <address-select-v-2 v-model:address="model.address.address" v-model:city="model.address.city"
@@ -70,6 +71,7 @@ import { Notify } from 'quasar'
 import { useStore } from 'vuex'
 import AddressSelectV2 from '../core_components/AddressSelectV2.vue'
 import FormBlock from '../Utils/FormBlock.vue'
+import functions from '../../utils/functions'
 export default {
     components: { AddressSelectV2, FormBlock },
     props: {
@@ -81,10 +83,10 @@ export default {
     setup(props, { emit }) {
         const store = useStore();
         const role = computed(() => store.getters.ROLE)
+        const originalModel = ref(null)
         const model = ref({
             name: null,
             email: null,
-            address: null,
             consultancy_name: null,
             cif_nif: null,
             consultancy_phone: null,
@@ -108,15 +110,26 @@ export default {
         async function submit() {
             try {
                 loading.value = true
-                await modelService.apiNoLoading({ url: `consulting`, method: 'POST', data: model.value })
+                let action = 'registrada';
+                if (consultancy_data.value) {
+                    const data = functions.difference(originalModel.value,model.value)
+                    if (data) {
+                        await modelService.apiNoLoading({ url: `consulting/${props.consultingId}`, method: 'PUT', data: data })
+                        emit('updated', true);
+                    }
+                    action = 'actualizada'
+                }else{
+                    await modelService.apiNoLoading({ url: `consulting`, method: 'POST', data: model.value })
+                    emit('saved', true);
+                }
                 loading.value = false
-
+                
                 Notify.create({
-                    message: 'Consultoria registrada',
+                    message: 'Consultoria '+ action,
                     color: 'positive'
                 })
-                emit('saved', true);
             } catch (error) {
+                console.error(error);
                 const serverMessage = error?.request?.response ? JSON.parse(error?.request?.response) : null
                 const message = serverMessage?.message ?? 'Ocurrio un error al registrar la consultoria';
                 loading.value = false
@@ -129,10 +142,13 @@ export default {
 
         async function getConsulting(){
             try {
-                
+                loading.value = true
+                const res = await modelService.apiNoLoading({ url: `consulting/${props.consultingId}` })
+                loading.value = false
+                consultancy_data.value = res?.data?.data
             } catch (error) {
                 const serverMessage = error?.request?.response ? JSON.parse(error?.request?.response) : null
-                const message = serverMessage?.message ?? 'Ocurrio un error al registrar la consultoria';
+                const message = serverMessage?.message ?? 'Ocurrio un error al obtener la consultoria';
                 loading.value = false
                 Notify.create({
                     message: message,
@@ -142,16 +158,33 @@ export default {
         }
 
         watch(() => props.consultingId, (v) => {
-            if (condition) {
-                
-            }
-        })
+            if (v) getConsulting()
+        }, {immediate: true})
 
+        watch(() => consultancy_data.value, (v) => {
+            if (v?.id) {
+                model.value = {
+                    name: v?.user?.name,
+                    email: v?.user?.email,
+                    address: v?.address,
+                    consultancy_name: v?.consultancy_name,
+                    cif_nif: v?.cif_nif,
+                    consultancy_phone: v?.consultancy_phone,
+                    consultancy_email: v?.consultancy_email,
+                    dni: v?.dni,
+                    phone_number: v?.phone_number,
+                    firm_date: v?.firm_date
+                }
+
+                originalModel.value = JSON.parse(JSON.stringify(model.value))
+            }
+        }, {immediate: true})
 
 
         return {
             loading,
             model,
+            consultancy_data,
             submit,
         }
     }
