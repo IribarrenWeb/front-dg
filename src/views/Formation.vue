@@ -28,7 +28,7 @@ export default {
 		});
 
 		function handleReload() {
-			reload = true
+			reload.value = true
 		}
 
 		return {
