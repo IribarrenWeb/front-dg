@@ -21,7 +21,7 @@
 					<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
 						color="grey-7">
 						<q-list bordered>
-							<q-item @click="selectedId = props.row?.profile?.id, showAdd = true" style="min-width: 200px;text-align: center;" clickable v-close-popup>
+							<q-item v-if="typeUser == 'business'" @click="selectedId = props.row?.profile?.id, showAdd = true" style="min-width: 200px;text-align: center;" clickable v-close-popup>
 								<q-item-section>
 									<q-item-label>Detalles</q-item-label>
 								</q-item-section>
@@ -42,7 +42,7 @@
 			<!-- <q-card :style="{minWidth: typeUser == 'consulting' ? '500px' : '100%'}"> -->
 			<q-card :style="{minWidth: '100%'}">
 				<q-card-section class="q-pa-lg">
-					<form-auditor v-if="typeUser == 'auditors'" @closeModal="showAdd = false" @saved="getUsers()"/>
+					<form-auditor v-if="typeUser == 'auditors'" :id="selectedId" @closeModal="showAdd = false" @saved="getUsers()"/>
 					<form-consulting v-else-if="typeUser == 'consulting'" :consultingId="selectedId" @cancel="showAdd = false" @updated="getUsers(true)" @saved="getUsers()"/>
 					<form-business v-else-if="typeUser == 'business'" @close="showAdd = false" @saved="getUsers()"/>
 				</q-card-section>
