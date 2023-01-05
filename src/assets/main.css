@@ -192,7 +192,9 @@
 .bac-ligth{
     background: #F6F9FC;
 }
-
+.swal2-container {
+    z-index: 10000;
+}
 .multiselect__tags{
     display: block;
     width: 100%;

@@ -28,7 +28,8 @@
 									<h6 class="heading-small text-muted mb-4">
 										Informacion de usuario
 									</h6>
-									<form-validate @submit="updateUser" class="row">
+									<form-consulting :profileMode="true" v-if="model?.profile?.id" :consultingId="model.profile.id"/>
+									<form-validate v-else @submit="updateUser" class="row">
 										<div class="col-md-6">
 											<base-field name="name" label="Nombre">
 												<field-validate class="form-control" name="name" label="nombre"
@@ -128,6 +129,7 @@ import FormPassword from "../components/Auth/FormPassword";
 import ShowBusiness from "../components/Business/ShowBusiness";
 import apiService from "../store/services/model-service.js";
 import { useStore } from "vuex";
+import FormConsulting from "../components/Superadmin/FormConsulting.vue";
 import ProfileShow from "../components/ProfileShow";
 
 export default {
@@ -138,6 +140,7 @@ export default {
 		FormPassword,
 		ShowBusiness,
 		ProfileShow,
+		FormConsulting
 	},
 	setup() {
 		const model = ref({

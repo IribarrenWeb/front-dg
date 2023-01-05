@@ -37,7 +37,7 @@ import InformsTable from '../AnnualReport/InformsTable.vue'
 import NonTable from '../Non/NonTable.vue'
 import VisitTablet from '../Visit/VisitTablet.vue'
 import { useStore } from 'vuex'
-import { watch } from '@vue/runtime-core'
+import { computed, watch } from '@vue/runtime-core'
 import modelService from '../../store/services/model-service'
 export default {
     components: { VisitTablet, InformsTable, NonTable },

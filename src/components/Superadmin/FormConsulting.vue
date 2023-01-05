@@ -1,43 +1,43 @@
 <template>
     <div>
-        <h3>{{ consultingId ? 'Editar' : 'Registrar' }} consultoria</h3>
-        <q-separator spaced="20px" />
+        <h3 v-if="!profileMode">{{ consultingId ? 'Editar' : 'Registrar' }} consultoria</h3>
+        <q-separator v-if="!profileMode" spaced="20px" />
         <q-form @submit.prevent="submit" class="q-col-gutter-md">
 
             <form-block title="Datos de consultoria">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.consultancy_name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
+                    <qu-input-validation apiName="consultancy_name" v-model="model.consultancy_name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
                         type="text" label="Nombre" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.consultancy_email" :rules="[val => val?.length || 'El email es requerido']" outlined
+                    <qu-input-validation apiName="consultancy_email" v-model="model.consultancy_email" :rules="[val => val?.length || 'El email es requerido']" outlined
                         type="text" label="Email" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.cif_nif" mask="XXXXXXXXX" :rules="[val => val?.length || 'El DNI es requerido']" outlined
+                    <qu-input-validation apiName="cif_nif" v-model="model.cif_nif" mask="XXXXXXXXX" :rules="[val => val?.length || 'El DNI es requerido']" outlined
                         type="text" label="CIF/DNI" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.consultancy_phone" mask="XXXXXXXXX" :rules="[val => val?.length || 'El movil es requerido']" outlined
+                    <qu-input-validation apiName="consultancy_phone" v-model="model.consultancy_phone" mask="XXXXXXXXX" :rules="[val => val?.length || 'El movil es requerido']" outlined
                         type="text" label="Movil" />
                 </div>
             </form-block>
 
             <form-block title="Datos representante legal">
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
+                    <qu-input-validation apiName="name" v-model="model.name" :rules="[val => val?.length || 'El nombre es requerido']" outlined
                         type="text" label="Nombre" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.email" :rules="[val => val?.length || 'El email es requerido']" outlined
+                    <qu-input-validation apiName="email" v-model="model.email" :rules="[val => val?.length || 'El email es requerido']" outlined
                         type="text" label="Email" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.dni" mask="XXXXXXXXX" :rules="[val => val?.length || 'El DNI es requerido']" outlined
+                    <qu-input-validation apiName="dni" v-model="model.dni" mask="XXXXXXXXX" :rules="[val => val?.length || 'El DNI es requerido']" outlined
                         type="text" label="DNI" />
                 </div>
                 <div class="col-12 col-md-6 col-lg-4">
-                    <q-input v-model="model.phone_number" mask="XXXXXXXXX" :rules="[val => val?.length || 'El movil es requerido']" outlined
+                    <qu-input-validation apiName="phone_number" v-model="model.phone_number" mask="XXXXXXXXX" :rules="[val => val?.length || 'El movil es requerido']" outlined
                         type="text" label="Movil" />
                 </div>
             </form-block>
@@ -72,12 +72,17 @@ import { useStore } from 'vuex'
 import AddressSelectV2 from '../core_components/AddressSelectV2.vue'
 import FormBlock from '../Utils/FormBlock.vue'
 import functions from '../../utils/functions'
+import QuInputValidation from '../core_components/FormQuasar/QuInputValidation.vue'
 export default {
-    components: { AddressSelectV2, FormBlock },
+    components: { AddressSelectV2, FormBlock, QuInputValidation },
     props: {
         consultingId: {
             type: Number,
             default: null
+        },
+        profileMode: {
+            type: Boolean,
+            default: false
         }
     },
     setup(props, { emit }) {
@@ -166,7 +171,7 @@ export default {
                 model.value = {
                     name: v?.user?.name,
                     email: v?.user?.email,
-                    address: v?.address,
+                    address: functions.assignSchema('address',v?.address),
                     consultancy_name: v?.consultancy_name,
                     cif_nif: v?.cif_nif,
                     consultancy_phone: v?.consultancy_phone,
