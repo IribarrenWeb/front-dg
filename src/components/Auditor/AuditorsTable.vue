@@ -30,7 +30,7 @@
 					<th>Email</th>
 					<th>Móvil</th>
 					<th>Ciudad</th>
-					<th>Delegado</th>
+					<th v-if="!$store.state.is_business">Delegado</th>
 					<th>PSICS</th>
 					<th>Acciones</th>
 				</template>
@@ -48,8 +48,8 @@
 					<td>
 						{{ row.item?.address?.city }}
 					</td>
-					<td>
-						{{ row.item?.delegate.user.full_name }}
+					<td v-if="!$store.state.is_business">
+						{{ row.item?.delegate?.user?.full_name }}
 					</td>
 					<td>
 						{{ row.item?.psics_number }}

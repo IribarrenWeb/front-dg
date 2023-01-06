@@ -15,7 +15,7 @@
 
 		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row items-center q-col-gutter-sm filter-container">
 			<installation-filter-v-2 v-model="filters.installation_id" class="col q-mb-none"
-				v-if="$store.state.is_business" />
+				v-if="$store.state.is_business && !installation_id" />
 			<text-filter-v-2 debounce="1000" outlined dense :loading="loading" type="number" class="col q-mb-none"
 				v-model="customFilters.un_code" label="UN" />
 			<text-filter-v-2 debounce="1000" outlined dense :loading="loading" type="text" class="col q-mb-none"

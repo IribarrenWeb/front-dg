@@ -22,6 +22,7 @@
 </template>
 <script>
 import { computed, ref } from '@vue/runtime-core'
+import { isEmpty } from 'lodash'
 import { useStore } from 'vuex'
 export default {
     props: {
@@ -39,6 +40,9 @@ export default {
                 roles: null,
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Usuarios',
@@ -47,6 +51,9 @@ export default {
                 roles: ['superadmin'],
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Empresas',
@@ -55,6 +62,10 @@ export default {
                 roles: ['business','business_no_adr','superadmin'],
                 not_condition: true,
                 no_adr: false,
+                or_not_conditions: {
+                    business_id: false,
+                    roles: ['auditor']
+                },
             },
             {
                 name: 'Cartas de porte',
@@ -63,6 +74,9 @@ export default {
                 roles: ['superadmin'],
                 not_condition: true,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Instalaciones',
@@ -71,6 +85,9 @@ export default {
                 roles: ['business','business_no_adr'],
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Empleados',
@@ -79,6 +96,9 @@ export default {
                 roles: ['business','business_no_adr'],
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Mercancías',
@@ -87,6 +107,9 @@ export default {
                 roles: ['business','business_no_adr'],
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Vehiculos',
@@ -95,6 +118,9 @@ export default {
                 roles: 'business',
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Auditorias',
@@ -103,6 +129,9 @@ export default {
                 roles: ['superadmin'],
                 not_condition: true,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Informes',
@@ -111,6 +140,9 @@ export default {
                 roles: ['superadmin'],
                 not_condition: true,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Delegación',
@@ -119,6 +151,9 @@ export default {
                 roles: ['admin'],
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Auditores',
@@ -127,6 +162,10 @@ export default {
                 roles: ['admin', 'delegate'],
                 not_condition: false,
                 no_adr: false,
+                or_conditions: {
+                    consultancy_id: true,
+                    roles: ['business']
+                },
             },
             {
                 name: 'Formaciones',
@@ -135,6 +174,9 @@ export default {
                 roles: ['delegate', 'auditor'],
                 not_condition: false,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Visitas',
@@ -143,6 +185,9 @@ export default {
                 roles: ['superadmin'],
                 not_condition: true,
                 no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
             },
             {
                 name: 'Solicitudes',
@@ -151,6 +196,10 @@ export default {
                 roles: ['delegate','auditor','business'],
                 not_condition: false,
                 no_adr: true,
+                or_conditions: {
+                    consultancy_id: false,
+                    not_roles: ['admin','superadmin']
+                }
             }
         ])
 
@@ -168,6 +217,7 @@ export default {
 
         function validate(menu) {
             let validation = true;
+            
             if (menu.roles) {
                 if (menu.not_condition) {
                     validation = !menu.roles.includes(role.value)
@@ -178,6 +228,40 @@ export default {
             if (validation && menu.no_adr && role.value == 'business') {
                 validation = store.state.is_bussines_no_adr
             } 
+
+            if (!validation && menu?.or_conditions) {
+                let fail = false;
+                Object.entries(menu?.or_conditions).forEach(entry => {
+                    const [key, value] = entry;
+                    if (key == 'roles') {
+                        fail = !value.includes(role.value)
+                    }else if(key == 'not_roles'){
+                        fail = value.includes(role.value)
+                    }else if (user.value?.profile && ((value && isEmpty(user.value?.profile[key])) || (!value && !isEmpty(user.value.profile[key])))) {
+                        fail = true
+                    }
+                });
+                validation = !fail
+                console.log('or', validation);
+            }
+
+            if (validation && menu?.or_not_conditions) {
+                let pass = false;
+                Object.entries(menu?.or_not_conditions).forEach((entry,idx) => {
+                    console.log(idx);
+                    if (!pass && idx >= 1) return
+
+                    const [key, value] = entry;
+                    if (key == 'roles') {
+                        pass = value.includes(role.value)
+                    }else if (user.value?.profile && ((value && !isEmpty(user.value?.profile[key])) || (!value && isEmpty(user.value.profile[key])))) {
+                        pass = true
+                    }
+                });
+                validation = pass ? false : true
+                console.log('notor', validation, pass, menu.path);
+            }
+
 
             return validation;
         }

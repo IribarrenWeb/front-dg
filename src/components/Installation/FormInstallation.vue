@@ -306,6 +306,7 @@ export default {
 		};
 	},
 	mounted() {
+		this.$store.commit('resetApiErrors')
 		this.initVals();
 		console.log(this.delegate_id);
 	},
@@ -376,7 +377,7 @@ export default {
 					this.installation_id = res.data.data.id;
 					this.isSaved = true;
 
-					if (this.ROLE != "business") {
+					if (this.ROLE != "business" && res.data.data?.audit_id) {
 						this.toAgend(res.data.data.audit_id);
 					}
 

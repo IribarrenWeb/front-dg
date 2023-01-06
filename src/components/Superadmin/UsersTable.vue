@@ -21,7 +21,7 @@
 					<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
 						color="grey-7">
 						<q-list bordered>
-							<q-item v-if="typeUser == 'business'" @click="selectedId = props.row?.profile?.id, showAdd = true" style="min-width: 200px;text-align: center;" clickable v-close-popup>
+							<q-item @click="handleShow(props.row)" style="min-width: 200px;text-align: center;" clickable v-close-popup>
 								<q-item-section>
 									<q-item-label>Detalles</q-item-label>
 								</q-item-section>
@@ -44,7 +44,7 @@
 				<q-card-section class="q-pa-lg">
 					<form-auditor v-if="typeUser == 'auditors'" :id="selectedId" @closeModal="showAdd = false" @saved="getUsers()"/>
 					<form-consulting v-else-if="typeUser == 'consulting'" :consultingId="selectedId" @cancel="showAdd = false" @updated="getUsers(true)" @saved="getUsers()"/>
-					<form-business v-else-if="typeUser == 'business'" @close="showAdd = false" @saved="getUsers()"/>
+					<form-business-update v-else-if="typeUser == 'business'" :businessData="selectedId" @close="showAdd = false" @saved="getUsers()"/>
 				</q-card-section>
 			</q-card>
 		</q-dialog>
@@ -62,10 +62,10 @@ import FormDelegate from '../Delegate/FormDelegate.vue'
 import FormConsulting from './FormConsulting.vue'
 import { Dialog, Notify } from 'quasar'
 import FormAuditor from '../Auditor/FormAuditor.vue'
-import FormBusiness from '../Business/FormBusiness.vue'
+import FormBusinessUpdate from '../Business/FormBusinessUpdate.vue'
 
 export default {
-	components: { TableHeader, FormDelegate, FormConsulting, FormAuditor, FormBusiness },
+	components: { TableHeader, FormDelegate, FormConsulting, FormAuditor, FormBusinessUpdate },
 	props: {
 		typeUser: {
 			type: String,
@@ -131,6 +131,9 @@ export default {
 				if (props.typeUser != 'consulting') {
 					url += `?includes[]=user`
 				}
+				if(props.typeUser == 'business') {
+					url += `&includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank`
+				}
 				const res = await modelService.api({ url })
 				console.log(res);
 				data.value = res?.data?.data ?? []
@@ -138,6 +141,13 @@ export default {
 			} catch (error) {
 
 			}
+		}
+
+		function handleShow(data){
+			if (props.typeUser != 'business') selectedId.value = data?.profile?.id ?? data?.id
+			else selectedId.value = data
+
+			showAdd.value = true
 		}
 
 		function destroy(id) {
@@ -190,6 +200,7 @@ export default {
 			getUsers,
 			translate,
 			destroy,
+			handleShow
 		}
 	}
 }
