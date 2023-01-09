@@ -47,7 +47,7 @@
 					</td>
 					<td class="text-uppercase" v-if="!byAuditableId">
 						<a v-if="row.item?.auditable != null" href="#" @click="showAuditor()">{{
-								row.item?.auditable.user.full_name
+							row.item?.auditable.user.full_name
 						}}</a>
 						<span v-else>SIN AUDITOR</span>
 					</td>
@@ -58,6 +58,8 @@
 						</router-link>
 						<a v-else href="#" @click.prevent="view(row.item?.id)" class="btn btn-sm btn-default"><i
 								class="fa-regular fa-eye"></i></a>
+						<a href="#" @click.prevent="assign = true,selectedInstallation = row.item" class="btn btn-sm btn-outline-default"><i
+								class="fa-solid fa-user-tie"></i></a>
 						<a href="#" @click.prevent="destroy(row.item?.id)" class="btn btn-sm btn-outline-default"><i
 								class="fa-regular fa-trash-can"></i></a>
 					</td>
@@ -71,8 +73,9 @@
 			<q-dialog v-if="modal" v-model="modal" full-width>
 				<q-card class="full-width q-pa-lg">
 					<q-card-section class="">
-						<form-installation class="pb-5" v-if="!isView" @close="modal = false" @reload="getInstallations()"
-							:business_id="business_id" :delegate_id="delegate_id"></form-installation>
+						<form-installation class="pb-5" v-if="!isView" @close="modal = false"
+							@reload="getInstallations()" :business_id="business_id"
+							:delegate_id="delegate_id"></form-installation>
 						<installation-show v-else :installation_id="installation_id" @reload="getInstallations()"
 							@close="(modal = false), (isView = false)"></installation-show>
 					</q-card-section>
@@ -100,6 +103,19 @@
 					@close="(modal = false), (isView = false)"
 				></installation-show>
 			</modal> -->
+			<q-dialog v-model="assign" persistent>
+				<q-card class="flex column" style="min-width: 500px;height: 300px;">
+					<q-card-section>
+						<q-input readonly dense :model-value="selectedInstallation?.auditable?.user?.full_name ?? 'Sin auditor'" outlined type="text" label="Auditor actual" />
+						<AsyncSelect :list="true" :roles="[3]" @selected="new_auditable = $event">
+						</AsyncSelect>
+					</q-card-section>
+					<q-card-actions align="right" style="margin-top: auto;">
+						<q-btn :loading="loadingAuditor" flat label="Cancelar" color="primary" v-close-popup />
+						<q-btn :loading="loadingAuditor" flat label="Asignar" color="primary" @click="assignAuditor" />
+					</q-card-actions>
+				</q-card>
+			</q-dialog>
 		</div>
 	</div>
 </template>
@@ -110,6 +126,7 @@ import InstallationShow from "../../components/Installation/InstallationShow.vue
 import { isNull } from "lodash";
 import CityFilter from "../../components/filters/CityFilter.vue";
 import AsyncSelect from "../../components/core_components/AsyncSelect.vue";
+import { Notify } from 'quasar';
 
 export default {
 	components: { FormInstallation, InstallationShow, CityFilter, AsyncSelect },
@@ -146,16 +163,20 @@ export default {
 	data() {
 		return {
 			tableData: {},
+			assign: false,
 			modal: false,
 			delegate: {},
 			metaData: {},
+			selectedInstallation: null,
 			page: 1,
 			clear: false,
+			new_auditable: null,
 			isView: false,
 			action: "Registrar",
 			installation_id: {},
 			params: 'includes[]=auditable.user&includes[]=employees&includes[]=province&order_by=id&order_direction=asc',
-			params_filter: null
+			params_filter: null,
+			loadingAuditor: false
 		};
 	},
 	mounted() {
@@ -165,6 +186,36 @@ export default {
 	methods: {
 		handleAdd() {
 			this.modal = true;
+		},
+		async assignAuditor() {
+			try {
+				if (!this.new_auditable?.id) {
+					Notify.create({
+						message: 'Debe seleccionar un auditor',
+						color: 'negative'
+					})
+					return
+				}
+				this.loadingAuditor = true
+				await service.api({url:`installations/${this.selectedInstallation.id}`, method: 'PUT', data: {
+					auditable_id: this.new_auditable?.id
+				}})
+				this.loadingAuditor = false
+				this.new_auditable = null
+				this.assign = false
+				Notify.create({
+					message: 'Auditor asignado correctamente',
+					color: 'positive'
+				})
+				this.getInstallations()
+				return
+			} catch (error) {
+				this.loadingAuditor = false
+				Notify.create({
+					message: 'Ocurrio un error al actualizar el auditor',
+					color: 'negative'
+				})
+			}
 		},
 		async getInstallations(page = 1) {
 			let response = null;
