@@ -3,7 +3,7 @@
         <q-list bordered class="">
             <q-item clickable v-ripple class="nav-link" v-for="menu, idx in enabled_menus" :key="idx" :to="menu.path">
                 <q-item-section avatar>
-                    <icon :class="menu.icon" />
+                    <i :class="menu.icon"></i>
                 </q-item-section>
 
                 <q-item-section>{{menu.name}}</q-item-section>
@@ -12,7 +12,7 @@
         <q-list>
             <q-item clickable v-ripple v-for="menu, idx in system_menues" :key="idx" :to="menu.path">
                 <q-item-section avatar>
-                    <icon :class="menu.icon" />
+                    <i :class="menu.icon"></i>
                 </q-item-section>
 
                 <q-item-section>{{menu.name}}</q-item-section>
@@ -63,7 +63,7 @@ export default {
                 not_condition: true,
                 no_adr: false,
                 or_not_conditions: {
-                    business_id: false,
+                    business_id: true,
                     roles: ['auditor']
                 },
             },
@@ -85,6 +85,12 @@ export default {
                 roles: ['business','business_no_adr'],
                 not_condition: false,
                 no_adr: false,
+                or_conditions: [
+                    {
+                        business_id: true,
+                        roles: ['auditor']
+                    },
+                ]
                 // or_conditions: {
                 //     // consultancy_id: false
                 // },
@@ -162,10 +168,17 @@ export default {
                 roles: ['admin', 'delegate'],
                 not_condition: false,
                 no_adr: false,
-                or_conditions: {
-                    consultancy_id: true,
-                    roles: ['business']
-                },
+                or_conditions: [
+                    // {
+                    //     consultancy_id: true,
+                    //     roles: ['business'],
+                    //     no_adr: true,
+                    // },
+                    {
+                        consultancy_id: false,
+                        roles: ['business'],
+                    },
+                ]
             },
             {
                 name: 'Formaciones',
@@ -195,11 +208,13 @@ export default {
                 path: '/business-aplication',
                 roles: ['delegate','auditor','business'],
                 not_condition: false,
-                no_adr: true,
-                or_conditions: {
-                    consultancy_id: false,
-                    not_roles: ['admin','superadmin']
-                }
+                no_adr: false,
+                or_conditions: [
+                    {
+                        consultancy_id: false,
+                        not_roles: ['admin','superadmin']
+                    },
+                ]
             }
         ])
 
@@ -215,6 +230,34 @@ export default {
             }
         ])
 
+        function validateEmpty(value){
+            let empty = false;
+            if (typeof value == 'number') {
+                empty = !(parseInt(value) >= 1)
+            }else{
+                empty = isEmpty(value)
+            }
+            return empty;
+        }
+
+        function validateOr(conditions){
+            let fail = false;
+            Object.entries(conditions).forEach(entry => {
+                const [key, value] = entry;
+
+                if (key == 'roles' && !value.includes(role.value)) {
+                    fail = true;
+
+                }else if(key == 'not_roles' && value.includes(role.value)){
+                    fail = true
+                }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && validateEmpty(user.value?.profile[key])) || (!value && !validateEmpty(user.value.profile[key])))) {
+                    fail = true
+                }
+
+            });
+            return !fail
+        }
+
         function validate(menu) {
             let validation = true;
             
@@ -229,20 +272,16 @@ export default {
                 validation = store.state.is_bussines_no_adr
             } 
 
-            if (!validation && menu?.or_conditions) {
-                let fail = false;
-                Object.entries(menu?.or_conditions).forEach(entry => {
-                    const [key, value] = entry;
-                    if (key == 'roles') {
-                        fail = !value.includes(role.value)
-                    }else if(key == 'not_roles'){
-                        fail = value.includes(role.value)
-                    }else if (user.value?.profile && ((value && isEmpty(user.value?.profile[key])) || (!value && !isEmpty(user.value.profile[key])))) {
-                        fail = true
-                    }
+            if (!validation && menu?.or_conditions?.length) {
+                let pass = false;
+                menu?.or_conditions.forEach(conditions => {
+                    if (pass) return
+                    pass = validateOr(conditions)
                 });
-                validation = !fail
-                console.log('or', validation);
+                
+                validation = pass
+                console.log('orConditions',validation) ;
+
             }
 
             if (validation && menu?.or_not_conditions) {
@@ -252,14 +291,16 @@ export default {
                     if (!pass && idx >= 1) return
 
                     const [key, value] = entry;
-                    if (key == 'roles') {
-                        pass = value.includes(role.value)
-                    }else if (user.value?.profile && ((value && !isEmpty(user.value?.profile[key])) || (!value && isEmpty(user.value.profile[key])))) {
+
+                    if (key == 'roles' && value.includes(role.value)) {
+                        pass = true
+                    }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
                         pass = true
                     }
+                    console.log('notor', validation, pass, key, value);
+
                 });
                 validation = pass ? false : true
-                console.log('notor', validation, pass, menu.path);
             }
 
 

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watchEffect } from 'vue';
 import Echo from 'laravel-echo'
 import { useStore } from 'vuex';
 import { filter, isEmpty } from 'lodash';
@@ -74,7 +74,7 @@ export default {
 
         function bindChannels() {
             console.log('BIND');
-            console.log(user.value.id);
+            // console.log(user.value.id);
             echo.value.private('users.' + user.value.id)
                 .notification((object) => {
                     audio.play();
@@ -119,14 +119,21 @@ export default {
             }
         }
 
-        watch(user, (val) => {
-            if (!isEmpty(val) && !isConnected.value) {
+        watchEffect(() => {
+            if (user.value?.id && !isConnected.value && echo.value) {
                 bindChannels()
                 isConnected.value = true
-            } else if (!isEmpty(echo.value)) {
-                // echo.value.disconnect()
             }
-        }, { immediate: true })
+        }, {immediate: true})
+
+        // watch(user, (val) => {
+        //     if (!isEmpty(val) && !isConnected.value) {
+        //         bindChannels()
+        //         isConnected.value = true
+        //     } else if (!isEmpty(echo.value)) {
+        //         // echo.value.disconnect()
+        //     }
+        // }, { immediate: true })
 
         return {
             connect,

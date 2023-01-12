@@ -232,7 +232,7 @@ export default {
 			formData.append("phone_number", this.model.phone_number);
 			formData.append("dni", this.model.dni);
 			formData.append("address", JSON.stringify(this.model.address));
-			if (this.ROLE != 'delegate') {
+			if (this.ROLE != 'delegate' && this.modelDelegate?.id && this.ROLE != 'business') {
 				formData.append("delegate_id", this.modelDelegate.id);
 			}
 			formData.append("certification_date", this.model.certification_date);
@@ -356,7 +356,7 @@ export default {
 		},
 		modelDelegate() {
 			let delegate = false
-			if (this.update && typeof this.model.delegate.id != 'undefined' && !this.new_delegate) {
+			if (this.ROLE != 'business' && this.update && typeof this.model.delegate.id != 'undefined' && !this.new_delegate) {
 				delegate = {
 					id: this.model.delegate.id,
 					name: this.model.delegate.user.full_name
