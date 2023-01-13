@@ -27,7 +27,7 @@
 						/>
 					</base-field>
 				</div>
-				<div class="col-lg-4" v-if="ROLE && ROLE != 'business'">
+				<div class="col-lg-4" v-if="ROLE && (ROLE != 'business' || ROLE != 'auditor')">
 					<base-field name="admin_document_type_id" label="Tipo de documento">
 						<select-filter @updated="model.admin_document_type_id = $event" :options="types" label="Selecciona un tipo..." placeholder=""/>
 						<field-validate v-model="model.admin_document_type_id" label="tipo de documento" name="admin_document_type_id" rules="required" v-show="false"/>
@@ -90,6 +90,9 @@
 				this.model.admin_document_type_id = 2
 				console.log(this.$store.state.profile.me.business.id);
 				this.model.business_id = this.$store.state.profile.me.business.id
+			}else if(this.ROLE == 'auditor' && this.$store.getters['profile/profile']?.business_id){
+				this.model.admin_document_type_id = 2
+				this.model.business_id = this.$store.getters['profile/profile']?.business_id
 			}
 			this.getTypes();
 		},
@@ -97,7 +100,7 @@
 			async onSubmit(values, { resetForm }) {
 				try {
 					const data = new FormData;
-
+	
                     data.append('name', this.model.name);
                     data.append('file', this.model.file[0]);
                     data.append('admin_document_type_id', this.model.admin_document_type_id);

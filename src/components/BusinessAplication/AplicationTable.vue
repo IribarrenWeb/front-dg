@@ -1,6 +1,6 @@
 <template>
 	<div class="custom-table">
-		<table-header :title="typeAplication">
+		<table-header :title="typeAplication == 'formation' ? 'Formaciones' : 'Auditorias'">
 			<q-btn v-if="role == 'business'" color="primary" label="Agregar" @click="showAdd = true" />
 		</table-header>
 		<q-table :loading="loading" table-class="table" table-header-class="thead-light" :rows="data" :columns="columns"

@@ -58,7 +58,7 @@
 						</router-link>
 						<a v-else href="#" @click.prevent="view(row.item?.id)" class="btn btn-sm btn-default"><i
 								class="fa-regular fa-eye"></i></a>
-						<a v-if="$store.state.is_business && !$store.state?.profile?.me?.profile?.consultancy_id" href="#" @click.prevent="assign = true,selectedInstallation = row.item" class="btn btn-sm btn-outline-default"><i
+						<a v-if="$store.state.is_business && !$store.getters['profile/profile']?.consultancy_id && !$store.getters['profile/profile']?.administrable_type" href="#" @click.prevent="assign = true,selectedInstallation = row.item" class="btn btn-sm btn-outline-default"><i
 								class="fa-solid fa-user-tie"></i>
 							<q-tooltip>
 								Asignar auditor

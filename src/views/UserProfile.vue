@@ -256,7 +256,7 @@ export default {
 				if (v > 0) {
 
 					let params = '';
-					if (v == 4 || v == 6) {
+					if ((v == 4 || v == 6) && store.getters['profile/profile']?.consultancy_id) {
 						params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
 
 						steps.value.push({
@@ -266,7 +266,7 @@ export default {
 						});
 					}
 
-					if (v == 3) {
+					if (v == 3 && store.getters['profile/profile']?.consultancy_id) {
 						params = 'includes[]=delegate.user';
 
 						steps.value.push({

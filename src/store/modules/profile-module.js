@@ -31,7 +31,8 @@ const actions = {
 };
 
 const getters = {
-    me: state => state.me
+    me: state => state.me,
+    profile: state => state.me?.profile
 };
 
 const profile = {
