@@ -126,13 +126,13 @@
 										<tr v-for="(material, idx) in materials" :key="material.id">
 											<th>
 												#{{ idx + 1 }} -
-												{{ material.installation.name }}
+												{{ material.installation?.name }}
 											</th>
 											<th>{{ material.operation.name }}</th>
-											<th>{{ material.material.packing.code }}</th>
-											<th>{{ material.material.class.code }}</th>
-											<th>{{ material.quantity_operation }} {{ material.unit }}</th>
-											<th>{{ material.installation.full_address }}</th>
+											<th>{{ material?.material?.packing.code }}</th>
+											<th>{{ material?.material?.class?.code }}</th>
+											<th>{{ material?.quantity_operation }} {{ material.unit }}</th>
+											<th>{{ material?.installation?.full_address }}</th>
 										</tr>
 									</tbody>
 									<tbody v-else>
@@ -319,16 +319,16 @@
 				</div>
 			</q-card-section>
 			<q-card-actions align="right">
-				<q-btn size="lg" :loading="(validating || loading)" label="Anterior" color="primary"
+				<q-btn size="md" :loading="(validating || loading)" label="Anterior" color="primary"
 					@click="currentStep--" v-if="currentStep !== 1" />
-				<q-btn size="lg" :loading="(validating || loading)" label="Siguiente" color="primary"
+				<q-btn size="md" :loading="(validating || loading)" label="Siguiente" color="primary"
 					v-if="currentStep < steps.length" @click="handleNext" />
-				<q-btn size="lg" :loading="(validating || loading)" color="primary"
+				<q-btn size="md" :loading="(validating || loading)" color="primary"
 					v-if="currentStep == steps.length && report?.status == 'PENDIENTE'"
 					:label="validating ? 'Validando..' : 'Generar'" @click="validate" />
-				<q-btn size="lg" :loading="(validating || loading)" label="Aceptar" color="primary"
+				<q-btn size="md" :loading="(validating || loading)" label="Aceptar" color="primary"
 					v-if="role != 'business' && report?.status == 'POR REVISAR'" @click="validate" />
-				<q-btn size="lg" outline :loading="(validating || loading)" label="Cerrar" color="primary"
+				<q-btn size="md" outline :loading="(validating || loading)" label="Cerrar" color="primary"
 					@click="handleClose" />
 			</q-card-actions>
 		</q-card>
@@ -437,7 +437,7 @@ export default {
 				if (res.data[1]) {
 					errors.value = res.data[0];
 				} else {
-					// generate()
+					generate()
 				}
 
 			} catch (err) {

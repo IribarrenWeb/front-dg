@@ -140,7 +140,7 @@ export default {
                 // },
             },
             {
-                name: 'Informes',
+                name: 'Informes anuales',
                 icon: 'ni ni-book-bookmark text-default',
                 path: '/informs',
                 roles: ['superadmin'],
