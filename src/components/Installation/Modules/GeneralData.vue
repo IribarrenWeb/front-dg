@@ -89,7 +89,7 @@
 					/>
 				</base-field>
 			</div>
-			<div class="col-lg-4" v-if="role != 'business'">
+			<div class="col-lg-4" v-if="role != 'business' || (role == 'business' && !$store.getters['profile/profile'].consultancy_id && !$store.getters['profile/profile'].administrable_type)">
 				<base-field
 					:name="form_id ? `installarions[${form_id}].` : '' + 'periodicy'"
 					label="Periodicidad de visitas"
