@@ -82,14 +82,14 @@ export default {
                 option_materials.value = res?.data?.data ? res.data.data.map(op => {
                     return {
                         value: op.id,
-                        label: `${op.material.un_code} - ${op?.name}`,
+                        label: `${op?.material?.un_code ?? 'MQ'} - ${op?.name}`,
                         model: op
                     }
                 }) : [];
                 // option_materials.value = data_options.value
                 options.value = option_materials.value
             } catch (err) {
-
+                console.error(err);
             }
         }
 
