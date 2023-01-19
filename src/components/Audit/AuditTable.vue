@@ -41,7 +41,7 @@
 					<select-filter class="col-md-3" v-model:clear="clear" :options="[
 						{ label: 'Pendiente', value: 'pendiente' },
 						{ label: 'Completado', value: 'completado' },
-						{ label: 'En progreso', value: 'en progreso' },
+						{ label: 'Incompleto', value: 'incompleto' },
 					]" placeholder="Selecciona un estado..." @updated="handleFilter('status', $event)" />
 				</div>
 			</div>
