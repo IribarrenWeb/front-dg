@@ -146,6 +146,10 @@ export default {
                 roles: ['superadmin'],
                 not_condition: true,
                 no_adr: false,
+                or_not_conditions: {
+                    no_adr: true,
+                    roles: ['business']
+                },
                 // or_conditions: {
                 //     // consultancy_id: false
                 // },

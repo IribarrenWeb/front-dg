@@ -67,6 +67,12 @@
 
 				<template v-slot:default="row">
 					<th scope="row">
+						<span class="q-mr-md" v-if="row.item?.complementary">
+							<q-icon name="fa-regular fa-square-plus" />
+							<q-tooltip>
+								Auditoria complementaria
+							</q-tooltip>
+						</span>
 						<span class="name mb-0 text-sm">{{
 								row.item?.installation.company.user.full_name
 						}}</span>

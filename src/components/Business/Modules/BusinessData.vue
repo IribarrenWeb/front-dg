@@ -57,9 +57,9 @@
 		</div>
 		<slot></slot>
 
-		<div class="col-lg-4 flex items-end custom-check" v-if="!update">
+		<div class="col-lg-4 flex items-end custom-check">
 			<base-field name="business_phone">
-				<q-checkbox :model-value="no_adr" @update:model-value="$emit('update:no_adr', $event)" label="Empresa no ADR" />
+				<q-checkbox :model-value="no_adr" :disable="update" @update:model-value="$emit('update:no_adr', $event)" label="Empresa no ADR" />
 			</base-field>
 		</div>
 

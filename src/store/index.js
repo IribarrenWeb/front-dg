@@ -195,7 +195,8 @@ export const store = createStore({
                                 }
                             })
                             .catch(error => {
-                                $swal.showValidationMessage('Ocurrio un error: ' + error)
+                                const message = error?.response?.data?.message ?? error;
+                                $swal.showValidationMessage('Ocurrio un error: ' + message)
                             })
                     } else {
                         $swal.showValidationMessage('Los campos fecha y hora son requeridos')

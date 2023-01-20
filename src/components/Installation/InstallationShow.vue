@@ -173,7 +173,7 @@
 		<div class="mt-4 row mx-0 justify-content-end">
 			<base-button type="default" @click="currentStep--" v-if="currentStep !== 1">Anterior</base-button>
 			<base-button type="default" @click="handleNext" v-if="currentStep < steps.length">Siguiente</base-button>
-			<base-button type="default" v-if="role != 'business'" :outline="true" @click="handleClose">Cerrar
+			<base-button type="default" v-if="role != 'business' && (role == 'auditor' && !$store.getters['profile/profile']?.business_id)" :outline="true" @click="handleClose">Cerrar
 			</base-button>
 		</div>
 	</div>
