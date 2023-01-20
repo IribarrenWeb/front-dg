@@ -520,6 +520,7 @@ export default {
 					null,
 					"includes[]=material&includes[]=operation" +
 					"&includes[]=installation" +
+					"&no_chemical=1" +
 					"&business_id=" +
 					business_id.value
 				);
