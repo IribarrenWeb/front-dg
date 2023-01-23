@@ -148,7 +148,7 @@ export default {
                 no_adr: false,
                 or_not_conditions: {
                     no_adr: true,
-                    roles: ['business']
+                    roles: ['business'],
                 },
                 // or_conditions: {
                 //     // consultancy_id: false
@@ -246,21 +246,21 @@ export default {
         }
 
         function validateOr(conditions){
-            let fail = false;
+            let count = 0;
+            let total = Object.entries(conditions).length
             Object.entries(conditions).forEach(entry => {
                 const [key, value] = entry;
 
                 if (key == 'roles' && !value.includes(role.value)) {
-                    fail = true;
-
+                    count++
                 }else if(key == 'not_roles' && value.includes(role.value)){
-                    fail = true
+                    count++
                 }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && validateEmpty(user.value?.profile[key])) || (!value && !validateEmpty(user.value.profile[key])))) {
-                    fail = true
+                    count++
                 }
 
             });
-            return !fail
+            return count == total
         }
 
         function validate(menu) {
@@ -290,22 +290,20 @@ export default {
             }
 
             if (validation && menu?.or_not_conditions) {
-                let pass = false;
+                let count = 0;
+                let total =  Object.entries(menu?.or_not_conditions).length
                 Object.entries(menu?.or_not_conditions).forEach((entry,idx) => {
-                    console.log(idx);
-                    if (!pass && idx >= 1) return
-
                     const [key, value] = entry;
 
                     if (key == 'roles' && value.includes(role.value)) {
-                        pass = true
+                        count++
                     }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
-                        pass = true
+                        count++
                     }
-                    console.log('notor', validation, pass, key, value);
+                    console.log('notor', total, count);
 
                 });
-                validation = pass ? false : true
+                validation = total == count ? false : true
             }
 
 

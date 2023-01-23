@@ -311,8 +311,14 @@ export default {
 		async canInitAudit(id){
 			Loading.show()
 			const res = await service.api({ url: `audits/${id}/can-init` })
+			if(!res?.data) {
+				Notify.create({
+					message: 'No se puede iniciar esta auditoria ya que no se ha culminado el ciclo anterior',
+					color: 'negative'
+				})
+			}
 			Loading.hide()
-			return res
+			return res?.data
 		},
 		async handleDocs(id) {
 			try {
@@ -341,13 +347,7 @@ export default {
 		async handleInit(item) {
 			const link = `/audit-init/${item.id}`;
 			const valid = await this.canInitAudit(item.id)
-			if (!valid) {
-				Notify.create({
-					message: 'No se puede iniciar esta auditoria ya que no se ha culminado el ciclo anterior',
-					color: 'negative'
-				})
-				return 
-			}
+			if (!valid) return 
 
 			if (item.can_init == null) {
 				let msg =
@@ -400,6 +400,9 @@ export default {
 			alert('canelll')
 		},
 		async toSchedule(id) {
+			const valid = await this.canInitAudit(id)
+			if (!valid) return
+
 			await this.$store.dispatch("toSchedule", {
 				model: "audits",
 				id: id,

@@ -129,7 +129,7 @@ export default {
       Loading.show()
       const res = await service.api({ url: `audits/${id}/can-init` })
       Loading.hide()
-      if (!res) {
+      if (!res?.data) {
         Notify.create({
 					message: 'No se puede iniciar esta auditoria ya que no se ha culminado el ciclo anterior',
 					color: 'negative'
