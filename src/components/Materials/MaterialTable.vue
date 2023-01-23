@@ -42,13 +42,13 @@
 				<template v-slot:default="row">
 					<td v-if="role == 'business'">{{ row.item?.installation.name }}</td>
 					<td>
-						{{ row.item?.material?.un_code ?? 'MATERIAL QUíMICO' }}
+						{{ row.item?.material?.un_code ?? 'MQ' }}
 					</td>
 					<td>{{ row.item?.name }}</td>
 					<td>{{ row.item?.operation?.name }}</td>
 					<td>
 						<span class="truncate-250">
-							{{ row.item?.material?.denomination_name ?? 'MATERIAL QUíMICO' }}
+							{{ row.item?.material?.denomination_name ?? 'MQ' }}
 						</span>
 						<q-tooltip v-if="row.item?.material?.denomination_name">
 							{{ row.item?.material.denomination_name }}

@@ -72,7 +72,7 @@
 							<th colspan="2" scope="row">GE</th>
 						</tr>
 						<tr>
-							<td>{{ material?.material?.un_code ?? 'MATERIAL QUÍMICO' }}</td>
+							<td>{{ material?.material?.un_code ?? 'MQ' }}</td>
 							<td>
 								<span
 									data-bs-toggle="tooltip"
@@ -112,6 +112,7 @@
 							<th scope="col">Cant. compra</th>
 							<th scope="col">Cant. venta</th>
 							<th scope="col">Cant. transportada</th>
+							<th scope="col">Vol. almacenamiento</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -120,6 +121,7 @@
 							<td>{{ material.buy }}</td>
 							<td>{{ material.sell }}</td>
 							<td>{{ material.transported }}</td>
+							<td>{{ material.quantity }}</td>
 						</tr>
 					</tbody>
 				</table>

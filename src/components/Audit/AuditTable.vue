@@ -241,7 +241,7 @@ import DateFilter from "../filters/DateFilter.vue";
 import InitTable from './InitTable.vue';
 import { baseUrl, apiUrl } from '../../axios/index';
 import DocsLoader from '../../loaders/DocsLoader.vue'
-import { Notify } from 'quasar';
+import { Loading, Notify } from 'quasar';
 
 export default {
 	name: "audits-table",
@@ -308,6 +308,12 @@ export default {
 		open(url) {
 			window.open(url, '_blank').focus();
 		},
+		async canInitAudit(id){
+			Loading.show()
+			const res = await service.api({ url: `audits/${id}/can-init` })
+			Loading.hide()
+			return res
+		},
 		async handleDocs(id) {
 			try {
 				this.showDocs = true
@@ -332,8 +338,17 @@ export default {
 				this.getAudits(this.page);
 			}
 		},
-		handleInit(item) {
+		async handleInit(item) {
 			const link = `/audit-init/${item.id}`;
+			const valid = await this.canInitAudit(item.id)
+			if (!valid) {
+				Notify.create({
+					message: 'No se puede iniciar esta auditoria ya que no se ha culminado el ciclo anterior',
+					color: 'negative'
+				})
+				return 
+			}
+
 			if (item.can_init == null) {
 				let msg =
 					"Esta auditoria no se puede iniciar ya que no esta programada";

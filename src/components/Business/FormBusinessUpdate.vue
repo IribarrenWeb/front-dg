@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form-business v-if="!businessData" @saved="$emit('saved',1)" @closed="$emit('close',1)"/>
+        <form-business v-if="!businessData" @saved="$emit('saved',1)" @close="$emit('close',1)"/>
         <show-business v-else :business="businessData" @close="$emit('close',1)" @reload="$emit('saved',1)" />
     </div>
 </template>
