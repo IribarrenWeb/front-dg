@@ -88,6 +88,36 @@ function rolename(role) {
     }
     return role;
 }
+function translateRolename(role) {
+    console.log(role);
+    switch (role) {
+        case 1:
+            role = 'consultoria';
+            break;
+        case 2:
+            role = 'delegación';
+            break;
+        case 3:
+            role = 'auditor';
+            break;
+        case 4:
+            role = 'empresa';
+            break;
+
+        case 5:
+            role = 'superadmin';
+            break;
+
+        case 6:
+            role = 'empresa';
+            break;
+
+        default:
+            role = false
+            break;
+    }
+    return role;
+}
 function pluck(arr, key) {
     return arr.map(i => i[key]);
 }
@@ -239,5 +269,6 @@ export default {
     timeAgo,
     assignSchema,
     toBase64,
-    toCapitalize
+    toCapitalize,
+    translateRolename
 }

@@ -10,9 +10,12 @@
 						spinner-size="10px"
 					/>
 				</q-avatar>
-				<div class="text-center q-ml-md flex column" v-if="!mobile">
+				<div class="text-center q-ml-md flex column text-uppercase" v-if="!mobile">
 					<span>{{me.full_name}}</span>
-					<span class="text-muted text-left" v-if="$store.state.is_business && $store.getters['profile/profile']?.no_adr">NO ADR</span>
+					<span class="text-muted text-left" >
+						{{ $store.getters.ROLE_TRANSLATE }}
+						<span v-if="$store.state.is_business">{{$store.getters['profile/profile']?.no_adr ? 'NO ADR' : 'ADR'}}</span>
+					</span>
 				</div>
 			</div>
 		</template>

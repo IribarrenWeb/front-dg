@@ -72,7 +72,7 @@
 							<th colspan="2" scope="row">GE</th>
 						</tr>
 						<tr>
-							<td>{{ material?.material?.un_code ?? 'MQ' }}</td>
+							<td>{{ material?.material?.un_code ?? 'PQ' }}</td>
 							<td>
 								<span
 									data-bs-toggle="tooltip"

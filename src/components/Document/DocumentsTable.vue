@@ -193,7 +193,7 @@ export default {
 				name: 'created_by',
 				label: 'Subido por',
 				align: 'left',
-				field: row => !row.is_folder ? row.created_by : '',
+				field: row => !row?.is_folder ? row.created_by?.full_name : '',
 			},
 			{
 				name: 'actions',

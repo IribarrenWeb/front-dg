@@ -29,6 +29,7 @@ export const store = createStore({
             is_auditor: false,
             is_business: false,
             is_bussines_no_adr: false,
+            is_superadmin: false,
             is_mobile: window.innerWidth <= 760,
             loader: false,
             apiErrors: {},
@@ -45,6 +46,10 @@ export const store = createStore({
         ROLE(state) {
             let role = state.role
             return functions.rolename(role)
+        },
+        ROLE_TRANSLATE(state) {
+            let role = state.role
+            return functions.translateRolename(role)
         },
         CURRENT_DATE(state) {
             return state.current
@@ -106,6 +111,7 @@ export const store = createStore({
             state.is_delegate = payload == 2;
             state.is_auditor = payload == 3;
             state.is_business = payload == 4 || payload == 6;
+            state.is_superadmin = payload == 5;
             state.is_bussines_no_adr = payload == 6;
         },
         stopedCamera(state, payload = null) {

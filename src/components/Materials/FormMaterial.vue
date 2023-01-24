@@ -42,7 +42,7 @@
 					</div>
 					<div class="col-lg-4 flex items-center">
 						<!-- <base-field name="is_chemical" label="Es un material quimico"> -->
-							<q-checkbox :true-value="1" :false-value="0" :disable="update" v-model="model.is_chemical" label="Es un material químico" />
+							<q-checkbox :true-value="1" :false-value="0" :disable="update" v-model="model.is_chemical" label="Es un producto químico" />
 						<!-- </base-field> -->
 					</div>
 					<div class="col-lg-8" v-if="!model.is_chemical">
