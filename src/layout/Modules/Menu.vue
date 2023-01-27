@@ -251,15 +251,16 @@ export default {
             Object.entries(conditions).forEach(entry => {
                 const [key, value] = entry;
 
-                if (key == 'roles' && !value.includes(role.value)) {
+                if (key == 'roles' && value.includes(role.value)) {
                     count++
-                }else if(key == 'not_roles' && value.includes(role.value)){
+                }else if(key == 'not_roles' && !value.includes(role.value)){
                     count++
-                }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && validateEmpty(user.value?.profile[key])) || (!value && !validateEmpty(user.value.profile[key])))) {
+                }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
                     count++
                 }
 
             });
+
             return count == total
         }
 
