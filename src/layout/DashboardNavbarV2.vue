@@ -31,6 +31,16 @@
 				</q-item-section>
 			</q-item>
 
+			<q-item clickable v-close-popup @click="onItemClick" to="/billing">
+				<q-item-section avatar>
+					<i class="ni ni-single-02"></i>
+				</q-item-section>
+				<q-item-section>
+					<q-item-label>Suscripciones</q-item-label>
+					<!-- <q-item-label caption>February 22, 2016</q-item-label> -->
+				</q-item-section>
+			</q-item>
+
 			<q-item clickable v-close-popup @click="logout">
 				<q-item-section avatar>
 					<i class="ni ni-user-run"></i>

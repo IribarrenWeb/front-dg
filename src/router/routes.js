@@ -75,10 +75,15 @@ const Aplication = defineAsyncComponent({ loader: () => import('../views/Busines
 
 const Users = defineAsyncComponent({ loader: () => import('../views/Users.vue'),loadingComponent: PageLoader}); 
 
+const Billing = defineAsyncComponent({ loader: () => import('../views/Billing.vue'),loadingComponent: PageLoader}); 
+
+const NoAuthorize = defineAsyncComponent({ loader: () => import('../views/NoAuthorize.vue'),loadingComponent: PageLoader}); 
+
 
 //import middleware
 import auth from "@/middleware/auth";
 import guest from "@/middleware/guest";
+import billable from "@/middleware/billable";
 
 import auditInit from './routes/audit_routes';
 
@@ -97,6 +102,12 @@ const routes = [{
                 name: "detalle de empresa",
                 components: { default: BusinessDetail },
                 meta: { middleware: auth },
+            },
+            {
+                path: "/billing",
+                name: "Subscripciones",
+                components: { default: Billing },
+                meta: { middleware: [auth, billable] },
             },
             {
                 path: "/business",
@@ -265,6 +276,12 @@ const routes = [{
                 path: "/visits",
                 name: "visitas",
                 components: { default: Visits },
+                meta: { middleware: auth },
+            },
+            {
+                path: "/no-authorized",
+                name: "unauth",
+                components: { default: NoAuthorize },
                 meta: { middleware: auth },
             },
             auditInit

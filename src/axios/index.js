@@ -14,6 +14,8 @@ if (host == 'localhost') {
     baseUrl = import.meta.env.VITE_API_URL_DEV
 }
 
+const stripeKey = import.meta.env.VITE_STRIPE_KEY
+
 axios.defaults.baseURL = apiUrl;
 
 axios.interceptors.request.use(function(config) {
@@ -48,4 +50,4 @@ axios.interceptors.response.use(function(response) {
     return Promise.reject(error);
 });
 
-export { axios, apiUrl, baseUrl };
+export { axios, apiUrl, baseUrl, stripeKey };
