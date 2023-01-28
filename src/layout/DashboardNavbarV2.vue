@@ -21,7 +21,7 @@
 		</template>
 
 		<q-list>
-			<q-item clickable v-close-popup @click="onItemClick" to="/profile">
+			<q-item clickable v-close-popup to="/profile">
 				<q-item-section avatar>
 					<i class="ni ni-single-02"></i>
 				</q-item-section>
@@ -31,12 +31,12 @@
 				</q-item-section>
 			</q-item>
 
-			<q-item clickable v-close-popup @click="onItemClick" to="/billing">
+			<q-item clickable v-close-popup to="/billing" v-if="$store?.state?.profile?.me?.is_billable">
 				<q-item-section avatar>
-					<i class="ni ni-single-02"></i>
+					<i class="fa-solid fa-building-columns"></i>
 				</q-item-section>
 				<q-item-section>
-					<q-item-label>Suscripciones</q-item-label>
+					<q-item-label>Facturación</q-item-label>
 					<!-- <q-item-label caption>February 22, 2016</q-item-label> -->
 				</q-item-section>
 			</q-item>

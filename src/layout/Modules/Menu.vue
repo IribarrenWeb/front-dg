@@ -56,6 +56,17 @@ export default {
                 // },
             },
             {
+                name: 'Planes',
+                icon: 'fa-solid fa-bolt text-default',
+                path: '/plans',
+                roles: ['superadmin'],
+                not_condition: false,
+                no_adr: false,
+                // or_conditions: {
+                //     // consultancy_id: false
+                // },
+            },
+            {
                 name: 'Empresas',
                 icon: 'fa-solid fa-building-columns text-default',
                 path: '/business',

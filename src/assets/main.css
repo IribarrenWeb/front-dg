@@ -18,6 +18,18 @@
     }
 }
 
+.custom-shadow{
+    box-shadow: -1px 8px 29px -5px rgba(93,93,93,0.65);
+    /* -webkit-box-shadow: -1px 8px 29px -5px rgba(93,93,93,0.65);
+    -moz-box-shadow: -1px 8px 29px -5px rgba(93,93,93,0.65); */
+}
+.custom-shadow-sm{
+    box-shadow: 1px 2px 17px -5px rgb(93 93 93 / 65%);
+    /* box-shadow: -1px 8px 29px -5px rgba(93,93,93,0.65); */
+    /* -webkit-box-shadow: -1px 8px 29px -5px rgba(93,93,93,0.65);
+    -moz-box-shadow: -1px 8px 29px -5px rgba(93,93,93,0.65); */
+}
+
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.5s ease;

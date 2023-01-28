@@ -10,7 +10,7 @@
                         <q-btn flat icon="arrow_back_ios" color="grey-3" v-else to="/audits">REGRESAR</q-btn>
                     </div>
                     <q-toolbar-title v-if="!mobile && !inAudit" class="text-uppercase">
-                        {{$route.name}}
+                        {{$route?.meta?.description ?? $route?.name}}
                     </q-toolbar-title>
                 </q-toolbar>
                 <div class="col flex justify-end items-center">
@@ -56,7 +56,7 @@ import Notifications from '../components/Notifications.vue';
 import DashboardNavbarV2 from './DashboardNavbarV2.vue';
 import { useStore } from 'vuex';
 import MenuAside from './Modules/Menu.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default {
     components: { Notifications, DashboardNavbarV2, MenuAside },
@@ -65,6 +65,7 @@ export default {
         const logo = ref(baseUrl + 'img/dg_logo.png')
         const store = useStore()
         const route = useRoute()
+        const router = useRouter()
         const me = computed(() => store.state.profile.me ?? {})
         const mobile = computed(() => window.innerWidth <= 1018)
         async function loadUser() {
@@ -83,6 +84,7 @@ export default {
             me,
             inAudit,
             route,
+            router,
             mobile,
             toggleLeftDrawer() {
                 leftDrawerOpen.value = !leftDrawerOpen.value

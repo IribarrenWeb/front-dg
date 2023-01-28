@@ -75,7 +75,9 @@ const Aplication = defineAsyncComponent({ loader: () => import('../views/Busines
 
 const Users = defineAsyncComponent({ loader: () => import('../views/Users.vue'),loadingComponent: PageLoader}); 
 
-const Billing = defineAsyncComponent({ loader: () => import('../views/Billing.vue'),loadingComponent: PageLoader}); 
+const Billing = defineAsyncComponent({ loader: () => import('../views/Billing.vue'),loadingComponent: PageLoader});
+
+const Plans = defineAsyncComponent({ loader: () => import('../views/Plans.vue'),loadingComponent: PageLoader}); 
 
 const NoAuthorize = defineAsyncComponent({ loader: () => import('../views/NoAuthorize.vue'),loadingComponent: PageLoader}); 
 
@@ -99,15 +101,22 @@ const routes = [{
             },
             {
                 path: "/business/:id",
-                name: "detalle de empresa",
+                name: "business_detail",
                 components: { default: BusinessDetail },
-                meta: { middleware: auth },
+                meta: { middleware: auth, description: 'detalle de empresa' },
             },
             {
                 path: "/billing",
-                name: "Subscripciones",
+                name: "billing",
                 components: { default: Billing },
-                meta: { middleware: [auth, billable] },
+                meta: { middleware: [auth, billable], description: "Subscripciones" },
+            },
+            {
+                path: "/plans",
+                name: "plans",
+                description: "Planes",
+                components: { default: Plans },
+                meta: { middleware: [auth], description: 'Planes' },
             },
             {
                 path: "/business",
@@ -183,9 +192,9 @@ const routes = [{
                     },
                     {
                         path: "nonconformities",
-                        name: "no conformidades",
+                        name: "nonconformities",
                         components: { default: NonTable },
-                        meta: { middleware: auth },
+                        meta: { middleware: auth, description: "no conformidades" },
 
                     },
                 ]
@@ -282,7 +291,7 @@ const routes = [{
                 path: "/no-authorized",
                 name: "unauth",
                 components: { default: NoAuthorize },
-                meta: { middleware: auth },
+                meta: { middleware: auth, description:'No autorizado' },
             },
             auditInit
         ],
