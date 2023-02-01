@@ -1,6 +1,7 @@
 <template>
-    <q-card class="shadow-2 q-mx-lg custom-shadow-sm" :class="{ 'border border-primary': idx == 2 && plan.id != actualPlan, 'border border-success': plan.id == actualPlan }" v-for="plan, idx in plans"
-        :key="idx">
+    <q-card class="shadow-2 q-mx-lg custom-shadow-sm"
+        :class="{ 'border border-primary': idx == 2 && plan.id != actualPlan, 'border border-success': plan.id == actualPlan }"
+        v-for="plan, idx in plans" :key="idx">
         <q-card-section>
             <div class="flex items-center q-mx-md">
                 <q-icon color="primary" name="fa-solid fa-infinity" class="q-mr-md" size="40px" v-if="idx == 0" />
@@ -16,9 +17,16 @@
                     </div>
                 </div>
                 <q-space />
-                <q-badge floating color="primary" v-if="idx == 2 && plan.id != actualPlan" text-color="white" label="Recomendado" />
+                <q-badge floating color="primary" v-if="idx == 2 && plan.id != actualPlan" text-color="white"
+                    label="Recomendado" />
                 <q-badge floating color="success" v-if="plan.id == actualPlan" text-color="white" label="Plan actual" />
-                <q-btn color="primary" v-if="plan.id != actualPlan" label="Suscribirse" @click="onClick" />
+                <div>
+                    <q-btn color="primary" v-if="plan.id != actualPlan && idx >= 1" :disable="!plan?.is_active" label="Suscribirse"
+                        @click="subscribe(plan)" :loading="loading" />
+                    <q-tooltip v-if="!plan?.is_active">
+                        Este plan no esta disponible actualmente
+                    </q-tooltip>
+                </div>
                 <!-- <q-btn color="primary" v-else disable label="Suscrito" @click="onClick" /> -->
             </div>
 
@@ -38,8 +46,10 @@
     </q-card>
 </template>
 <script>
-import { computed } from '@vue/runtime-core'
+import { computed, ref } from '@vue/runtime-core'
 import { useStore } from 'vuex'
+import { Dialog, Notify } from 'quasar'
+import modelService from '../../store/services/model-service'
 export default {
     props: {
         plans: {}
@@ -47,9 +57,55 @@ export default {
     setup(props) {
         const store = useStore()
         const actualPlan = computed(() => store.state?.profile?.me?.subscription_plan_id)
+        const actualPlanStripe = computed(() => store.state?.profile?.me?.subscriptions?.length ? store.state?.profile?.me?.subscriptions[0] : null )
+        const loading = ref(false)
+
+        function subscribe(plan) {
+            Dialog.create({
+                title: `Suscribirse al plan ${plan.name}`,
+                message: '¿Estas seguro de suscribirte a este plan?',
+                ok: {
+                    label: 'Suscribirse',
+                },
+                cancel: {
+                    label: 'Cancelar',
+                    outline: true
+                }
+            }).onOk(async () => {
+                if (!plan?.is_active) {
+                    Notify.create({
+                        message: 'Este plan no esta disponible actualmente',
+                        color: 'negative'
+                    })
+                    return
+                }
+
+                try {
+                    loading.value = true
+                    await modelService.apiNoLoading({ url: 'billing/subscription', data: { plan_id: plan.id,price_id: plan.stripe_price }, method: 'POST' })
+                    Notify.create({
+                        message: 'Suscripción creada!',
+                        color: 'positive'
+                    })
+                    loading.value = false
+
+                } catch (error) {
+                    loading.value = false
+
+                    const message = error?.response?.message ?? error?.response?.data?.message ?? 'Ocurrio un error al crear la suscripción'
+                    Notify.create({
+                        message,
+                        color: 'negative'
+                    })
+                }
+            })
+        }
 
         return {
-            actualPlan
+            actualPlan,
+            loading,
+            actualPlanStripe,
+            subscribe
         }
     }
 }

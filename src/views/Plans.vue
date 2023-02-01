@@ -15,7 +15,14 @@
 							<template v-slot:body-cell-actions="props">
 								<q-td :props="props">
 									<q-btn color="primary" flat dense icon="fa-solid fa-key"
-										@click="updatePlan = true, planId = props.row?.id, planData = prop.row" />
+										@click="handleSelect(props.row)" />
+								</q-td>
+							</template>
+							<template v-slot:body-cell-stripe="props">
+								<q-td :props="props">
+									<q-badge v-if="props.row?.stripe_price && props.row?.stripe_product" color="success"
+										text-color="white" label="Si" />
+									<q-badge v-else color="red" text-color="white" label="No" />
 								</q-td>
 							</template>
 						</q-table>
@@ -28,7 +35,14 @@
 							<template v-slot:body-cell-actions="props">
 								<q-td :props="props">
 									<q-btn color="primary" flat dense icon="fa-solid fa-key"
-										@click="updatePlan = true, planId = props.row?.id, planData = prop.row" />
+										@click="handleSelect(props.row)" />
+								</q-td>
+							</template>
+							<template v-slot:body-cell-stripe="props">
+								<q-td :props="props">
+									<q-badge v-if="props.row?.stripe_price && props.row?.stripe_product" color="success"
+										text-color="white" label="Si" />
+									<q-badge v-else color="red" text-color="white" label="No" />
 								</q-td>
 							</template>
 						</q-table>
@@ -40,7 +54,15 @@
 							<template v-slot:body-cell-actions="props">
 								<q-td :props="props">
 									<q-btn color="primary" flat dense icon="fa-solid fa-key"
-										@click="updatePlan = true, planId = props.row?.id, planData = prop.row" />
+										@click="handleSelect(props.row)" />
+								</q-td>
+							</template>
+
+							<template v-slot:body-cell-stripe="props">
+								<q-td :props="props">
+									<q-badge v-if="props.row?.stripe_price && props.row?.stripe_product" color="success"
+										text-color="white" label="Si" />
+									<q-badge v-else color="red" text-color="white" label="No" />
 								</q-td>
 							</template>
 						</q-table>
@@ -48,7 +70,7 @@
 					</q-tab-panel>
 				</q-tab-panels>
 
-				<plan-update-module v-model="updatePlan" :planId="planId" :planData="planData" />
+				<plan-update-module v-model="updatePlan" :planId="planId" :planData="planData" @saved="getPlans" />
 			</div>
 		</div>
 	</div>
@@ -100,6 +122,14 @@ export default {
 				sortable: true
 			},
 			{
+				name: 'stripe',
+				label: 'Conectado (stripe)',
+				align: 'left',
+				// field: row => row?.price,
+				// format: val => `${val}€`,
+				// sortable: true
+			},
+			{
 				name: 'actions',
 				align: 'left',
 			},
@@ -120,6 +150,12 @@ export default {
 			}
 		}
 
+		function handleSelect(data) {
+			updatePlan.value = true
+			planId.value = data?.id
+			planData.value = data
+		}
+
 		watch(() => role_id.value, (v) => {
 			if (v) getPlans()
 		}, { immediate: true })
@@ -138,7 +174,10 @@ export default {
 			columns,
 			updatePlan,
 			planId,
-			planData
+			planData,
+
+			getPlans,
+			handleSelect
 		}
 	}
 };
