@@ -24,7 +24,7 @@
 							</template>
 
 							<div class="px-lg-3 px-md-2 px-1 mx-xl-4">
-								<div v-if="role == 'admin'">
+								<div v-if="[1,5].includes(model.role_id)">
 									<h6 class="heading-small text-muted mb-4">
 										Informacion de usuario
 									</h6>
@@ -55,7 +55,7 @@
 									</form-validate>
 								</div>
 								<!-- Address -->
-								<div v-if="model.role_id >= 2">
+								<div v-if="model.role_id >= 2 && model.role_id != 5">
 									<h6 class="heading-small text-muted mb-4">
 										Informacion de perfil
 									</h6>
