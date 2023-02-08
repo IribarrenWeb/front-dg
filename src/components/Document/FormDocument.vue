@@ -27,7 +27,7 @@
 						/>
 					</base-field>
 				</div>
-				<div class="col-lg-4" v-if="ROLE && (ROLE != 'business' || ROLE != 'auditor')">
+				<div class="col-lg-4" v-if="ROLE && !['business','auditor'].includes(ROLE)">
 					<base-field name="admin_document_type_id" label="Tipo de documento">
 						<select-filter @updated="model.admin_document_type_id = $event" :options="types" label="Selecciona un tipo..." placeholder=""/>
 						<field-validate v-model="model.admin_document_type_id" label="tipo de documento" name="admin_document_type_id" rules="required" v-show="false"/>
