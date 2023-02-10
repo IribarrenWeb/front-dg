@@ -15,6 +15,7 @@ function cleanData(model, excludes = [], includes = [], formData = false) {
     }
     return data
 }
+
 function toFormData(data, ignore = []) {
     const dataForm = new FormData
     const keysData = keys(data)
@@ -230,17 +231,19 @@ function timeAgo(time){
     // $timeAgo.format(today - date)
 }
 function formatDoc(b64) {
-    var byteCharacters = atob(b64);
-    var byteNumbers = new Array(byteCharacters.length);
-    for (var i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    var byteArray = new Uint8Array(byteNumbers);
-    var file = new Blob([byteArray], {
-        type: "application/pdf;base64",
-    });
-    var fileURL = URL.createObjectURL(file);
-    return fileURL;
+    return new Promise((resolve, reject) => {
+        var byteCharacters = atob(b64);
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        var file = new Blob([byteArray], {
+            type: "application/pdf;base64",
+        });
+        var fileURL = URL.createObjectURL(file);
+        resolve(fileURL);
+    })
 }
 
 async function toBase64(file) {

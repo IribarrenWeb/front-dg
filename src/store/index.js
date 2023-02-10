@@ -10,6 +10,7 @@ import service from './services/model-service';
 import { each } from 'lodash';
 import functions from '../utils/functions';
 import schemas from '../schemas';
+import { Notify } from 'quasar';
 
 const $swal = $Swal.mixin({
     customClass: {
@@ -86,7 +87,7 @@ export const store = createStore({
                 return false
             }
         },
-        getNotifications(state){
+        getNotifications(state) {
             return state.notifications.reverse()
         }
     },
@@ -102,7 +103,7 @@ export const store = createStore({
         },
         clearError(state, index) {
             if (index in state.apiErrors) {
-                delete state.apiErrors[index] 
+                delete state.apiErrors[index]
             }
         },
         setRole(state, payload) {
@@ -117,23 +118,23 @@ export const store = createStore({
         stopedCamera(state, payload = null) {
             state.stopCamera = payload != null ? payload : !state.stopCamera
         },
-        setNotifications(state, payload){
+        setNotifications(state, payload) {
             state.notifications = payload
         },
-        markRead(state){
+        markRead(state) {
             state.notifications = map(state.notifications, (n) => {
                 n.read_at = true
                 return n
             })
         },
-        pushNotification(state,payload) {
+        pushNotification(state, payload) {
             state.notifications.unshift(payload)
         }
     },
     actions: {
-        async getNotifications({commit}){
+        async getNotifications({ commit }) {
             try {
-                const res = await service.api({url:'notifications'});
+                const res = await service.api({ url: 'notifications' });
                 commit('setNotifications', res.data.data)
             } catch (err) {
                 console.log(err);
@@ -235,6 +236,27 @@ export const store = createStore({
                 console.log(err);
             }
         },
+
+
+        async generatePdf(state, payload) {
+            try {
+                const res = await service.api({ url: payload })
+                const b64 = res?.data?.data;
+                
+                if (!b64) throw new Error('base64 undefined')
+
+                const fileUrl = await functions.formatDoc(b64);
+
+                window.open(fileUrl);
+            } catch (error) {
+                console.error(error);
+                Notify.create({
+                    message: 'Error inesperado al generar el pdf, intente luego.',
+                    color: 'negative'
+                })
+                return
+            }
+        }
 
     },
     modules: {

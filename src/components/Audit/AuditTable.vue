@@ -138,7 +138,8 @@
 								</q-item>
 								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
 									v-if="row.item?.status == 'COMPLETADO'"
-									:href="url + '/audits/report/' + row.item?.id" target="_blank">
+									@click="$store.dispatch('generatePdf',`audits/report/${row.item.id}`)">
+									<!-- :href="url + '/audits/report/' + row.item?.id" target="_blank"> -->
 									<q-item-section>
 										<q-item-label>Imprimir</q-item-label>
 									</q-item-section>
