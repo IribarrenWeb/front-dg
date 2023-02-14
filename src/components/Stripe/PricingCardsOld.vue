@@ -1,6 +1,6 @@
 <template>
     <q-card class="shadow-2 q-mx-lg custom-shadow-sm"
-        :class="{ 'border border-primary': idx == 2 && plan.stripe_price != actualPlanStripe?.stripe_price, 'border border-success': plan.stripe_price == actualPlanStripe?.stripe_price }"
+        :class="{ 'border border-primary': idx == 2 && plan.stripe_price != actualPlanStripe?.stripe_price, 'border border-success': plan.stripe_price == actualPlanStripe?.stripe_price || viewOnly }"
         v-for="plan, idx in plans" :key="idx">
         <q-card-section>
             <div class="flex items-center q-mx-md">
@@ -17,11 +17,11 @@
                     </div>
                 </div>
                 <q-space />
-                <q-badge floating color="primary" v-if="idx == 2 && plan.stripe_price != actualPlanStripe?.stripe_price" text-color="white"
+                <q-badge floating color="primary" v-if="idx == 2 && plan.stripe_price != actualPlanStripe?.stripe_price && !viewOnly" text-color="white"
                     label="Recomendado" />
-                <q-badge floating color="success" v-if="plan.stripe_price == actualPlanStripe?.stripe_price" text-color="white"
+                <q-badge floating color="success" v-if="plan.stripe_price == actualPlanStripe?.stripe_price || viewOnly" text-color="white"
                     label="Plan actual" />
-                <div v-if="idx >= 1">
+                <div v-if="idx >= 1 && !viewOnly">
                     <!-- Suscribirse -->
                     <q-btn color="primary" v-if="plan.stripe_price != actualPlanStripe?.stripe_price && !actualPlanStripe?.stripe_price"
                         :disable="!plan?.is_active" label="Suscribirse" @click="handleAction('subscribe', plan)"
@@ -70,7 +70,11 @@ import { Dialog, Notify } from 'quasar'
 import modelService from '../../store/services/model-service'
 export default {
     props: {
-        plans: {}
+        plans: {},
+        viewOnly: {
+            type: Boolean,
+            default: false
+        },
     },
     setup(props) {
         const store = useStore()
@@ -188,7 +192,9 @@ export default {
             executeAction({ options, action, plan, notifyErrorMessage, notifySuccessMessage })
         }
 
-        getSubscriptions()
+        if(!props.viewOnly){
+            getSubscriptions()
+        }
 
         return {
             actualPlan,

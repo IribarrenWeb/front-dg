@@ -273,16 +273,18 @@
 													v-model="model.formation_data.time_formation" />
 											</base-field>
 											<base-field class="col-md-12" label="Descripción de la formación">
-												<textarea class="form-control" cols="30" rows="10"
-													v-model="model.formation_desc"></textarea>
+												<!-- <textarea class="form-control" cols="30" rows="10"
+													v-model="model.formation_desc"></textarea> -->
+												<qu-input-validation type="textarea" v-model="model.formation_desc" cols="30" rows="10" apiName="formation_desc"/>
 											</base-field>
 										</div>
 									</div>
 									<div v-if="!model.has_formations">
 										<base-field
 											label="Indicar motivos y medidas emprendidas por la empresa para subsanar la deficiencia">
-											<textarea class="form-control" cols="30" rows="10"
-												v-model="model.deficiency_desc"></textarea>
+											<qu-input-validation type="textarea" v-model="model.deficiency_desc" cols="30" rows="10" apiName="deficiency_desc"/>
+											<!-- <textarea class="form-control" cols="30" rows="10"
+												v-model="model.deficiency_desc"></textarea> -->
 										</base-field>
 									</div>
 								</div>
@@ -348,6 +350,7 @@ import functions from "../../utils/functions";
 import { computed, watch } from '@vue/runtime-core';
 import { swal } from '../../boot/plugins';
 import FormLoader from '../../loaders/FormLoader.vue';
+import QuInputValidation from '../core_components/FormQuasar/QuInputValidation.vue';
 
 export default {
 	inheritAttrs: true,
@@ -355,6 +358,7 @@ export default {
 		VehiclesTable,
 		ValidationErrors,
 		FormLoader,
+		QuInputValidation,
 	},
 	props: {
 		report_id: {

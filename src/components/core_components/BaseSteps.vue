@@ -1,34 +1,39 @@
 <template>
   <div :class="containerClassess">
-      <div v-if="audit">
-        <Carousel :settings="settings" ref="carousel" :breakpoints="breakpoints" >
-          <Slide :class="`nav nav-pills justify-content-center ${listClasses}`" v-for="step in steps" :key="step">
-            <li class="nav-item" >
-                <a class="nav-link p-2 d-flex align-items-center text" :class="[{'active': currentStep == step.number},{'disabled':!step.valid}]" href="#" @click.prevent="handleClick(step)">
-                    <i class="fa fa-check mr-2" aria-hidden="true" v-if="step.valid"></i> 
-                    {{step.title}}
-                </a>
-            </li>
-          </Slide>
-          <template #addons="{ slidesCount }">
-            <Navigation v-if="slidesCount > 1"/>
-          </template>
-        </Carousel>
-      </div>
-
-      <ul v-else :class="`nav nav-pills justify-content-center steps nav-fill ${listClasses}`">
-          <li class="nav-item" v-for="step in steps" :key="step">
-              <a class="nav-link p-2 d-flex align-items-center text-center justify-content-center" :class="[{'active': currentStep == step.number},{'disabled':!step.valid && !edit}]" href="#" @click.prevent="handleClick(step)">
-                  <i class="fa fa-check mr-2" aria-hidden="true" v-if="step.valid"></i> 
-                  {{step.title}}
-              </a>
+    <div v-if="audit">
+      <Carousel :settings="settings" ref="carousel" :breakpoints="breakpoints">
+        <Slide :class="`nav nav-pills justify-content-center ${listClasses}`" v-for="step in steps" :key="step">
+          <li class="nav-item">
+            <a class="nav-link p-2 d-flex align-items-center text"
+              :class="[{ 'active': currentStep == step.number }, { 'disabled': !step.valid }]" href="#"
+              @click.prevent="handleClick(step)">
+              <i class="fa fa-check mr-2" aria-hidden="true" v-if="step.valid"></i>
+              {{ step.title }}
+            </a>
           </li>
-      </ul>
+        </Slide>
+        <template #addons="{ slidesCount }">
+          <Navigation v-if="slidesCount > 1" />
+        </template>
+      </Carousel>
+    </div>
+
+    <ul v-else :class="`nav nav-pills justify-content-center steps nav-fill ${listClasses}`">
+      <li class="nav-item" v-for="step, idx in steps" :key="idx">
+        <a class="nav-link p-2 d-flex align-items-center text-center justify-content-center"
+          :class="[{ 'active': currentStep == step.number }, { 'disabled': !step.valid && !edit }]" href="#"
+          @click.prevent="handleClick(step)">
+          <i class="fa fa-check mr-2" aria-hidden="true" v-if="step.valid"></i>
+          {{ step.title }}
+        </a>
+      </li>
+    </ul>
   </div>
 </template>
 <script>
 import 'vue3-carousel/dist/carousel.css';
-import { Carousel,Slide, Navigation } from 'vue3-carousel';
+import { Carousel, Slide, Navigation } from 'vue3-carousel';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "base-steps",
@@ -60,7 +65,7 @@ export default {
       type: String
     },
     edit: {
-        type: Boolean
+      type: Boolean
     }
   },
   data() {
@@ -95,11 +100,11 @@ export default {
     }
   },
   methods: {
-    handleClick(step){
+    handleClick(step) {
       let true1 = step.valid
       if (true1 || this.edit) {
-        this.$emit('navigate',step.number);
-      }else{
+        this.$emit('navigate', step.number);
+      } else {
         this.$toast.error('No puedes ir hasta que valides la información');
         return
       }
@@ -109,6 +114,9 @@ export default {
     if (this.audit) {
       this.$refs.carousel.slideTo(this.currentStep)
     }
+  },
+  computed: {
+    ...mapGetters(["ROLE"]),
   },
   watch: {
     // currentStep(newVal){

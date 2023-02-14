@@ -1,16 +1,10 @@
 <template>
 	<div>
-		<base-steps
-			v-if="update"
-			:currentStep="currentStep"
-			listClasses="mb-md-4 pb-md-2"
-			:steps="steps"
-			:edit="true"
-			@step="currentStep = $event"
-			@navigate="currentStep = $event"
-		></base-steps>
+		<base-steps v-if="update" :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="formatSteps"
+			:edit="true" @step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
 		<template v-if="currentStep == 1 || !update">
-			<form-validate v-if="canShow" @submit="onSubmit" ref="form" v-slot="{ meta }" :initial-values="current_values">
+			<form-validate v-if="canShow" @submit="onSubmit" ref="form" v-slot="{ meta }"
+				:initial-values="current_values">
 
 				<div class="row border rounded border-light px-md-3 py-md-2">
 					<div class="col-12">
@@ -34,7 +28,7 @@
 						</base-field>
 					</div>
 
-					<div class="col-lg-4" v-if="ROLE == 'admin' ">
+					<div class="col-lg-4" v-if="ROLE == 'admin'">
 						<base-field name="delegate" label="Delegado">
 							<div v-if="modelDelegate">
 								<span class="mr-md-4 text-uppercase">{{ modelDelegate.name }}</span>
@@ -79,15 +73,10 @@
 					</div>
 				</div>
 
-				<address-select 
-					v-model:address="model.address.address" 
-					v-model:city="model.address.city" 
-					v-model:code="model.address.code" 
-					v-model:country="model.address.country" 
-					v-model:province="model.address.province" 
-					v-model:comunity="model.address.comunity" 
-					v-model:street_number="model.address.street_number" 
-				/>
+				<address-select v-model:address="model.address.address" v-model:city="model.address.city"
+					v-model:code="model.address.code" v-model:country="model.address.country"
+					v-model:province="model.address.province" v-model:comunity="model.address.comunity"
+					v-model:street_number="model.address.street_number" />
 
 				<div class="row border rounded border-light px-md-3 py-md-2 mt-2 mt-md-3">
 					<div class="col-12">
@@ -100,7 +89,7 @@
 						<base-field name="file_certification" label="Documento Certificado ADR">
 							<div v-if="cert_document && !cer_update">
 								<a href="#" @click.prevent="getDocument(cert_document.id)" class="mr-md-4">{{
-										cert_document.name_document ?? cert_document.type.name
+									cert_document.name_document ?? cert_document.type.name
 								}}</a>
 								<base-button @click="cer_update = true" size="sm" type="default" :outline="true"><i
 										class="fa-solid fa-pencil"></i></base-button>
@@ -119,7 +108,8 @@
 					<div class="col-lg-6">
 						<base-field name="certification_date" label="Fecha Caducidad Certificado ADR">
 							<field-validate class="form-control" name="certification_date" type="date"
-								label="fecha caducidad certificado ADR" rules="required" v-model="model.certification_date">
+								label="fecha caducidad certificado ADR" rules="required"
+								v-model="model.certification_date">
 							</field-validate>
 						</base-field>
 					</div>
@@ -128,7 +118,7 @@
 						<base-field name="file_firm" label="Documento de alta">
 							<div v-if="firm_document && !firm_update">
 								<a href="#" @click.prevent="getDocument(firm_document.id)" class="mr-md-4">{{
-										firm_document.name_document ?? firm_document.type.name
+									firm_document.name_document ?? firm_document.type.name
 								}}</a>
 								<base-button @click="firm_update = true" size="sm" type="default" :outline="true"><i
 										class="fa-solid fa-pencil"></i></base-button>
@@ -156,8 +146,7 @@
 					<base-button type="default" nativeType="submit" size="sm" v-if="!update">
 						Aceptar
 					</base-button>
-					<base-button type="default" nativeType="submit" size="sm" v-if="update"
-						:disabled="!meta.valid">
+					<base-button type="default" nativeType="submit" size="sm" v-if="update" :disabled="!meta.valid">
 						Actualizar
 					</base-button>
 					<base-button type="default" :outline="true" size="md" class="btn-inline-block"
@@ -169,7 +158,23 @@
 		</template>
 		<template v-if="currentStep == 2 && update">
 			<div>
-				<installation-table :byAuditableId="id" byAuditableType="auditor_id"/>
+				<installation-table :byAuditableId="id" byAuditableType="auditor_id" />
+				<div class="flex justify-end mt-2">
+					<base-button type="default" :outline="true" size="md" class="btn-inline-block"
+						@click="$emit('closeModal')">
+						Cancelar
+					</base-button>
+				</div>
+			</div>
+		</template>
+
+		<template v-if="currentStep === 3 && auditor?.user?.is_billable && update">
+			<subscription-module viewOnly :planId="auditor?.user?.subscription_plan_id" />
+			<div class="flex justify-end">
+				<base-button type="default" :outline="true" size="md" class="btn-inline-block"
+					@click="$emit('closeModal')">
+					Cancelar
+				</base-button>
 			</div>
 		</template>
 	</div>
@@ -183,9 +188,10 @@ import { mapGetters } from 'vuex';
 import AsyncSelect from '../core_components/AsyncSelect.vue';
 import AddressSelect from "../core_components/AddressSelect.vue";
 import InstallationTable from '../Installation/InstallationTable.vue';
+import SubscriptionModule from '../Stripe/SubscriptionModule.vue';
 
 export default {
-	components: { AsyncSelect, AddressSelect, InstallationTable },
+	components: { AsyncSelect, AddressSelect, InstallationTable, SubscriptionModule },
 	mixins: [utils],
 	name: "form-auditor",
 	props: {
@@ -219,6 +225,11 @@ export default {
 					number: 2,
 					title: 'Instalaciones',
 					valid: null,
+				}, {
+					number: 3,
+					title: "Suscripción",
+					valid: false,
+					roles: ['superadmin']
 				},
 			],
 		};
@@ -278,7 +289,7 @@ export default {
 				const data = response.data.data
 				this.setCurrent(data)
 				this.auditor = this.$functions.copy(data)
-				this.model = this.$functions.assignSchema('auditor', data,['address']);
+				this.model = this.$functions.assignSchema('auditor', data, ['address']);
 				this.model.name = this.model.user.name;
 				this.model.last_name = this.model.user.last_name;
 				this.model.email = this.model.user.email;
@@ -394,7 +405,16 @@ export default {
 				show = true;
 			}
 			return show;
-		}
+		},
+		formatSteps() {
+			return this.steps.filter(s => {
+				let valid = true
+				if (s?.roles && !s.roles.includes(this.ROLE)) {
+					valid = false
+				}
+				return valid
+			})
+		},
 	},
 	watch: {
 		id: {
