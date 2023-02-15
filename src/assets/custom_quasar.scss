@@ -13,6 +13,36 @@
     // z-index: -1;
 }
 
+.nav-pills-tabs{
+    .q-tabs__content{
+        gap: 20px;
+        padding-bottom: 15px;
+    
+        .q-tab {
+            border-radius: .375rem;
+            // padding: .5rem!important;
+            padding: 0.5rem 2rem;
+            color: #191A4D;
+            font-weight: 500;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 6px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
+            background-color: #fff;
+            transition: all 0.15s ease;
+
+            &.active-tab {
+                color: #fff !important;
+                background-color: #191a4d !important;
+            }
+        }
+
+    }
+
+    .q-tab__indicator{
+        visibility: hidden;
+    }
+
+}
+
 .custom-tabpanel .q-tab-panel {
     padding: 0;
 }

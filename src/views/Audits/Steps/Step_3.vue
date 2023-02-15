@@ -52,7 +52,7 @@
 														<q-item-section>
 															<q-item-label>{{ scope.opt.query }}</q-item-label>
 															<q-item-label caption class="truncate-250">{{
-																	scope.opt.material.material.denomination_name
+																	scope.opt?.material?.material?.denomination_name ?? 'PRODUCTO QUIMICO'
 															}}
 															</q-item-label>
 														</q-item-section>
@@ -116,22 +116,22 @@
 						<div class="col-md-11 border-bottom border-primary">
 							<div class="row">
 								<div class="col-md-2">
-									<base-input :view="true" :modelValue="dep.material.un_code" disabled />
+									<base-input :view="true" :modelValue="dep?.material?.un_code ?? 'PQ'" disabled />
 								</div>
 								<div class="col-md-5">
 									<base-input :view="true" :modelValue="dep.name" disabled />
 								</div>
 								<div class="col-md-5">
-									<base-input :view="true" :modelValue="dep.material.denomination_name" disabled />
+									<base-input :view="true" :modelValue="dep?.material?.denomination_name" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.material.class.code" disabled />
+									<base-input :view="true" :modelValue="dep?.material?.class?.code" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.material.packing.code" disabled />
+									<base-input :view="true" :modelValue="dep?.material?.packing?.code" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="dep.equipment.name" disabled />
+									<base-input :view="true" :modelValue="dep?.equipment?.name" disabled />
 								</div>
 								<div class="col-md-3">
 									<base-input :view="true" :modelValue="dep.quantity" disabled />
@@ -244,7 +244,7 @@
 														<q-item-section>
 															<q-item-label>{{ scope.opt.query }}</q-item-label>
 															<q-item-label caption class="truncate-250">{{
-																	scope.opt.material.material.denomination_name
+																	scope.opt?.material?.material?.denomination_name ?? 'PRODUCTO QUIMICO'
 															}}
 															</q-item-label>
 														</q-item-section>
@@ -308,22 +308,22 @@
 						<div class="col-md-11">
 							<div class="row">
 								<div class="col-md-2">
-									<base-input :view="true" :modelValue="res.material.un_code" disabled />
+									<base-input :view="true" :modelValue="res?.material?.un_code ?? 'PQ'" disabled />
 								</div>
 								<div class="col-md-5">
 									<base-input :view="true" :modelValue="res.name" disabled />
 								</div>
 								<div class="col-md-5">
-									<base-input :view="true" :modelValue="res.material.denomination_name" disabled />
+									<base-input :view="true" :modelValue="res?.material.denomination_name" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="res.material.class.code" disabled />
+									<base-input :view="true" :modelValue="res?.material?.class?.code" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="res.material.packing.code" disabled />
+									<base-input :view="true" :modelValue="res?.material?.packing?.code" disabled />
 								</div>
 								<div class="col-md-3">
-									<base-input :view="true" :modelValue="res.equipment.name" disabled />
+									<base-input :view="true" :modelValue="res?.equipment?.name" disabled />
 								</div>
 								<div class="col-md-3">
 									<base-input :view="true" :modelValue="res.quantity" disabled />
@@ -402,7 +402,7 @@ export default {
 	components: {
 		UploadImages,
 		AsyncSelect,
-AuditImagesModule,
+		AuditImagesModule,
 	},
 	data() {
 		return {
@@ -466,18 +466,20 @@ AuditImagesModule,
 		this.adr_deposits = this.formatMaterials(this.audit.materials, false);
 		this.installation = this.audit.installation
 		this.residues = this.audit.installation.residues.map((r, idx) => {
+			const code = r?.material?.un_code ?? 'PQ'
 			return {
-				label: r.material.un_code,
+				label: code,
 				value: idx,
-				query: r.material.un_code + ' - ' + r.name,
+				query: code + ' - ' + r.name,
 				material: r
 			}
 		})
 		this.deposits = this.audit.installation.deposits.map((d, idx) => {
+			const code = d?.material?.un_code ?? 'PQ'
 			return {
-				label: d.material.un_code,
+				label: code,
 				value: idx,
-				query: d.material.un_code + ' - ' + d.name,
+				query: code + ' - ' + d.name,
 				material: d
 			}
 		})
@@ -770,24 +772,26 @@ AuditImagesModule,
 	},
 	watch: {
 		"residue.index": function (newVal) {
+			if (newVal < 0 || (!newVal && newVal != 0)) return
 			this.residue.id = this.audit.installation.residues[newVal].id;
-			this.residue.name = this.audit.installation.residues[newVal].name;
+			this.residue.name = this.audit.installation.residues[newVal]?.name;
 			this.residue.equipment =
 				this.audit.installation.residues[newVal].equipment;
 			this.residue.quantity = this.audit.installation.residues[newVal].quantity;
-			this.residue.material = this.audit.installation.residues[newVal].material;
+			this.residue.material = this.audit.installation.residues[newVal]?.material;
 			this.residue.buy = this.audit.installation.residues[newVal].buy;
 			this.residue.is_residue =
 				this.audit.installation.residues[newVal].is_residue;
 			this.selected_quantity = this.$functions.copy(this.residue.quantity)
 		},
 		"deposit.index": function (newVal) {
-			this.deposit.name = this.audit.installation.deposits[newVal].name;
+			if (newVal < 0 || (!newVal && newVal != 0)) return
+			this.deposit.name = this.audit.installation.deposits[newVal]?.name;
 			this.deposit.equipment =
 				this.audit.installation.deposits[newVal].equipment;
 			this.deposit.quantity = this.audit.installation.deposits[newVal].quantity;
 			this.deposit.id = this.audit.installation.deposits[newVal].id;
-			this.deposit.material = this.audit.installation.deposits[newVal].material;
+			this.deposit.material = this.audit.installation.deposits[newVal]?.material;
 			this.deposit.buy = this.audit.installation.deposits[newVal].buy;
 			this.deposit.is_residue =
 				this.audit.installation.deposits[newVal].is_residue;
