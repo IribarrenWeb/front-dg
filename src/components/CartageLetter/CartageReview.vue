@@ -77,11 +77,11 @@
                     <cartage-road-details-module class="q-px-md" :cartage="cartage" />
                 </q-card-section>
                 <q-separator spaced v-if="(cartage?.review?.id && cartage?.status != 'APROBADA')"/>
-                <q-card-section v-if="(cartage?.review?.id && cartage?.status != 'APROBADA')">
+                <q-card-section v-if="cartage?.review?.id">
                     <div class="q-px-md" >
                         <span class="h4">Observaciones</span>
                         <div v-if="role != 'business' && cartage?.status == 'EN REVISION'">
-                            <q-editor class="q-mt-sm" v-model="model.observation" min-height="5rem" />
+                            <q-editor disable="role != 'business'" class="q-mt-sm" v-model="model.observation" min-height="5rem" />
                         </div>
                         <div v-else>
                             <div class="q-pa-sm border"
