@@ -97,8 +97,8 @@
 						{{ row.item?.scheduled_date }}
 					</td>
 					<td v-if="ROLE == 'business' && row.item?.status == 'COMPLETADO'">
-						<a class="btn btn-sm btn-primary" :href="url + '/audits/report/' + row.item?.id"
-							target="_blank">Imprimir</a>
+						<a class="btn btn-sm btn-primary" @click.prevent="$store.dispatch('generatePdf',`audits/report/${row.item.id}`)" href="#"
+							>Imprimir</a>
 					</td>
 					<td class="text-right" v-if="ROLE != 'business'">
 						<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
