@@ -6,7 +6,7 @@
                     <i :class="menu.icon"></i>
                 </q-item-section>
 
-                <q-item-section>{{menu.name}}</q-item-section>
+                <q-item-section>{{ menu.name }}</q-item-section>
             </q-item>
         </q-list>
         <q-list>
@@ -15,7 +15,7 @@
                     <i :class="menu.icon"></i>
                 </q-item-section>
 
-                <q-item-section>{{menu.name}}</q-item-section>
+                <q-item-section>{{ menu.name }}</q-item-section>
             </q-item>
         </q-list>
     </div>
@@ -70,7 +70,7 @@ export default {
                 name: 'Empresas',
                 icon: 'fa-solid fa-building-columns text-default',
                 path: '/business',
-                roles: ['business','business_no_adr','superadmin'],
+                roles: ['business', 'business_no_adr', 'superadmin'],
                 not_condition: true,
                 no_adr: false,
                 or_not_conditions: {
@@ -93,7 +93,7 @@ export default {
                 name: 'Instalaciones',
                 icon: 'ni ni-shop text-default',
                 path: '/installations',
-                roles: ['business','business_no_adr'],
+                roles: ['business', 'business_no_adr'],
                 not_condition: false,
                 no_adr: false,
                 or_conditions: [
@@ -110,7 +110,7 @@ export default {
                 name: 'Empleados',
                 icon: 'fa-solid fa-briefcase text-default',
                 path: '/employees',
-                roles: ['business','business_no_adr'],
+                roles: ['business', 'business_no_adr'],
                 not_condition: false,
                 no_adr: false,
                 // or_conditions: {
@@ -121,7 +121,7 @@ export default {
                 name: 'Mercancías',
                 icon: 'fa-solid fa-atom text-default',
                 path: '/materials',
-                roles: ['business','business_no_adr'],
+                roles: ['business', 'business_no_adr'],
                 not_condition: false,
                 no_adr: false,
                 // or_conditions: {
@@ -222,20 +222,20 @@ export default {
                 name: 'Solicitudes',
                 icon: 'fa-solid fa-bell-concierge text-default',
                 path: '/business-aplication',
-                roles: ['delegate','auditor','business'],
+                roles: ['delegate', 'auditor', 'business'],
                 not_condition: false,
                 no_adr: false,
                 or_conditions: [
                     {
                         consultancy_id: false,
-                        not_roles: ['admin','superadmin']
+                        not_roles: ['admin', 'superadmin']
                     },
                 ]
             }
         ])
 
         const enabled_menus = computed(() => menues.value.filter((m) => validate(m)))
-        
+
         const system_menues = ref([
             {
                 name: 'Documentación',
@@ -246,17 +246,17 @@ export default {
             }
         ])
 
-        function validateEmpty(value){
+        function validateEmpty(value) {
             let empty = false;
             if (typeof value == 'number') {
                 empty = !(parseInt(value) >= 1)
-            }else{
+            } else {
                 empty = isEmpty(value)
             }
             return empty;
         }
 
-        function validateOr(conditions){
+        function validateOr(conditions) {
             let count = 0;
             let total = Object.entries(conditions).length
             Object.entries(conditions).forEach(entry => {
@@ -264,9 +264,9 @@ export default {
 
                 if (key == 'roles' && value.includes(role.value)) {
                     count++
-                }else if(key == 'not_roles' && !value.includes(role.value)){
+                } else if (key == 'not_roles' && !value.includes(role.value)) {
                     count++
-                }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
+                } else if (!['not_roles', 'roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
                     count++
                 }
 
@@ -277,7 +277,7 @@ export default {
 
         function validate(menu) {
             let validation = true;
-            
+
             if (menu.roles) {
                 if (menu.not_condition) {
                     validation = !menu.roles.includes(role.value)
@@ -287,7 +287,7 @@ export default {
             }
             if (validation && menu.no_adr && role.value == 'business') {
                 validation = store.state.is_bussines_no_adr
-            } 
+            }
 
             if (!validation && menu?.or_conditions?.length) {
                 let pass = false;
@@ -295,21 +295,21 @@ export default {
                     if (pass) return
                     pass = validateOr(conditions)
                 });
-                
+
                 validation = pass
-                console.log('orConditions',validation) ;
+                console.log('orConditions', validation);
 
             }
 
             if (validation && menu?.or_not_conditions) {
                 let count = 0;
-                let total =  Object.entries(menu?.or_not_conditions).length
-                Object.entries(menu?.or_not_conditions).forEach((entry,idx) => {
+                let total = Object.entries(menu?.or_not_conditions).length
+                Object.entries(menu?.or_not_conditions).forEach((entry, idx) => {
                     const [key, value] = entry;
 
                     if (key == 'roles' && value.includes(role.value)) {
                         count++
-                    }else if (!['not_roles','roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
+                    } else if (!['not_roles', 'roles'].includes(key) && user.value?.profile && ((value && !validateEmpty(user.value?.profile[key])) || (!value && validateEmpty(user.value.profile[key])))) {
                         count++
                     }
                     console.log('notor', total, count);

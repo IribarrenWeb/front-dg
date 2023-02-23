@@ -1,21 +1,10 @@
 <template>
 	<div v-if="material != null">
 		<div class="d-flex align-items-center">
-                <img
-                    v-if="material.is_dangerous"
-					:src="dangerous_label"
-					alt="is dangerous material"
-					width="75"
-				/>
+			<img v-if="material.is_dangerous" :src="dangerous_label" alt="is dangerous material" width="75" />
 			<div v-if="material?.material?.labels" class="d-flex align-content-center justify-center">
-				<img
-					v-for="label in material?.material?.labels"
-					:key="label.id"
-					class="rounded"
-					:src="label.url"
-					:alt="label.image"
-					width="75"
-				/>
+				<img v-for="label in material?.material?.labels" :key="label.id" class="rounded" :src="label.url"
+					:alt="label.image" width="75" />
 			</div>
 			<div class="ml-md-2 ml-1 row">
 				<div class="col-12">
@@ -23,13 +12,8 @@
 						{{ material.name }}
 					</h3>
 				</div>
-				<span
-					v-if="material.material?.denomination_name"
-					class="text-muted font-weight-light h6 col-12"
-					data-bs-toggle="tooltip"
-					data-bs-placement="top"
-					:title="material?.material?.denomination_name"
-				>
+				<span v-if="material.material?.denomination_name" class="text-muted font-weight-light h6 col-12"
+					data-bs-toggle="tooltip" data-bs-placement="top" :title="material?.material?.denomination_name">
 					<!-- {{ denomination }} -->
 					{{ material.material?.denomination_name }}
 				</span>
@@ -55,10 +39,7 @@
 							<td>{{ material.installation.name }}</td>
 							<td>{{ material.installation?.address?.city }}</td>
 							<td>
-								<span
-									v-for="op in material.installation.operations"
-									:key="op.id"
-								>
+								<span v-for="op in material.installation.operations" :key="op.id">
 									{{ op.name }},
 								</span>
 							</td>
@@ -74,11 +55,8 @@
 						<tr>
 							<td>{{ material?.material?.un_code ?? 'PQ' }}</td>
 							<td>
-								<span
-									data-bs-toggle="tooltip"
-									data-bs-placement="top"
-									:title="material?.material?.denomination_name"
-								>
+								<span data-bs-toggle="tooltip" data-bs-placement="top"
+									:title="material?.material?.denomination_name">
 									{{ denomination }}
 									<!-- {{ material.material?.denomination_name }} -->
 								</span>
@@ -131,100 +109,88 @@
 			<div class="col-md-6 border rounded border-light px-md-2 py-md-1">
 				<div class="col-12 d-flex justify-content-around align-items-center">
 					<h4>Contaminante del medioambiente</h4>
-					<base-switch
-						:value="material.is_dangerous == 1 ? true : false"
-						classes="m-0"
-						:disabled="true"
-					></base-switch>
+					<base-switch :value="material.is_dangerous == 1 ? true : false" classes="m-0"
+						:disabled="true"></base-switch>
 				</div>
 			</div>
-			<div
-                v-if="document"
-				class="
-					col-md-6
-					border
-					rounded
-					border-light
-					px-md-2
-					py-md-1
-					d-flex
-					align-items-center
-				"
-			>
+			<div v-if="document" class="
+						col-md-6
+						border
+						rounded
+						border-light
+						px-md-2
+						py-md-1
+						d-flex
+						align-items-center
+					">
 				<div class="col-12 d-flex justify-content-around">
-                    <a href="#" @click.prevent="getDocument(document.id)">
-                        <h4>Ficha de datos de seguridad <i class="fa-regular fa-file-pdf"></i></h4>
-                        
-                    </a>
+					<a href="#" @click.prevent="getDocument(document.id)">
+						<h4>Ficha de datos de seguridad <i class="fa-regular fa-file-pdf"></i></h4>
+
+					</a>
 				</div>
 			</div>
 		</div>
 		<div class="d-flex justify-content-lg-end mt-md-3 mt-2">
-			<base-button
-				type="default"
-				:outline="true"
-				size="sm"
-				class="btn-inline-block"
-				@click="$emit('close')"
-			>
+			<base-button type="default" :outline="true" size="sm" class="btn-inline-block" @click="$emit('close')">
 				Cerrar
 			</base-button>
 		</div>
 	</div>
 </template>
 <script>
-	import _ from "lodash";
-	import service from "../../store/services/model-service";
-	import utils from "@/mixins/utils-mixin";
-	import { baseUrl } from '../../axios/index'
+import _ from "lodash";
+import service from "../../store/services/model-service";
+import utils from "@/mixins/utils-mixin";
+import { baseUrl } from '../../axios/index'
 
-	export default {
-        mixins: [utils],
-		name: "material-show",
-		props: ["id"],
-		data() {
-			return {
-				material: null,
-			};
+export default {
+	mixins: [utils],
+	name: "material-show",
+	props: ["id"],
+	data() {
+		return {
+			material: null,
+		};
+	},
+	mounted() { },
+	methods: {
+		async show(id) {
+			try {
+				const res = await service.show(
+					"material",
+					id,
+					"includes[]=installation.operations&includes[]=installation.province.city&includes[]=equipment&includes[]=documents"
+				);
+				this.material = this.$functions.copy(res.data.data);
+			} catch (err) {
+				console.log(err);
+			}
 		},
-		mounted() {},
-		methods: {
-			async show(id) {
-				try {
-					const res = await service.show(
-						"material",
-						id,
-						"includes[]=installation.operations&includes[]=installation.province.city&includes[]=equipment&includes[]=documents"
-					);
-					this.material = this.$functions.copy(res.data.data);
-				} catch (err) {
-					console.log(err);
+	},
+	computed: {
+		denomination() {
+			return _.truncate(this.material?.material?.denomination_name, {
+				length: 25,
+			});
+		},
+		document() {
+			return _.isEmpty(this.material?.documents) ? false : this.material.documents[0]
+		},
+		dangerous_label() {
+			return baseUrl + '/labels/is_dangerous.jpg'
+		}
+	},
+	watch: {
+		id: {
+			// the callback will be called immediately after the start of the observation
+			handler(val) {
+				if (val >= 1 && val != null) {
+					this.show(val);
 				}
 			},
+			immediate: true,
 		},
-		computed: {
-			denomination() {
-				return _.truncate(this.material?.material?.denomination_name, {
-					length: 25,
-				});
-			},
-            document(){
-                return _.isEmpty(this.material?.documents) ? false : this.material.documents[0]
-            },
-            dangerous_label(){
-                return baseUrl + '/labels/is_dangerous.jpg'
-            }
-		},
-		watch: {
-			id: {
-				// the callback will be called immediately after the start of the observation
-				handler(val) {
-					if (val >= 1 && val != null) {
-						this.show(val);
-					}
-				},
-				immediate: true,
-			},
-		},
-	};
+	},
+};
 </script>
