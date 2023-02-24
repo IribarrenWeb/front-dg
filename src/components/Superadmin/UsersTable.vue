@@ -87,6 +87,17 @@ export default {
 				field: row => row?.user ? row?.user.full_name : row?.full_name,
 			},
 			{
+				name: 'plan',
+				label: 'Plan contratado',
+				align: 'left',
+				// field: row => row?.scheduled_date,
+				field: row => row.user ? row.user?.plan?.name : row?.plan?.name,
+				// field: row => moment(row?.scheduled_date_original).format('DD/MM/YYYY HH:mm a'),
+				// field: row => row?.created_at,
+				// format: val => `${val}`,
+				sortable: false
+			},
+			{
 				name: 'created_at',
 				label: 'Creado hace',
 				align: 'left',
@@ -129,11 +140,12 @@ export default {
 				let url = `${props.typeUser}`
 
 				if (props.typeUser != 'consulting') {
-					url += `?includes[]=user`
+					url += `?includes[]=user.plan`
 				}
 				if(props.typeUser == 'business') {
-					url += `&includes[]=province.city&counts[]=installations&includes[]=documents.type&includes[]=bank`
+					url += `&counts[]=installations&includes[]=documents.type&includes[]=bank`
 				}
+				
 				const res = await modelService.api({ url })
 				console.log(res);
 				data.value = res?.data?.data ?? []

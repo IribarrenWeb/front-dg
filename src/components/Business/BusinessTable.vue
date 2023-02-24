@@ -33,9 +33,8 @@
 				<template v-slot:columns>
 					<th>Nombre</th>
 					<th>Ciudad</th>
-					<th>Instalaciones</th>
-					<th></th>
-					<th v-if="!byAuditableId">Delegación</th>
+					<th colspan="2">Instalaciones</th>
+					<th v-if="!byAuditableId && ($store.is_auditor)">Delegación</th>
 					<th v-if="!byAuditableId">Acciones</th>
 				</template>
 
@@ -55,7 +54,7 @@
 							{{ installation.name }},
 						</span>
 					</td>
-					<td v-if="!byAuditableId">
+					<td v-if="!byAuditableId && ($store.is_auditor)">
 						{{ row.item?.administrable?.user?.full_name }}
 					</td>
 					<td class="d-flex" v-if="!byAuditableId">

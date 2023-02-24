@@ -134,7 +134,7 @@ export default {
 
         function setModel(data) {
             model.value.installation_id = data.installation_id
-            model.value.scheduled_date = data.scheduled_date
+            model.value.scheduled_date = data.scheduled_date_original
             model.value.employees_ids = data.employees.map(e => e.id)
         }
 

@@ -28,8 +28,8 @@
                             :model-value="cartage?.business?.user?.full_name" label="Empresa" readonly
                             class="col-md-4 col-6" />
 
-                        <div class="col-md-4 col-6" v-if="cartage?.document">
-                            <q-item clickable v-if="!toChange" style="max-width: 500px; margin-left: auto;">
+                        <div class="col-md-4 col-6" v-if="cartage?.document || cartage.type == 'carretera'">
+                            <q-item clickable v-if="!toChange && cartage.type != 'carretera'" style="max-width: 500px; margin-left: auto;">
                                 <q-item-section top avatar>
                                     <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" />
                                 </q-item-section>
@@ -48,7 +48,7 @@
                                         @click="toChange = true" />
                                 </q-item-section>
                             </q-item>
-                            <q-file v-else label="Documento (carta de porte)" :rules="[$rules.required]"
+                            <q-file v-else-if="cartage.type != 'carretera'" label="Documento (carta de porte)" :rules="[$rules.required]"
                                 :loading="loading" @update:model-value="changeDoc" v-model="model.document" outlined
                                 accept=".pdf">
                                 <template v-slot:prepend>
@@ -60,6 +60,19 @@
                                         icon="fa-solid fa-xmark" />
                                 </template>
                             </q-file>
+                            <q-item v-else-if="cartage.type == 'carretera'" clickable style="max-width: 500px; margin-left: auto;">
+                                <q-item-section top avatar>
+                                    <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" />
+                                </q-item-section>
+                                <q-item-section @click="$store.dispatch('generatePdf',cartage.print_url)">
+                                    <q-item-label>Documento generado</q-item-label>
+                                    <!-- <q-item-label caption lines="2" v-if="cartage?.document?.size">{{
+                                            cartage?.document.size /
+                                            1000
+                                    }}
+                                        KB</q-item-label> -->
+                                </q-item-section>
+                            </q-item>
                         </div>
                         <q-file v-else-if="cartage.status != 'APROBADA'" label="Documento (carta de porte)"  :rules="[$rules.required]" :loading="loading"
                             @update:model-value="changeDoc" v-model="model.document" outlined accept=".pdf">
@@ -81,7 +94,7 @@
                     <div class="q-px-md" >
                         <span class="h4">Observaciones</span>
                         <div v-if="role != 'business' && cartage?.status == 'EN REVISION'">
-                            <q-editor disable="role != 'business'" class="q-mt-sm" v-model="model.observation" min-height="5rem" />
+                            <q-editor class="q-mt-sm" v-model="model.observation" min-height="5rem" />
                         </div>
                         <div v-else>
                             <div class="q-pa-sm border"

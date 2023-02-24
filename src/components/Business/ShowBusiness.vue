@@ -34,7 +34,7 @@
 					</div>
 					<div class="col-lg-6">
 						<base-field name="file_date.date" label="Fecha de documentación">
-							<field-validate type="date" class="form-control" name="file_date.date" rules="required"
+							<field-validate type="date" class="form-control" name="file_date.date"
 								label="fecha documentación" v-model="model.file_date" />
 						</base-field>
 					</div>
@@ -48,7 +48,7 @@
 										class="fa-solid fa-pencil"></i></base-button>
 							</div>
 							<field-validate v-else type="file" class="form-control" name="file_doc"
-								rules="required|ext:pdf" label="documento" v-model="model.file_document.file" />
+								rules="ext:pdf" label="documento" v-model="model.file_document.file" />
 						</base-field>
 					</div>
 				</div>
