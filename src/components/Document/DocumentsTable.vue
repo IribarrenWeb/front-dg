@@ -51,13 +51,19 @@
 
 				<template v-slot:body-cell-actions="props">
 					<q-td>
-						<q-btn-dropdown v-if="!props.row?.is_folder" class="custom-drop" flat rounded
+						<q-btn-dropdown class="custom-drop" flat rounded
 							icon="fa-solid fa-ellipsis-vertical" color="grey-7">
 							<q-list bordered>
-								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+								<q-item v-if="!props.row?.is_folder" style="min-width: 200px;text-align: center;" clickable v-close-popup
 									@click="addFolder = true, selected_document_id = props.row.id">
 									<q-item-section>
 										<q-item-label>Agregar carpeta</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item v-if="props.row?.is_folder" style="min-width: 200px;text-align: center;" clickable v-close-popup
+									@click="editFolder = true, folderData = props.row">
+									<q-item-section>
+										<q-item-label>Editar</q-item-label>
 									</q-item-section>
 								</q-item>
 							</q-list>
@@ -87,6 +93,8 @@
 
 		<document-folder-modal @update="manualRequest" v-if="addFolder" v-model="addFolder"
 			:document_id="selected_document_id" />
+
+		<document-folder-create-modal v-model="editFolder" :folderData="folderData" @created="manualRequest" />
 	</div>
 </template>
 <script>
@@ -100,9 +108,10 @@ import { ref } from '@vue/reactivity';
 import { forEach, isEmpty, map } from 'lodash';
 import { computed, watch } from '@vue/runtime-core';
 import { baseUrl } from '../../axios';
+import DocumentFolderCreateModal from '../DocumentFolder/DocumentFolderCreateModal.vue';
 
 export default {
-	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2 },
+	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2, DocumentFolderCreateModal },
 	name: "documents-table",
 	props: ["reload"],
 	setup(props, { emit }) {
@@ -199,6 +208,9 @@ export default {
 				name: 'actions',
 			},
 		]
+		const editFolder = ref(false)
+
+		const folderData = ref(null)
 
 		function getExtIcon(ext) {
 			let url = baseUrl + `img/icons/`
@@ -216,6 +228,7 @@ export default {
 
 		function manualRequest(page = 1) {
 			// if (page == pagination.value.page) return
+			folderData.value = null
 			pagination.value.page = page
 			tableRef.value.requestServerInteraction()
 		}
@@ -318,6 +331,8 @@ export default {
 			tableRef,
 			columns,
 			pagination,
+			folderData,
+			editFolder,
 
 			handleOpen,
 			getExtIcon,

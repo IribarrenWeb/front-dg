@@ -89,12 +89,10 @@
 									<div class="col-lg-12">
 										<!-- <pre>{{ operations }}</pre> -->
 										<base-field name="operations" label="Tipos de operaciones">
-											<div v-for="operation in operations" :key="operation.key"
-												class="form-check">
+											<div v-for="operation in operations" :key="operation.key" class="form-check">
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox"
-														:value="operation.value" disabled
-														:checked="operation.checked" />
+													<input class="form-check-input" type="checkbox" :value="operation.value"
+														disabled :checked="operation.checked" />
 													<label class="form-check-label" for="flexCheckDefault">
 														{{ operation.label }}
 													</label>
@@ -275,14 +273,17 @@
 											<base-field class="col-md-12" label="Descripción de la formación">
 												<!-- <textarea class="form-control" cols="30" rows="10"
 													v-model="model.formation_desc"></textarea> -->
-												<qu-input-validation type="textarea" v-model="model.formation_desc" cols="30" rows="10" apiName="formation_desc"/>
+												<qu-input-validation type="textarea" v-model="model.formation_desc"
+													cols="30" rows="10" apiName="formation_desc">
+												</qu-input-validation>
 											</base-field>
 										</div>
 									</div>
 									<div v-if="!model.has_formations">
 										<base-field
 											label="Indicar motivos y medidas emprendidas por la empresa para subsanar la deficiencia">
-											<qu-input-validation type="textarea" v-model="model.deficiency_desc" cols="30" rows="10" apiName="deficiency_desc"/>
+											<qu-input-validation type="textarea" v-model="model.deficiency_desc" cols="30"
+												rows="10" apiName="deficiency_desc" />
 											<!-- <textarea class="form-control" cols="30" rows="10"
 												v-model="model.deficiency_desc"></textarea> -->
 										</base-field>
@@ -291,8 +292,8 @@
 								<div class="col-lg-12">
 									<base-field label="¿Figura la formación recibida en el expediente?">
 										<div class="custom-control custom-radio">
-											<input class="custom-control-input" type="radio"
-												name="has_formations_records" id="has_formations_records1" :value="true"
+											<input class="custom-control-input" type="radio" name="has_formations_records"
+												id="has_formations_records1" :value="true"
 												v-model="model.has_formations_records" />
 											<label class="custom-control-label" for="has_formations_records1">
 												SI
@@ -321,8 +322,8 @@
 				</div>
 			</q-card-section>
 			<q-card-actions align="right">
-				<q-btn size="md" :loading="(validating || loading)" label="Anterior" color="primary"
-					@click="currentStep--" v-if="currentStep !== 1" />
+				<q-btn size="md" :loading="(validating || loading)" label="Anterior" color="primary" @click="currentStep--"
+					v-if="currentStep !== 1" />
 				<q-btn size="md" :loading="(validating || loading)" label="Siguiente" color="primary"
 					v-if="currentStep < steps.length" @click="handleNext" />
 				<q-btn size="md" :loading="(validating || loading)" color="primary"
@@ -380,7 +381,7 @@ export default {
 		const steps = ref([])
 		const model = ref({
 			has_formations: null,
-			formation_desc: null,
+			formation_desc: 'Naturaleza de la formación (ADR)- 1.3.2.1 Sensibilización general- 1.3.2.2 Formación específica- 1.3.2.3 Formación en materia de seguridad- 1.3.3 Documentación- Definiciones y obligaciones de los participantes- Normas sobre la operación de transporte-Disposiciones varias a observar por la tripulación del vehículo-Validez y renovación del certificado ADR-Restricciones a la circulación-Procedimientos para la operación de carga-Procedimientos para la operación de descarga-Disposiciones relativas al transporte en bultos-Disposiciones relativas a la carga, a la descarga y a la manipulación-Prohibiciones relativas de cargamento en común-Manipulación y estiba (adr)-Peligro de los productos químicos de la Instalación-ficha se seguridad de los productos manipulados.-Procedimientos en caso de avería, incidente o accidente.-Equipamiento de los camiones destinados al Tte. de materias peligrosas-Equipamiento para cada miembro de la tripulación según adr.-Documentación; carta de porte, instrucciones escritas-Medios de extinción-Normas para la correcta utilización de los extintores portátiles',
 			deficiency_desc: null,
 			has_formations_records: null,
 			formation_data: {
@@ -411,7 +412,7 @@ export default {
 				model.value.has_formations =
 					report.value.has_formations == 0 ? false : true;
 				model.value.formation_desc =
-					report.value?.last_training?.formation?.content;
+					report.value?.last_training?.formation?.content ?? model.value.formation_desc;
 				model.value.formation_data.employees_count =
 					report.value?.last_training?.employees_count;
 				model.value.formation_data.date_formation =

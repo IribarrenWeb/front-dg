@@ -16,10 +16,15 @@
 import { ref } from '@vue/reactivity'
 import modelService from '../../store/services/model-service'
 import {  Notify } from 'quasar'
+import { watch } from 'vue'
 
 export default {
     inheritAttrs: true,
     props: {
+        folderData: {
+            type: Number,
+            default: null
+        }
     },
     setup(props, { emit }) {
         const loading = ref(false)
@@ -28,7 +33,11 @@ export default {
         async function save() {
             loading.value = true
             try {
-                await modelService.apiNoLoading({ url: 'document-folder', method: 'POST', data: {name:name.value} })
+                if (props.folderData?.id) {
+                    await modelService.apiNoLoading({ url: 'document-folder/'+props.folderData.id, method: 'PUT', data: {name:name.value} })
+                }else{
+                    await modelService.apiNoLoading({ url: 'document-folder', method: 'POST', data: {name:name.value} })
+                }
                 emit('update:model-value',false)
                 emit('created',true)
                 Notify.create({
@@ -45,6 +54,11 @@ export default {
             }
             loading.value = false
         }
+
+        watch(() => props.folderData, (v) => {
+            if(v) name.value = v.name
+            else name.value = null
+        }, {immediate: true})
 
         return {
             loading,
