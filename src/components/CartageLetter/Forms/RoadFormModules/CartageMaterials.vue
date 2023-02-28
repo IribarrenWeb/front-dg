@@ -143,7 +143,7 @@ export default {
                     number: 1,
                     quantity: 1,
                     packing_name: 'Saco',
-                    nep_comment: 'Comentario',
+                    nep_comment: '',
                     limited_quantity_reference: false,
                 })
                 else if (model_selected) materials.push(model_selected)
