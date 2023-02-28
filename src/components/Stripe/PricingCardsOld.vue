@@ -1,6 +1,6 @@
 <template>
     <q-card class="shadow-2 q-mx-lg custom-shadow-sm"
-        :class="{ 'border border-primary': idx == 2 && plan.stripe_price != actualPlanStripe?.stripe_price, 'border border-success': plan.stripe_price == actualPlanStripe?.stripe_price || viewOnly }"
+        :class="{ 'border border-primary': idx == 2 && !samePlan(plan), 'border border-success': samePlan(plan) || viewOnly }"
         v-for="plan, idx in plans" :key="idx">
         <q-card-section>
             <div class="flex items-center q-mx-md">
@@ -17,28 +17,28 @@
                     </div>
                 </div>
                 <q-space />
-                <q-badge floating color="primary" v-if="idx == 2 && plan.stripe_price != actualPlanStripe?.stripe_price && !viewOnly" text-color="white"
+                <q-badge floating color="primary" v-if="idx == 2 && !samePlan(plan) && !viewOnly" text-color="white"
                     label="Recomendado" />
-                <q-badge floating color="success" v-if="plan.stripe_price == actualPlanStripe?.stripe_price || viewOnly" text-color="white"
+                <q-badge floating color="success" v-if="samePlan(plan) || viewOnly" text-color="white"
                     label="Plan actual" />
                 <div v-if="idx >= 1 && !viewOnly">
                     <!-- Suscribirse -->
-                    <q-btn color="primary" v-if="plan.stripe_price != actualPlanStripe?.stripe_price && !actualPlanStripe?.stripe_price"
+                    <q-btn color="primary" v-if="!samePlan(plan) && !actualPlanStripe?.stripe_price"
                         :disable="!plan?.is_active" label="Suscribirse" @click="handleAction('subscribe', plan)"
                         :loading="loading" />
 
                     <!-- Cancelar suscripcion -->
-                    <q-btn color="danger" outline v-else-if="plan.stripe_price == actualPlanStripe?.stripe_price && !actualPlanStripe?.ends_at"
+                    <q-btn color="danger" outline v-else-if="samePlan(plan) && !actualPlanStripe?.ends_at"
                         :disable="!plan?.is_active" label="Cancelar" @click="handleAction('cancel', plan)"
                         :loading="loading" />
 
                     <!-- Reanudar suscripcion -->
-                    <q-btn color="primary" v-else-if="plan.stripe_price == actualPlanStripe?.stripe_price && actualPlanStripe?.ends_at"
+                    <q-btn color="primary" v-else-if="samePlan(plan) && actualPlanStripe?.ends_at"
                         :disable="!plan?.is_active" label="Reanudar" @click="handleAction('resume', plan)"
                         :loading="loading" />
 
                     <!-- Cambiar suscripcion -->
-                    <q-btn color="primary" v-else-if="plan.stripe_price != actualPlanStripe?.stripe_price" :disable="!plan?.is_active"
+                    <q-btn color="primary" v-else-if="samePlan(!plan)" :disable="!plan?.is_active"
                         label="Cambiar plan" @click="handleAction('change', plan)" :loading="loading" />
 
                     <q-tooltip v-if="!plan?.is_active">
@@ -94,6 +94,10 @@ export default {
                 loading.value = false
 
             }
+        }
+
+        function samePlan(plan){
+            return (actualPlanStripe.value && plan.stripe_price == actualPlanStripe.value?.stripe_price) || plan.id == actualPlan.value.id
         }
 
         function executeAction(data) {
@@ -200,6 +204,7 @@ export default {
             actualPlan,
             loading,
             actualPlanStripe,
+            samePlan,
             handleAction
         }
     }
