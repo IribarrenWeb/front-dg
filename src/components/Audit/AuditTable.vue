@@ -15,20 +15,19 @@
 		</div>
 
 		<div class="
-				card-header
-				border-0
-				pl-2
-				py-3
-				bac-ligth
-				mx-0
-				row
-				align-items-end
-				filter-container
-			">
+					card-header
+					border-0
+					pl-2
+					py-3
+					bac-ligth
+					mx-0
+					row
+					align-items-end
+					filter-container
+				">
 			<div class="col-md-10">
 				<div class="row align-items-end ">
-					<date-filter class="col-md-3" v-model:clear="clear"
-						@updated="handleFilter('scheduled_date', $event)" />
+					<date-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('scheduled_date', $event)" />
 					<delegate-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('delegate', $event)"
 						v-if="$store.state.is_admin"></delegate-filter>
 					<business-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('business', $event)"
@@ -74,7 +73,7 @@
 							</q-tooltip>
 						</span>
 						<span class="name mb-0 text-sm">{{
-								row.item?.installation.company.user.full_name
+							row.item?.installation.company.user.full_name
 						}}</span>
 					</th>
 					<td>
@@ -97,8 +96,9 @@
 						{{ row.item?.scheduled_date }}
 					</td>
 					<td v-if="ROLE == 'business' && row.item?.status == 'COMPLETADO'">
-						<a class="btn btn-sm btn-primary" @click.prevent="$store.dispatch('generatePdf',`audits/report/${row.item.id}`)" href="#"
-							>Imprimir</a>
+						<a class="btn btn-sm btn-primary"
+							@click.prevent="$store.dispatch('generatePdf', `audits/report/${row.item.id}`)"
+							href="#">Imprimir</a>
 					</td>
 					<td class="text-right" v-if="ROLE != 'business'">
 						<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
@@ -108,7 +108,7 @@
 									@click="toSchedule(row.item?.id)">
 									<q-item-section>
 										<q-item-label>{{
-												row.item?.scheduled_date != null ? "Re-agendar" : "Agendar"
+											row.item?.scheduled_date != null ? "Re-agendar" : "Agendar"
 										}}</q-item-label>
 									</q-item-section>
 								</q-item>
@@ -122,8 +122,8 @@
 										</q-item-label>
 									</q-item-section>
 								</q-item>
-								<q-item style="min-width: 200px;text-align: center;" to="/audits/nonconformities"
-									clickable v-close-popup v-if="row.item?.status == 'COMPLETADO'">
+								<q-item style="min-width: 200px;text-align: center;" to="/audits/nonconformities" clickable
+									v-close-popup v-if="row.item?.status == 'COMPLETADO'">
 									<q-item-section>
 										<q-item-label>No conformidades</q-item-label>
 									</q-item-section>
@@ -138,14 +138,14 @@
 								</q-item>
 								<q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
 									v-if="row.item?.status == 'COMPLETADO'"
-									@click="$store.dispatch('generatePdf',`audits/report/${row.item.id}`)">
+									@click="$store.dispatch('generatePdf', `audits/report/${row.item.id}`)">
 									<!-- :href="url + '/audits/report/' + row.item?.id" target="_blank"> -->
 									<q-item-section>
 										<q-item-label>Imprimir</q-item-label>
 									</q-item-section>
 								</q-item>
-								<q-item @click="handleDocs(row.item.id)" style="min-width: 200px;text-align: center;" clickable
-									v-close-popup v-if="row.item?.status == 'COMPLETADO'">
+								<q-item @click="handleDocs(row.item.id)" style="min-width: 200px;text-align: center;"
+									clickable v-close-popup v-if="row.item?.status == 'COMPLETADO'">
 									<q-item-section>
 										<q-item-label>Documentos</q-item-label>
 									</q-item-section>
@@ -171,17 +171,13 @@
 							<div v-for="file, idx in docs" :key="idx">
 								<q-item clickable style="width: 100%;">
 									<q-item-section top avatar>
-										<q-img
-											src="/img/icons/pdf.png"
-											spinner-color="primary"
-											spinner-size="82px"
-										/>
+										<q-img src="/img/icons/pdf.png" spinner-color="primary" spinner-size="82px" />
 										<!-- <q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" /> -->
 									</q-item-section>
 									<q-item-section @click="open(file?.public_url)">
 										<q-item-label>{{ file.file_name }}</q-item-label>
 										<q-item-label caption lines="2" v-if="file?.size">{{ file.size /
-												1000
+											1000
 										}}
 											KB</q-item-label>
 									</q-item-section>
@@ -309,10 +305,10 @@ export default {
 		open(url) {
 			window.open(url, '_blank').focus();
 		},
-		async canInitAudit(id){
+		async canInitAudit(id) {
 			Loading.show()
 			const res = await service.api({ url: `audits/${id}/can-init` })
-			if(!res?.data) {
+			if (!res?.data) {
 				Notify.create({
 					message: 'No se puede iniciar esta auditoria ya que no se ha culminado el ciclo anterior',
 					color: 'negative'
@@ -348,7 +344,7 @@ export default {
 		async handleInit(item) {
 			const link = `/audit-init/${item.id}`;
 			const valid = await this.canInitAudit(item.id)
-			if (!valid) return 
+			if (!valid) return
 
 			if (item.can_init == null) {
 				let msg =

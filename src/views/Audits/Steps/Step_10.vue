@@ -24,7 +24,7 @@
 											rules="required" :disabled="!check" v-model="vehicle.index">
 											<option selected>Matricula</option>
 											<option :value="idx" v-for="(veh, idx) in inst_vehicles" :key="idx">
-												{{ veh.registration_number ?? 'N/A' }} 
+												{{ veh.registration_number ?? 'N/A' }}
 											</option>
 										</field-validate>
 									</base-field>
@@ -75,10 +75,10 @@
 					<div class="col-md-12 my-3">
 						<base-field label="Imagenes:">
 							<div class="clearfix">
-								<audit-images-module :images="images" @delete="deleteImg"/>
+								<audit-images-module :images="images" @delete="deleteImg" />
 								<div class="">
 									<base-button type="primary" @click="addImages = !addImages" size="sm">{{
-											!addImages ? "Agregar imagenes" : "Cancelar"
+										!addImages ? "Agregar imagenes" : "Cancelar"
 									}}</base-button>
 								</div>
 							</div>
@@ -107,8 +107,7 @@
 					</div>
 					<div class="col-md-12">
 						<base-field label="OBSERVACIONES VEHÍCULOS EMPRESA">
-							<textarea class="form-control" cols="30" rows="10"
-								v-model="vehicle_observations"></textarea>
+							<textarea class="form-control" cols="30" rows="10" v-model="vehicle_observations"></textarea>
 						</base-field>
 					</div>
 				</div>

@@ -1,9 +1,6 @@
 <template>
 	<form-validate @submit="onSubmit" v-slot="{ meta }">
-		<div
-			class="d-flex justify-content-center"
-			v-if="typeof audit.id == 'undefined'"
-		>
+		<div class="d-flex justify-content-center" v-if="typeof audit.id == 'undefined'">
 			<div class="spinner-border" role="status"></div>
 		</div>
 		<div v-else class="row justify-content-center px-md-2">
@@ -69,73 +66,63 @@
 			</div>
 			<div class="col-12">
 				<div class="mt-4 float-md-right">
-					<base-button
-						type="default"
-						@click="this.$emit('prev')"
-						v-if="currentStep !== 1"
-						>Anterior</base-button
-					>
-					<base-button
-						type="default"
-						:disabled="!meta.valid"
-						nativeType="submit"
-						v-if="currentStep !== 9"
-						>Siguiente</base-button
-					>
+					<base-button type="default" @click="this.$emit('prev')" v-if="currentStep !== 1">Anterior</base-button>
+					<base-button type="default" :disabled="!meta.valid" nativeType="submit"
+						v-if="currentStep !== 9">Siguiente</base-button>
 				</div>
 			</div>
 		</div>
 	</form-validate>
 </template>
 <script>
-	import service from "@/store/services/model-service";
-	export default {
-		props: ["audit", "currentStep"],
-		data() {
-			return {
-				check1: false,
-				check2: false,
-				checked: false,
-				audit_id: this.$route.params.id,
-			};
-		},
-		async mounted() {
-			if (typeof this.audit.id == "undefined") {
-				const res = await service.show("audit", this.audit_id);
-				this.checked = res.data.data.valid_step >= 2;
-				this.check1 = this.checked;
-				this.check2 = this.checked;
-			} else {
-				this.checked = this.audit.valid_step >= 2;
-				this.check1 = this.checked;
-				this.check2 = this.checked;
+import service from "@/store/services/model-service";
+export default {
+	props: ["audit", "currentStep"],
+	data() {
+		return {
+			check1: false,
+			check2: false,
+			checked: false,
+			audit_id: this.$route.params.id,
+		};
+	},
+	async mounted() {
+		if (typeof this.audit.id == "undefined") {
+			const res = await service.show("audit", this.audit_id);
+			this.checked = res.data.data.valid_step >= 2;
+			this.check1 = this.checked;
+			this.check2 = this.checked;
+		} else {
+			this.checked = this.audit.valid_step >= 2;
+			this.check1 = this.checked;
+			this.check2 = this.checked;
+		}
+	},
+	methods: {
+		async onSubmit() {
+			if (!this.check1 && !this.check2) {
+				this.$toast.warning("Tiene que marcar los checkbox");
+			}
+			try {
+				await service.update("audit", this.audit_id, {
+					current_step: 5,
+					valid_step:
+						this.audit.valid_step >= this.currentStep
+							? this.audit.valid_step
+							: this.currentStep,
+				});
+				this.$emit("next", 4);
+			} catch (err) {
+				let message = err.response.message
+					? err.response.message
+					: "Ocurrio un error al guardar los cambios";
+				this.$toast.error(message);
+				console.log(err);
 			}
 		},
-		methods: {
-			async onSubmit() {
-				if (!this.check1 && !this.check2) {
-					this.$toast.warning("Tiene que marcar los checkbox");
-				}
-				try {
-					await service.update("audit", this.audit_id, {
-						current_step: 5,
-						valid_step:
-							this.audit.valid_step >= this.currentStep
-								? this.audit.valid_step
-								: this.currentStep,
-					});
-					this.$emit("next", 4);
-				} catch (err) {
-					let message = err.response.message
-						? err.response.message
-						: "Ocurrio un error al guardar los cambios";
-					this.$toast.error(message);
-					console.log(err);
-				}
-			},
-			handle(event) {
-				console.log(event, this.check2);
-			},
+		handle(event) {
+			console.log(event, this.check2);
 		},
-	};
+	},
+};
 </script>

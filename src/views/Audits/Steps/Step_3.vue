@@ -52,15 +52,16 @@
 														<q-item-section>
 															<q-item-label>{{ scope.opt.query }}</q-item-label>
 															<q-item-label caption class="truncate-250">{{
-																	scope.opt?.material?.material?.denomination_name ?? 'PRODUCTO QUIMICO'
+																scope.opt?.material?.material?.denomination_name ??
+																'PRODUCTO QUIMICO'
 															}}
 															</q-item-label>
 														</q-item-section>
 													</q-item>
 												</template>
 											</q-select>
-											<field-validate v-show="false" class="form-control" name="un_code"
-												label="un" rules="required" v-model="deposit.index">
+											<field-validate v-show="false" class="form-control" name="un_code" label="un"
+												rules="required" v-model="deposit.index">
 											</field-validate>
 										</base-field>
 									</div>
@@ -140,8 +141,7 @@
 						</div>
 						<div class="col-md-1 d-flex">
 							<div class="align-self-center">
-								<base-button size="sm" @click="unlink(dep.id, 'deposits')" type="danger"
-									:outline="true">
+								<base-button size="sm" @click="unlink(dep.id, 'deposits')" type="danger" :outline="true">
 									<i class="fa fa-minus" aria-hidden="true"></i>
 								</base-button>
 							</div>
@@ -160,8 +160,8 @@
 							<div class="col-md-3">
 								<base-field name="un" label="UN">
 									<async-select trackBy="value" customClass="custom-form-control"
-										@selected="discovered_material = $event" v-model:clear="clearUn"
-										:materials="true" :list="false">
+										@selected="discovered_material = $event" v-model:clear="clearUn" :materials="true"
+										:list="false">
 									</async-select>
 									<field-validate type="text" class="form-control d-none" name="un" rules="required"
 										label="un" v-model="audit_materials.comment" />
@@ -244,15 +244,16 @@
 														<q-item-section>
 															<q-item-label>{{ scope.opt.query }}</q-item-label>
 															<q-item-label caption class="truncate-250">{{
-																	scope.opt?.material?.material?.denomination_name ?? 'PRODUCTO QUIMICO'
+																scope.opt?.material?.material?.denomination_name ??
+																'PRODUCTO QUIMICO'
 															}}
 															</q-item-label>
 														</q-item-section>
 													</q-item>
 												</template>
 											</q-select>
-											<field-validate v-show="false" class="form-control" name="un_code"
-												label="un" rules="required" v-model="residue.index">
+											<field-validate v-show="false" class="form-control" name="un_code" label="un"
+												rules="required" v-model="residue.index">
 											</field-validate>
 										</base-field>
 									</div>
@@ -332,8 +333,7 @@
 						</div>
 						<div class="col-md-1 d-flex">
 							<div class="align-self-center">
-								<base-button size="sm" @click="unlink(res.id, 'residues')" type="danger"
-									:outline="true">
+								<base-button size="sm" @click="unlink(res.id, 'residues')" type="danger" :outline="true">
 									<i class="fa fa-minus" aria-hidden="true"></i>
 								</base-button>
 							</div>
@@ -343,17 +343,16 @@
 				<div class="col-md-12 my-3">
 					<base-field label="Imagenes:">
 						<div class="clearfix">
-							<audit-images-module :images="images" @delete="deleteImg"/>
+							<audit-images-module :images="images" @delete="deleteImg" />
 							<div class="">
 								<base-button type="primary" @click="addImages = !addImages" size="sm">{{
-										!addImages ? "Agregar imagenes" : "Cancelar"
+									!addImages ? "Agregar imagenes" : "Cancelar"
 								}}</base-button>
 							</div>
 						</div>
 						<div v-if="addImages">
 							<div class="d-flex my-3 border border-ligth rounded p-2">
-								<base-button :type="takePic ? 'secondary' : 'primary'" size="sm"
-									@click="takePic = true">
+								<base-button :type="takePic ? 'secondary' : 'primary'" size="sm" @click="takePic = true">
 									Tomar foto
 								</base-button>
 								<base-button :type="takePic === false ? 'secondary' : 'primary'" size="sm"
