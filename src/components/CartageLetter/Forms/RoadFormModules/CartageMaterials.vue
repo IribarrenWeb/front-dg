@@ -1,11 +1,11 @@
 <template>
     <div class="row col-12">
-        <q-toggle size="lg" label="Residuos" color="primary" class="q-mb-md" v-model="is_residue" />
-        <qu-select-validation @filter="filterFn" use-chips :rules="[$rules.required()]" apiName="materials_ids"
+        <q-toggle v-if="!cloneId" size="lg" label="Residuos" color="primary" class="q-mb-md" v-model="is_residue" />
+        <qu-select-validation v-if="!cloneId" @filter="filterFn" use-chips :rules="[$rules.required()]" apiName="materials_ids"
             class="col-12" v-model="local_material_ids" map-options :options="formatted_options" outlined emit-value
             use-input fill-input :loading="loading" label="Materiales" multiple />
-        <q-separator spaced="10px" size="10px" />
-        <div class="col-md-12 q-px-md q-mb-md" v-if="materials_selected.length >= 1">
+        <q-separator v-if="!cloneId" spaced="10px" size="10px" />
+        <div class="col-md-12 q-px-md q-mb-md" v-if="materials_selected.length >= 1 && !loading">
             <h4>Detalles:</h4>
             <q-item v-for="material in materials_selected" :key="material.id" class="border-bottom">
                 <q-item-section top>
@@ -45,14 +45,16 @@
                             label="Cantidad por bulto" type="text" />
                         <material-packing-selector dense class="col-4" :rules="[$rules.required()]" option-value="label"
                             label="Empaque" v-model="material.packing_name" />
-                        <qu-input-validation class="col-6 mt--2" label="NEP" v-model="material.nep_comment"
-                            dense type="text" />
-                        <q-checkbox class="col-6 mt--3" dense v-model="material.limited_quantity_reference" label="Cantidades limitadas" />
+                        <qu-input-validation class="col-6 mt--2" label="NEP" v-model="material.nep_comment" dense
+                            type="text" />
+                        <q-checkbox class="col-6 mt--3" dense v-model="material.limited_quantity_reference"
+                            label="Cantidades limitadas" />
                     </div>
                 </q-item-section>
             </q-item>
         </div>
-</div>
+        <form-loader class="full-width" v-else />
+    </div>
 </template>
 
 <script>
@@ -67,9 +69,10 @@ import { computed, watch } from '@vue/runtime-core';
 import QuSelectValidation from '../../../core_components/FormQuasar/QuSelectValidation.vue';
 import QuInputValidation from '../../../core_components/FormQuasar/QuInputValidation.vue';
 import MaterialPackingSelector from '../../../Materials/Modules/MaterialPackingSelector.vue';
+import FormLoader from '../../../../loaders/FormLoader.vue';
 
 export default {
-    components: { QuSelectValidation, QuInputValidation, MaterialPackingSelector },
+    components: { QuSelectValidation, QuInputValidation, MaterialPackingSelector, FormLoader },
     props: {
         formRef: {},
         materials_ids: {
@@ -85,11 +88,16 @@ export default {
             type: Boolean,
             default: false
         },
+        cloneId: {
+            type: Number,
+            default: null
+        }
     },
     setup(props, { emit }) {
         const is_residue = ref(false)
         const local_material_ids = ref([])
         const options = ref([])
+        const loading = ref(false)
         const residues = computed(() => options.value.filter(m => m.model?.is_residue))
         const not_residues = computed(() => options.value.filter(m => !m.model?.is_residue))
         const formatted_options = computed(() => is_residue.value ? residues.value : not_residues.value)
@@ -113,6 +121,32 @@ export default {
                 // option_materials.value = data_options.value
                 options.value = option_materials.value
             } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function cloneMaterials() {
+            try {
+                loading.value = true
+                const res = await modelService.apiNoLoading({ url: `cartage-letter/materials/${props.cloneId}` });
+                console.log(res);
+                const response = res?.data?.data ?? [];
+                let materials = []
+                response.forEach(m => {
+                    materials.push({
+                        ...m,
+                        number: m.pivot?.number_of_packages,
+                        quantity: m.pivot?.quantity_of_packages,
+                        packing_name: m.pivot?.packing_name,
+                        nep_comment: m.pivot?.nep_comment,
+                        limited_quantity_reference: m.pivot?.limited_quantity_reference ? true : false,
+                    })
+                })
+
+                materials_selected.value = materials
+                loading.value = false
+            } catch (err) {
+                loading.value = false
                 console.error(err);
             }
         }
@@ -156,7 +190,11 @@ export default {
             return materials_selected.value?.length ? materials_selected.value.map(m => ({ installation_material_id: m.id, number_of_packages: m.number, quantity_of_packages: m.quantity, packing_name: m.packing_name, nep_comment: m.nep_comment, limited_quantity_reference: m.limited_quantity_reference })) : []
         }
 
-        getMaterials()
+        if (props.cloneId) {
+            cloneMaterials()
+        }else{
+            getMaterials()
+        }
 
         watch(() => is_residue.value, (v) => {
             resetSelected()
@@ -175,6 +213,7 @@ export default {
             is_residue,
             formatted_options,
             materials_selected,
+            loading,
 
             filterFn
         }

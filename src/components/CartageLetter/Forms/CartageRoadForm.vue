@@ -69,12 +69,12 @@
         <q-step :name="5" title="Mercancías peligrosas" icon="add_comment">
             <q-form ref="carrier_form" class="row q-py-md" @submit="$emit('save', true)">
 
-                <cartage-materials :installation_id="installation_id" :materials_ids="materials_ids"
+                <cartage-materials :cloneId="cloneId" :installation_id="installation_id" :materials_ids="materials_ids"
                     @update:materials_ids="$emit('update:materials_ids', $event)" />
 
                 <q-stepper-navigation>
-                    <q-btn flat @click="step -= 1" color="primary" label="Atras" class="q-ml-sm" />
-                    <q-btn type="submit" color="primary" label="Guardar" :disable="materials_ids.length <= 0" />
+                    <q-btn flat @click="step -= 1" color="primary" v-if="!cloneMode" label="Atras" class="q-ml-sm" />
+                    <q-btn type="submit" color="primary" :label="cloneMode ? 'Clonar' : 'Guardar'" :disable="materials_ids.length <= 0" />
                 </q-stepper-navigation>
             </q-form>
         </q-step>
@@ -128,11 +128,20 @@ export default {
         materials_ids: {
             type: Array
         },
+        cloneMode: {
+            type: Boolean,
+            default: false
+        },
+        cloneId: {
+            type: Number,
+            default: null
+        }
     },
     setup(props, { emit }) {
         const destinatary_model = ref({})
         const carrier_model = ref({})
         const loader_model = ref({})
+        const step = ref(1)
 
         destinatary_model.value = functions.schemas('cartage_destinatary')
         carrier_model.value = functions.schemas('cartage_carrier')
@@ -149,12 +158,16 @@ export default {
         watch(() => loader_model.value, (v) => {
             emit('update:loader_data', v)
         }, { deep: true, immediate: true })
+        
+        if (props.cloneMode) {
+            step.value = 5
+        }
 
         return {
             destinatary_model,
             carrier_model,
             loader_model,
-            step: ref(1),
+            step,
             loader_form: ref(null),
             carrier_form: ref(null),
             destinatary_form: ref(null),

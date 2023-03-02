@@ -66,6 +66,12 @@
                                     <q-item-label>Ver documento</q-item-label>
                                 </q-item-section>
                             </q-item>
+                            <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
+                                @click="handleClone(props.row)" v-if="(role == 'business' && type_for == 'carretera')">
+                                <q-item-section>
+                                    <q-item-label>Clonar</q-item-label>
+                                </q-item-section>
+                            </q-item>
                             <!-- <q-item style="min-width: 200px;text-align: center;" clickable v-close-popup
                                 @click="toLoadDocument(props.row?.id)"
                                 v-if="role == 'business' && !props.row?.document?.public_url && type_for == 'carretera'">
@@ -89,8 +95,8 @@
         <q-dialog v-model="showAdd" persistent>
             <q-card :style="{ 'min-width': type_for == 'carretera' ? '80vw' : '60vw' }">
                 <q-card-section>
-                    <cartage-form :tab="type_for" :modalMode="true" @close="showAdd = false"
-                        @saved="showAdd = false, getData()" />
+                    <cartage-form :cloneId="cloneId" :tab="type_for" :modalMode="true" @close="showAdd = false, cloneId = null"
+                        @saved="showAdd = false, cloneId = null, getData()" />
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -152,6 +158,7 @@ export default {
             cartage_destinatary_id: null,
             cartage_carrier_id: null
         })
+        const cloneId = ref(null)
         const prefix_review_text = computed(() => role.value == 'business' ? 'Asesor' : 'Revisión')
         const reviewText = computed(() => props.type_for == 'maritimas' ? prefix_review_text.value + ' IMO' : prefix_review_text.value + ' IATA')
         const showAdd = ref(false);
@@ -292,6 +299,11 @@ export default {
                     break;
             }
             return color;
+        }
+
+        function handleClone(cartage) {
+            cloneId.value = cartage?.id
+            showAdd.value = true
         }
 
         async function getData() {
@@ -442,8 +454,10 @@ export default {
             cartage_letter_id,
             showDocumentRoad,
             filters,
-            clearFilters,
+            cloneId,
 
+            clearFilters,
+            handleClone,
             toLoadDocument,
             generateRoad,
             getStatusColor,
