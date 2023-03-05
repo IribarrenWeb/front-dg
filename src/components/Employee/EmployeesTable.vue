@@ -209,7 +209,7 @@ export default {
 		},
 		openFormation(formation) {
 			if (formation.dg_formation) {
-				window.open(formation.link);
+				this.$store.dispatch('generatePdf',formation.link)
 			} else {
 				this.getDocument(formation?.data?.id)
 			}

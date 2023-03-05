@@ -228,6 +228,14 @@ export default {
                 sortable: true
             },
             {
+                name: 'created',
+                label: 'Fecha de creación',
+                align: 'left',
+                field: row => moment(row.created_at).format('DD/MM/YYYY h:mm a'),
+                // format: val => `${val}`,
+                sortable: true
+            },
+            {
                 name: 'materials_count',
                 label: 'Mercancías peligrosas',
                 align: 'center',
@@ -260,7 +268,8 @@ export default {
                 'date',
                 'status',
                 'materials_count',
-                'actions'
+                'actions',
+                'created'
             ]
             let visible = [];
             if (role.value == 'business') {
@@ -272,7 +281,7 @@ export default {
             if (props.type_for == 'carretera') {
                 visible = visible.filter(a => !['description', 'date'].includes(a))
             } else {
-                visible = visible.filter(a => !['destinatary', 'carrier', 'loader', 'materials_count'].includes(a))
+                visible = visible.filter(a => !['destinatary', 'carrier', 'loader', 'materials_count', 'created'].includes(a))
             }
             return visible;
         })

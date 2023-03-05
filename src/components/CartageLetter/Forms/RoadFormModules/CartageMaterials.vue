@@ -53,7 +53,7 @@
                 </q-item-section>
             </q-item>
         </div>
-        <form-loader class="full-width" v-else />
+        <form-loader class="full-width" v-else-if="cloneId" />
     </div>
 </template>
 

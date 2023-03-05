@@ -7,8 +7,13 @@
                     :rules="[$rules.required()]" outlined :model-value="name"
                     @update:model-value="$emit('update:name', $event)" type="text" label="Nombre Carta de Porte" />
 
+
                 <installation-selector-v-2 :required="true" class="col-md-6 col-12" :model-value="installation_id"
                     @update:model-value="$emit('update:installation_id', $event)" />
+
+                <qu-input-validation type="textarea" apiName="description" class="col-12" :loading="loading"
+                    outlined :model-value="description"
+                    @update:model-value="$emit('update:description', $event)" label="Descripción general" />
 
                 <q-stepper-navigation class="col-12 flex q-gutter-md">
                     <q-btn color="primary" type="submit" label="Siguiente" />
