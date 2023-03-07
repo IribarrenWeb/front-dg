@@ -77,8 +77,8 @@
 											label="documento" v-model="model.file_certification.file" />
 									</div>
 									<div v-else>
-										<a :href="model.last_formation?.link"
-											target="_blank">{{ model.last_formation?.data?.name }}</a>
+										<a href="#"
+											@click.prevent="$store.dispatch('generatePdf',model.last_formation.simple_link)">{{ model.last_formation?.data?.name }}</a>
 									</div>
 								</base-field>
 							</div>
