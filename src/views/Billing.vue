@@ -13,7 +13,7 @@
 				<q-tabs v-model="tab" inline-label align="justify" class="text-white q-mb-md">
 					<q-tab name="plans" icon="fa-solid fa-address-card" label="Planes" />
 					<q-tab name="payments" class="q-mx-md" icon="fa-regular fa-credit-card" label="Metodos de pago" />
-					<q-tab name="transactions" icon="fa-solid fa-landmark" label="Transacciones" />
+					<!-- <q-tab name="transactions" icon="fa-solid fa-landmark" label="Transacciones" /> -->
 				</q-tabs>
 				<!-- </template> -->
 

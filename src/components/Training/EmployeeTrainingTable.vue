@@ -37,7 +37,7 @@
 					<td>{{ row.item?.date }}</td>
 					<td>
 						<!-- <a :href="row.item?.link_certificate + '/' + id" target="_blank"> -->
-						<a @click.prevent="$store.dispatch('generatePdf',`${row.item?.link_certificate}/${id}`)">
+						<a @click.prevent="$store.dispatch('generatePdf', `${row.item?.link_certificate}/${id}`)">
 							CERTIFICADO
 						</a>
 					</td>
@@ -57,52 +57,52 @@
 	</div>
 </template>
 <script>
-	// import service from "../../store/services/model-service";
-	export default {
-		name: "documents-table",
-		props: ["reload", "tableData", "id"],
-		data() {
-			return {
-				metaData: {},
-				page: 1,
-				submit: false,
-				loader: false,
-				action: "Registrar",
-			};
-		},
-		mounted() {
-			// this.getDocuments(this.page);
-		},
-		methods: {
-			// async getDocuments(page = 1) {
-			// 	try {
-			// 		const response = await service.getIndex("documents", page,'includes[]=type&includes[]=business.user');
-			// 		// this.tableData = response.data.data;
-			// 		this.metaData = response.data.meta.page;
-			// 		this.page = this.metaData.currentPage;
-			// 	} catch (err) {
-			// 		console.log(err);
-			// 	}
-			// },
-			// async handleChange(event) {
-			// 	if (event != this.page) {
-			// 		this.getDocuments(event);
-			// 	}
-			// },
-		},
-		watch: {
-			// modal(newVal) {
-			// 	if (!newVal) {
-			// 		this.action = "Registrar";
-			// 	}
-			// },
-			// reload(val) {
-			// 	if (val) {
-			// 		this.getDocuments(this.page);
-			// 		this.$emit("reloaded");
-			// 	}
-			// },
-		},
-	};
+// import service from "../../store/services/model-service";
+export default {
+	name: "documents-table",
+	props: ["reload", "tableData", "id"],
+	data() {
+		return {
+			metaData: {},
+			page: 1,
+			submit: false,
+			loader: false,
+			action: "Registrar",
+		};
+	},
+	mounted() {
+		// this.getDocuments(this.page);
+	},
+	methods: {
+		// async getDocuments(page = 1) {
+		// 	try {
+		// 		const response = await service.getIndex("documents", page,'includes[]=type&includes[]=business.user');
+		// 		// this.tableData = response.data.data;
+		// 		this.metaData = response.data.meta.page;
+		// 		this.page = this.metaData.currentPage;
+		// 	} catch (err) {
+		// 		console.log(err);
+		// 	}
+		// },
+		// async handleChange(event) {
+		// 	if (event != this.page) {
+		// 		this.getDocuments(event);
+		// 	}
+		// },
+	},
+	watch: {
+		// modal(newVal) {
+		// 	if (!newVal) {
+		// 		this.action = "Registrar";
+		// 	}
+		// },
+		// reload(val) {
+		// 	if (val) {
+		// 		this.getDocuments(this.page);
+		// 		this.$emit("reloaded");
+		// 	}
+		// },
+	},
+};
 </script>
 <style></style>

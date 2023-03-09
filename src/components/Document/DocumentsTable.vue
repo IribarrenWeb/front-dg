@@ -10,9 +10,8 @@
 		</div>
 
 		<div class="custom-table">
-			<q-table hide-pagination ref="tableRef" @request="onRequest" v-model:pagination="pagination"
-				:loading="loading" table-class="table" table-header-class="thead-light" :rows="tableData"
-				:columns="columns" row-key="id">
+			<q-table hide-pagination ref="tableRef" @request="onRequest" v-model:pagination="pagination" :loading="loading"
+				table-class="table" table-header-class="thead-light" :rows="tableData" :columns="columns" row-key="id">
 				<template v-slot:top>
 					<business-filter class="col-md-3" v-model:clear="clear" @updated="filters.business_id = $event"
 						v-if="!$store.state.is_business" />
@@ -20,7 +19,8 @@
 						:options="[{ label: 'General', value: 1 }, { label: 'Empresas', value: 2 }]"
 						@updated="filters.type_id = $event" />
 
-					<folder-filter-v-2 @new-folder="manualRequest" v-model:clear="clear" v-model="filters.folder_id" class="col-md-3" />
+					<folder-filter-v-2 @new-folder="manualRequest" v-model:clear="clear" v-model="filters.folder_id"
+						class="col-md-3" />
 
 					<div class="col-md-2">
 						<base-button size="sm" @click="clearFilters">Borrar
@@ -42,8 +42,8 @@
 
 				<template v-slot:body-cell-name="props">
 					<q-td :props="props" @click="handleOpen(props.row)">
-						<q-img class="q-mr-md" :src="getExtIcon(props.row.extension)" spinner-color="primary"
-							height="30px" width="30px" spinner-size="10px" />
+						<q-img class="q-mr-md" :src="getExtIcon(props.row.extension)" spinner-color="primary" height="30px"
+							width="30px" spinner-size="10px" />
 						<span :style="{ cursor: 'pointer' }">{{ props.value }}</span>
 						<!-- {{ `${props.row.doc_name}.${props.row.extension}` }} -->
 					</q-td>
@@ -51,17 +51,17 @@
 
 				<template v-slot:body-cell-actions="props">
 					<q-td>
-						<q-btn-dropdown class="custom-drop" flat rounded
-							icon="fa-solid fa-ellipsis-vertical" color="grey-7">
+						<q-btn-dropdown class="custom-drop" flat rounded icon="fa-solid fa-ellipsis-vertical"
+							color="grey-7">
 							<q-list bordered>
-								<q-item v-if="!props.row?.is_folder" style="min-width: 200px;text-align: center;" clickable v-close-popup
-									@click="addFolder = true, selected_document_id = props.row.id">
+								<q-item v-if="!props.row?.is_folder" style="min-width: 200px;text-align: center;" clickable
+									v-close-popup @click="addFolder = true, selected_document_id = props.row.id">
 									<q-item-section>
 										<q-item-label>Agregar carpeta</q-item-label>
 									</q-item-section>
 								</q-item>
-								<q-item v-if="props.row?.is_folder" style="min-width: 200px;text-align: center;" clickable v-close-popup
-									@click="editFolder = true, folderData = props.row">
+								<q-item v-if="props.row?.is_folder" style="min-width: 200px;text-align: center;" clickable
+									v-close-popup @click="editFolder = true, folderData = props.row">
 									<q-item-section>
 										<q-item-label>Editar</q-item-label>
 									</q-item-section>
@@ -85,8 +85,7 @@
 
 				<template v-slot:bottom class="items-center justify-center">
 					<base-pagination :perPage="pagination?.rowsPerPage" :value="pagination.page"
-						@changePage="manualRequest($event)" :total="pagination.rowsNumber"
-						align="center"></base-pagination>
+						@changePage="manualRequest($event)" :total="pagination.rowsNumber" align="center"></base-pagination>
 				</template>
 			</q-table>
 		</div>
@@ -245,7 +244,7 @@ export default {
 		function handleOpen(row) {
 			if (row?.is_folder) {
 				filters.value.folder_id = row?.id
-			}else{
+			} else {
 				window.open(row.link, '_blank').focus();
 			}
 		}
