@@ -23,8 +23,7 @@
 						class="col-md-3" />
 
 					<div class="col-md-2">
-						<base-button size="sm" @click="clearFilters">Borrar
-							filtros</base-button>
+						<base-button size="sm" @click="clearFilters">Borrar filtros</base-button>
 					</div>
 				</template>
 
@@ -90,8 +89,7 @@
 			</q-table>
 		</div>
 
-		<document-folder-modal @update="manualRequest" v-if="addFolder" v-model="addFolder"
-			:document_id="selected_document_id" />
+		<document-folder-modal @update="manualRequest" v-if="addFolder" v-model="addFolder" :document_id="selected_document_id" />
 
 		<document-folder-create-modal v-model="editFolder" :folderData="folderData" @created="manualRequest" />
 	</div>
