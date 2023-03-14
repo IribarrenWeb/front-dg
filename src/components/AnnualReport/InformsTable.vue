@@ -71,6 +71,10 @@
 							@click.prevent="generate(row.item)"><i class="fa-solid fa-file-pdf"></i> INFORME{{
 								row.item?.period
 							}}</a>
+						<a :href="row.item?.xml_link" target="_blank" class="btn btn-sm btn-default" v-if="row.item?.xml_link"
+							><i class="fa-regular fa-file-excel"></i> XML INFORME{{
+								row.item?.period
+							}}</a>
 						<a href="#" class="btn btn-sm btn-default" v-if="
 							row.item?.status == 'PENDIENTE' ||
 							(ROLE != 'business' && row.item?.status != 'COMPLETADO')
