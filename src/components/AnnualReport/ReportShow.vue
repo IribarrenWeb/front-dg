@@ -407,7 +407,8 @@ export default {
 					"&includes[]=business.operations"
 				);
 				report.value = functions.copy(res.data.data);
-				model.value.accidents = functions.copy(res.data.data.accidents)
+
+				model.value.accidents = functions.copy(res.data.data.report_meta_data?.accidents_data ?? [])
 
 				model.value.has_formations =
 					report.value.has_formations == 0 ? false : true;
@@ -496,7 +497,10 @@ export default {
 				try {
 					const data = functions.cleanData(model.value);
 					loading.value = true
-					await service.update("report", props.report_id, data);
+					await service.update("report", props.report_id, {
+						...data,
+						generate: 1
+					});
 					emit("close");
 					emit("reload");
 					loading.value = false
@@ -553,8 +557,12 @@ export default {
 				// loadOperations()
 			}
 
-			if (currentStep.value == 3) {
-				//
+			if (currentStep.value == 6) {
+				const realData = model.value.accidents.filter(a => a?.date && (a?.address || a?.description)) ?? []
+				model.value.accidents = realData
+				service.apiNoLoading({ url: `reports/${props.report_id}`, method: 'PUT', data: {
+					accidents: realData
+				}})
 			}
 
 			currentStep.value++;
