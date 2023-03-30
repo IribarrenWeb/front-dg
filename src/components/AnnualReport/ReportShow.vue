@@ -201,19 +201,29 @@
 										</thead>
 										<tbody v-if="model.accidents && model.accidents?.length >= 1">
 											<tr v-for="accident, idx in model.accidents" :key="idx">
-												<th>
-													<input type="date" class="form-control"
+												<th class="d-flex items-center">
+													<q-icon size="25px" class="q-mr-md"
+														v-if="model.accidents[idx]?.from_audit"
+														name="fa-solid fa-audio-description">
+														<q-tooltip>
+															Suceso de auditoria
+														</q-tooltip>
+													</q-icon>
+													<input :disabled="model.accidents[idx]?.from_audit ? true : false"
+														type="date" class="form-control"
 														v-model="model.accidents[idx].date" />
 												</th>
 												<th>
-													<input type="text" class="form-control"
+													<input :disabled="model.accidents[idx]?.from_audit ? true : false"
+														type="text" class="form-control"
 														v-model="model.accidents[idx].address" />
 												</th>
 												<th>
-													<input type="text" class="form-control"
+													<input :disabled="model.accidents[idx]?.from_audit ? true : false"
+														type="text" class="form-control"
 														v-model="model.accidents[idx].description" />
 												</th>
-												<th>
+												<th v-if="!model.accidents[idx]?.from_audit">
 													<base-button size="sm" rounded icon="fa-solid fa-minus" icon-only
 														type="primary" @click="removeAccident(idx)" />
 												</th>
@@ -408,8 +418,15 @@ export default {
 				);
 				report.value = functions.copy(res.data.data);
 
-				model.value.accidents = functions.copy(res.data.data.report_meta_data?.accidents_data ?? [])
+				let accidents = functions.copy(res.data.data.report_meta_data?.accidents_data ?? [])
+				if (res.data.data?.accidents?.length) {
+					res.data.data?.accidents.forEach(a => {
+						a['from_audit'] = true;
+						accidents.push(a)
+					});
+				}
 
+				model.value.accidents = accidents
 				model.value.has_formations =
 					report.value.has_formations == 0 ? false : true;
 				model.value.formation_desc =
@@ -495,10 +512,14 @@ export default {
 			});
 			if (result) {
 				try {
-					const data = functions.cleanData(model.value);
+					const accidents = model.value.accidents.filter(f => !f?.from_audit)
+					let data = functions.copy(model.value);
+					delete data.accidents
+					data = functions.cleanData(data);
 					loading.value = true
 					await service.update("report", props.report_id, {
 						...data,
+						accidents: accidents,
 						generate: 1
 					});
 					emit("close");
@@ -560,9 +581,12 @@ export default {
 			if (currentStep.value == 6) {
 				const realData = model.value.accidents.filter(a => a?.date && (a?.address || a?.description)) ?? []
 				model.value.accidents = realData
-				service.apiNoLoading({ url: `reports/${props.report_id}`, method: 'PUT', data: {
-					accidents: realData
-				}})
+				const accidents = realData.filter(f => !f?.from_audit)
+				service.apiNoLoading({
+					url: `reports/${props.report_id}`, method: 'PUT', data: {
+						accidents: accidents
+					}
+				})
 			}
 
 			currentStep.value++;
