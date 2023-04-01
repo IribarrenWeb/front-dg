@@ -10,7 +10,7 @@
 			<general-data v-model:file_document="model.file_document" v-model:file_auditor="model.file_auditor"
 				v-model:auditable="model.auditable_id" v-model:name="model.name" v-model:periodicity="model.periodicity"
 				:delegate_id="queryParams" :auditable_value="model.auditable?.user?.id"
-				:firm_document="model.firm_document" :auditor_document="model.auditor_document" />
+				:firm_document="model.firm_document" :auditor_document="model.auditor_document" v-model="model.ministry_id" />
 
 			<address-select v-model:address="model.address.address" v-model:city="model.address.city"
 				v-model:code="model.address.code" v-model:country="model.address.country"

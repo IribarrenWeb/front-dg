@@ -6,7 +6,7 @@
 			<template v-if="currentStep == 1">
 				<general-data v-model:file_document="model.file_document" v-model:file_auditor="model.file_auditor"
 					v-model:auditable="model.auditable_id" v-model:name="model.name"
-					v-model:periodicity="model.periodicity" :delegate_id="delegate_id" :isSaved="isSaved" />
+					v-model:periodicity="model.periodicity" :delegate_id="delegate_id" :isSaved="isSaved" v-model="model.ministry_id" />
 
 				<address-select v-model:address="model.address.address" v-model:city="model.address.city"
 					v-model:code="model.address.code" v-model:country="model.address.country"

@@ -165,6 +165,22 @@
 					/>
 				</base-field>
 			</div>
+			<div v-if="role != 'business'" class="col-md-3 col-12">
+				<base-field
+					:name="form_id ? `installarions[${form_id}].` : '' + 'ministry_id'"
+					label="Id del ministerio"
+				>
+					<field-validate
+						:disabled="isSaved"
+						type="text"
+						class="form-control"
+						:name="form_id ? `installarions[${form_id}].` : '' + 'ministry_id'"
+						label="Id del ministerio"
+						@input="$emit('update:ministry_id', $event.target.value)"
+						:value="ministry_id"
+					/>
+				</base-field>
+			</div>
 		</div>
 	</div>
 </template>
@@ -205,6 +221,10 @@
 			delegate_id: {
 				type: Number,
 				required: true,
+			},
+			ministry_id: {
+				type: Number,
+				// required: true,
 			},
 			form_id: {
 				type: Number,

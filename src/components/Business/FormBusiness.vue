@@ -105,6 +105,7 @@
 							v-model:auditable="installations[id].auditable_id"
 							v-model:name="installations[id].name"
 							v-model:periodicity="installations[id].periodicity"
+							v-model:ministry_id="installations[id].ministry_id"
 							:onlyForm="true"
 							:form_id="id"
 							:delegate_id="delegateId"

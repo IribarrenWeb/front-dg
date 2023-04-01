@@ -7,6 +7,7 @@ export default {
     auditable_id: null,
     province_id: null,
     periodicity: null,
+    ministry_id: null,
     file_document: {
         base64: null,
         file: [],
