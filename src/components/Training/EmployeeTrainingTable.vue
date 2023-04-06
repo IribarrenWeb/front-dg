@@ -37,9 +37,9 @@
 					<td>{{ row.item?.date }}</td>
 					<td>
 						<!-- <a :href="row.item?.link_certificate + '/' + id" target="_blank"> -->
-						<a @click.prevent="$store.dispatch('generatePdf', `${row.item?.link_certificate}/${id}`)">
-							CERTIFICADO
-						</a>
+						<q-btn color="primary" flat dense icon="fa-solid fa-certificate" label="CERTIFICADO"
+							@click="$store.dispatch('generatePdf', `${row.item?.simple_link_certificate}${id}`)" />
+
 					</td>
 				</template>
 			</base-table>
