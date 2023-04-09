@@ -1,6 +1,6 @@
 <template>
     <div>
-        <qu-select-validation :apiName="apiName" :rules="[required ? $rules.required() : null]" :model-value="modelValue" @update:model-value="$emit('update:model-value',$event)" emit-value  map-options :options="options" label="Instalación" outlined />
+        <qu-select-validation :disable="disabled" :apiName="apiName" :rules="[required ? $rules.required() : null]" :model-value="modelValue" @update:model-value="$emit('update:model-value',$event)" emit-value  map-options :options="options" label="Instalación" outlined />
     </div>
 </template>
 <script>
@@ -26,6 +26,10 @@ export default {
             default: 'installation_id'
         },
         required: {
+            type: Boolean,
+            default: false
+        },
+        disabled: {
             type: Boolean,
             default: false
         }

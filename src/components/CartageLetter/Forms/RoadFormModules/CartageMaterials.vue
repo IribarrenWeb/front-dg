@@ -1,11 +1,11 @@
 <template>
     <div class="row col-12">
-        <q-toggle v-if="!cloneId" size="lg" label="Residuos" color="primary" class="q-mb-md" v-model="is_residue" />
-        <qu-select-validation v-if="!cloneId" @filter="filterFn" use-chips :rules="[$rules.required()]" apiName="materials_ids"
-            class="col-12" v-model="local_material_ids" map-options :options="formatted_options" outlined emit-value
-            use-input fill-input :loading="loading" label="Materiales" multiple />
-        <q-separator v-if="!cloneId" spaced="10px" size="10px" />
-        <div class="col-md-12 q-px-md q-mb-md" v-if="materials_selected.length >= 1 && !loading">
+        <q-toggle :disable="cloneId" size="lg" label="Residuos" color="primary" class="q-mb-md" v-model="is_residue" />
+        <qu-select-validation @filter="filterFn" use-chips :rules="[$rules.required()]"
+            apiName="materials_ids" class="col-12" v-model="local_material_ids" map-options :options="formatted_options"
+            outlined emit-value use-input fill-input :loading="loading" label="Materiales" multiple />
+        <q-separator spaced="10px" size="10px" />
+        <div class="col-md-12 q-px-md q-mb-md" v-if="materials_selected?.length >= 1 && !loading">
             <h4>Detalles:</h4>
             <q-item v-for="material in materials_selected" :key="material.id" class="border-bottom">
                 <q-item-section top>
@@ -53,7 +53,7 @@
                 </q-item-section>
             </q-item>
         </div>
-        <form-loader class="full-width" v-else-if="cloneId" />
+        <form-loader class="full-width" v-else-if="cloneId && loading" />
     </div>
 </template>
 
@@ -143,6 +143,8 @@ export default {
                     })
                 })
 
+                is_residue.value = materials.findIndex(m => m.is_residue) >= 0
+                local_material_ids.value = materials.map(m => m.id)
                 materials_selected.value = materials
                 loading.value = false
             } catch (err) {
@@ -190,11 +192,12 @@ export default {
             return materials_selected.value?.length ? materials_selected.value.map(m => ({ installation_material_id: m.id, number_of_packages: m.number, quantity_of_packages: m.quantity, packing_name: m.packing_name, nep_comment: m.nep_comment, limited_quantity_reference: m.limited_quantity_reference })) : []
         }
 
-        if (props.cloneId) {
-            cloneMaterials()
-        }else{
-            getMaterials()
-        }
+        getMaterials().then(() => {
+            if (props.cloneId) {
+                cloneMaterials()
+            }
+        })
+
 
         watch(() => is_residue.value, (v) => {
             resetSelected()
