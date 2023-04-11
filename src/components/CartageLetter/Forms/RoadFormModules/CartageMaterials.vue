@@ -1,9 +1,9 @@
 <template>
     <div class="row col-12">
         <q-toggle :disable="cloneId" size="lg" label="Residuos" color="primary" class="q-mb-md" v-model="is_residue" />
-        <qu-select-validation @filter="filterFn" use-chips :rules="[$rules.required()]"
-            apiName="materials_ids" class="col-12" v-model="local_material_ids" map-options :options="formatted_options"
-            outlined emit-value use-input fill-input :loading="loading" label="Materiales" multiple />
+        <qu-select-validation @filter="filterFn" use-chips :rules="[$rules.required()]" apiName="materials_ids"
+            class="col-12" v-model="local_material_ids" map-options :options="formatted_options" outlined emit-value
+            use-input fill-input :loading="loading" label="Materiales" multiple />
         <q-separator spaced="10px" size="10px" />
         <div class="col-md-12 q-px-md q-mb-md" v-if="materials_selected?.length >= 1 && !loading">
             <h4>Detalles:</h4>

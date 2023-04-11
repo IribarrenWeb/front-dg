@@ -1,6 +1,8 @@
 <template>
     <div>
-        <qu-select-validation :disable="disabled" :apiName="apiName" :rules="[required ? $rules.required() : null]" :model-value="modelValue" @update:model-value="$emit('update:model-value',$event)" emit-value  map-options :options="options" label="Instalación" outlined />
+        <qu-select-validation :disable="disabled" :apiName="apiName" :rules="[required ? $rules.required() : null]"
+            :model-value="modelValue" @update:model-value="$emit('update:model-value', $event)" emit-value map-options
+            :options="options" label="Instalación" outlined />
     </div>
 </template>
 <script>
@@ -10,7 +12,7 @@ import { watch } from '@vue/runtime-core';
 import QuSelectValidation from '../../core_components/FormQuasar/QuSelectValidation.vue';
 
 export default {
-	components: { QuSelectValidation },
+    components: { QuSelectValidation },
     props: {
         modelValue: {
             type: [String, Number, Object],

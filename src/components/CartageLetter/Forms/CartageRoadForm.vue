@@ -1,5 +1,6 @@
 <template>
-    <q-stepper style="box-shadow: none;" :header-nav="cloneMode" v-model="step" vertical color="primary" keep-alive animated>
+    <q-stepper style="box-shadow: none;" :header-nav="cloneMode" v-model="step" vertical color="primary" keep-alive
+        animated>
         <q-step :name="1" title="Datos generales" icon="settings" :done="step > 1">
             <q-form class="row q-py-md" @submit="cloneMode ? step = 5 : step += 1">
 
@@ -8,11 +9,11 @@
                     @update:model-value="$emit('update:name', $event)" type="text" label="Nombre Carta de Porte" />
 
 
-                <installation-selector-v-2 :required="true" class="col-md-6 col-12" :disabled="cloneMode" :model-value="installation_id"
-                    @update:model-value="$emit('update:installation_id', $event)" />
+                <installation-selector-v-2 :required="true" class="col-md-6 col-12" :disabled="cloneMode"
+                    :model-value="installation_id" @update:model-value="$emit('update:installation_id', $event)" />
 
-                <qu-input-validation type="textarea" apiName="description" class="col-12" :loading="loading || clone_loading"
-                    outlined :model-value="description"
+                <qu-input-validation type="textarea" apiName="description" class="col-12"
+                    :loading="loading || clone_loading" outlined :model-value="description"
                     @update:model-value="$emit('update:description', $event)" label="Descripción general" />
 
                 <q-stepper-navigation class="col-12 flex q-gutter-md">
@@ -21,12 +22,13 @@
             </q-form>
         </q-step>
 
-        <q-step :name="2" :disable="cloneMode" title="Datos cargador" caption="Optional" icon="create_new_folder" :done="step > 2">
+        <q-step :name="2" :disable="cloneMode" title="Datos cargador" caption="Optional" icon="create_new_folder"
+            :done="step > 2">
             <q-form ref="loader_form" class="row q-py-md" @submit="step += 1">
 
                 <cartage-loader-form :form-ref="loader_form" v-model:address="loader_model.address"
-                    v-model:business_name="loader_model.business_name"
-                    v-model:nif="loader_model.nif" v-model:phone_number="loader_model.phone_number" :loading="loading || clone_loading"
+                    v-model:business_name="loader_model.business_name" v-model:nif="loader_model.nif"
+                    v-model:phone_number="loader_model.phone_number" :loading="loading || clone_loading"
                     @update:loading="$emit('update:loading', $event)" :cartage_loader_id="cartage_loader_id"
                     @update:cartage_loader_id="$emit('update:cartage_loader_id', $event)" :same_loader="same_loader"
                     @update:same_loader="$emit('update:same_loader', $event)" />
@@ -42,9 +44,8 @@
             <q-form ref="destinatary_form" class="row q-py-md" @submit="step += 1">
 
                 <cartage-destinatary-form :form-ref="destinatary_form" v-model:address="destinatary_model.address"
-                    v-model:loading="loading"
-                    v-model:business_name="destinatary_model.business_name" v-model:nif="destinatary_model.nif"
-                    v-model:phone_number="destinatary_model.phone_number"
+                    v-model:loading="loading" v-model:business_name="destinatary_model.business_name"
+                    v-model:nif="destinatary_model.nif" v-model:phone_number="destinatary_model.phone_number"
                     :cartage_destinatary_id="cartage_destinatary_id"
                     @update:cartage_destinatary_id="$emit('update:cartage_destinatary_id', $event)" />
 
@@ -59,9 +60,9 @@
             <q-form ref="carrier_form" class="row q-py-md" @submit="step += 1">
 
                 <cartage-carrier-form :form-ref="carrier_form" v-model:address="carrier_model.address"
-                    v-model:loading="loading"
-                    v-model:business_name="carrier_model.business_name" v-model:nif="carrier_model.nif"
-                    v-model:phone_number="carrier_model.phone_number" :cartage_carrier_id="cartage_carrier_id"
+                    v-model:loading="loading" v-model:business_name="carrier_model.business_name"
+                    v-model:nif="carrier_model.nif" v-model:phone_number="carrier_model.phone_number"
+                    :cartage_carrier_id="cartage_carrier_id"
                     @update:cartage_carrier_id="$emit('update:cartage_carrier_id', $event)" />
 
                 <q-stepper-navigation>
@@ -79,7 +80,8 @@
 
                 <q-stepper-navigation>
                     <q-btn flat @click="cloneMode ? step = 1 : step -= 1" color="primary" label="Atras" class="q-ml-sm" />
-                    <q-btn type="submit" color="primary" :label="cloneMode ? 'Clonar' : 'Guardar'" :disable="materials_ids.length <= 0" />
+                    <q-btn type="submit" color="primary" :label="cloneMode ? 'Clonar' : 'Guardar'"
+                        :disable="materials_ids.length <= 0" />
                 </q-stepper-navigation>
             </q-form>
         </q-step>
@@ -157,18 +159,18 @@ export default {
         async function getCloneData() {
             try {
                 clone_loading.value = true
-                const res = await modelService.api({url:`cartage-letter/${props.cloneId}`})
+                const res = await modelService.api({ url: `cartage-letter/${props.cloneId}` })
                 console.log(res);
                 const cartage = res?.data?.data
                 if (cartage) {
-                    emit('update:name',cartage.name)
-                    emit('update:description',cartage.description)
-                    emit('update:installation_id',cartage.installation_id)
+                    emit('update:name', cartage.name)
+                    emit('update:description', cartage.description)
+                    emit('update:installation_id', cartage.installation_id)
                 }
                 clone_loading.value = false
             } catch (error) {
                 clone_loading.value = false
-                
+
             }
         }
 
@@ -183,7 +185,7 @@ export default {
         watch(() => loader_model.value, (v) => {
             emit('update:loader_data', v)
         }, { deep: true, immediate: true })
-        
+
         if (props.cloneMode) {
             getCloneData()
             step.value = 1

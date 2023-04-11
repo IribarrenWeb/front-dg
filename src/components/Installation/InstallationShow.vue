@@ -10,7 +10,7 @@
 			<general-data v-model:file_document="model.file_document" v-model:file_auditor="model.file_auditor"
 				v-model:auditable="model.auditable_id" v-model:name="model.name" v-model:periodicity="model.periodicity"
 				:delegate_id="queryParams" :auditable_value="model.auditable?.user?.id"
-				:firm_document="model.firm_document" :auditor_document="model.auditor_document" v-model="model.ministry_id" />
+				:firm_document="model.firm_document" :auditor_document="model.auditor_document" v-model:ministry_id="model.ministry_id" />
 
 			<address-select v-model:address="model.address.address" v-model:city="model.address.city"
 				v-model:code="model.address.code" v-model:country="model.address.country"
@@ -173,7 +173,7 @@
 		<div class="mt-4 row mx-0 justify-content-end">
 			<base-button type="default" @click="currentStep--" v-if="currentStep !== 1">Anterior</base-button>
 			<base-button type="default" @click="handleNext" v-if="currentStep < steps.length">Siguiente</base-button>
-			<base-button type="default" v-if="role != 'business' && (role == 'auditor' && !$store.getters['profile/profile']?.business_id)" :outline="true" @click="handleClose">Cerrar
+			<base-button type="default" v-if="role != 'business' && !(role == 'auditor' && !$store.getters['profile/profile']?.business_id)" :outline="true" @click="handleClose">Cerrar
 			</base-button>
 		</div>
 	</div>
@@ -346,7 +346,8 @@ export default {
 					name: model.value.name,
 					address: model.value.address,
 					periodicity: model.value.periodicity,
-					province_id: model.value.province_id
+					province_id: model.value.province_id,
+					ministry_id: model.value.ministry_id
 				};
 				if (!isEmpty(model.value.file_document.base64)) {
 					data.file_document = model.value.file_document;
