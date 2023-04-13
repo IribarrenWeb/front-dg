@@ -39,7 +39,7 @@
 											<q-item-section @click="open(file?.public_url)">
 												<q-item-label>{{ file.file_name }}</q-item-label>
 												<q-item-label caption lines="2" v-if="file?.size">{{ file.size /
-														1000
+													1000
 												}}
 													KB</q-item-label>
 											</q-item-section>
@@ -63,7 +63,7 @@
 
 								<div class="">
 									<base-button type="primary" @click="addImages = !addImages" size="sm">{{
-											!addImages ? "Agregar imagenes" : "Cancelar"
+										!addImages ? "Agregar imagenes" : "Cancelar"
 									}}</base-button>
 								</div>
 							</div>

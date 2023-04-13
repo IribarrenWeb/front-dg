@@ -47,8 +47,8 @@
 								<base-button @click="new_file_doc = true" size="sm" type="default" :outline="true"><i
 										class="fa-solid fa-pencil"></i></base-button>
 							</div>
-							<field-validate v-else type="file" class="form-control" name="file_doc"
-								rules="ext:pdf" label="documento" v-model="model.file_document.file" />
+							<field-validate v-else type="file" class="form-control" name="file_doc" rules="ext:pdf"
+								label="documento" v-model="model.file_document.file" />
 						</base-field>
 					</div>
 				</div>
@@ -57,7 +57,8 @@
 				<subscription-module viewOnly :planId="business?.user?.subscription_plan_id" />
 			</template>
 			<div class="row mx-0 justify-content-end">
-				<base-button v-if="(canUpdate || profile) && currentStep <= 2" type="default" nativeType="submit">Actualizar</base-button>
+				<base-button v-if="(canUpdate || profile) && currentStep <= 2" type="default"
+					nativeType="submit">Actualizar</base-button>
 				<base-button class="ml-2" type="default" @click="currentStep++"
 					v-if="currentStep !== 2 && !canUpdate && !profile">Siguiente</base-button>
 				<base-button class="ml-2" type="default" @click="currentStep--"
