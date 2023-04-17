@@ -15,7 +15,8 @@
 			<div class="col-md-10 row align-items-end q-col-gutter-md">
 				<year-filter label="Año" class="col-md-3" v-model:clear="clear" placeholder="Año"
 					@updated="handleFilter('year', $event)" />
-				<business-filter class="col-md-3" v-if="!$store.state.is_business" v-model:clear="clear" @updated="handleFilter('business', $event)" />
+				<business-filter class="col-md-3" v-if="!$store.state.is_business" v-model:clear="clear"
+					@updated="handleFilter('business', $event)" />
 				<delegate-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('delegate', $event)"
 					v-if="$store.state.is_admin"></delegate-filter>
 				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city', $event)"></city-filter>
@@ -71,10 +72,11 @@
 							@click.prevent="generate(row.item)"><i class="fa-solid fa-file-pdf"></i> INFORME{{
 								row.item?.period
 							}}</a>
-						<a :href="row.item?.xml_link" target="_blank" class="btn btn-sm btn-default" v-if="row.item?.xml_link"
-							><i class="fa-regular fa-file-excel"></i> XML INFORME{{
-								row.item?.period
-							}}</a>
+						<a :href="row.item?.xml_link" target="_blank" class="btn btn-sm btn-default"
+							v-if="$store.getters['profile/me']?.subscriptionPlan && !$store.getters['profile/me']?.subscriptionPlan?.is_free && row.item?.xml_link"><i
+								class="fa-regular fa-file-excel"></i> XML INFORME{{
+									row.item?.period
+								}}</a>
 						<a href="#" class="btn btn-sm btn-default" v-if="
 							row.item?.status == 'PENDIENTE' ||
 							(ROLE != 'business' && row.item?.status != 'COMPLETADO')

@@ -168,7 +168,7 @@
 			<div v-if="role != 'business'" class="col-md-3 col-12">
 				<base-field
 					:name="form_id ? `installarions[${form_id}].` : '' + 'ministry_id'"
-					label="Id del ministerio"
+					label="ID según MITMA"
 				>
 					<field-validate
 						:disabled="isSaved"
