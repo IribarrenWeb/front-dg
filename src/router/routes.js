@@ -80,6 +80,7 @@ const Billing = defineAsyncComponent({ loader: () => import('../views/Billing.vu
 const Plans = defineAsyncComponent({ loader: () => import('../views/Plans.vue'),loadingComponent: PageLoader}); 
 
 const NoAuthorize = defineAsyncComponent({ loader: () => import('../views/NoAuthorize.vue'),loadingComponent: PageLoader}); 
+const TrainingTable = defineAsyncComponent({ loader: () => import('../components/Training/TrainingTable.vue'),loadingComponent: PageLoader}); 
 
 
 //import middleware
@@ -265,9 +266,9 @@ const routes = [{
                         meta: { middleware: auth },
                     },
                     {
-                        path: "/employees/formations",
-                        name: "formaciones",
-                        components: { default: EmployeesTable },
+                        path: "keinher",
+                        name: "",
+                        components: { default: TrainingTable },
                         meta: { middleware: auth },
 
                     },
@@ -320,7 +321,7 @@ const routes = [{
             },
         ],
     },
-    // { path: "*", component: NotFound },
+    { path: "/:pathMatch(.*)*", name: "not-found", component: NoAuthorize },
 ];
 
 export default routes;

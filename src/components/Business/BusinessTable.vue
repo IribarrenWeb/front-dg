@@ -34,7 +34,7 @@
 					<th>Nombre</th>
 					<th>Ciudad</th>
 					<th colspan="2">Instalaciones</th>
-					<th v-if="!byAuditableId && ($store.is_auditor)">Delegación</th>
+					<th v-if="!byAuditableId && ($store.state.is_auditor)">Delegación</th>
 					<th v-if="!byAuditableId">Acciones</th>
 				</template>
 
@@ -54,7 +54,7 @@
 							{{ installation.name }},
 						</span>
 					</td>
-					<td v-if="!byAuditableId && ($store.is_auditor)">
+					<td v-if="!byAuditableId && ($store.state.is_auditor)">
 						{{ row.item?.administrable?.user?.full_name }}
 					</td>
 					<td class="d-flex" v-if="!byAuditableId">

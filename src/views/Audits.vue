@@ -25,7 +25,7 @@
 							</router-link>
 						</li>
 					</ul>
-					<audit-table
+					<!-- <audit-table
 						v-if="!isNons"
 						classes="border-radius-top-0"
 						title="Auditorias"
@@ -34,7 +34,8 @@
 						v-if="isNons"
 						classes="border-radius-top-0"
 						residue="true"
-					></non-table>
+					></non-table> -->
+					<router-view></router-view>
 				</div>
 			</div>
 		</div>

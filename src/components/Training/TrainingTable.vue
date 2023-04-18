@@ -3,7 +3,7 @@
 		<div class="card-header border-0">
 			<div class="row align-items-center">
 				<div class="col">
-					<h4 class="mb-0">Asignaciones</h4>
+					<h4 class="mb-0">{{ !$store.state.is_business ? 'Asignaciones' : 'Formaciones' }}</h4>
 				</div>
 				<div class="col text-right">
 					<!-- <a href="#" class="btn btn-sm btn-default" @click.prevent="handleAdd">Agregar</a> -->
@@ -84,7 +84,7 @@
 						</badge>
 					</td>
 					<td>
-						<base-dropdown class="dropdown audit-drop" position="right" direction="custom">
+						<base-dropdown v-if="!$store.state.is_business" class="dropdown audit-drop" position="right" direction="custom">
 							<template v-slot:title>
 								<a class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
@@ -161,6 +161,10 @@ export default {
 		async index(page = 1) {
 			if (this.params_filter == null) {
 				this.params_filter = this.params;
+			}
+
+			if (this.$store.state.is_business) {
+				this.params_filter += '&status_id=true'
 			}
 
 			const resp = await service.getIndex("training", page, this.params_filter);

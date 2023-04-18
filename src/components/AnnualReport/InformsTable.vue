@@ -72,11 +72,10 @@
 							@click.prevent="generate(row.item)"><i class="fa-solid fa-file-pdf"></i> INFORME{{
 								row.item?.period
 							}}</a>
-						<a :href="row.item?.xml_link" target="_blank" class="btn btn-sm btn-default"
-							v-if="$store.getters['profile/me']?.subscriptionPlan && !$store.getters['profile/me']?.subscriptionPlan?.is_free && row.item?.xml_link"><i
-								class="fa-regular fa-file-excel"></i> XML INFORME{{
-									row.item?.period
-								}}</a>
+						<a href="#" @click="handleOpen(row.item.xml_link)" target="_blank" class="btn btn-sm btn-default"
+							v-if="row.item?.xml_link"><i class="fa-regular fa-file-excel"></i> XML INFORME{{
+								row.item?.period
+							}}</a>
 						<a href="#" class="btn btn-sm btn-default" v-if="
 							row.item?.status == 'PENDIENTE' ||
 							(ROLE != 'business' && row.item?.status != 'COMPLETADO')
@@ -103,6 +102,7 @@ import SelectFilter from "../filters/SelectFilter.vue";
 import YearFilter from "../filters/YearFilter.vue";
 import BusinessFilterV2 from '../filters/BusinessFilterV2.vue';
 import BusinessFilter from '../filters/BusinessFilter.vue';
+import { Notify } from 'quasar'
 
 export default {
 	components: {
@@ -230,6 +230,17 @@ export default {
 				}
 			}
 		},
+		handleOpen(url) {
+			if (!this.$store.getters['profile/me']?.subscriptionPlan || this.$store.getters['profile/me']?.subscriptionPlan?.is_free) {
+				Notify.create({
+					message: 'Actualice el plan para realizar esta acción',
+					color: 'warning'
+				})
+				return
+			}
+
+			window.open(url, '_blank');
+		}
 	},
 	watch: {
 		hasRole: {

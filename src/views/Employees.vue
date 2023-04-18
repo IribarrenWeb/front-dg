@@ -1,7 +1,5 @@
 <template>
 	<div>
-		
-
 		<div class="container-fluid mt--7">
 			<div class="row">
 				<div class="col">
@@ -16,15 +14,16 @@
                             Empleados
                             </router-link>
                         </li>
-                        <!-- <li class="nav-item">
-                            <router-link  to="/employees/formations" class="nav-link tab-custom-link disabled" exact-active-class="active" @click="residue = 'true'">
+                        <li class="nav-item">
+                            <router-link  to="/employees/keinher" class="nav-link tab-custom-link" exact-active-class="active">
                             Formaciones
                             </router-link>
-                        </li> -->
+                        </li>
                     </ul>
-                    <router-view v-slot="{Component}">
+                    <router-view></router-view>
+                    <!-- <router-view v-slot="{Component}">
                         <component classes="border-radius-top-0" title="Empleados" :is="Component"></component>
-                    </router-view>
+                    </router-view> -->
 				</div>
 			</div>
 		</div>
