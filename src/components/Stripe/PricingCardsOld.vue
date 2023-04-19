@@ -52,11 +52,14 @@
             <q-expansion-item group="somegroup" label="Beneficios" default-opened header-class="text-primary">
                 <q-card>
                     <q-card-section>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos
-                        corrupti
-                        commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto
-                        suscipit iste
-                        eveniet doloribus ullam aliquid.
+                        <q-list bordered>
+                            <q-item dense v-ripple v-for="(item, index) in benefits" :key="index">
+                                <q-item-section avatar>
+                                    <q-icon color="primary" :name="item.icon" />
+                                </q-item-section>
+                                <q-item-section>{{ item.name }} : {{ actualPlan[item.key] ?? 'No aplica'   }}</q-item-section>
+                            </q-item>
+                        </q-list>
                     </q-card-section>
                 </q-card>
             </q-expansion-item>
@@ -81,6 +84,28 @@ export default {
         const actualPlan = ref(null)
         const actualPlanStripe = ref(null)
         const loading = ref(false)
+        const benefits = [
+            {
+                name: 'Cantidad de empresas disponibles',
+                key: 'business_count',
+                icon: 'fa-regular fa-building'
+            },
+            {
+                name: 'Cantidad de delegaciones disponibles',
+                key: 'delegations_count',
+                icon: 'fa-solid fa-briefcase'
+            },
+            {
+                name: 'Cantidad de auditores disponibles',
+                key: 'auditors_count',
+                icon: 'fa-solid fa-user-tie'
+            },
+            {
+                name: 'Cantidad de instalaciones disponibles',
+                key: 'installations_count',
+                icon: 'fa-solid fa-location-dot'
+            }
+        ]
 
         async function getSubscriptions() {
             try {
@@ -204,6 +229,7 @@ export default {
             actualPlan,
             loading,
             actualPlanStripe,
+            benefits,
             samePlan,
             handleAction
         }

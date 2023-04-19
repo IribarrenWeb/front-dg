@@ -71,6 +71,10 @@
 							<q-input :model-value="psics_number" type="text" readonly outlined />
 						</base-field>
 					</div>
+
+					<div class="col-lg-4" v-if="$store.state.is_business">
+						<q-toggle :true-value="1" :false-value="0" v-model="model.is_external" color="primary" size="lg" label="Es externo" />
+					</div>
 				</div>
 
 				<address-select v-model:address="model.address.address" v-model:city="model.address.city"
@@ -242,6 +246,7 @@ export default {
 			formData.append("email", this.model.email);
 			formData.append("phone_number", this.model.phone_number);
 			formData.append("dni", this.model.dni);
+			formData.append("is_external", this.model.is_external);
 			formData.append("address", JSON.stringify(this.model.address));
 			if (this.ROLE != 'delegate' && this.modelDelegate?.id && this.ROLE != 'business') {
 				formData.append("delegate_id", this.modelDelegate.id);

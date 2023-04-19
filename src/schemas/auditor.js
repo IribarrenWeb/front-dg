@@ -13,5 +13,6 @@ export default {
     file_firm: "",
     firm_date: "",
     delegate_id: "",
-    delegate: null
+    delegate: null,
+    is_external: 0
 }
