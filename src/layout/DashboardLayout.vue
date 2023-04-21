@@ -121,10 +121,10 @@
 					<Transition name="fade">
 						<div>
 							<component :is="Component"></component>
-							<loader></loader>
 						</div>
 					</Transition>
 				</router-view>
+				<loader v-if="$store.state.loader"></loader>
 				<content-footer v-if="!$route.meta.hideFooter"></content-footer>
 			</div>
 		</div>

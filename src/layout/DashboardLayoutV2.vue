@@ -34,7 +34,7 @@
                 <component :is="Component"></component>
             </router-view>
             <transition :duration="{ enter: 300, leave: 500 }" appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                <loader ></loader>
+                <loader v-if="$store.state.loader"></loader>
             </transition>
         </q-page-container>
 
