@@ -1,12 +1,12 @@
 <template>
     <div>
-        <div class="full-width flex q-mb-md">
+        <div class="full-width flex q-mb-md" v-if="!profileMode">
             <div>
             </div>
             <q-space />
             <q-btn color="primary" flat icon="fa-solid fa-xmark" @click="$emit('cancel', true)" />
         </div>
-        <q-tabs v-if="consultingId" v-model="tab" class="nav-pills-tabs" active-class="active-tab">
+        <q-tabs v-if="consultingId && !profileMode" v-model="tab" class="nav-pills-tabs" active-class="active-tab">
             <q-tab class="nav-link" name="data" label="Datos generales" />
             <q-tab class="nav-link" name="sub" label="Subscripción" />
         </q-tabs>
@@ -73,7 +73,7 @@
 
                     <div class="col-12 flex items-center justify-end q-gutter-md">
                         <q-btn label="Cancelar" type="reset" color="primary" @click="$emit('cancel', true)" flat
-                            class="q-ml-sm" />
+                            class="q-ml-sm" v-if="!profileMode" />
 
                         <q-btn label="Guardar" :loading="loading" type="submit" color="primary" />
                     </div>

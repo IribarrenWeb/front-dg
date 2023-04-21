@@ -21,10 +21,10 @@
 					v-if="$store.state.is_admin"></delegate-filter>
 				<city-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('city', $event)"></city-filter>
 				<select-filter class="col-md-3" v-model:clear="clear" :options="[
-					{ label: 'Pendiente', value: 'pendiente' },
-					{ label: 'Completado', value: 'completado' },
-					{ label: 'POR REVISAR', value: 'POR REVISAR' },
-				]" placeholder="Selecciona un estado..." @updated="handleFilter('status', $event)" />
+						{ label: 'Pendiente', value: 'pendiente' },
+						{ label: 'Completado', value: 'completado' },
+						{ label: 'POR REVISAR', value: 'POR REVISAR' },
+					]" placeholder="Selecciona un estado..." @updated="handleFilter('status', $event)" />
 			</div>
 			<div class="col-md-2 d-flex align-self-center justify-center">
 				<base-button size="sm" @click="(params_filter = params), index(page), (clear = true)">Borrar
@@ -67,19 +67,14 @@
 							}}</span>
 						</badge>
 					</td>
-					<td>
-						<a href="#" class="btn btn-sm btn-default" v-if="row.item?.status == 'COMPLETADO'"
-							@click.prevent="generate(row.item)"><i class="fa-solid fa-file-pdf"></i> INFORME{{
-								row.item?.period
-							}}</a>
-						<a href="#" @click="handleOpen(row.item.xml_link)" target="_blank" class="btn btn-sm btn-default"
-							v-if="row.item?.xml_link"><i class="fa-regular fa-file-excel"></i> XML INFORME{{
-								row.item?.period
-							}}</a>
-						<a href="#" class="btn btn-sm btn-default" v-if="
-							row.item?.status == 'PENDIENTE' ||
-							(ROLE != 'business' && row.item?.status != 'COMPLETADO')
-						" @click="handleView(row.item)"><i class="fa-regular fa-eye"></i></a>
+					<td class="q-gutter-sm">
+						<q-btn color="primary" v-if="row.item?.status == 'COMPLETADO'" dense icon="fa-solid fa-file-pdf"
+							:label="`INFORME ${row.item?.period}`" @click="generate(row.item)" />
+						<q-btn color="primary" v-if="row.item?.xml_link" dense icon="fa-regular fa-file-excel"
+							:label="`XML INFORME ${row.item?.period}`" @click="handleOpen(row.item.xml_link)" />
+						<q-btn color="primary" v-if="row.item?.status == 'PENDIENTE' ||
+								(ROLE != 'business' && row.item?.status != 'COMPLETADO')
+								" dense icon="fa-regular fa-eye" @click="handleView(row.item)" />
 					</td>
 				</template>
 			</base-table>

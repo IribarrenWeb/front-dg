@@ -25,7 +25,7 @@
 
 							<div class="px-lg-3 px-md-2 px-1 mx-xl-4">
 								<div v-if="[1,5].includes(model.role_id)">
-									<h6 class="heading-small text-muted mb-4">
+									<h6 v-if="!model?.profile?.id" class="heading-small text-muted mb-4">
 										Informacion de usuario
 									</h6>
 									<form-consulting :profileMode="true" v-if="model?.profile?.id" :consultingId="model.profile.id"/>

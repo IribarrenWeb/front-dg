@@ -73,7 +73,7 @@
 					</div>
 
 					<div class="col-lg-4" v-if="$store.state.is_business">
-						<q-toggle :true-value="1" :false-value="0" v-model="model.is_external" color="primary" size="lg" label="Es externo" />
+						<q-toggle :true-value="1" :false-value="0" v-model="model.is_external" color="primary" size="lg" label="Auditor Externo" />
 					</div>
 				</div>
 

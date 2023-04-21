@@ -57,7 +57,7 @@
                                 <q-item-section avatar>
                                     <q-icon color="primary" :name="item.icon" />
                                 </q-item-section>
-                                <q-item-section>{{ item.name }} : {{ actualPlan[item.key] ?? 'No aplica'   }}</q-item-section>
+                                <q-item-section>{{ item.name }} : {{ plan[item.key] ?? 'No aplica'   }}</q-item-section>
                             </q-item>
                         </q-list>
                     </q-card-section>
