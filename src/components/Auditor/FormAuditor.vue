@@ -1,10 +1,9 @@
 <template>
 	<div>
-		<base-steps v-if="update" :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="formatSteps"
-			:edit="true" @step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
+		<base-steps v-if="update" :currentStep="currentStep" listClasses="mb-md-4 pb-md-2" :steps="formatSteps" :edit="true"
+			@step="currentStep = $event" @navigate="currentStep = $event"></base-steps>
 		<template v-if="currentStep == 1 || !update">
-			<form-validate v-if="canShow" @submit="onSubmit" ref="form" v-slot="{ meta }"
-				:initial-values="current_values">
+			<form-validate v-if="canShow" @submit="onSubmit" ref="form" v-slot="{ meta }" :initial-values="current_values">
 
 				<div class="row border rounded border-light px-md-3 py-md-2">
 					<div class="col-12">
@@ -73,7 +72,8 @@
 					</div>
 
 					<div class="col-lg-4" v-if="$store.state.is_business">
-						<q-toggle :true-value="1" :false-value="0" v-model="model.is_external" color="primary" size="lg" label="Auditor Externo" />
+						<q-toggle :true-value="1" :false-value="0" v-model="model.is_external" color="primary" size="lg"
+							label="Auditor Externo" />
 					</div>
 				</div>
 
@@ -112,8 +112,7 @@
 					<div class="col-lg-6">
 						<base-field name="certification_date" label="Fecha Caducidad Certificado ADR">
 							<field-validate class="form-control" name="certification_date" type="date"
-								label="fecha caducidad certificado ADR" rules="required"
-								v-model="model.certification_date">
+								label="fecha caducidad certificado ADR" rules="required" v-model="model.certification_date">
 							</field-validate>
 						</base-field>
 					</div>
@@ -175,8 +174,7 @@
 		<template v-if="currentStep === 3 && auditor?.user?.is_billable && update">
 			<subscription-module viewOnly :planId="auditor?.user?.subscription_plan_id" />
 			<div class="flex justify-end">
-				<base-button type="default" :outline="true" size="md" class="btn-inline-block"
-					@click="$emit('closeModal')">
+				<base-button type="default" :outline="true" size="md" class="btn-inline-block" @click="$emit('closeModal')">
 					Cancelar
 				</base-button>
 			</div>

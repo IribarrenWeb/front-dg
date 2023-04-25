@@ -13,7 +13,7 @@
 
         <q-tab-panels v-model="tab" animated keep-alive>
             <q-tab-panel name="data">
-                <h3 v-if="!consultingId">{{ consultingId? 'Editar': 'Registrar' }} consultoria</h3>
+                <h3 v-if="!consultingId">{{ consultingId ? 'Editar' : 'Registrar' }} consultoria</h3>
                 <q-separator v-if="!profileMode" spaced="20px" />
                 <q-form @submit.prevent="submit" class="q-col-gutter-md">
 
@@ -53,8 +53,7 @@
                         </div>
                         <div class="col-12 col-md-6 col-lg-4">
                             <qu-input-validation apiName="dni" v-model="model.dni" mask="XXXXXXXXX"
-                                :rules="[val => val?.length || 'El DNI es requerido']" outlined type="text"
-                                label="DNI" />
+                                :rules="[val => val?.length || 'El DNI es requerido']" outlined type="text" label="DNI" />
                         </div>
                         <div class="col-12 col-md-6 col-lg-4">
                             <qu-input-validation apiName="phone_number" v-model="model.phone_number" mask="XXXXXXXXX"

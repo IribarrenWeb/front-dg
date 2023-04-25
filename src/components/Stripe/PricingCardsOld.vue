@@ -38,8 +38,8 @@
                         :loading="loading" />
 
                     <!-- Cambiar suscripcion -->
-                    <q-btn color="primary" v-else-if="samePlan(!plan)" :disable="!plan?.is_active"
-                        label="Cambiar plan" @click="handleAction('change', plan)" :loading="loading" />
+                    <q-btn color="primary" v-else-if="samePlan(!plan)" :disable="!plan?.is_active" label="Cambiar plan"
+                        @click="handleAction('change', plan)" :loading="loading" />
 
                     <q-tooltip v-if="!plan?.is_active">
                         Este plan no esta disponible actualmente
@@ -57,7 +57,7 @@
                                 <q-item-section avatar>
                                     <q-icon color="primary" :name="item.icon" />
                                 </q-item-section>
-                                <q-item-section>{{ item.name }} : {{ plan[item.key] ?? 'No aplica'   }}</q-item-section>
+                                <q-item-section>{{ item.name }} : {{ plan[item.key] ?? 'No aplica' }}</q-item-section>
                             </q-item>
                         </q-list>
                     </q-card-section>
@@ -121,7 +121,7 @@ export default {
             }
         }
 
-        function samePlan(plan){
+        function samePlan(plan) {
             return (actualPlanStripe.value && plan.stripe_price == actualPlanStripe.value?.stripe_price) || plan.id == actualPlan.value.id
         }
 
@@ -221,7 +221,7 @@ export default {
             executeAction({ options, action, plan, notifyErrorMessage, notifySuccessMessage })
         }
 
-        if(!props.viewOnly){
+        if (!props.viewOnly) {
             getSubscriptions()
         }
 

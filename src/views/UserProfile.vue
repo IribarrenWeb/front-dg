@@ -2,7 +2,7 @@
 	<div class="mt--7">
 		<div class="container-fluid">
 			<div class="container mb-4">
-				<q-tabs inline-label  v-model="currentStep" dense align="justify"  class="text-grey-3">
+				<q-tabs inline-label v-model="currentStep" dense align="justify" class="text-grey-3">
 					<q-tab v-for="step, idx in steps" :key="idx" :name="step.number" icon="mail" :label="step.title" />
 				</q-tabs>
 			</div>
@@ -24,11 +24,12 @@
 							</template>
 
 							<div class="px-lg-3 px-md-2 px-1 mx-xl-4">
-								<div v-if="[1,5].includes(model.role_id)">
+								<div v-if="[1, 5].includes(model.role_id)">
 									<h6 v-if="!model?.profile?.id" class="heading-small text-muted mb-4">
 										Informacion de usuario
 									</h6>
-									<form-consulting :profileMode="true" v-if="model?.profile?.id" :consultingId="model.profile.id"/>
+									<form-consulting :profileMode="true" v-if="model?.profile?.id"
+										:consultingId="model.profile.id" />
 									<form-validate v-else @submit="updateUser" class="row">
 										<div class="col-md-6">
 											<base-field name="name" label="Nombre">
@@ -60,8 +61,8 @@
 										Informacion de perfil
 									</h6>
 									<div class="px-0">
-										<component :is="component" :id="roleModel.id" :business="roleModel"
-											:profile="true" :user="model"></component>
+										<component :is="component" :id="roleModel.id" :business="roleModel" :profile="true"
+											:user="model"></component>
 									</div>
 								</div>
 							</div>
@@ -96,7 +97,7 @@
 								<div class="bg-white border-0">
 									<div class="row align-items-center">
 										<div class="col-8">
-											<h3 class="mb-0">{{steps[2].title}}</h3>
+											<h3 class="mb-0">{{ steps[2].title }}</h3>
 										</div>
 										<div class="col-4 text-right">
 											<!-- <a href="#!" class="btn btn-sm btn-default">Configuracion</a> -->
