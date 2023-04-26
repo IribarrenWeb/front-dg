@@ -13,11 +13,14 @@
 			<q-table hide-pagination ref="tableRef" @request="onRequest" v-model:pagination="pagination" :loading="loading"
 				table-class="table" table-header-class="thead-light" :rows="tableData" :columns="columns" row-key="id">
 				<template v-slot:top>
-					<business-filter class="col-md-3" v-model:clear="clear" @updated="filters.business_id = $event"
-						v-if="!$store.state.is_business" />
-					<select-filter class="col-md-3" placeholder="Tipos" v-model:clear="clear"
-						:options="[{ label: 'General', value: 1 }, { label: 'Empresas', value: 2 }]"
-						@updated="filters.type_id = $event" />
+					<q-input debounce="1000" v-model="filters.search_by" class="col-md-2" type="text" dense outlined
+						label="Buscar" />
+
+					<business-filter-v-2 class="col-md-3" v-if="!$store.state.is_business" v-model="filters.business_id" />
+
+					<q-select class="col-md-2" dense emit-value map-options v-model="filters.type_id"
+						:options="[{ label: 'General', value: 1 }, { label: 'Empresas', value: 2 }]" label="Tipos"
+						outlined />
 
 					<folder-filter-v-2 @new-folder="manualRequest" v-model:clear="clear" v-model="filters.folder_id"
 						class="col-md-3" />
@@ -40,7 +43,12 @@
 				</template>
 
 				<template v-slot:body-cell-name="props">
-					<q-td :props="props" @click="handleOpen(props.row)">
+					<q-td :props="props" @click="handleOpen(props.row)" >
+						<div v-if="getCurrentFolder(props.row)" class="d-inline">
+							<q-img class="q-mr-md" :src="getExtIcon('folder')" spinner-color="primary"
+								height="30px" width="30px" spinner-size="10px" />
+							{{ getCurrentFolder(props.row) }} /
+						</div>
 						<q-img class="q-mr-md" :src="getExtIcon(props.row.extension)" spinner-color="primary" height="30px"
 							width="30px" spinner-size="10px" />
 						<span :style="{ cursor: 'pointer' }">{{ props.value }}</span>
@@ -63,6 +71,13 @@
 									v-close-popup @click="editFolder = true, folderData = props.row">
 									<q-item-section>
 										<q-item-label>Editar</q-item-label>
+									</q-item-section>
+								</q-item>
+
+								<q-item style="min-width: 200px;text-align: center;" clickable
+									v-close-popup @click="destroy(props.row)">
+									<q-item-section>
+										<q-item-label>Eliminar</q-item-label>
 									</q-item-section>
 								</q-item>
 							</q-list>
@@ -89,7 +104,8 @@
 			</q-table>
 		</div>
 
-		<document-folder-modal @update="manualRequest" v-if="addFolder" v-model="addFolder" :document_id="selected_document_id" />
+		<document-folder-modal @update="manualRequest" v-if="addFolder" v-model="addFolder"
+			:document_id="selected_document_id" />
 
 		<document-folder-create-modal v-model="editFolder" :folderData="folderData" @created="manualRequest" />
 	</div>
@@ -106,15 +122,20 @@ import { forEach, isEmpty, map } from 'lodash';
 import { computed, watch } from '@vue/runtime-core';
 import { baseUrl } from '../../axios';
 import DocumentFolderCreateModal from '../DocumentFolder/DocumentFolderCreateModal.vue';
+import BusinessFilterV2 from '../filters/BusinessFilterV2.vue'
+import { useStore } from 'vuex';
+import { Dialog, Notify } from 'quasar';
 
 export default {
-	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2, DocumentFolderCreateModal },
+	components: { DeleteButton, SelectFilter, BusinessFilter, DocumentFolderModal, FolderFilterV2, DocumentFolderCreateModal, BusinessFilterV2 },
 	name: "documents-table",
 	props: ["reload"],
 	setup(props, { emit }) {
 
 		const metaData = ref([])
 		const page = ref(1)
+		const store = useStore()
+		const userId = computed(() => store.getters['profile/me']?.id)
 		const submit = ref(false)
 		const loading = ref(false)
 		const clear = ref(false)
@@ -122,7 +143,8 @@ export default {
 		const filters = ref({
 			folder_id: null,
 			type_id: null,
-			business_id: null
+			business_id: null,
+			search_by: ''
 		})
 		const pagination = ref({
 			sortBy: 'desc',
@@ -234,7 +256,8 @@ export default {
 			filters.value = {
 				folder_id: null,
 				type_id: null,
-				business_id: null
+				business_id: null,
+				search_by: ''
 			}
 			clear.value = true
 		}
@@ -249,7 +272,7 @@ export default {
 
 		async function getFolders() {
 			try {
-				const res = await service.api({ url: 'document-folder' })
+				const res = await service.apiNoLoading({ url: 'document-folder' })
 				// folders.value = res?.data?.data ?? []
 				return res?.data?.data?.length ? map(res?.data?.data, (f) => {
 					return {
@@ -265,11 +288,17 @@ export default {
 			}
 		}
 
+		function getCurrentFolder(doc) {
+			let folder = null
+			if (doc?.folders?.length) folder = doc.folders.find(f => f.created_by == userId.value)
+			return folder?.name
+		}
+
 		async function onRequest(props) {
 			const { page, rowsPerPage, sortBy, descending } = props.pagination
 			loading.value = true
 
-			const folders_data = !filters.value?.folder_id ? await getFolders() : []
+			const folders_data = !filters.value?.folder_id && !filters.value.search_by?.length ? await getFolders() : []
 
 			try {
 				const take = rowsPerPage === 0 ? pagination.value.rowsNumber : rowsPerPage;
@@ -279,7 +308,7 @@ export default {
 					if (v || v == 0) url += `&${k}=${v}`;
 				})
 
-				const response = await service.api({ url });
+				const response = await service.apiNoLoading({ url });
 				// documents.value = response?.data?.data ?? []
 				documents.value = response?.data?.data?.length ? map(response?.data?.data, (d) => {
 					return {
@@ -297,6 +326,42 @@ export default {
 			} catch (error) {
 				loading.value = false
 			}
+		}
+
+		function destroy(row) {
+			Dialog.create({
+				title: `Eliminar ${row?.is_folder ? 'carpeta' : 'archivo'}`,
+				message: `¿Estas seguro de eliminar ${row?.is_folder ? 'esta carpeta' : 'este archivo'}?`,
+				ok: {
+					label: 'Eliminar',
+					outline: true,
+					color: 'primary'
+				},
+				cancel: {
+					label: 'Cancelar',
+					color: 'primary'
+				}
+			}).onOk(async () => {
+				try {
+					loading.value = true
+					let url = `admin-docs/`
+					if (row?.is_folder) url = `document-folder/`
+
+					await service.api({ url: url+row.id, method: 'DELETE' });				
+					manualRequest();
+					Notify.create({
+						message: 'Registro eliminado',
+						color: 'positive'
+					})
+					loading.value = false
+				} catch (error) {
+					loading.value = false
+					Notify.create({
+						message: 'No se pudo eliminar el registro',
+						color: 'negative'
+					})
+				}
+			})
 		}
 
 		watch(() => tableRef.value, (v) => {
@@ -333,10 +398,12 @@ export default {
 
 			handleOpen,
 			getExtIcon,
+			getCurrentFolder,
 			onRequest,
 			manualRequest,
 			clearFilters,
 			handleChange,
+			destroy,
 		};
 	},
 };

@@ -348,7 +348,7 @@ function errors(err) {
         // /[`!@#$%^&*()_+\-=\[\]{};'"\\|<>\/?~]/;
     const status = err?.response?.status;
     const resp_message = err?.response?.data?.message ?? null;
-    const message = resp_message && resp_message.length <= 75 && !specialChars.test(resp_message) ? resp_message : null;
+    const message = resp_message && resp_message.length <= 100 && !specialChars.test(resp_message) ? resp_message : null;
     let title = '';
     let body = '';
 
