@@ -78,7 +78,7 @@
 				</div>
 				<div v-else>
 					<div v-if="!isSaved">
-						<base-button class="mb-4" @click="modalResponsible = true">Seleccionar responsable</base-button>
+						<!-- <base-button class="mb-4" @click="modalResponsible = true">Seleccionar responsable</base-button> -->
 						<employee-general-data custom_key="responsible" v-model:name="model.responsible.name"
 							v-model:last_name="model.responsible.last_name"
 							v-model:phone_number="model.responsible.phone_number"
@@ -119,7 +119,7 @@
 							<div class="col-lg-12">
 								<base-switch v-model="model.responsible.dangerous_goods" :value="
 									model.responsible.dangerous_goods != 0 ? true : false
-								" :disabled="isSaved" label="Mercancias peligrosas"></base-switch>
+								" :disabled="isSaved" label="Mercancías peligrosas"></base-switch>
 								<div class="row">
 									<div class="col-lg-6">
 										<base-field apiName="responsible.date_certification" name="date_cer"

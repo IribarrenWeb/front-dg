@@ -362,7 +362,31 @@ import { computed, watch } from '@vue/runtime-core';
 import { swal } from '../../boot/plugins';
 import FormLoader from '../../loaders/FormLoader.vue';
 import QuInputValidation from '../core_components/FormQuasar/QuInputValidation.vue';
-
+const defaultText = `
+	Naturaleza de la formación (ADR)
+	- 1.3.2.1 Sensibilización general
+	- 1.3.2.2 Formación específica
+	- 1.3.2.3 Formación en materia de seguridad
+	- 1.3.3 Documentación
+	
+	- Definiciones y obligaciones de los participantes
+	- Normas sobre la operación de transporte
+	- Disposiciones varias a observar por la tripulación del vehículo
+	- Validez y renovación del certificado ADR
+	- Restricciones a la circulación-Procedimientos para la operación de carga
+	- Procedimientos para la operación de descarga
+	- Disposiciones relativas al transporte en bultos
+	- Disposiciones relativas a la carga, a la descarga y a la manipulación
+	- Prohibiciones relativas de cargamento en común
+	- Manipulación y estiba (adr)
+	- Peligro de los productos químicos de la Instalación
+	- ficha se seguridad de los productos manipulados.
+	- Procedimientos en caso de avería, incidente o accidente.
+	- Equipamiento de los camiones destinados al Tte. de materias peligrosas
+	- Equipamiento para cada miembro de la tripulación según adr.
+	- Documentación; carta de porte, instrucciones escritas-Medios de extinción
+	- Normas para la correcta utilización de los extintores portátiles
+`
 export default {
 	inheritAttrs: true,
 	components: {
@@ -391,7 +415,7 @@ export default {
 		const steps = ref([])
 		const model = ref({
 			has_formations: null,
-			formation_desc: 'Naturaleza de la formación (ADR)- 1.3.2.1 Sensibilización general- 1.3.2.2 Formación específica- 1.3.2.3 Formación en materia de seguridad- 1.3.3 Documentación- Definiciones y obligaciones de los participantes- Normas sobre la operación de transporte-Disposiciones varias a observar por la tripulación del vehículo-Validez y renovación del certificado ADR-Restricciones a la circulación-Procedimientos para la operación de carga-Procedimientos para la operación de descarga-Disposiciones relativas al transporte en bultos-Disposiciones relativas a la carga, a la descarga y a la manipulación-Prohibiciones relativas de cargamento en común-Manipulación y estiba (adr)-Peligro de los productos químicos de la Instalación-ficha se seguridad de los productos manipulados.-Procedimientos en caso de avería, incidente o accidente.-Equipamiento de los camiones destinados al Tte. de materias peligrosas-Equipamiento para cada miembro de la tripulación según adr.-Documentación; carta de porte, instrucciones escritas-Medios de extinción-Normas para la correcta utilización de los extintores portátiles',
+			formation_desc: defaultText,
 			deficiency_desc: null,
 			has_formations_records: null,
 			formation_data: {
