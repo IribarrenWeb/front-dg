@@ -21,6 +21,7 @@ import _ from "lodash";
 import { ref } from '@vue/reactivity';
 import modelService from "../../store/services/model-service";
 import BaseTable from '../core_components/BaseTable.vue';
+import { useStore } from "vuex";
 
 export default {
 	components: { BaseTable },
@@ -38,6 +39,9 @@ export default {
 		}
 	},
 	setup(props) {
+		const store = useStore()
+		const profile = computed(() => store.getters['profile/profile'])
+		const businessId = computed(() => props.business_id ?? profile?.business_id)
 		const employees = ref([])
 		const columns = ref([
 			{
@@ -61,7 +65,7 @@ export default {
 
 		async function getEmployees() 
 		{
-			let url = 'business/responsibles/'+props.business_id
+			let url = 'business/responsibles/'+businessId.value
 			if (props.installation_id) {
 				url += '?installation_id='+props.installation_id
 			}
@@ -73,7 +77,8 @@ export default {
 		return {
 			employees,
 			employee_selected,
-			columns
+			columns,
+			businessId
 		}
 	}
 };
