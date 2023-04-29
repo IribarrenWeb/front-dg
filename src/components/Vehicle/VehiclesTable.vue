@@ -26,7 +26,7 @@
 			></installation-filter>
 			<!-- <select-filter
 				class="col-md-3"
-				placeholder="Mercancias peligrosas"
+				placeholder="Mercancías peligrosas"
 				v-model:clear="clear"
 				:options="[{label: 'Si',value:'true'},{label:'No',value:'false'}]"
 				@updated="handleFilter('adr', $event)"

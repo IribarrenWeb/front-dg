@@ -4,7 +4,7 @@
 	</div>
 	<div v-else class="row justify-content-center">
 		<div class="col-md-12">
-			<h4 class="text-uppercase">Mercancias</h4>
+			<h4 class="text-uppercase">Mercancías</h4>
 			<div class="row justify-content-center">
 				<div class="col-md-6">
 					<base-field label="TIPO DE OPERACIONES DE MERCANCÍAS PELIGROSAS">

@@ -12,7 +12,7 @@
 								class="nav-link tab-custom-link"
 								exact-active-class="active"
 							>
-								Auditorias
+								Auditorías
 							</router-link>
 						</li>
 						<li class="nav-item">
@@ -28,7 +28,7 @@
 					<!-- <audit-table
 						v-if="!isNons"
 						classes="border-radius-top-0"
-						title="Auditorias"
+						title="Auditorías"
 					></audit-table>
 					<non-table
 						v-if="isNons"

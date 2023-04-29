@@ -57,7 +57,7 @@
 									CALCULO NIVEL DE CUMPLIMIENTOEl objetivo de la visita técnica
 									es la comprobación del proceso de manipulación de mercancías
 									peligrosas. Se evaluará el nivel de cumplimiento que quedará
-									reflejado en el punto 14 de la Auditoria.
+									reflejado en el punto 14 de la Auditoría.
 								</div>
 							</b>
 						</base-checkbox>

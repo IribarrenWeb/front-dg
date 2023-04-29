@@ -128,7 +128,7 @@
 									installations[id].responsible.dangerous_goods != 0
 										? true
 										: false
-								" label="Mercancias peligrosas"></base-switch>
+								" label="Mercancías peligrosas"></base-switch>
 							</div>
 							<div class="row">
 								<div class="col-lg-6">

@@ -161,7 +161,7 @@ export default {
       }
 
       if (evnt == 13) {
-        this.$swal('Auditoria completada!', 'La auditoria se ha completado con exito.', 'success').then(() => {
+        this.$swal('Auditoría completada!', 'La auditoria se ha completado con exito.', 'success').then(() => {
           this.$router.push({ name: `auditorias` })
         })
       } else {

@@ -43,7 +43,7 @@
 					<div class="col-lg-12">
 						<div>
 							<base-switch v-model="model.dangerous_goods" :value="model.dangerous_goods"
-								label="Mercancias peligrosas"></base-switch>
+								label="Mercancías peligrosas"></base-switch>
 						</div>
 						<div class="row">
 							<div class="col-lg-6">

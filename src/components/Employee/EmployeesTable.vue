@@ -14,7 +14,7 @@
 		<div class="card-header border-0 pl-2 py-3 bac-ligth mx-0 row align-items-center filter-container">
 			<installation-filter v-if="$store.state.is_business" class="col-md-3" v-model:clear="clear"
 				@updated="handleFilter('installation_id', $event)"></installation-filter>
-			<select-filter v-if="$store.state.is_business" class="col-md-3" placeholder="Mercancias peligrosas"
+			<select-filter v-if="$store.state.is_business" class="col-md-3" placeholder="Mercancías peligrosas"
 				v-model:clear="clear" :options="[{ label: 'Si', value: 'true' }, { label: 'No', value: 'false' }]"
 				@updated="handleFilter('adr_id', $event)" />
 			<text-filter class="col-md-3" v-model:clear="clear" @updated="handleFilter('name', $event)" />

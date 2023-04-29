@@ -226,13 +226,13 @@ export default {
 			}
 		},
 		handleOpen(url) {
-			if (!this.$store.getters['profile/me']?.subscriptionPlan || this.$store.getters['profile/me']?.subscriptionPlan?.is_free) {
-				Notify.create({
-					message: 'Actualice el plan para realizar esta acción',
-					color: 'warning'
-				})
-				return
-			}
+			// if (!this.$store.getters['profile/me']?.subscriptionPlan || this.$store.getters['profile/me']?.subscriptionPlan?.is_free) {
+			// 	Notify.create({
+			// 		message: 'Actualice el plan para realizar esta acción',
+			// 		color: 'warning'
+			// 	})
+			// 	return
+			// }
 
 			window.open(url, '_blank');
 		}

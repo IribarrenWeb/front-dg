@@ -62,7 +62,7 @@
                 
 				<sidebar-item
 					:link="{
-						name: 'Auditorias',
+						name: 'Auditorías',
 						icon: 'fa-solid fa-clipboard-list text-default',
 						path: '/audits',
 					}"

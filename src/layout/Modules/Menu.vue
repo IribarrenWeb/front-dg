@@ -140,7 +140,7 @@ export default {
                 // },
             },
             {
-                name: 'Auditorias',
+                name: 'Auditorías',
                 icon: 'fa-solid fa-clipboard-list text-default',
                 path: '/audits',
                 roles: ['superadmin'],

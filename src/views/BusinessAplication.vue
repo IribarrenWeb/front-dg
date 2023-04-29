@@ -4,7 +4,7 @@
 			<q-tabs v-model="tab" class="text-white" content-class="custom-q-tabs" align="left"
 				indicator-color="transparent">
 				<q-tab name="formation" label="Formaciones" content-class="q-tab-custom" />
-				<q-tab name="audit" label="Auditorias" content-class="q-tab-custom" />
+				<q-tab name="audit" label="Auditorías" content-class="q-tab-custom" />
 			</q-tabs>
 			<q-tab-panels class="card shadow card-header border-radius-top-0 px-0 custom-tabpanel" v-model="tab"
 				animated>

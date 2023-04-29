@@ -35,7 +35,7 @@
 					<th>Clase</th>
 					<th>GE</th>
 					<th>Depósito</th>
-					<th>Cantidad</th>
+					<th colspan="3">Cantidad CARGA/DESCARGA/TRANSPORTADA</th>
 					<th></th>
 				</template>
 
@@ -57,7 +57,9 @@
 					<td>{{ row.item?.material?.class?.code }}</td>
 					<td>{{ row.item?.material?.packing?.code }}</td>
 					<td>{{ row.item?.equipment.name }}</td>
-					<td>{{ row.item?.quantity }}</td>
+					<td>{{ row.item?.buy ?? 0 }}</td>
+					<td>{{ row.item?.sell ?? 0 }}</td>
+					<td>{{ row.item?.transported ?? 0 }}</td>
 					<td class="text-right">
 						<q-btn color="primary" @click="clone(row.item?.id)" class="q-mr-sm" flat dense
 							icon="fa-regular fa-clone">

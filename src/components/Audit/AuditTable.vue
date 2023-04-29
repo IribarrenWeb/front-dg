@@ -69,7 +69,7 @@
 						<span class="q-mr-md" v-if="row.item?.complementary">
 							<q-icon name="fa-regular fa-square-plus" />
 							<q-tooltip>
-								Auditoria complementaria
+								Auditoría complementaria
 							</q-tooltip>
 						</span>
 						<span class="name mb-0 text-sm">{{
@@ -355,7 +355,7 @@ export default {
 						item.scheduled_date +
 						"</b>";
 				}
-				this.$swal("Auditoria no programada", msg, "warning");
+				this.$swal("Auditoría no programada", msg, "warning");
 			} else if (item.auditable == null) {
 				this.$swal(
 					"Instalación sin auditor",
@@ -416,7 +416,7 @@ export default {
 					});
 					this.getAudits();
 					this.toDelegate = false;
-					this.$toast.success("Auditoria delegada con exito");
+					this.$toast.success("Auditoría delegada con exito");
 				} catch (err) {
 					console.log(err);
 				}

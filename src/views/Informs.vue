@@ -5,18 +5,18 @@
     <div class="container-fluid mt--7">
       <div class="row">
         <div class="col">
-          <informs-table title="Informes"/>
+          <AnnualReportTable title="Informes"/>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import InformsTable from '../components/AnnualReport/InformsTable.vue';
+import AnnualReportTable from '../components/AnnualReport/AnnualReportTable.vue';
 export default {
   name: "tables",
   components: {
-    InformsTable
+    AnnualReportTable
   },
 };
 </script>

@@ -24,7 +24,7 @@
             <visit-tablet :dash="true" title="Visitas"></visit-tablet>
         </div>
         <div class="my-md-4">
-            <informs-table :dash="true"></informs-table>
+            <AnnualReportTable :dash="true"></AnnualReportTable>
         </div>
         <div>
             <non-table :dash="true"></non-table>
@@ -33,14 +33,14 @@
 </template>
 <script>
 import { ref } from '@vue/reactivity'
-import InformsTable from '../AnnualReport/InformsTable.vue'
+import AnnualReportTable from '../AnnualReport/AnnualReportTable.vue'
 import NonTable from '../Non/NonTable.vue'
 import VisitTablet from '../Visit/VisitTablet.vue'
 import { useStore } from 'vuex'
 import { computed, watch } from '@vue/runtime-core'
 import modelService from '../../store/services/model-service'
 export default {
-    components: { VisitTablet, InformsTable, NonTable },
+    components: { VisitTablet, AnnualReportTable, NonTable },
     props: {
 
     },
