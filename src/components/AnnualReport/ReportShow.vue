@@ -517,10 +517,15 @@ export default {
 				}
 			}
 
+			let text = "Una vez generado el reporte no se pueden editar los campos.";
+			if (role.value == 'business') {
+				text = "UNA VEZ CONFIRMADO EL INFORME ANUAL, SERÁ SU AUDITOR ASIGNADO EL QUE LO REVISARÁ";
+			}
+
 			const result = await new swal({
 				title: "¿Estas seguro?",
 				icon: "question",
-				text: "Una vez generado el reporte no se pueden editar los campos.",
+				text,
 				showCancelButton: true,
 				confirmButtonText: "Generar",
 				customClass: {
