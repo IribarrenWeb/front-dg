@@ -257,7 +257,7 @@ export default {
 				if (v > 0) {
 
 					let params = '';
-					if ((v == 4 || v == 6) && store.getters['profile/profile']?.consultancy_id) {
+					if ((v == 4 || v == 6) && (store.getters['profile/profile']?.consultancy_id || store.getters['profile/profile']?.administrable_type)) {
 						params = 'includes[]=administrable.user&includes[]=installations.auditable.user';
 
 						steps.value.push({
