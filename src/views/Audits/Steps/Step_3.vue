@@ -315,7 +315,7 @@
 									<base-input :view="true" :modelValue="res.name" disabled />
 								</div>
 								<div class="col-md-5">
-									<base-input :view="true" :modelValue="res?.material.denomination_name" disabled />
+									<base-input :view="true" :modelValue="res?.material?.denomination_name" disabled />
 								</div>
 								<div class="col-md-3">
 									<base-input :view="true" :modelValue="res?.material?.class?.code" disabled />
