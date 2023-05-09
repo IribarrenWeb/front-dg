@@ -15,7 +15,7 @@
                             </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link  to="/employees/keinher" class="nav-link tab-custom-link" exact-active-class="active">
+                            <router-link  to="/employees/formations" class="nav-link tab-custom-link" exact-active-class="active">
                             Formaciones
                             </router-link>
                         </li>

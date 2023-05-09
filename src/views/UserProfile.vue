@@ -17,6 +17,9 @@
 											<h3 class="mb-0">Mi cuenta</h3>
 										</div>
 										<div class="col-4 text-right">
+											<q-btn v-if="!$store.state?.is_superadmin" :loading="loadingDelete"
+												color="danger" outline icon="fa-regular fa-trash-can"
+												label="Eliminar mi cuenta" @click="deleteAccount" />
 											<!-- <a href="#!" class="btn btn-sm btn-default">Configuracion</a> -->
 										</div>
 									</div>
@@ -132,6 +135,7 @@ import apiService from "../store/services/model-service.js";
 import { useStore } from "vuex";
 import FormConsulting from "../components/Superadmin/FormConsulting.vue";
 import ProfileShow from "../components/ProfileShow";
+import { Dialog, Notify } from "quasar";
 
 export default {
 	name: "user-profile",
@@ -149,6 +153,9 @@ export default {
 			last_name: null,
 			email: null,
 		});
+
+		const loadingDelete = ref(false)
+
 		const colsProfile = [
 			{
 				title: 'Nombre',
@@ -247,6 +254,48 @@ export default {
 			model.value = data.list.user;
 		}
 
+		function deleteAccount() {
+			Dialog.create({
+				title: 'Eliminar mi cuenta',
+				message: '¿Estas seguro de querer eliminar tu cuenta?. Este acción es irreversible.',
+				ok: {
+					label: 'Eliminar',
+					outline: true,
+					color: 'danger'
+				},
+				cancel: {
+					label: 'Cancelar'
+				}
+			}).onOk(async () => {
+				try {
+					loadingDelete.value = true
+					// throw Error
+
+					const res = await apiService.api({ url: 'users/delete-account', method: 'DELETE' })
+
+					Notify.create({
+						// position: 'center',
+						closeBtn: 'Aceptar',
+						message: 'Tu cuenta ha sido eliminada.',
+						color: 'positive'
+					})
+					setTimeout(() => {
+						store.dispatch("auth/logout");
+					}, 1000);
+					loadingDelete.value = false
+				} catch (error) {
+					console.error(error);
+					loadingDelete.value = false
+					Notify.create({
+						// position: 'center',
+						closeBtn: 'Aceptar',
+						message: 'Ocurrio un error al eliminar tu cuenta.',
+						color: 'negative'
+					})
+				}
+			})
+		}
+
 		onMounted(() => {
 			// getUser();
 		});
@@ -293,7 +342,9 @@ export default {
 			currentStep,
 			profileModel,
 			colsAuditors,
+			loadingDelete,
 			updateUser,
+			deleteAccount,
 		};
 	},
 };

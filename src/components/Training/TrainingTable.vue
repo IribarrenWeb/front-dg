@@ -84,7 +84,7 @@
 						</badge>
 					</td>
 					<td>
-						<base-dropdown v-if="!$store.state.is_business" class="dropdown audit-drop" position="right" direction="custom">
+						<base-dropdown class="dropdown audit-drop" position="right" direction="custom">
 							<template v-slot:title>
 								<a class="btn btn-sm btn-icon-only text-light" role="button" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="false">
@@ -93,15 +93,15 @@
 							</template>
 							<a class="dropdown-item" href="#" v-if="!row.item?.status"
 								@click="generate(row.item)">Reporte</a>
-							<a class="dropdown-item" href="#" v-if="!row.item?.status"
+							<a class="dropdown-item" href="#" v-if="!row.item?.status && !$store.state.is_business"
 								@click="toSchedule(row.item?.id)">Re-agendar</a>
 							<a class="dropdown-item" href="#" v-if="row.item?.status"
 								@click="toComplete(row.item)">Detalle</a>
-							<a class="dropdown-item" href="#" v-if="!row.item?.status && row.item.can_complete"
+							<a class="dropdown-item" href="#" v-if="!row.item?.status && row.item.can_complete && !$store.state.is_business"
 								@click="toComplete(row.item)">Completar</a>
-							<a class="dropdown-item" href="#" v-if="!row.item?.status"
+							<a class="dropdown-item" href="#" v-if="!row.item?.status && !$store.state.is_business"
 								@click="toReAssign(row.item)">Re-asignar</a>
-							<a class="dropdown-item" href="#" v-if="!row.item?.status"
+							<a class="dropdown-item" href="#" v-if="!row.item?.status && !$store.state.is_business"
 								@click="toDelete(row.item)">Eliminar</a>
 						</base-dropdown>
 					</td>
@@ -164,7 +164,7 @@ export default {
 			}
 
 			if (this.$store.state.is_business) {
-				this.params_filter += '&status_id=true'
+				// this.params_filter += '&status_id=true'
 			}
 
 			const resp = await service.getIndex("training", page, this.params_filter);

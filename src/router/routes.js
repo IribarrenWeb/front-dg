@@ -266,7 +266,7 @@ const routes = [{
                         meta: { middleware: auth },
                     },
                     {
-                        path: "keinher",
+                        path: "formations",
                         name: "",
                         components: { default: TrainingTable },
                         meta: { middleware: auth },
