@@ -91,11 +91,11 @@
 									<i class="fas fa-ellipsis-v"></i>
 								</a>
 							</template>
-							<a class="dropdown-item" href="#" v-if="!row.item?.status"
+							<a class="dropdown-item" href="#" v-if="!row.item?.status || $store.state?.is_business"
 								@click="generate(row.item)">Reporte</a>
 							<a class="dropdown-item" href="#" v-if="!row.item?.status && !$store.state.is_business"
 								@click="toSchedule(row.item?.id)">Re-agendar</a>
-							<a class="dropdown-item" href="#" v-if="row.item?.status"
+							<a class="dropdown-item" href="#" v-if="row.item?.status || $store.state?.is_business"
 								@click="toComplete(row.item)">Detalle</a>
 							<a class="dropdown-item" href="#" v-if="!row.item?.status && row.item.can_complete && !$store.state.is_business"
 								@click="toComplete(row.item)">Completar</a>
@@ -205,7 +205,7 @@ export default {
 			this.index();
 		},
 		async toComplete(item) {
-			if (!item.can_complete && !item.status) {
+			if (!item.can_complete && !item.status && !this.$store.state.is_business) {
 				this.$swal('No se puede completar esta Formación',
 					'Esta formación no se puede completar debido a que la fecha agendada es anterior a la fecha actual.',
 					'error')

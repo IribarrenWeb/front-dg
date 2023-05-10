@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="row border rounded border-light px-3 py-2 mx-0" v-if="isComplete">
+		<div class="row border rounded border-light px-3 py-2 mx-0" v-if="isComplete || $store.state.is_business">
 			<div class="col-lg-6">
 				<base-field name="name" label="Nombre">
 					<input type="text" class="form-control text-uppercase" :disabled="true"
@@ -13,16 +13,32 @@
 						:value="training?.formation?.type?.name" />
 				</base-field>
 			</div>
-			<div class="col-lg-6">
+			<div :class="!$store.state.is_auditor ? 'col-lg-4' : 'col-lg-6'">
 				<base-field name="duration" label="Duración">
 					<input type="text" class="form-control text-uppercase" :disabled="true"
 						:value="training?.formation?.duration" />
 				</base-field>
 			</div>
-			<div class="col-lg-6" v-if="!$store.state.is_auditor">
+			<div class="col-lg-4" v-if="!$store.state.is_auditor">
 				<base-field name="auditor_id" label="Responsable">
 					<input type="text" class="form-control text-uppercase" :disabled="true"
 						:value="training?.formation?.facilitable.user.full_name" />
+				</base-field>
+			</div>
+			<div :class="!$store.state.is_auditor ? 'col-lg-4' : 'col-lg-6'">
+				<base-field name="doc" label="Documento de formación">
+					<q-item v-if="formationDoc" clickable style="max-width: 500px; margin-left: auto;">
+						<q-item-section top avatar>
+							<q-icon size="2rem" color="primary" name="fa-regular fa-file-pdf" />
+						</q-item-section>
+						<q-item-section @click="open(formationDoc?.public_url)">
+							<q-item-label>{{ formationDoc.name_document }}</q-item-label>
+							<q-item-label caption lines="2" v-if="formationDoc?.size">{{ formationDoc.size /
+								1000
+							}}
+								KB</q-item-label>
+						</q-item-section>
+					</q-item>
 				</base-field>
 			</div>
 			<div class="col-lg-12">
@@ -35,7 +51,7 @@
 
 		<form-validate @submit="onSubmit" v-slot="{ resetForm }">
 			<div class="border rounded border-light px-3 py-2 my-2" style="overflow-x: scroll">
-				<h4 v-if="isComplete">Listado de asistentes</h4>
+				<h4 v-if="isComplete || $store.state.is_business">Listado de asistentes</h4>
 				<h4 v-else-if="reAssign">Listado de empleados</h4>
 
 				<div class="d-flex mx-0 align-items-end mb-4">
@@ -62,9 +78,8 @@
 						<tr v-for="employee in employees_rows" :key="employee.id">
 							<td>
 								<div class="form-check">
-									<input v-if="!isComplete && (toComplete || employee.canCheck)"
-										class="form-check-input" type="checkbox" :value="employee.id"
-										v-model="employees_ids" />
+									<input v-if="!isComplete && (toComplete || employee.canCheck)" class="form-check-input"
+										type="checkbox" :value="employee.id" v-model="employees_ids" />
 									<label class="form-check-label" for="flexCheckDefault">
 										{{ employee.full_name }}
 									</label>
@@ -78,9 +93,9 @@
 							</td>
 							<td>
 								{{
-								employee.last_formation == null
-								? "SIN FORMACIÓN"
-								: employee.last_formation.date_formatted
+									employee.last_formation == null
+									? "SIN FORMACIÓN"
+									: employee.last_formation.date_formatted
 								}}
 							</td>
 						</tr>
@@ -89,7 +104,8 @@
 			</div>
 
 			<div class="mt-4 float-md-right">
-				<base-button type="default" nativeType="submit" v-if="!isComplete">{{ reAssign ? 'Asignar' : 'Aceptar'}}
+				<base-button type="default" nativeType="submit" v-if="!isComplete && !$store.state.is_business">{{ reAssign
+					? 'Asignar' : 'Aceptar' }}
 				</base-button>
 				<base-button type="default" :outline="true" class="ml-auto" @click="handleClose(resetForm)">Cancelar
 				</base-button>
@@ -128,6 +144,7 @@ export default {
 		const training = ref(null)
 		const filter = ref(null)
 		const filter_date = ref(null)
+		const formationDoc = computed(() => training.value?.formation?.documents?.length ? training.value?.formation?.documents[0] : null)
 		const training_employees_ids = computed(() => training.value?.employees ? training.value.employees.map(e => e.id) : [])
 		const employees = computed(() => uniqBy([...training.value?.employees, ...installation_employees.value], 'id').map(e => {
 			e.canCheck = true;
@@ -135,10 +152,10 @@ export default {
 		}))
 
 		const employees_rows = computed(() => {
-            return employees.value?.filter((e) => {
-                return filter.value ? e.full_name.toLowerCase().includes(filter.value) : e;
-            }) ?? []
-        })
+			return employees.value?.filter((e) => {
+				return filter.value ? e.full_name.toLowerCase().includes(filter.value) : e;
+			}) ?? []
+		})
 
 		async function onSubmit(values, { resetForm }) {
 			try {
@@ -182,6 +199,10 @@ export default {
 			emit("close");
 		}
 
+		function open(url) {
+            window.open(url, '_blank').focus();
+        }
+
 		loadTraining();
 		if (props.reAssign) {
 			loadEmployees()
@@ -197,7 +218,9 @@ export default {
 			employees,
 			filter,
 			employees_rows,
-
+			formationDoc,
+			
+			open,
 			loadEmployees,
 			loadTraining,
 			onSubmit,

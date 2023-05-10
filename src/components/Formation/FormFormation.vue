@@ -33,24 +33,24 @@
                         </field-validate>
                     </base-field>
                 </div>
-                <div
-                    class="col-lg-12">
+                <div class="col-lg-12">
                     <base-field name="document" label="Documentos de formación">
                         <div class="row q-gutter-md">
                             <div class="col">
                                 <div>
                                     <!-- <q-separator spaced="1rem" v-if="model.documents?.length >= 1" /> -->
                                     <div class="flex">
-                                        <q-file :disable="model.documents?.length >=3" :filled="model.documents?.length >=3" :loading="loading" counter :max-files="available_files_upload"
+                                        <q-file :disable="model.documents?.length >= 3" :filled="model.documents?.length >= 3"
+                                            :loading="loading" counter :max-files="available_files_upload"
                                             class="col q-mt-sm" v-model="new_documents" outlined use-chips multiple
                                             accept=".pdf">
                                             <template v-slot:prepend>
                                                 <q-icon name="attach_file" />
                                             </template>
                                         </q-file>
-                                        <div v-if="new_documents?.length >= 1 && model?.documents?.length >= 1" class="col-2 flex column q-mt-lg">
-                                            <q-btn flat dense color="primary"
-                                                 icon="fa-solid fa-upload"
+                                        <div v-if="new_documents?.length >= 1 && model?.documents?.length >= 1"
+                                            class="col-2 flex column q-mt-lg">
+                                            <q-btn flat dense color="primary" icon="fa-solid fa-upload"
                                                 @click="submit_btn.click()">
                                                 <q-tooltip>
                                                     Subir Archivos
@@ -72,13 +72,13 @@
                                         <q-item-section @click="open(document?.public_url)">
                                             <q-item-label>{{ document.name_document }}</q-item-label>
                                             <q-item-label caption lines="2" v-if="document?.size">{{ document.size /
-                                                    1000
+                                                1000
                                             }}
                                                 KB</q-item-label>
                                         </q-item-section>
                                         <q-item-section side>
-                                            <q-btn :loading="loading" v-if="model.documents?.length > 1" color="primary" icon="fa-solid fa-xmark" flat
-                                                @click="remove(document)" />
+                                            <q-btn :loading="loading" v-if="model.documents?.length > 1" color="primary"
+                                                icon="fa-solid fa-xmark" flat @click="remove(document)" />
                                         </q-item-section>
                                     </q-item>
                                 </div>
