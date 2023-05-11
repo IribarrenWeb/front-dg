@@ -4,26 +4,42 @@
             <q-toggle size="lg" label="Usar datos de expedidor" :model-value="same_loader"
                 @update:model-value="$emit('update:same_loader', $event)" color="primary" />
         </div>
+        <div class="col-12 row" v-if="!same_loader">
+            <qu-select-validation v-if="selectMode" :rules="[!isDisabled ? $rules.required() : true]"
+                :readonly="same_loader" :filled="isDisabled" apiName="business_name" class="col-md-6 col-12"
+                :model-value="business_name" map-options :options="options" @filter="filterFn" outlined emit-value use-input
+                fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
 
-        <qu-select-validation v-if="selectMode" :rules="[!isDisabled ? $rules.required() : true]" :readonly="same_loader" :filled="isDisabled" apiName="business_name"
-            class="col-md-6 col-12" :model-value="business_name" map-options :options="options" @filter="filterFn" outlined
-            emit-value use-input fill-input :loading="loading" @input-value="setModel" label="Razón Social" hide-selected />
+            <qu-input-validation v-else :readonly="isDisabled" :filled="isDisabled" apiName="business_name"
+                class="col-md-6 col-12" :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined
+                :model-value="business_name" @update:model-value="$emit('update:business_name', $event)" type="text"
+                label="Razón Social" />
 
-        <qu-input-validation v-else :readonly="isDisabled" :filled="isDisabled" apiName="business_name" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="business_name"
-            @update:model-value="$emit('update:business_name', $event)" type="text" label="Razón Social" />
+            <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="nif" class="col-md-6 col-12"
+                :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
+                @update:model-value="$emit('update:nif', $event)" type="text" label="NIF" />
+            <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="phone_number" class="col-md-6 col-12"
+                :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="phone_number"
+                @update:model-value="$emit('update:phone_number', $event)" type="text" label="Numero de telefono" />
 
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="nif" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="nif"
-            @update:model-value="$emit('update:nif', $event)" type="text" label="NIF" />
-        <qu-input-validation :readonly="isDisabled" :filled="isDisabled" apiName="phone_number" class="col-md-6 col-12"
-            :loading="loading" :rules="[!isDisabled ? $rules.required() : true]" outlined :model-value="phone_number"
-            @update:model-value="$emit('update:phone_number', $event)" type="text" label="Numero de telefono" />
+            <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled" v-model:address="address_model.address"
+                v-model:city="address_model.city" v-model:code="address_model.code"
+                v-model:comunity="address_model.comunity" v-model:country="address_model.country"
+                v-model:street_number="address_model.street_number" v-model:province="address_model.province" />
+        </div>
+        <div class="col-12 row" v-else>
+            <qu-input-validation readonly filled class="col-md-6 col-12" :loading="loading" outlined
+                :model-value="userData?.full_name" type="text" label="Razón Social" />
+            <qu-input-validation readonly filled class="col-md-6 col-12" :loading="loading" outlined
+                :model-value="businessData.business_nif" type="text" label="NIF" />
+            <qu-input-validation readonly filled class="col-md-6 col-12" :loading="loading" outlined
+                :model-value="businessData.business_phone" type="text" label="Numero de telefono" />
 
-        <address-select-v-2 :readonly="isDisabled" v-model:filled="isDisabled"
-            v-model:address="address_model.address" v-model:city="address_model.city" v-model:code="address_model.code"
-            v-model:comunity="address_model.comunity" v-model:country="address_model.country"
-            v-model:street_number="address_model.street_number" v-model:province="address_model.province" />
+            <address-select-v-2 readonly filled :address="businessData.address?.address"
+                :city="businessData.address?.city" :code="businessData.address?.code"
+                :comunity="businessData.address?.comunity" :country="businessData.address?.country"
+                :street_number="businessData.address?.street_number" :province="businessData.address?.province" />
+        </div>
     </div>
 </template>
 
@@ -36,6 +52,7 @@ import AddressSelectV2 from '../../../core_components/AddressSelectV2.vue';
 import { computed, onActivated, watch } from '@vue/runtime-core';
 import QuSelectValidation from '../../../core_components/FormQuasar/QuSelectValidation.vue';
 import { keys } from 'lodash';
+import { useStore } from 'vuex';
 
 export default {
     components: { AddressSelectV2, QuInputValidation, QuSelectValidation },
@@ -79,6 +96,9 @@ export default {
         const address_model = ref({})
         const data_options = ref([])
         const options = ref([])
+        const store = useStore()
+        const businessData = computed(() => store.getters['profile/profile'])
+        const userData = computed(() => store.getters['profile/me'])
         // const name_value = ref([])
         const isDisabled = computed(() => props.same_loader || loader_selected.value ? true : false)
 
@@ -112,7 +132,7 @@ export default {
         }
 
         function resetSelected() {
-            const k = ['nif','phone_number','address']
+            const k = ['nif', 'phone_number', 'address']
             console.log(k, loader_selected.value);
             k.forEach(k => {
                 emit('update:' + k, null)
@@ -159,7 +179,7 @@ export default {
 
         watch(() => props.same_loader, (v) => {
 
-            if(v) {
+            if (v) {
                 resetSelected()
                 emit('update:cartage_loader_id', null)
             }
@@ -184,7 +204,7 @@ export default {
             if (v) {
                 v.reset()
             }
-        }, {immediate: true})
+        }, { immediate: true })
 
         watch(() => props.selectMode, (v) => {
             if (v) {
@@ -197,12 +217,14 @@ export default {
                 setAddress(v)
             }
         }, { immediate: true })
-        
+
         return {
             address_model,
             loader_selected,
             options,
             isDisabled,
+            businessData,
+            userData,
             // name_value,
             setModel,
             filterFn
