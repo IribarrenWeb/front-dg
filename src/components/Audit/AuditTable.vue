@@ -85,7 +85,9 @@
 					<td>
 						{{ row.item?.installation?.address?.city }}
 					</td>
-					<td>Sin datos</td>
+					<td>
+						{{ formatLastAudit(row.item) }}
+					</td>
 					<td>
 						<badge class="badge-dot mr-4" :type="setStatusType(row.item?.status)">
 							<i :class="`bg-${setStatusType(row.item?.status)}`"></i>
@@ -266,6 +268,7 @@ export default {
 			params:
 				"includes[]=auditable.user" +
 				"&includes[]=installation.company.user" +
+				"&includes[]=installation.lastCompletedAudit" +
 				"&order_by=scheduled_date" +
 				"&order_direction=asc",
 			params_filter: null,
@@ -301,6 +304,13 @@ export default {
 				this.metaData = resp.data.meta.page;
 				this.page = this.metaData.currentPage;
 			}
+		},
+		formatLastAudit(audit){
+			let date = ''
+			if (audit?.installation?.last_completed_audit) {
+				date = audit?.installation?.last_completed_audit.id == audit.id ? 'Esta auditoria' : audit?.installation?.last_completed_audit.date_end;
+			}
+			return date;
 		},
 		open(url) {
 			window.open(url, '_blank').focus();
