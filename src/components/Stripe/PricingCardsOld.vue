@@ -38,7 +38,7 @@
                         :loading="loading" />
 
                     <!-- Cambiar suscripcion -->
-                    <q-btn color="primary" v-else-if="samePlan(!plan)" :disable="!plan?.is_active" label="Cambiar plan"
+                    <q-btn color="primary" v-else-if="!samePlan(plan)" :disable="!plan?.is_active" label="Cambiar plan"
                         @click="handleAction('change', plan)" :loading="loading" />
 
                     <q-tooltip v-if="!plan?.is_active">
