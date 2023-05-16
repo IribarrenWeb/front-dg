@@ -9,7 +9,11 @@
                 <q-icon color="primary" name="fa-regular fa-square-plus" class="q-mr-md" size="40px" v-if="idx == 2" />
                 <q-icon color="primary" name="fa-solid fa-bolt" class="q-mr-md" size="40px" v-if="idx == 3" />
                 <div>
-                    <div class="text-h6 text-blue-10 text-uppercase">{{ plan.name }}</div>
+                    <div class="text-h6 text-blue-10 text-uppercase">{{ plan.name }}
+                    </div>
+                    <q-badge class="p-1" v-if="samePlan(plan) && actualPlanStripe?.ends_at" color="grey-5"
+                        text-color="grey-8" rounded
+                        :label="`Activa hasta: ${$moment(actualPlanStripe.ends_at).format('DD/MM/YYYY H:mm a')}`" />
                     <div class="text-subtitle2">
                         <span class="h3">{{ plan.price }}</span>
                         <q-icon size="10px" class="q-ml-sm" name="fa-solid fa-euro-sign" />
@@ -71,6 +75,7 @@ import { computed, ref } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import { Dialog, Notify } from 'quasar'
 import modelService from '../../store/services/model-service'
+
 export default {
     props: {
         plans: {},

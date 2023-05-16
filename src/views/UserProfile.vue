@@ -257,7 +257,7 @@ export default {
 		function deleteAccount() {
 			Dialog.create({
 				title: 'Eliminar mi cuenta',
-				message: '¿Estas seguro de querer eliminar tu cuenta?. Este acción es irreversible. Todos los datos seran eliminados y no podran ser recuperados',
+				message: '¿Estas seguro de querer eliminar tu cuenta?. Esta acción es irreversible. Todos los datos seran eliminados y no podran ser recuperados',
 				ok: {
 					label: 'Eliminar',
 					outline: true,
