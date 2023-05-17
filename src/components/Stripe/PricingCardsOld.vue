@@ -11,9 +11,9 @@
                 <div>
                     <div class="text-h6 text-blue-10 text-uppercase">{{ plan.name }}
                     </div>
-                    <q-badge class="p-1" v-if="samePlan(plan) && actualPlanStripe?.ends_at" color="grey-5"
+                    <q-badge class="p-1" v-if="samePlan(plan) && periodDate" color="grey-5"
                         text-color="grey-8" rounded
-                        :label="`Activa hasta: ${$moment(actualPlanStripe.ends_at).format('DD/MM/YYYY H:mm a')}`" />
+                        :label="`Activa hasta: ${periodDate}`" />
                     <div class="text-subtitle2">
                         <span class="h3">{{ plan.price }}</span>
                         <q-icon size="10px" class="q-ml-sm" name="fa-solid fa-euro-sign" />
@@ -75,6 +75,7 @@ import { computed, ref } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import { Dialog, Notify } from 'quasar'
 import modelService from '../../store/services/model-service'
+import { moment } from '../../boot/plugins'
 
 export default {
     props: {
@@ -88,6 +89,8 @@ export default {
         const store = useStore()
         const actualPlan = ref(null)
         const actualPlanStripe = ref(null)
+        const stripeSub = ref(null)
+        const periodDate = computed(() => actualPlanStripe.value?.ends_at ? moment(actualPlanStripe.value?.ends_at).format('DD/MM/YYYY H:mm a') : (stripeSub.value?.current_period_end ? moment.unix(stripeSub.value?.current_period_end).format('DD/MM/YYYY H:mm a') : ''))
         const loading = ref(false)
         const benefits = [
             {
@@ -120,6 +123,7 @@ export default {
                 console.log(res.data);
                 actualPlanStripe.value = res?.data?.stripe && res?.data?.stripe?.length ? res.data.stripe[0] : null
                 actualPlan.value = res?.data?.local ? res.data.local : null
+                stripeSub.value = res?.data?.stripe_sub ? res.data.stripe_sub : null
             } catch (error) {
                 loading.value = false
 
@@ -235,6 +239,8 @@ export default {
             loading,
             actualPlanStripe,
             benefits,
+            stripeSub,
+            periodDate,
             samePlan,
             handleAction
         }
