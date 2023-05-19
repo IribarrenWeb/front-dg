@@ -24,7 +24,7 @@
             :style="{top: !mobile ? '60px' : 0}">
             <div class="flex justify-center q-mt-xl">
                 <q-img :src="logo" spinner-color="primary" fit="contain" spinner-size="10px" height="100px"
-                    width="100px" />
+                    width="170px" />
             </div>
             <menu-aside />
         </q-drawer>
