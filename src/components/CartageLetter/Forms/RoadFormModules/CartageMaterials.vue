@@ -46,7 +46,7 @@
                         <material-packing-selector dense class="col-4" :rules="[$rules.required()]" option-value="label"
                             label="Empaque" v-model="material.packing_name" />
                         <qu-input-validation class="col-6 mt--2" label="NEP" v-model="material.nep_comment" dense
-                            type="text" />
+                            type="textarea" />
                         <q-checkbox class="col-6 mt--3" dense v-model="material.limited_quantity_reference"
                             label="Cantidades limitadas" />
                     </div>
