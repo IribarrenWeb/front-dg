@@ -77,7 +77,7 @@ export default {
                 let data = []
                 if (val !== '' && val) {
                     const needle = val.toLowerCase()
-                    const res = await modelService.apiNoLoading({ url: 'adr-materials?includes[]=packing&query=' + needle })
+                    const res = await modelService.apiNoLoading({ url: 'adr-materials?is_active=1&includes[]=packing&query=' + needle })
                     data = res?.data?.data.map(m => {
                         return {
                             label: `${m.un_code} - ${m.denomination_name}`,
