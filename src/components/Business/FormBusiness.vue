@@ -44,8 +44,8 @@
 					v-model:responsible_dni="model.responsible_dni"
 					v-model:responsible_phone_number="model.responsible_phone_number"
 					v-model:responsible_email="model.responsible_email" />
-				<bank-data v-model:holder_name="model.holder_name" v-model:bank_code="model.bank_code"
-					v-model:iban_number="model.iban_number" />
+				<!-- <bank-data v-model:holder_name="model.holder_name" v-model:bank_code="model.bank_code"
+					v-model:iban_number="model.iban_number" /> -->
 				<document-data v-model:file_date="model.file_date" v-model:file_document="model.file_document.file" />
 			</template>
 			<template v-if="currentStep === 3">

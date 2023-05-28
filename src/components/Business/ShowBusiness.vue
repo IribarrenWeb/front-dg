@@ -26,8 +26,8 @@
 					v-model:responsible_dni="model.responsible_dni"
 					v-model:responsible_phone_number="model.responsible_phone_number"
 					v-model:responsible_email="model.responsible_email" />
-				<bank-data v-model:holder_name="model.holder_name" v-model:bank_code="model.bank_code"
-					v-model:iban_number="model.iban_number" />
+				<!-- <bank-data v-model:holder_name="model.holder_name" v-model:bank_code="model.bank_code"
+					v-model:iban_number="model.iban_number" /> -->
 				<div class="row border border-light mt-3 rounded p-2">
 					<div class="col-12">
 						<h4>Documentación de la empresa</h4>
